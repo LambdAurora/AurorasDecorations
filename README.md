@@ -17,11 +17,13 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 - Big Flower Pot Block
   - Can hold a plant, can dynamically support some modded plants (or new plants in Minecraft if the mod hasn't been updated).
   - Can hold tall plants.
-- Wall Lantern
-  - Lanterns can now be placed on walls!
-  - Can be waterlogged.
-  - Swings when hit.
-  - Supports modded lanterns.
+- Lanterns
+  - Can now be put on leaves.
+  - Wall Lantern
+    - Lanterns can now be placed on walls!
+    - Can be waterlogged.
+    - Swings when hit.
+    - Supports modded lanterns.
 
 ## Pictures
 
