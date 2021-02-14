@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "dev.lambdaurora.aurorasdeco.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "BlockItemMixin",
+    "LanternMixin"
+  ],
+  "client": [
+    "client.ModelLoaderMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

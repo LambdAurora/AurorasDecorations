@@ -1,0 +1,36 @@
+{
+  "credit": "Made by LambdAurora",
+  "parent": "block/block",
+  "textures": {
+    "particle": "minecraft:block/chain",
+    "attachment": "aurorasdeco:block/wall_lantern_attachment",
+    "bar": "minecraft:block/dark_oak_planks"
+  },
+  "elements": [
+    {
+      "name": "bar",
+      "from": [ 7, 13, 7 ],
+      "to": [ 16, 15, 9 ],
+      "faces": {
+        "north": { "uv": [ 2, 2, 11, 4 ], "texture": "#bar" },
+        "south": { "uv": [ 2, 3, 11, 5 ], "texture": "#bar" },
+        "west":  { "uv": [ 5, 4,  7, 6 ], "texture": "#bar" },
+        "up":    { "uv": [ 2, 3, 11, 5 ], "texture": "#bar" },
+        "down":  { "uv": [ 2, 3, 11, 5 ], "texture": "#bar" }
+      }
+    },
+    {
+      "name": "wall_attachment",
+      "from": [ 15, 10, 6 ],
+      "to": [ 16, 16, 10 ],
+      "faces": {
+        "north": {"uv": [ 5, 1, 6, 7 ], "texture": "#attachment"},
+        "east":  {"uv": [ 1, 1, 5, 7 ], "texture": "#attachment", "cullface": "east"},
+        "south": {"uv": [ 0, 1, 1, 7 ], "texture": "#attachment"},
+        "west":  {"uv": [ 1, 1, 5, 7 ], "texture": "#attachment"},
+        "up":    {"uv": [ 0, 1, 1, 5 ], "texture": "#attachment"},
+        "down":  {"uv": [ 7, 1, 8, 5 ], "texture": "#attachment"}
+      }
+    }
+  ]
+}

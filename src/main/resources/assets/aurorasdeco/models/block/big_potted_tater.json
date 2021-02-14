@@ -1,0 +1,21 @@
+{
+  "textures": {
+    "tater_face": "aurorasdeco:block/tater_face",
+    "tater_side": "aurorasdeco:block/tater_side",
+    "tater_top": "aurorasdeco:block/tater_side",
+    "tater_behind": "aurorasdeco:block/tater_side"
+  },
+  "elements": [
+    {
+      "from": [ 4, 13, 4 ],
+      "to": [ 12, 21, 12 ],
+      "faces": {
+        "north": {"uv": [ 0, 0, 16, 16 ], "texture": "#tater_face"},
+        "east":  {"uv": [ 0, 0, 16, 16 ], "texture": "#tater_side"},
+        "south": {"uv": [ 0, 0, 16, 16 ], "texture": "#tater_behind"},
+        "west":  {"uv": [ 16, 0, 0, 16 ], "texture": "#tater_side"},
+        "up":    {"uv": [ 0, 0, 16, 16 ], "texture": "#tater_top"}
+      }
+    }
+  ]
+}

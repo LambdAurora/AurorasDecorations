@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "aurorasdeco",
+  "version": "${version}",
+  "name": "Aurora's Decorations",
+  "description": "Some new decorations features.",
+  "authors": [
+    "LambdAurora"
+  ],
+  "contributors": [],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/aurorasdecorations",
+    "sources": "https://github.com/LambdAurora/AurorasDecorations.git",
+    "issues": "https://github.com/LambdAurora/AurorasDecorations/issues"
+  },
+  "license": "LGPLv3",
+  "icon": "assets/aurorasdeco/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.lambdaurora.aurorasdeco.AurorasDeco"
+    ],
+    "client": [
+      "dev.lambdaurora.aurorasdeco.client.AurorasDecoClient"
+    ]
+  },
+  "mixins": [
+    "aurorasdeco.mixins.json"
+  ],
+  "depends": {
+    "minecraft": ">=1.17-alpha.21.5.b",
+    "fabricloader": ">=0.11.1",
+    "fabric": ">=0.30.1+1.17"
+  }
+}

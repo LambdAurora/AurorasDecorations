@@ -1,0 +1,105 @@
+plugins {
+    id 'fabric-loom' version '0.5-SNAPSHOT'
+    id 'java-library'
+    id 'maven-publish'
+    id 'net.minecrell.licenser' version '0.4.1'
+}
+
+group = project.maven_group
+version = "${project.mod_version}+${getMCVersionString()}"
+archivesBaseName = project.archives_base_name
+
+// This field defines the Java version your mod target.
+// The Minecraft launcher currently installs Java 8 for users, so your mod probably wants to target Java 8 too.
+def targetJavaVersion = 8
+
+def getMCVersionString() {
+    if (project.minecraft_version.matches("\\d\\dw\\d\\d[a-z]")) {
+        return project.minecraft_version
+    }
+    int lastDot = project.minecraft_version.lastIndexOf('.')
+    return project.minecraft_version.substring(0, lastDot)
+}
+
+repositories {
+    maven {
+        name 'AperLambda'
+        url 'https://aperlambda.github.io/maven'
+    }
+    maven {
+        name 'Jitpack'
+        url 'https://jitpack.io'
+    }
+}
+
+minecraft {
+}
+
+dependencies {
+    //to change the versions see the gradle.properties file
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+}
+
+java {
+    sourceCompatibility = JavaVersion.toVersion(targetJavaVersion)
+    targetCompatibility = JavaVersion.toVersion(targetJavaVersion)
+
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+
+    if (JavaVersion.current().isJava9Compatible()) {
+        if (JavaVersion.current().isJava9Compatible()) {
+            it.options.release = targetJavaVersion
+        }
+    }
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.archivesBaseName}" }
+    }
+}
+
+license {
+    header file('HEADER')
+    include '**/*.java'
+}
+
+// configure the maven publication
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            // add all the jars that should be included when publishing to maven
+            artifact(jar) {
+                builtBy remapJar
+            }
+            artifact("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}.jar") {
+                builtBy remapJar
+            }
+            artifact(sourcesJar) {
+                builtBy remapSourcesJar
+            }
+        }
+    }
+
+    // select the repositories you want to publish to
+    repositories {
+        // uncomment to publish to the local maven
+        // mavenLocal()
+    }
+}

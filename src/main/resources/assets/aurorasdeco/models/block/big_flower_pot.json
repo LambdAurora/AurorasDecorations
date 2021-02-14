@@ -1,0 +1,67 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "particle": "aurorasdeco:block/big_flower_pot",
+    "pot": "aurorasdeco:block/big_flower_pot",
+    "soil": "block/dirt"
+  },
+  "elements": [
+    {
+      "name": "soil",
+      "from": [ 3, 0, 3 ],
+      "to": [ 13, 13, 13 ],
+      "faces": {
+        "up":   {"uv": [ 3, 3, 13, 13 ], "texture": "#soil"},
+        "down": {"uv": [ 2, 2, 12, 12 ], "texture": "#pot", "cullface": "down"}
+      }
+    },
+    {
+      "name": "north",
+      "from": [ 3, 0, 1 ],
+      "to": [ 15, 14, 3 ],
+      "faces": {
+        "north": {"uv": [ 0, 0, 12, 14 ], "texture": "#pot"},
+        "east":  {"uv": [ 12, 0, 14, 14 ], "texture": "#pot"},
+        "south": {"uv": [ 2, 0, 14, 15 ], "texture": "#pot"},
+        "up":    {"uv": [ 2, 14, 14, 16 ], "texture": "#pot"},
+        "down":  {"uv": [ 2, 12, 14, 14 ], "texture": "#pot", "cullface": "down"}
+      }
+    },
+    {
+      "name": "east",
+      "from": [ 13, 0, 3 ],
+      "to": [ 15, 14, 15 ],
+      "faces": {
+        "east":  {"uv": [ 0, 0, 12, 14 ], "texture": "#pot"},
+        "south": {"uv": [ 12, 0, 14, 14 ], "texture": "#pot"},
+        "west":  {"uv": [ 2, 0, 14, 15 ], "texture": "#pot"},
+        "up":    {"uv": [ 14, 2, 16, 14 ], "texture": "#pot"},
+        "down":  {"uv": [ 12, 0, 14, 12 ], "texture": "#pot", "cullface": "down"}
+      }
+    },
+    {
+      "name": "south",
+      "from": [ 1, 0, 13 ],
+      "to": [ 13, 14, 15 ],
+      "faces": {
+        "north": {"uv": [ 2, 0, 14, 15 ], "texture": "#pot"},
+        "south": {"uv": [ 0, 0, 12, 13 ], "texture": "#pot"},
+        "west":  {"uv": [ 12, 0, 14, 14 ], "texture": "#pot"},
+        "up":    {"uv": [ 0, 14, 12, 16 ], "texture": "#pot"},
+        "down":  {"uv": [ 0, 0, 12, 2 ], "texture": "#pot", "cullface": "down"}
+      }
+    },
+    {
+      "name": "west",
+      "from": [ 1, 0, 1 ],
+      "to": [ 3, 14, 13 ],
+      "faces": {
+        "north": {"uv": [ 12, 0, 14, 14 ], "texture": "#pot"},
+        "east":  {"uv": [ 2, 0, 14, 15 ], "texture": "#pot"},
+        "west":  {"uv": [ 0, 0, 12, 14 ], "texture": "#pot"},
+        "up":    {"uv": [ 14, 0, 16, 12 ], "texture": "#pot"},
+        "down":  {"uv": [ 0, 2, 2, 14 ], "texture": "#pot", "cullface": "down"}
+      }
+    }
+  ]
+}
