@@ -20,7 +20,6 @@ package dev.lambdaurora.aurorasdeco.block;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
-import dev.lambdaurora.aurorasdeco.block.state.LanternProperty;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
@@ -30,6 +29,7 @@ import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -38,10 +38,12 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
@@ -71,20 +73,22 @@ import java.util.Map;
  * @since 1.0.0
  */
 public class WallLanternBlock extends BlockWithEntity {
-    public static final LanternProperty TYPE = new LanternProperty("type");
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+    public static final IntProperty LIGHT = IntProperty.of("light", 0, 15);
     public static final BooleanProperty COLLISION = BooleanProperty.of("collision");
+    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public static final VoxelShape LANTERN_HANG_SHAPE = Block.createCuboidShape(7.0, 11.0, 7.0, 9.0, 13.0, 9.0);
-    private static final Map<Direction, VoxelShape> BOUNDING_SHAPES;
+    public static final Map<Direction, VoxelShape> ATTACHMENT_SHAPES;
 
     public WallLanternBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.LANTERN).breakByTool(FabricToolTags.PICKAXES)
-                .luminance(state -> state.get(TYPE).getLantern().getDefaultState().getLuminance()));
+        super(FabricBlockSettings.copyOf(Blocks.LANTERN)
+                .breakByTool(FabricToolTags.PICKAXES)
+                .luminance(state -> state.get(LIGHT))
+                .dynamicBounds());
 
         this.setDefaultState(this.stateManager.getDefaultState()
-                .with(TYPE, LanternProperty.NORMAL)
                 .with(FACING, Direction.NORTH)
+                .with(LIGHT, 0)
                 .with(COLLISION, false)
                 .with(WATERLOGGED, false)
         );
@@ -92,8 +96,8 @@ public class WallLanternBlock extends BlockWithEntity {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(TYPE);
         builder.add(FACING);
+        builder.add(LIGHT);
         builder.add(COLLISION);
         builder.add(WATERLOGGED);
     }
@@ -103,20 +107,27 @@ public class WallLanternBlock extends BlockWithEntity {
         return this.asItem().getTranslationKey();
     }
 
+    @Override
+    public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
+        return state.getFluidState().isEmpty();
+    }
+
     /* Shapes */
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        VoxelShape baseShape = BOUNDING_SHAPES.get(state.get(FACING));
-        VoxelShape lanternShape = state.get(TYPE).getLantern().getDefaultState().getOutlineShape(world, pos, context).offset(0, 2.0 / 16.0, 0);
-        return VoxelShapes.union(baseShape, lanternShape);
+        return LanternBlockEntity.getOutlineShape(world, pos, state);
     }
 
     /* Interaction */
 
     @Override
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-        return state.get(TYPE).getLantern().getPickStack(world, pos, state);
+        LanternBlockEntity blockEntity = AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
+        if (blockEntity != null)
+            return blockEntity.getLantern().getPickStack(world, pos, state);
+        else
+            return LanternBlockEntity.DEFAULT_LANTERN.getPickStack(world, pos, state);
     }
 
     public void onProjectileHit(World world, BlockState state, BlockHitResult hit, ProjectileEntity projectile) {
@@ -151,23 +162,22 @@ public class WallLanternBlock extends BlockWithEntity {
         }
     }
 
-    public void swing(@Nullable Entity entity, World world, BlockPos blockPos, @Nullable Direction direction,
+    public void swing(@Nullable Entity entity, World world, BlockPos pos, @Nullable Direction direction,
                       @Nullable Direction.Axis lanternCollisionAxis) {
-        BlockEntity blockEntity = world.getBlockEntity(blockPos);
-        if (!world.isClient() && blockEntity instanceof LanternBlockEntity) {
+        LanternBlockEntity blockEntity = AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
+        if (!world.isClient() && blockEntity != null) {
             if (direction == null) {
-                direction = world.getBlockState(blockPos).get(FACING);
+                direction = world.getBlockState(pos).get(FACING);
             }
 
-            LanternBlockEntity lanternBlockEntity = (LanternBlockEntity) blockEntity;
-            boolean previousColliding = lanternBlockEntity.isColliding();
+            boolean previousColliding = blockEntity.isColliding();
             if (lanternCollisionAxis == null)
-                lanternBlockEntity.activate(direction);
+                blockEntity.activate(direction);
             else
-                lanternBlockEntity.activate(direction, entity, lanternCollisionAxis);
+                blockEntity.activate(direction, entity, lanternCollisionAxis);
             if (!previousColliding) {
-                world.playSound(null, blockPos, AurorasDecoRegistry.LANTERN_SWING_SOUND_EVENT, SoundCategory.BLOCKS, 2.0F, 1.0F);
-                world.emitGameEvent(entity, GameEvent.RING_BELL, blockPos);
+                world.playSound(null, pos, AurorasDecoRegistry.LANTERN_SWING_SOUND_EVENT, SoundCategory.BLOCKS, 2.0F, 1.0F);
+                world.emitGameEvent(entity, GameEvent.RING_BELL, pos);
             }
         }
     }
@@ -176,14 +186,13 @@ public class WallLanternBlock extends BlockWithEntity {
         if (entity instanceof ProjectileEntity)
             return;
 
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (!(blockEntity instanceof LanternBlockEntity))
+        LanternBlockEntity blockEntity = AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
+        if (blockEntity == null)
             return;
 
-        LanternBlockEntity lanternBlockEntity = (LanternBlockEntity) blockEntity;
         Direction.Axis swingAxis = state.get(FACING).rotateYClockwise().getAxis();
 
-        Box lanternBox = lanternBlockEntity.getLanternCollisionBox(swingAxis);
+        Box lanternBox = blockEntity.getLanternCollisionBox(swingAxis);
         Box entityBox = entity.getBoundingBox();
         if (lanternBox.intersects(entityBox)) {
             Direction swingDirection = Direction.NORTH;
@@ -201,7 +210,12 @@ public class WallLanternBlock extends BlockWithEntity {
 
     @Override
     public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
-        return state.get(TYPE).getLantern().getDefaultState().getDroppedStacks(builder);
+        BlockEntity blockEntity = builder.getNullable(LootContextParameters.BLOCK_ENTITY);
+        BlockState lanternState = LanternBlockEntity.DEFAULT_LANTERN.getDefaultState();
+        if (blockEntity instanceof LanternBlockEntity) {
+            lanternState = ((LanternBlockEntity) blockEntity).getLanternState();
+        }
+        return lanternState.getDroppedStacks(builder);
     }
 
     /* Block Entity Stuff */
@@ -249,12 +263,6 @@ public class WallLanternBlock extends BlockWithEntity {
 
         state = state.with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
 
-        ItemStack stack = ctx.getStack();
-        LanternProperty.Value value = LanternProperty.fromItem(stack.getItem());
-        if (value != null) {
-            state = state.with(TYPE, value);
-        }
-
         for (Direction direction : directions) {
             if (direction.getAxis().isHorizontal()) {
                 Direction direction2 = direction.getOpposite();
@@ -266,6 +274,14 @@ public class WallLanternBlock extends BlockWithEntity {
         }
 
         return null;
+    }
+
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        LanternBlockEntity blockEntity = AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
+        if (blockEntity != null) {
+            blockEntity.setLanternFromItem(itemStack.getItem());
+        }
     }
 
     /* Fluid */
@@ -327,7 +343,7 @@ public class WallLanternBlock extends BlockWithEntity {
             eastShape = VoxelShapes.union(LANTERN_HANG_SHAPE, barShape, wallAttachment);
         }
 
-        BOUNDING_SHAPES = Maps.newEnumMap(
+        ATTACHMENT_SHAPES = Maps.newEnumMap(
                 ImmutableMap.of(
                         Direction.NORTH, northShape,
                         Direction.SOUTH, southShape,

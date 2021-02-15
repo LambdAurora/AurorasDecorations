@@ -17,7 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.mixin;
 
-import dev.lambdaurora.aurorasdeco.block.state.LanternProperty;
+import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -53,7 +53,7 @@ public abstract class BlockItemMixin {
     @Inject(method = "appendBlocks", at = @At("RETURN"))
     private void onAppendBlocks(Map<Block, Item> map, Item item, CallbackInfo ci) {
         if (this.getBlock() instanceof LanternBlock) {
-            LanternProperty.registerValue(this.getBlock());
+            LanternBlockEntity.registerLantern(item, this.getBlock());
         }
     }
 

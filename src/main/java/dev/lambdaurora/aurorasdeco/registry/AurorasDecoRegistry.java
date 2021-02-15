@@ -17,7 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.registry;
 
-import dev.lambdaurora.aurorasdeco.block.BigFlowerPotBlock;
+import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -53,7 +53,7 @@ public final class AurorasDecoRegistry {
                     FabricBlockSettings.of(Material.AIR)
                             .noCollision()
                             .nonOpaque()
-                            .strength(-1.0F, 3600000.0F)
+                            .strength(-1.f, 3600000.f)
                             .dropsNothing()
                             .allowsSpawning((state, world, pos, type) -> false)
             )

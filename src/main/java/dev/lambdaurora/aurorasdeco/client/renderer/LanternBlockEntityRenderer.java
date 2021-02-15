@@ -70,7 +70,7 @@ public class LanternBlockEntityRenderer implements BlockEntityRenderer<LanternBl
             }
         }
 
-        BlockState lanternState = entity.getCachedState().get(WallLanternBlock.TYPE).getLantern().getDefaultState();
+        BlockState lanternState = entity.getLantern().getDefaultState();
         VertexConsumer consumer = vertexConsumers.getBuffer(RenderLayers.getBlockLayer(lanternState));
         matrices.push();
         matrices.translate(8.f / 16.f, 12.f / 16.f, 8.f / 16.f);

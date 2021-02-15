@@ -17,7 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.client.model;
 
-import dev.lambdaurora.aurorasdeco.block.BigFlowerPotBlock;
+import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.state.PlantProperty;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;

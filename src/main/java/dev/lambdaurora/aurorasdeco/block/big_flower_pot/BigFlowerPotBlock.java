@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.block;
+package dev.lambdaurora.aurorasdeco.block.big_flower_pot;
 
 import dev.lambdaurora.aurorasdeco.block.state.PlantProperty;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
