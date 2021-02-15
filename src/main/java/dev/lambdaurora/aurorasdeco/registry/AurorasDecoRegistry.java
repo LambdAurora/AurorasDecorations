@@ -17,8 +17,8 @@
 
 package dev.lambdaurora.aurorasdeco.registry;
 
-import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
+import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;

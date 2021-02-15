@@ -28,7 +28,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -39,8 +38,6 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.EmptyBlockView;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
-import org.lwjgl.system.CallbackI;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
