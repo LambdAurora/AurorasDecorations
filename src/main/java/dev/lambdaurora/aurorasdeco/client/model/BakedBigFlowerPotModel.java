@@ -18,12 +18,10 @@
 package dev.lambdaurora.aurorasdeco.client.model;
 
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
-import dev.lambdaurora.aurorasdeco.block.state.PlantProperty;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TallPlantBlock;
 import net.minecraft.block.enums.DoubleBlockHalf;
@@ -53,16 +51,19 @@ public class BakedBigFlowerPotModel extends ForwardingBakedModel {
     }
 
     @Override
-    public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier,
+                               RenderContext context) {
         super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 
-        PlantProperty.Value value = state.get(BigFlowerPotBlock.PLANT);
-        Block block = value.getPlant();
-        if (block != null) {
+        if (!(state.getBlock() instanceof BigFlowerPotBlock))
+            return;
+
+        BigFlowerPotBlock potBlock = (BigFlowerPotBlock) state.getBlock();
+        BlockState plantState = potBlock.getPlantState();
+        if (!plantState.isAir()) {
             float ratio = .65f;
             float offset = (1.f - ratio) / 2.f;
 
-            BlockState plantState = block.getDefaultState();
             for (Property<?> property : plantState.getProperties()) {
                 if (property instanceof IntProperty && property.getName().equals("age")) {
                     IntProperty ageProperty = ((IntProperty) property);
@@ -91,8 +92,10 @@ public class BakedBigFlowerPotModel extends ForwardingBakedModel {
                 context.popTransform();
             }
 
-            if (block instanceof TallPlantBlock) {
-                final BakedModel upModel = client.getBakedModelManager().getBlockModels().getModel(plantState.with(TallPlantBlock.HALF, DoubleBlockHalf.UPPER));
+            if (plantState.getBlock() instanceof TallPlantBlock) {
+                final BakedModel upModel = client.getBakedModelManager().getBlockModels().getModel(
+                        plantState.with(TallPlantBlock.HALF, DoubleBlockHalf.UPPER)
+                );
                 if (upModel instanceof FabricBakedModel) {
                     context.pushTransform(quad -> {
                         Vec3f vec = null;

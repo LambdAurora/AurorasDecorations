@@ -1,75 +1,7 @@
 {
-  "multipart": [
-    {
-      "apply": {
-        "model": "aurorasdeco:block/big_flower_pot"
-      }
-    },
-    {
-      "when": {
-        "plant": "azalea|flowering_azalea"
-      },
-      "apply": {
-        "model": "aurorasdeco:block/big_mossy_flower_pot",
-        "rescale": 1.00001
-      }
-    },
-    {
-      "when": {
-        "plant": "bamboo"
-      },
-      "apply": {
-        "model": "aurorasdeco:block/big_potted_bamboo"
-      }
-    },
-    {
-      "when": {
-        "plant": "nether_wart"
-      },
-      "apply": {
-        "model": "aurorasdeco:block/big_soul_sand_flower_pot",
-        "rescale": 1.00001
-      }
-    },
-    {
-      "when": {
-        "plant": "cactus"
-      },
-      "apply": {
-        "model": "aurorasdeco:block/big_sand_flower_pot",
-        "rescale": 1.00001
-      }
-    },
-    {
-      "when": {
-        "plant": "small_dripleaf"
-      },
-      "apply": {
-        "model": "aurorasdeco:block/big_clay_flower_pot",
-        "rescale": 1.00001
-      }
-    },
-    {
-      "when": {
-        "plant": "aurorasdeco_tater"
-      },
-      "apply": [
-        {
-          "model": "aurorasdeco:block/big_potted_tater"
-        },
-        {
-          "model": "aurorasdeco:block/big_potted_tater",
-          "y": 90
-        },
-        {
-          "model": "aurorasdeco:block/big_potted_tater",
-          "y": 180
-        },
-        {
-          "model": "aurorasdeco:block/big_potted_tater",
-          "y": 270
-        }
-      ]
+  "variants": {
+    "": {
+      "model": "aurorasdeco:block/big_flower_pot/big_flower_pot"
     }
-  ]
+  }
 }

@@ -1,6 +1,0 @@
-{
-  "parent": "aurorasdeco:block/big_flower_pot",
-  "textures": {
-    "soil": "block/sand"
-  }
-}

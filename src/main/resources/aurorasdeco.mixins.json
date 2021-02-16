@@ -7,7 +7,8 @@
     "LanternMixin"
   ],
   "client": [
-    "client.ModelLoaderMixin"
+    "client.ModelLoaderMixin",
+    "client.ReloadableResourceManagerImplMixin"
   ],
   "injectors": {
     "defaultRequire": 1

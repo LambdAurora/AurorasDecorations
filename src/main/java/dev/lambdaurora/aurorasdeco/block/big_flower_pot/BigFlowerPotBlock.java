@@ -17,7 +17,6 @@
 
 package dev.lambdaurora.aurorasdeco.block.big_flower_pot;
 
-import dev.lambdaurora.aurorasdeco.block.state.PlantProperty;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
@@ -27,9 +26,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.stat.Stats;
-import net.minecraft.state.StateManager;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -54,63 +53,69 @@ import java.util.List;
  * @since 1.0.0
  */
 public class BigFlowerPotBlock extends Block {
-    public static final PlantProperty PLANT = new PlantProperty("plant");
     public static final VoxelShape BIG_FLOWER_POT_SHAPE = createCuboidShape(
             1.f, 0.f, 1.f,
             15.f, 14.f, 15.f
     );
-    public static final VoxelShape AZALEA_SHAPE = createCuboidShape(
-            2.8f, 14.f, 2.8f,
-            13.2f, 23.2f, 13.2f
-    );
-    public static final VoxelShape CACTUS_SHAPE = createCuboidShape(
-            3.f, 14.f, 3.f,
-            13.f, 23.1f, 13.f
-    );
-    public static final VoxelShape POTTED_AZALEA_SHAPE = VoxelShapes.union(BIG_FLOWER_POT_SHAPE, AZALEA_SHAPE);
-    public static final VoxelShape POTTED_CACTUS_SHAPE = VoxelShapes.union(BIG_FLOWER_POT_SHAPE, CACTUS_SHAPE);
 
-    public BigFlowerPotBlock() {
+    protected final PottedPlantType type;
+
+    public BigFlowerPotBlock(PottedPlantType type) {
         super(FabricBlockSettings.of(Material.DECORATION).strength(.1f).nonOpaque());
-        this.setDefaultState(this.getStateManager().getDefaultState().with(PLANT, PlantProperty.NONE));
+
+        this.type = type;
     }
 
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-        builder.add(PLANT);
+    public PottedPlantType getPlantType() {
+        return this.type;
+    }
+
+    public Block getPlant() {
+        return this.getPlantType().getPlant();
+    }
+
+    public BlockState getPlantState() {
+        return this.getPlant().getDefaultState();
+    }
+
+    public boolean isEmpty() {
+        return this.getPlantType().isEmpty();
+    }
+
+    public boolean hasDynamicModel() {
+        return !this.isEmpty();
     }
 
     /* Shapes */
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        PlantProperty.Value value = state.get(PLANT);
-        if (value.getPlant() instanceof AzaleaBlock) {
-            return POTTED_AZALEA_SHAPE;
-        } else if (value.getPlant() instanceof CactusBlock) {
-            return POTTED_CACTUS_SHAPE;
-        }
-
         return BIG_FLOWER_POT_SHAPE;
     }
 
     /* Interaction */
 
     @Override
+    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+        if (this.getPlantType().getItem() == Items.AIR)
+            return super.getPickStack(world, pos, state);
+
+        return new ItemStack(this.getPlantType().getItem());
+    }
+
+    @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack handStack = player.getStackInHand(hand);
-        PlantProperty.Value value = state.get(PLANT);
-        PlantProperty.Value toPlace = PlantProperty.fromItem(handStack.getItem());
-        boolean empty = value.isEmpty();
-        boolean toPlaceEmpty = toPlace == null || toPlace.isEmpty();
+        BigFlowerPotBlock toPlace = PottedPlantType.getFlowerPotFromItem(handStack.getItem());
+        boolean empty = this.isEmpty();
+        boolean toPlaceEmpty = toPlace.isEmpty();
         if (empty != toPlaceEmpty) {
             BlockPos up = pos.up();
             if (empty) {
                 if (!world.getBlockState(up).isAir())
                     return ActionResult.PASS;
 
-                world.setBlockState(pos, this.getDefaultState().with(PLANT, toPlace), 3);
+                world.setBlockState(pos, toPlace.getDefaultState(), 3);
                 player.incrementStat(Stats.POT_FLOWER);
                 if (!player.getAbilities().creativeMode) {
                     handStack.decrement(1);
@@ -119,7 +124,7 @@ public class BigFlowerPotBlock extends Block {
                 world.setBlockState(up, AurorasDecoRegistry.PLANT_AIR_BLOCK.getDefaultState());
                 world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
             } else {
-                this.removePlant(state, world, pos, player, hand, true);
+                this.removePlant(world, pos, player, hand, true);
             }
 
             return ActionResult.success(world.isClient());
@@ -128,9 +133,8 @@ public class BigFlowerPotBlock extends Block {
         }
     }
 
-    private void removePlant(BlockState state, World world, BlockPos pos, @Nullable PlayerEntity player, @Nullable Hand hand, boolean removeUp) {
-        PlantProperty.Value value = state.get(PLANT);
-        ItemStack droppedStack = new ItemStack(value.getPlant());
+    private void removePlant(World world, BlockPos pos, @Nullable PlayerEntity player, @Nullable Hand hand, boolean removeUp) {
+        ItemStack droppedStack = new ItemStack(this.getPlantType().getItem());
 
         if (!droppedStack.isEmpty()) {
             if (player != null) {
@@ -149,7 +153,7 @@ public class BigFlowerPotBlock extends Block {
             }
         }
 
-        world.setBlockState(pos, this.getDefaultState(), 3);
+        world.setBlockState(pos, AurorasDecoRegistry.BIG_FLOWER_POT_BLOCK.getDefaultState(), 3);
 
         if (removeUp) {
             BlockPos up = pos.up();
@@ -165,10 +169,12 @@ public class BigFlowerPotBlock extends Block {
 
     @Override
     public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
-        PlantProperty.Value value = state.get(PLANT);
-        Item item = value.getItem();
+        if (this.isEmpty())
+            return super.getDroppedStacks(state, builder);
 
-        List<ItemStack> stacks = super.getDroppedStacks(state, builder);
+        Item item = this.getPlantType().getItem();
+
+        List<ItemStack> stacks = AurorasDecoRegistry.BIG_FLOWER_POT_BLOCK.getDroppedStacks(state, builder);
         if (item != null && !stacks.isEmpty()) {
             stacks.add(new ItemStack(item));
         }
@@ -185,6 +191,8 @@ public class BigFlowerPotBlock extends Block {
         public BlockRenderType getRenderType(BlockState state) {
             return BlockRenderType.INVISIBLE;
         }
+
+        /* Shapes */
 
         @Override
         public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
@@ -205,8 +213,9 @@ public class BigFlowerPotBlock extends Block {
             BlockPos downPos = pos.down();
             BlockState downState = world.getBlockState(downPos);
             if (downState.getBlock() instanceof BigFlowerPotBlock) {
-                if (!downState.get(PLANT).isEmpty()) {
-                    ((BigFlowerPotBlock) downState.getBlock()).removePlant(downState, world, downPos, null, null, false);
+                BigFlowerPotBlock block = (BigFlowerPotBlock) downState.getBlock();
+                if (!block.isEmpty()) {
+                    block.removePlant(world, downPos, null, null, false);
                 }
             }
         }
@@ -225,7 +234,7 @@ public class BigFlowerPotBlock extends Block {
                                                     BlockPos pos, BlockPos posFrom) {
             BlockState downState = world.getBlockState(pos.down());
             if (downState.getBlock() instanceof BigFlowerPotBlock) {
-                if (!downState.get(PLANT).isEmpty())
+                if (!((BigFlowerPotBlock) downState.getBlock()).isEmpty())
                     return state;
             }
 

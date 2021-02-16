@@ -18,6 +18,8 @@
 package dev.lambdaurora.aurorasdeco.mixin.client;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
+import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.client.model.UnbakedBigFlowerPotModel;
 import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.UnbakedModel;
@@ -46,11 +48,12 @@ public abstract class ModelLoaderMixin {
         if (id instanceof ModelIdentifier && !(unbakedModel instanceof UnbakedBigFlowerPotModel)) {
             ModelIdentifier modelId = (ModelIdentifier) id;
             if (!modelId.getVariant().equals("inventory")) {
-                if (AurorasDeco.BIG_FLOWER_POT_ID.equals(modelId)
-                        && !modelId.getVariant().equals("plant=none")
-                        && !modelId.getVariant().equals("plant=bamboo")) {
-                    this.putModel(id, new UnbakedBigFlowerPotModel(unbakedModel));
-                    ci.cancel();
+                if (modelId.getNamespace().equals(AurorasDeco.NAMESPACE) && modelId.getPath().startsWith("big_flower_pot/")) {
+                    BigFlowerPotBlock potBlock = PottedPlantType.fromId(modelId.getPath().substring("big_flower_pot/".length())).getPot();
+                    if (potBlock.hasDynamicModel()) {
+                        this.putModel(id, new UnbakedBigFlowerPotModel(unbakedModel));
+                        ci.cancel();
+                    }
                 }
             }
         }

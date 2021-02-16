@@ -17,10 +17,13 @@
 
 package dev.lambdaurora.aurorasdeco;
 
-import dev.lambdaurora.aurorasdeco.block.state.PlantProperty;
+import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
+import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigPottedCactusBlock;
+import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -33,15 +36,23 @@ import net.minecraft.util.registry.Registry;
  */
 public class AurorasDeco implements ModInitializer {
     public static final String NAMESPACE = "aurorasdeco";
-    public static final Identifier BIG_FLOWER_POT_ID = id("big_flower_pot");
 
     @Override
     public void onInitialize() {
         AurorasDecoRegistry.init();
 
         RegistryEntryAddedCallback.event(Registry.BLOCK).register((rawId, id, object) -> {
-            if (PlantProperty.isValidBlock(object)) {
-                PlantProperty.registerValue(object);
+            if (PottedPlantType.isValidPlant(object)) {
+                BigFlowerPotBlock potBlock = PottedPlantType.registerFromBlock(object);
+                if (potBlock != null)
+                    Registry.register(Registry.BLOCK, id("big_flower_pot/" + potBlock.getPlantType().getId()), potBlock);
+            }
+        });
+        RegistryEntryAddedCallback.event(Registry.ITEM).register((rawId, id, object) -> {
+            if (id.toString().equals("pockettools:pocket_cactus")) {
+                Registry.register(Registry.BLOCK, id("big_flower_pot/pocket_cactus"),
+                        PottedPlantType.register("pocket_cactus", Blocks.POTTED_CACTUS, object,
+                                type -> new BigPottedCactusBlock(type, BigPottedCactusBlock.POCKET_CACTUS_SHAPE)));
             }
         });
     }

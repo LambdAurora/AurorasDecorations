@@ -1,0 +1,28 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "aurorasdeco:block/big_flower_pot/big_flower_pot"
+      }
+    },
+    {
+      "apply": [
+        {
+          "model": "aurorasdeco:block/big_flower_pot/potted/bamboo"
+        },
+        {
+          "model": "aurorasdeco:block/big_flower_pot/potted/bamboo",
+          "y": 90
+        },
+        {
+          "model": "aurorasdeco:block/big_flower_pot/potted/bamboo",
+          "y": 180
+        },
+        {
+          "model": "aurorasdeco:block/big_flower_pot/potted/bamboo",
+          "y": 270
+        }
+      ]
+    }
+  ]
+}

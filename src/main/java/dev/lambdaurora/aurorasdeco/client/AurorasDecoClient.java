@@ -19,15 +19,9 @@ package dev.lambdaurora.aurorasdeco.client;
 
 import dev.lambdaurora.aurorasdeco.client.renderer.LanternBlockEntityRenderer;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.minecraft.client.color.world.BiomeColors;
-import net.minecraft.client.color.world.GrassColors;
-import net.minecraft.client.render.RenderLayer;
-
-import static dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry.BIG_FLOWER_POT_BLOCK;
 
 /**
  * Represents the Aurora's Decorations client mod.
@@ -37,13 +31,10 @@ import static dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry.BIG_FLOWE
  * @since 1.0.0
  */
 public class AurorasDecoClient implements ClientModInitializer {
+    public static final AurorasDecoPack RESOURCE_PACK = new AurorasDecoPack();
+
     @Override
     public void onInitializeClient() {
-        BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), BIG_FLOWER_POT_BLOCK);
-        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) ->
-                        world != null && pos != null ? BiomeColors.getGrassColor(world, pos) : GrassColors.getColor(0.5D, 1.0D),
-                BIG_FLOWER_POT_BLOCK);
-
         BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE, LanternBlockEntityRenderer::new);
     }
 }
