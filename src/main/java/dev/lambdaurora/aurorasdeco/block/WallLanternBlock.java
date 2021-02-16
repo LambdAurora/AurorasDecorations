@@ -137,7 +137,7 @@ public class WallLanternBlock extends BlockWithEntity {
     }
 
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        return this.swing(world, state, hit, player, true) ? ActionResult.success(world.isClient) : ActionResult.PASS;
+        return this.swing(world, state, hit, player, true) ? ActionResult.success(world.isClient()) : ActionResult.PASS;
     }
 
     public boolean swing(World world, BlockState state, BlockHitResult hitResult, @Nullable PlayerEntity player, boolean hitResultIndependent) {

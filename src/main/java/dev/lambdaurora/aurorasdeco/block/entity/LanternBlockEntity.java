@@ -135,10 +135,7 @@ public class LanternBlockEntity extends BlockEntity implements BlockEntityClient
         this.updateCollisionBoxes();
         this.updateShape();
 
-        int luminance = this.getLanternState().getLuminance();
-        if (this.getCachedState().get(WallLanternBlock.LIGHT) != luminance) {
-            this.getWorld().setBlockState(pos, this.getCachedState().with(WallLanternBlock.LIGHT, luminance));
-        }
+        this.replaceState(this.getCachedState());
     }
 
     private void updateShape() {
@@ -231,7 +228,7 @@ public class LanternBlockEntity extends BlockEntity implements BlockEntityClient
         this.collisions.put(entity, lanternCollisionAxis);
 
         if (!this.getCachedState().get(WallLanternBlock.COLLISION)) {
-            this.getWorld().setBlockState(this.getPos(), this.getCachedState().with(WallLanternBlock.COLLISION, true));
+            this.replaceState(this.getCachedState().with(WallLanternBlock.COLLISION, true));
         }
         this.activate(direction);
     }
@@ -343,6 +340,11 @@ public class LanternBlockEntity extends BlockEntity implements BlockEntityClient
         }
 
         tick(blockEntity);
+    }
+
+    private void replaceState(BlockState newState) {
+        int luminance = this.getLanternState().getLuminance();
+        this.getWorld().setBlockState(this.getPos(), newState.with(WallLanternBlock.LIGHT, luminance));
     }
 
     @Override
