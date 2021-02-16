@@ -1,0 +1,6 @@
+{
+  "parent": "aurorasdeco:block/big_flower_pot/big_flower_pot",
+  "textures": {
+    "soil": "block/mycelium_top"
+  }
+}

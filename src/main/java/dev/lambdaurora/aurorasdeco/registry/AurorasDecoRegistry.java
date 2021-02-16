@@ -57,7 +57,6 @@ public final class AurorasDecoRegistry {
             "plant_air",
             new BigFlowerPotBlock.PlantAir(
                     FabricBlockSettings.of(Material.AIR)
-                            .noCollision()
                             .nonOpaque()
                             .strength(-1.f, 3600000.f)
                             .dropsNothing()
@@ -76,6 +75,9 @@ public final class AurorasDecoRegistry {
     public static final BigPottedAzaleaBlock BIG_POTTED_FLOWERING_AZALEA_BLOCK = registerBigPotted("flowering_azalea",
             Blocks.FLOWERING_AZALEA, Items.FLOWERING_AZALEA,
             BigPottedAzaleaBlock::new);
+    public static final BigPottedSweetBerryBushBlock BIG_POTTED_SWEET_BERRY_BUSH_BLOCK = registerBigPotted("sweet_berry_bush",
+            Blocks.SWEET_BERRY_BUSH, Items.SWEET_BERRIES,
+            BigPottedSweetBerryBushBlock::new);
     public static final BigStaticFlowerPot BIG_POTTED_TATER_BLOCK = registerBigPotted("tater", Blocks.AIR, Items.POTATO,
             type -> new BigStaticFlowerPot(type, Block.createCuboidShape(
                     4.f, 14.f, 4.f,

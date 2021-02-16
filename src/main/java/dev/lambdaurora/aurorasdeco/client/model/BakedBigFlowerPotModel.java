@@ -18,6 +18,7 @@
 package dev.lambdaurora.aurorasdeco.client.model;
 
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
+import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigPottedSweetBerryBushBlock;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
@@ -59,21 +60,22 @@ public class BakedBigFlowerPotModel extends ForwardingBakedModel {
             return;
 
         BigFlowerPotBlock potBlock = (BigFlowerPotBlock) state.getBlock();
-        BlockState plantState = potBlock.getPlantState();
+        BlockState plantState = potBlock.getPlantState(state);
         if (!plantState.isAir()) {
             float ratio = .65f;
             float offset = (1.f - ratio) / 2.f;
 
-            for (Property<?> property : plantState.getProperties()) {
-                if (property instanceof IntProperty && property.getName().equals("age")) {
-                    IntProperty ageProperty = ((IntProperty) property);
-                    Optional<Integer> max = ageProperty.getValues().stream().max(Integer::compareTo);
-                    if (max.isPresent()) {
-                        plantState = plantState.with(ageProperty, max.get());
+            if (!(potBlock instanceof BigPottedSweetBerryBushBlock))
+                for (Property<?> property : plantState.getProperties()) {
+                    if (property instanceof IntProperty && property.getName().equals("age")) {
+                        IntProperty ageProperty = ((IntProperty) property);
+                        Optional<Integer> max = ageProperty.getValues().stream().max(Integer::compareTo);
+                        if (max.isPresent()) {
+                            plantState = plantState.with(ageProperty, max.get());
+                        }
+                        break;
                     }
-                    break;
                 }
-            }
 
             BakedModel model = client.getBakedModelManager().getBlockModels().getModel(plantState);
             if (model instanceof FabricBakedModel) {

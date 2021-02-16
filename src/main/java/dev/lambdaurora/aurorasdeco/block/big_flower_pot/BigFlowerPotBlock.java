@@ -21,6 +21,7 @@ import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.piston.PistonBehavior;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -57,6 +58,12 @@ public class BigFlowerPotBlock extends Block {
             1.f, 0.f, 1.f,
             15.f, 14.f, 15.f
     );
+    public static final VoxelShape PLANT_FULL_CUBE = createCuboidShape(
+            2.8f, 14.f, 2.8f,
+            13.2f, 23.1f, 13.2f
+    );
+
+    public static final VoxelShape BIG_FLOWER_POT_POTTED_FULL_CUBE_SHAPE = VoxelShapes.union(BIG_FLOWER_POT_SHAPE, PLANT_FULL_CUBE);
 
     protected final PottedPlantType type;
 
@@ -74,7 +81,7 @@ public class BigFlowerPotBlock extends Block {
         return this.getPlantType().getPlant();
     }
 
-    public BlockState getPlantState() {
+    public BlockState getPlantState(BlockState potState) {
         return this.getPlant().getDefaultState();
     }
 
@@ -217,6 +224,15 @@ public class BigFlowerPotBlock extends Block {
                 if (!block.isEmpty()) {
                     block.removePlant(world, downPos, null, null, false);
                 }
+            }
+        }
+
+        @Override
+        public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+            BlockPos downPos = pos.down();
+            BlockState downState = world.getBlockState(downPos);
+            if (downState.getBlock() instanceof BigFlowerPotBlock) {
+                downState.onEntityCollision(world, downPos, entity);
             }
         }
 

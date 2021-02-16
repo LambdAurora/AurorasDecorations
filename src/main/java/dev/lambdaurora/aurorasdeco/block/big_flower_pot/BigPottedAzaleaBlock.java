@@ -24,6 +24,13 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
+/**
+ * Represents a potted azalea.
+ *
+ * @author LambdAurora
+ * @version 1.0.0
+ * @since 1.0.0
+ */
 public final class BigPottedAzaleaBlock extends BigFlowerPotBlock {
     public static final VoxelShape AZALEA_SHAPE = createCuboidShape(
             2.8f, 14.f, 2.8f,

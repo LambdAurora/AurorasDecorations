@@ -30,7 +30,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 /**
- * Represents a potted cactus in a big flower pot.
+ * Represents a potted cactus.
  * <p><i>Spiky...</i></p>
  *
  * @author LambdAurora
