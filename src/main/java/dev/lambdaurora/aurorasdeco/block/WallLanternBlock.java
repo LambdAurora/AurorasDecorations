@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.block;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -92,6 +93,9 @@ public class WallLanternBlock extends BlockWithEntity {
                 .with(COLLISION, false)
                 .with(WATERLOGGED, false)
         );
+
+        LanternBlockEntity.streamLanternItems().filter(item -> item instanceof BlockItemAccessor)
+                .forEach(item -> ((BlockItemAccessor) item).aurorasdeco$setWallBlock(this));
     }
 
     @Override

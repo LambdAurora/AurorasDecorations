@@ -1,0 +1,87 @@
+{
+  "credit": "Made by LambdAurora",
+  "parent": "block/block",
+  "textures": {
+    "attachment": "aurorasdeco:block/wall_candle_attachment",
+    "particle": "#candle"
+  },
+  "elements": [
+    {
+      "name": "body",
+      "from": [ 7, 6, 3 ],
+      "to": [ 9, 12, 5 ],
+      "faces": {
+        "north": {"uv": [ 0, 8, 2, 14 ], "texture": "#candle"},
+        "east":  {"uv": [ 0, 8, 2, 14 ], "texture": "#candle"},
+        "south": {"uv": [ 0, 8, 2, 14 ], "texture": "#candle"},
+        "west":  {"uv": [ 0, 8, 2, 14 ], "texture": "#candle"},
+        "up":    {"uv": [ 0, 6, 2, 8 ], "texture": "#candle"}
+      }
+    },
+    {
+      "from": [ 7.5, 12, 4 ],
+      "to": [ 8.5, 13, 4 ],
+      "rotation": {"angle": 45, "axis": "y", "origin": [ 8, 12, 4 ]},
+      "faces": {
+        "north": {"uv": [ 0, 5, 1, 6 ], "texture": "#candle"},
+        "south": {"uv": [ 0, 5, 1, 6 ], "texture": "#candle"}
+      }
+    },
+    {
+      "from": [ 7.5, 12, 4 ],
+      "to": [ 8.5, 13, 4 ],
+      "rotation": {"angle": -45, "axis": "y", "origin": [ 8, 12, 4 ]},
+      "faces": {
+        "north": {"uv": [ 0, 5, 1, 6 ], "texture": "#candle"},
+        "south": {"uv": [ 0, 5, 1, 6 ], "texture": "#candle"}
+      }
+    },
+    {
+      "from": [ 6, 2, 0 ],
+      "to": [ 10, 6, 1 ],
+      "faces": {
+        "north": {"uv": [ 1, 1, 5, 5 ], "texture": "#attachment", "cullface": "north"},
+        "east":  {"uv": [ 5, 1, 6, 5 ], "texture": "#attachment"},
+        "south": {"uv": [ 1, 1, 5, 5 ], "texture": "#attachment"},
+        "west":  {"uv": [ 0, 1, 1, 5 ], "texture": "#attachment"},
+        "up":    {"uv": [ 1, 0, 5, 1 ], "texture": "#attachment"},
+        "down":  {"uv": [ 1, 5, 5, 6 ], "texture": "#attachment"}
+      }
+    },
+    {
+      "from": [ 7, 3, 1 ],
+      "to": [ 9, 5, 5 ],
+      "faces": {
+        "east":  {"uv": [ 2, 10, 6, 12 ], "texture": "#attachment"},
+        "south": {"uv": [ 9, 0, 11, 2 ], "texture": "#attachment"},
+        "west":  {"uv": [ 2, 14, 6, 16 ], "texture": "#attachment"},
+        "up":    {"uv": [ 11, 2, 13, 6 ], "texture": "#attachment"},
+        "down":  {"uv": [ 9, 2, 11, 6 ], "texture": "#attachment"}
+      }
+    },
+    {
+      "from": [ 6, 5, 2 ],
+      "to": [ 10, 6, 6 ],
+      "faces": {
+        "north": {"uv": [ 1, 0, 5, 1 ], "texture": "#attachment"},
+        "east":  {"uv": [ 1, 0, 5, 1 ], "texture": "#attachment"},
+        "south": {"uv": [ 1, 5, 5, 6 ], "texture": "#attachment"},
+        "west":  {"uv": [ 1, 4, 5, 5 ], "texture": "#attachment"},
+        "up":    {"uv": [ 1, 1, 5, 5 ], "texture": "#attachment"},
+        "down":  {"uv": [ 1, 1, 5, 5 ], "texture": "#attachment"}
+      }
+    }
+  ],
+  "groups": [
+    {
+      "name": "candle",
+      "origin": [ 8, 8, 8 ],
+      "children": [ 0, 1, 2 ]
+    },
+    {
+      "name": "attachment",
+      "origin": [ 8, 8, 8 ],
+      "children": [ 3, 4, 5 ]
+    }
+  ]
+}

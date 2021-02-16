@@ -36,6 +36,7 @@ import net.minecraft.util.registry.Registry;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 import static dev.lambdaurora.aurorasdeco.AurorasDeco.id;
@@ -114,7 +115,7 @@ public final class AurorasDecoRegistry {
         return Registry.register(Registry.ITEM, id(name), item);
     }
 
-    public static void init() {
+    public static void init(Map<Identifier, Block> delayed) {
         List<BigFlowerPotBlock> plants = new ArrayList<>();
         Registry.BLOCK.forEach(block -> {
             if (PottedPlantType.isValidPlant(block)) {
@@ -129,5 +130,7 @@ public final class AurorasDecoRegistry {
         Registry.ITEM.getOrEmpty(new Identifier("pockettools", "pocket_cactus"))
                 .ifPresent(pocketCactus -> registerBigPotted("pocket_cactus", Blocks.POTTED_CACTUS, pocketCactus,
                         type -> new BigPottedCactusBlock(type, BigPottedCactusBlock.POCKET_CACTUS_SHAPE)));
+
+        delayed.forEach((id, block) -> Registry.register(Registry.BLOCK, id, block));
     }
 }

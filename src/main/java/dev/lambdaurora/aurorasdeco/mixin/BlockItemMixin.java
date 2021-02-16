@@ -17,17 +17,18 @@
 
 package dev.lambdaurora.aurorasdeco.mixin;
 
+import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
+import dev.lambdaurora.aurorasdeco.block.WallCandleBlock;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
-import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.LanternBlock;
-import net.minecraft.block.ShapeContext;
+import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.WorldView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -46,21 +47,35 @@ import java.util.Map;
  * @since 1.0.0
  */
 @Mixin(BlockItem.class)
-public abstract class BlockItemMixin {
+public abstract class BlockItemMixin implements BlockItemAccessor {
     @Shadow
     public abstract Block getBlock();
+
+    private Block aurorasdeco$wallBlock = null;
+
+    @Override
+    public void aurorasdeco$setWallBlock(Block block) {
+        this.aurorasdeco$wallBlock = block;
+    }
 
     @Inject(method = "appendBlocks", at = @At("RETURN"))
     private void onAppendBlocks(Map<Block, Item> map, Item item, CallbackInfo ci) {
         if (this.getBlock() instanceof LanternBlock) {
             LanternBlockEntity.registerLantern(item, this.getBlock());
+        } else if (this.getBlock() instanceof CandleBlock) {
+            Identifier candleId = Registry.BLOCK.getId(this.getBlock());
+            if (candleId.getNamespace().equals("minecraft")) {
+                AurorasDeco.DELAYED_REGISTER_BLOCK.put(AurorasDeco.id("wall_" + candleId.getPath()),
+                        this.aurorasdeco$wallBlock = new WallCandleBlock((CandleBlock) this.getBlock()));
+                map.put(this.aurorasdeco$wallBlock, item);
+            }
         }
     }
 
     @Inject(method = "getPlacementState", at = @At("HEAD"), cancellable = true)
     private void onGetPlacementState(ItemPlacementContext context, CallbackInfoReturnable<BlockState> cir) {
-        if (this.getBlock() instanceof LanternBlock) {
-            BlockState wallState = AurorasDecoRegistry.WALL_LANTERN_BLOCK.getPlacementState(context);
+        if (this.aurorasdeco$wallBlock != null) {
+            BlockState wallState = this.aurorasdeco$wallBlock.getPlacementState(context);
             BlockState resultState = null;
             WorldView world = context.getWorld();
             BlockPos blockPos = context.getBlockPos();

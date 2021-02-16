@@ -21,11 +21,16 @@ import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigPottedCactusBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.jetbrains.annotations.ApiStatus;
+
+import java.util.Map;
 
 /**
  * Represents the Aurora's Decorations mod.
@@ -37,9 +42,12 @@ import net.minecraft.util.registry.Registry;
 public class AurorasDeco implements ModInitializer {
     public static final String NAMESPACE = "aurorasdeco";
 
+    @ApiStatus.Internal
+    public static final Map<Identifier, Block> DELAYED_REGISTER_BLOCK = new Object2ObjectOpenHashMap<>();
+
     @Override
     public void onInitialize() {
-        AurorasDecoRegistry.init();
+        AurorasDecoRegistry.init(DELAYED_REGISTER_BLOCK);
 
         RegistryEntryAddedCallback.event(Registry.BLOCK).register((rawId, id, object) -> {
             if (PottedPlantType.isValidPlant(object)) {

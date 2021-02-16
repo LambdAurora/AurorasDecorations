@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Represents a Lantern Block Entity for the wall lanterns.
@@ -77,6 +78,10 @@ public class LanternBlockEntity extends BlockEntity implements BlockEntityClient
 
     public static Block getLanternFromItem(Item item) {
         return ITEM_BLOCK_MAP.getOrDefault(item, DEFAULT_LANTERN);
+    }
+
+    public static Stream<Item> streamLanternItems() {
+        return ITEM_BLOCK_MAP.keySet().stream();
     }
 
     public static int getLuminanceFromItem(Item item) {

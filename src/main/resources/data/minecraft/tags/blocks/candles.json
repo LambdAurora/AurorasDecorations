@@ -1,0 +1,22 @@
+{
+  "replace": false,
+  "values": [
+    "aurorasdeco:wall_candle",
+    "aurorasdeco:wall_white_candle",
+    "aurorasdeco:wall_orange_candle",
+    "aurorasdeco:wall_magenta_candle",
+    "aurorasdeco:wall_light_blue_candle",
+    "aurorasdeco:wall_yellow_candle",
+    "aurorasdeco:wall_lime_candle",
+    "aurorasdeco:wall_pink_candle",
+    "aurorasdeco:wall_gray_candle",
+    "aurorasdeco:wall_light_gray_candle",
+    "aurorasdeco:wall_cyan_candle",
+    "aurorasdeco:wall_purple_candle",
+    "aurorasdeco:wall_blue_candle",
+    "aurorasdeco:wall_brown_candle",
+    "aurorasdeco:wall_green_candle",
+    "aurorasdeco:wall_red_candle",
+    "aurorasdeco:wall_black_candle"
+  ]
+}
