@@ -344,7 +344,8 @@ public class LanternBlockEntity extends BlockEntity implements BlockEntityClient
 
     private void replaceState(BlockState newState) {
         int luminance = this.getLanternState().getLuminance();
-        this.getWorld().setBlockState(this.getPos(), newState.with(WallLanternBlock.LIGHT, luminance));
+        if (this.getWorld() != null)
+            this.getWorld().setBlockState(this.getPos(), newState.with(WallLanternBlock.LIGHT, luminance));
     }
 
     @Override
