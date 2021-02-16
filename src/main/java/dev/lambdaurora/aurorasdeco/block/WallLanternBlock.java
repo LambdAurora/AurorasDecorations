@@ -261,7 +261,8 @@ public class WallLanternBlock extends BlockWithEntity {
         FluidState fluidState = world.getFluidState(pos);
         Direction[] directions = ctx.getPlacementDirections();
 
-        state = state.with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+        state = state.with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER)
+                .with(LIGHT, LanternBlockEntity.getLuminanceFromItem(ctx.getStack().getItem()));
 
         for (Direction direction : directions) {
             if (direction.getAxis().isHorizontal()) {
@@ -297,6 +298,11 @@ public class WallLanternBlock extends BlockWithEntity {
                                                 BlockPos pos, BlockPos posFrom) {
         if (state.get(WATERLOGGED)) {
             world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
+
+        LanternBlockEntity blockEntity = AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
+        if (blockEntity != null) {
+            state = state.with(LIGHT, blockEntity.getLanternState().getLuminance());
         }
 
         return direction.getOpposite() == state.get(FACING) && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : state;

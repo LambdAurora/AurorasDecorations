@@ -79,6 +79,10 @@ public class LanternBlockEntity extends BlockEntity implements BlockEntityClient
         return ITEM_BLOCK_MAP.getOrDefault(item, DEFAULT_LANTERN);
     }
 
+    public static int getLuminanceFromItem(Item item) {
+        return getLanternFromItem(item).getDefaultState().getLuminance();
+    }
+
     public static void registerLantern(Item item, Block block) {
         ITEM_BLOCK_MAP.put(item, block);
 
@@ -97,7 +101,7 @@ public class LanternBlockEntity extends BlockEntity implements BlockEntityClient
     @Override
     public void setWorld(World world) {
         super.setWorld(world);
-        this.updateLantern();
+        this.updateCollisionBoxes();
     }
 
     /**
@@ -134,8 +138,6 @@ public class LanternBlockEntity extends BlockEntity implements BlockEntityClient
     private void updateLantern() {
         this.updateCollisionBoxes();
         this.updateShape();
-
-        this.replaceState(this.getCachedState());
     }
 
     private void updateShape() {
@@ -234,6 +236,9 @@ public class LanternBlockEntity extends BlockEntity implements BlockEntityClient
     }
 
     private void updateCollisionBoxes() {
+        if (this.getWorld() == null)
+            return;
+
         BlockPos pos = this.getPos();
 
         BlockState lanternState = this.getLanternState();
@@ -316,9 +321,12 @@ public class LanternBlockEntity extends BlockEntity implements BlockEntityClient
     }
 
     public static void serverTick(World world, BlockPos pos, BlockState state, LanternBlockEntity blockEntity) {
+        boolean canTick = true;
+
+        BlockState originalState = state;
+
         if (!blockEntity.collisions.isEmpty()) {
             List<Entity> toRemove = new ArrayList<>();
-            boolean canTick = true;
             for (Map.Entry<Entity, Direction.Axis> entry : blockEntity.collisions.entrySet()) {
                 if (entry.getKey().isRemoved()) {
                     toRemove.add(entry.getKey());
@@ -332,20 +340,22 @@ public class LanternBlockEntity extends BlockEntity implements BlockEntityClient
             }
 
             toRemove.forEach(blockEntity.collisions::remove);
-
-            if (!canTick)
-                return;
         } else if (state.get(WallLanternBlock.COLLISION)) {
-            world.setBlockState(pos, state.with(WallLanternBlock.COLLISION, false));
+            state = state.with(WallLanternBlock.COLLISION, false);
         }
 
-        tick(blockEntity);
+        if (state.get(WallLanternBlock.LIGHT) != blockEntity.getLanternState().getLuminance())
+            state = state.with(WallLanternBlock.LIGHT, blockEntity.getLanternState().getLuminance());
+
+        if (originalState != state)
+            world.setBlockState(pos, state);
+
+        if (canTick)
+            tick(blockEntity);
     }
 
     private void replaceState(BlockState newState) {
-        int luminance = this.getLanternState().getLuminance();
-        if (this.getWorld() != null)
-            this.getWorld().setBlockState(this.getPos(), newState.with(WallLanternBlock.LIGHT, luminance));
+        this.getWorld().setBlockState(this.getPos(), newState.with(WallLanternBlock.LIGHT, this.getLanternState().getLuminance()));
     }
 
     @Override
