@@ -50,6 +50,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
+import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -80,6 +81,8 @@ public class WallLanternBlock extends BlockWithEntity {
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public static final VoxelShape LANTERN_HANG_SHAPE = Block.createCuboidShape(7.0, 11.0, 7.0, 9.0, 13.0, 9.0);
     public static final Map<Direction, VoxelShape> ATTACHMENT_SHAPES;
+
+    private static final VoxelShape HOLDER_SHAPE = createCuboidShape(0.0, 8.0, 0.0, 16.0, 16.0, 16.0);
 
     public WallLanternBlock() {
         super(FabricBlockSettings.copyOf(Blocks.LANTERN)
@@ -121,6 +124,49 @@ public class WallLanternBlock extends BlockWithEntity {
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return LanternBlockEntity.getOutlineShape(world, pos, state);
+    }
+
+    /* Placement */
+
+    @Override
+    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+        Direction direction = state.get(FACING);
+        BlockPos blockPos = pos.offset(direction.getOpposite());
+        BlockState blockState = world.getBlockState(blockPos);
+        return !VoxelShapes.matchesAnywhere(blockState.getSidesShape(world, blockPos).getFace(direction),
+                HOLDER_SHAPE, BooleanBiFunction.ONLY_SECOND);
+    }
+
+    @Override
+    public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
+        BlockState state = this.getDefaultState();
+        WorldView world = ctx.getWorld();
+        BlockPos pos = ctx.getBlockPos();
+        FluidState fluidState = world.getFluidState(pos);
+        Direction[] directions = ctx.getPlacementDirections();
+
+        state = state.with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER)
+                .with(LIGHT, LanternBlockEntity.getLuminanceFromItem(ctx.getStack().getItem()));
+
+        for (Direction direction : directions) {
+            if (direction.getAxis().isHorizontal()) {
+                Direction direction2 = direction.getOpposite();
+                state = state.with(FACING, direction2);
+                if (state.canPlaceAt(world, pos)) {
+                    return state;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        LanternBlockEntity blockEntity = AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
+        if (blockEntity != null) {
+            blockEntity.setLanternFromItem(itemStack.getItem());
+        }
     }
 
     /* Interaction */
@@ -187,6 +233,8 @@ public class WallLanternBlock extends BlockWithEntity {
     }
 
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+        if (world.isClient())
+            return;
         if (entity instanceof ProjectileEntity)
             return;
 
@@ -245,48 +293,6 @@ public class WallLanternBlock extends BlockWithEntity {
     @Override
     public PistonBehavior getPistonBehavior(BlockState state) {
         return PistonBehavior.DESTROY;
-    }
-
-    /* Placement */
-
-    @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        Direction direction = state.get(FACING);
-        BlockPos blockPos = pos.offset(direction.getOpposite());
-        BlockState blockState = world.getBlockState(blockPos);
-        return blockState.isSideSolidFullSquare(world, blockPos, direction);
-    }
-
-    @Override
-    public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState state = this.getDefaultState();
-        WorldView world = ctx.getWorld();
-        BlockPos pos = ctx.getBlockPos();
-        FluidState fluidState = world.getFluidState(pos);
-        Direction[] directions = ctx.getPlacementDirections();
-
-        state = state.with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER)
-                .with(LIGHT, LanternBlockEntity.getLuminanceFromItem(ctx.getStack().getItem()));
-
-        for (Direction direction : directions) {
-            if (direction.getAxis().isHorizontal()) {
-                Direction direction2 = direction.getOpposite();
-                state = state.with(FACING, direction2);
-                if (state.canPlaceAt(world, pos)) {
-                    return state;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        LanternBlockEntity blockEntity = AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
-        if (blockEntity != null) {
-            blockEntity.setLanternFromItem(itemStack.getItem());
-        }
     }
 
     /* Fluid */

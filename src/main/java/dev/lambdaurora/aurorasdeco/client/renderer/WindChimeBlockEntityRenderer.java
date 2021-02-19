@@ -87,6 +87,8 @@ public class WindChimeBlockEntityRenderer implements BlockEntityRenderer<WindChi
     public void render(WindChimeBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
                        int light, int overlay) {
         float ticks = (float) entity.ticks + tickDelta;
+        if (!entity.isColliding())
+            ticks = 0.f;
         float angle = MathHelper.sin(ticks / (float) Math.PI) / (4.f + ticks / 3.f);
 
         this.chimes.forEach(model -> {

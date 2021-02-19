@@ -263,15 +263,15 @@ public class LanternBlockEntity extends BlockEntity implements BlockEntityClient
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        return this.toClientTag(super.toTag(tag));
+    public CompoundTag toTag(CompoundTag compound) {
+        return this.toClientTag(super.toTag(compound));
     }
 
     @Override
-    public void fromClientTag(CompoundTag tag) {
+    public void fromClientTag(CompoundTag compound) {
         Block lantern = DEFAULT_LANTERN;
-        if (tag.contains("lantern", NbtType.STRING)) {
-            Block block = Registry.BLOCK.get(new Identifier(tag.getString("lantern")));
+        if (compound.contains("lantern", NbtType.STRING)) {
+            Block block = Registry.BLOCK.get(new Identifier(compound.getString("lantern")));
             if (block instanceof LanternBlock) {
                 lantern = block;
             }
@@ -282,9 +282,9 @@ public class LanternBlockEntity extends BlockEntity implements BlockEntityClient
     }
 
     @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
-        tag.putString("lantern", Registry.BLOCK.getId(this.lantern).toString());
-        return tag;
+    public CompoundTag toClientTag(CompoundTag compound) {
+        compound.putString("lantern", Registry.BLOCK.getId(this.lantern).toString());
+        return compound;
     }
 
     /* Syncing */

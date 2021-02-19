@@ -22,17 +22,50 @@ import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class WindChimeBlock extends BlockWithEntity {
+    public static final VoxelShape SHAPE;
+    public static final Box COLLISION_BOX;
+
     public WindChimeBlock(Settings settings) {
         super(settings);
     }
+
+    /* Shapes */
+
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return SHAPE;
+    }
+
+    /* Interaction */
+
+    @Override
+    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+        if (!world.isClient())
+            return;
+
+        WindChimeBlockEntity windChime = AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE.get(world, pos);
+        if (windChime == null)
+            return;
+
+        if (windChime.getCollisionBox().intersects(entity.getBoundingBox()))
+            windChime.startColliding(entity);
+    }
+
+    /* Block Entity Stuff */
 
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
@@ -40,13 +73,22 @@ public class WindChimeBlock extends BlockWithEntity {
     }
 
     @Override
-    public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        if (!world.isClient()) return null;
-        return checkType(type, AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE, WindChimeBlockEntity::clientTick);
+    public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(World world, BlockState state,
+                                                                            BlockEntityType<T> type) {
+        return checkType(type, AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE,
+                world.isClient() ? WindChimeBlockEntity::clientTick : null);
     }
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
+    }
+
+    static {
+        VoxelShape up = createCuboidShape(4.0, 13.0, 4.0, 12.0, 16.0, 12.0);
+        VoxelShape wood = createCuboidShape(3.0, 12.0, 3.0, 13.0, 13.0, 13.0);
+        VoxelShape chimes = createCuboidShape(4.0, 0.0, 4.0, 12.0, 12.0, 12.0);
+        SHAPE = VoxelShapes.union(up, wood, chimes);
+        COLLISION_BOX = chimes.getBoundingBox().expand(0.1);
     }
 }
