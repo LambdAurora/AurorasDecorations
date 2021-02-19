@@ -2,7 +2,7 @@
   "credit": "Made by LambdAurora",
   "parent": "block/block",
   "textures": {
-    "attachment": "aurorasdeco:block/wall_candle_attachment",
+    "attachment": "aurorasdeco:block/attachment",
     "particle": "#candle"
   },
   "elements": [

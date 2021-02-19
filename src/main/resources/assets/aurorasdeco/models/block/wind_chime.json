@@ -1,0 +1,55 @@
+{
+  "credits": "Model by LambdAurora",
+  "parent": "block/block",
+  "textures": {
+    "attachment": "aurorasdeco:block/attachment",
+    "wind_chime": "aurorasdeco:block/wind_chime",
+    "wood": "minecraft:block/oak_planks"
+  },
+  "elements": [
+    {
+      "name": "attachment",
+      "from": [ 6, 15, 6 ],
+      "to": [ 10, 16, 10 ],
+      "faces": {
+        "north": {"uv": [ 1, 0, 5, 2 ], "texture": "#attachment"},
+        "east":  {"uv": [ 1, 1, 5, 3 ], "texture": "#attachment"},
+        "south": {"uv": [ 1, 5, 5, 6 ], "texture": "#attachment"},
+        "west":  {"uv": [ 1, 4, 5, 5 ], "texture": "#attachment"},
+        "up":    {"uv": [ 1, 1, 5, 5 ], "texture": "#attachment", "cullface": "up"},
+        "down":  {"uv": [ 1, 1, 5, 5 ], "texture": "#attachment"}
+      }
+    },
+    {
+      "name": "string_x",
+      "from": [ 8, 13, 4 ],
+      "to": [ 8, 15, 12 ],
+      "faces": {
+        "east": {"uv": [ 8, 0, 16, 2 ], "texture": "#wind_chime"},
+        "west": {"uv": [ 8, 0, 16, 2 ], "texture": "#wind_chime"}
+      }
+    },
+    {
+      "name": "string_z",
+      "from": [ 4, 13, 8 ],
+      "to": [ 12, 15, 8 ],
+      "faces": {
+        "north": {"uv": [ 8, 0, 16, 2 ], "texture": "#wind_chime"},
+        "south": {"uv": [ 8, 0, 16, 2 ], "texture": "#wind_chime"}
+      }
+    },
+    {
+      "name": "wood",
+      "from": [ 3, 12, 3 ],
+      "to": [ 13, 13, 13 ],
+      "faces": {
+        "north": {"uv": [ 0, 3, 10, 4 ], "texture": "#wood"},
+        "east":  {"uv": [ 0, 7, 10, 8 ], "texture": "#wood"},
+        "south": {"uv": [ 0, 11, 10, 12 ], "texture": "#wood"},
+        "west":  {"uv": [ 0, 15, 10, 16 ], "texture": "#wood"},
+        "up":    {"uv": [ 0, 0, 10, 10 ], "texture": "#wood"},
+        "down":  {"uv": [ 0, 0, 10, 10 ], "texture": "#wood"}
+      }
+    }
+  ]
+}

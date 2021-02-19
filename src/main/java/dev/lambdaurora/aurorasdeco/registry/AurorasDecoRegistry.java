@@ -18,8 +18,10 @@
 package dev.lambdaurora.aurorasdeco.registry;
 
 import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
+import dev.lambdaurora.aurorasdeco.block.WindChimeBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.*;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
+import dev.lambdaurora.aurorasdeco.block.entity.WindChimeBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
@@ -30,6 +32,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Items;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -86,11 +89,19 @@ public final class AurorasDecoRegistry {
             )));
 
     public static final WallLanternBlock WALL_LANTERN_BLOCK = register("wall_lantern", new WallLanternBlock());
+    public static final WindChimeBlock WIND_CHIME_BLOCK = registerWithItem("wind_chime",
+            new WindChimeBlock(FabricBlockSettings.of(Material.DECORATION).nonOpaque().sounds(BlockSoundGroup.AMETHYST_BLOCK)),
+            new Item.Settings().group(ItemGroup.DECORATIONS));
 
     public static final BlockEntityType<LanternBlockEntity> LANTERN_BLOCK_ENTITY_TYPE = Registry.register(
             Registry.BLOCK_ENTITY_TYPE,
             id("lantern"),
             FabricBlockEntityTypeBuilder.create(LanternBlockEntity::new, WALL_LANTERN_BLOCK).build()
+    );
+    public static final BlockEntityType<WindChimeBlockEntity> WIND_CHIME_BLOCK_ENTITY_TYPE = Registry.register(
+            Registry.BLOCK_ENTITY_TYPE,
+            id("wind_chime"),
+            FabricBlockEntityTypeBuilder.create(WindChimeBlockEntity::new, WIND_CHIME_BLOCK).build()
     );
 
     public static final Identifier LANTERN_SWING_SOUND_ID = id("block.lantern.swing");

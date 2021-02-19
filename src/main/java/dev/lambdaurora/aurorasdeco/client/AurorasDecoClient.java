@@ -18,10 +18,14 @@
 package dev.lambdaurora.aurorasdeco.client;
 
 import dev.lambdaurora.aurorasdeco.client.renderer.LanternBlockEntityRenderer;
+import dev.lambdaurora.aurorasdeco.client.renderer.WindChimeBlockEntityRenderer;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;
+import net.minecraft.client.render.RenderLayer;
 
 /**
  * Represents the Aurora's Decorations client mod.
@@ -36,5 +40,12 @@ public class AurorasDecoClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE, LanternBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE,
+                WindChimeBlockEntityRenderer::new);
+
+        BlockRenderLayerMap.INSTANCE.putBlock(AurorasDecoRegistry.WIND_CHIME_BLOCK, RenderLayer.getCutoutMipped());
+
+        EntityModelLayerRegistry.registerModelLayer(WindChimeBlockEntityRenderer.WIND_CHIME_MODEL_LAYER,
+                WindChimeBlockEntityRenderer::getTexturedModelData);
     }
 }

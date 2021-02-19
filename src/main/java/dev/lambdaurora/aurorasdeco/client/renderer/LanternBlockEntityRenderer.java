@@ -43,9 +43,9 @@ public class LanternBlockEntityRenderer implements BlockEntityRenderer<LanternBl
     private float maxAngle = 0.f;
 
     @Override
-    public void render(LanternBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    public void render(LanternBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
+                       int light, int overlay) {
         boolean fluid = !entity.getCachedState().getFluidState().isEmpty();
-
         float ticks = (float) entity.swingTicks + tickDelta;
 
         if (entity.isColliding() && ticks > 4) {
@@ -98,7 +98,8 @@ public class LanternBlockEntityRenderer implements BlockEntityRenderer<LanternBl
         matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(angle));
 
         matrices.translate(-8.f / 16.f, -10.f / 16.f, -8.f / 16.f);
-        this.client.getBlockRenderManager().renderBlock(lanternState, entity.getPos(), entity.getWorld(), matrices, consumer, false, this.random);
+        this.client.getBlockRenderManager().renderBlock(lanternState, entity.getPos(), entity.getWorld(), matrices, consumer,
+                false, this.random);
         matrices.pop();
     }
 }

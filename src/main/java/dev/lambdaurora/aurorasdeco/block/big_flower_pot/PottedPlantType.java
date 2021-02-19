@@ -161,7 +161,7 @@ public final class PottedPlantType {
     static {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
             CLIENT_HANDLER = block -> {
-                BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout());
+                BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutoutMipped());
 
                 ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) ->
                                 world != null && pos != null ? BiomeColors.getGrassColor(world, pos)
