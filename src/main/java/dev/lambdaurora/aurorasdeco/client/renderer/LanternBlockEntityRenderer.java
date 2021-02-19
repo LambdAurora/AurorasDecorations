@@ -56,7 +56,7 @@ public class LanternBlockEntityRenderer implements BlockEntityRenderer<LanternBl
 
         float pitch = 0.0F;
         float roll = 0.0F;
-        if (entity.swinging || entity.isColliding()) {
+        if (entity.isSwinging() || entity.isColliding()) {
             float angle = MathHelper.sin(ticks / (float) Math.PI) / (4.f + ticks / 3.f);
             this.maxAngle = Math.max(angle, maxAngle);
             if (entity.lastSideHit == Direction.NORTH) {

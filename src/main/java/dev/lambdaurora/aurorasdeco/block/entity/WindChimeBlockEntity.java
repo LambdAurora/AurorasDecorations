@@ -34,7 +34,7 @@ public class WindChimeBlockEntity extends BlockEntity {
     private final Set<Entity> collisions = new ObjectOpenHashSet<>();
     private final Vec3f collisionUnitVector = new Vec3f();
     private final Box collisionBox;
-    private boolean collides;
+    private boolean colliding;
 
     public int ticks = 0;
 
@@ -53,12 +53,12 @@ public class WindChimeBlockEntity extends BlockEntity {
     }
 
     public boolean isColliding() {
-        return this.collides;
+        return this.colliding;
     }
 
     public void startColliding(Entity entity) {
         this.collisions.add(entity);
-        this.collides = true;
+        this.colliding = true;
     }
 
     /* Ticking */
@@ -85,7 +85,7 @@ public class WindChimeBlockEntity extends BlockEntity {
             windChime.collisionUnitVector.multiplyComponentwise(multiple, 0.f, multiple);
         }
         if (windChime.collisions.isEmpty() && windChime.isColliding()) {
-            windChime.collides = false;
+            windChime.colliding = false;
         }
 
         if (windChime.isColliding()) {

@@ -77,7 +77,6 @@ import java.util.Map;
 public class WallLanternBlock extends BlockWithEntity {
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
     public static final IntProperty LIGHT = IntProperty.of("light", 0, 15);
-    public static final BooleanProperty COLLISION = BooleanProperty.of("collision");
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public static final VoxelShape LANTERN_HANG_SHAPE = Block.createCuboidShape(7.0, 11.0, 7.0, 9.0, 13.0, 9.0);
     public static final Map<Direction, VoxelShape> ATTACHMENT_SHAPES;
@@ -93,7 +92,6 @@ public class WallLanternBlock extends BlockWithEntity {
         this.setDefaultState(this.stateManager.getDefaultState()
                 .with(FACING, Direction.NORTH)
                 .with(LIGHT, 0)
-                .with(COLLISION, false)
                 .with(WATERLOGGED, false)
         );
 
@@ -105,7 +103,6 @@ public class WallLanternBlock extends BlockWithEntity {
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING);
         builder.add(LIGHT);
-        builder.add(COLLISION);
         builder.add(WATERLOGGED);
     }
 
