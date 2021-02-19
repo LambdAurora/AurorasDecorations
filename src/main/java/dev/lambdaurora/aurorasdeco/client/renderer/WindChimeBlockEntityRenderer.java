@@ -58,61 +58,29 @@ public class WindChimeBlockEntityRenderer implements BlockEntityRenderer<WindChi
         ModelData modelData = new ModelData();
         ModelPartData root = modelData.getRoot();
 
-        ModelPartData chimeBody = root.addChild("chime1_body", ModelPartBuilder.create()
-                        .uv(0, 0)
-                        .cuboid(-1.f, -12.f, -1.f, 2.f, 10.f, 2.f),
-                ModelTransform.pivot(5.f, 12.f, 10.f));
-        chimeBody.addChild("string", ModelPartBuilder.create()
-                        .uv(8, 2)
-                        .cuboid(-.5f, -2.f, -.5f, 1.f, 2.f, 1.f),
-                ModelTransform.NONE);
-
-        chimeBody = root.addChild("chime2_body", ModelPartBuilder.create()
-                        .uv(0, 0)
-                        .cuboid(-1.f, -11.f, -1.f, 2.f, 9.f, 2.f),
-                ModelTransform.pivot(5.f, 12.f, 7.f));
-        chimeBody.addChild("string", ModelPartBuilder.create()
-                        .uv(8, 2)
-                        .cuboid(-.5f, -2.f, -.5f, 1.f, 2.f, 1.f),
-                ModelTransform.NONE);
-
-        chimeBody = root.addChild("chime3_body", ModelPartBuilder.create()
-                        .uv(0, 0)
-                        .cuboid(-1.f, -10.f, -1.f, 2.f, 8.f, 2.f),
-                ModelTransform.pivot(8.f, 12.f, 5.f));
-        chimeBody.addChild("string", ModelPartBuilder.create()
-                        .uv(8, 2)
-                        .cuboid(-.5f, -2.f, -.5f, 1.f, 2.f, 1.f),
-                ModelTransform.NONE);
-
-        chimeBody = root.addChild("chime4_body", ModelPartBuilder.create()
-                        .uv(0, 0)
-                        .cuboid(-1.f, -8.f, -1.f, 2.f, 6.f, 2.f),
-                ModelTransform.pivot(11.f, 12.f, 6.f));
-        chimeBody.addChild("string", ModelPartBuilder.create()
-                        .uv(8, 2)
-                        .cuboid(-.5f, -2.f, -.5f, 1.f, 2.f, 1.f),
-                ModelTransform.NONE);
-
-        chimeBody = root.addChild("chime5_body", ModelPartBuilder.create()
-                        .uv(0, 0)
-                        .cuboid(-1.f, -11.f, -1.f, 2.f, 9.f, 2.f),
-                ModelTransform.pivot(11.f, 12.f, 9.f));
-        chimeBody.addChild("string", ModelPartBuilder.create()
-                        .uv(8, 2)
-                        .cuboid(-.5f, -2.f, -.5f, 1.f, 2.f, 1.f),
-                ModelTransform.NONE);
-
-        chimeBody = root.addChild("chime6_body", ModelPartBuilder.create()
-                        .uv(0, 0)
-                        .cuboid(-1.f, -9.f, -1.f, 2.f, 7.f, 2.f),
-                ModelTransform.pivot(8.f, 12.f, 11.f));
-        chimeBody.addChild("string", ModelPartBuilder.create()
-                        .uv(8, 2)
-                        .cuboid(-.5f, -2.f, -.5f, 1.f, 2.f, 1.f),
-                ModelTransform.NONE);
+        addChime(root, 1, 10.f, 5.f, 10.f);
+        addChime(root, 2, 9.f, 5.f, 7.f);
+        addChime(root, 3, 8.f, 8.f, 5.f);
+        addChime(root, 4, 6.f, 11.f, 6.f);
+        addChime(root, 5, 9.f, 11.f, 9.f);
+        addChime(root, 6, 7.f, 8.f, 11.f);
 
         return TexturedModelData.of(modelData, 16, 16);
+    }
+
+    private static void addChime(ModelPartData root, int number, float size, float x, float z) {
+        ModelPartData chimeBody = root.addChild("chime" + number + "_body", ModelPartBuilder.create()
+                        .uv(0, 0)
+                        .cuboid(-1.f, -(2.f + size), -1.f, 2.f, size, 2.f),
+                ModelTransform.pivot(x, 12.f, z));
+        addString(chimeBody);
+    }
+
+    private static void addString(ModelPartData parent) {
+        parent.addChild("string", ModelPartBuilder.create()
+                        .uv(8, 2)
+                        .cuboid(-.5f, -2.f, -.5f, 1.f, 2.f, 1.f),
+                ModelTransform.NONE);
     }
 
     @Override
