@@ -22,6 +22,8 @@ import dev.lambdaurora.aurorasdeco.client.renderer.WindChimeBlockEntityRenderer;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;
@@ -34,6 +36,7 @@ import net.minecraft.client.render.RenderLayer;
  * @version 1.0.0
  * @since 1.0.0
  */
+@Environment(EnvType.CLIENT)
 public class AurorasDecoClient implements ClientModInitializer {
     public static final AurorasDecoPack RESOURCE_PACK = new AurorasDecoPack();
 

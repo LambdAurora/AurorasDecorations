@@ -19,6 +19,8 @@ package dev.lambdaurora.aurorasdeco.client.renderer;
 
 import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayers;
@@ -33,6 +35,7 @@ import net.minecraft.util.math.Vec3f;
 
 import java.util.Random;
 
+@Environment(EnvType.CLIENT)
 public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<LanternBlockEntity> {
     private final MinecraftClient client = MinecraftClient.getInstance();
     private final Random random = new Random();
