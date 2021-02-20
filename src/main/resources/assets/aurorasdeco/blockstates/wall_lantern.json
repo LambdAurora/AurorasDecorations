@@ -1,19 +1,49 @@
 {
   "variants": {
-    "facing=north": {
+    "facing=north,extension=none": {
       "model": "aurorasdeco:block/wall_lantern_attachment",
       "y": 90
     },
-    "facing=east": {
+    "facing=east,extension=none": {
       "model": "aurorasdeco:block/wall_lantern_attachment",
       "y": 180
     },
-    "facing=south": {
+    "facing=south,extension=none": {
       "model": "aurorasdeco:block/wall_lantern_attachment",
       "y": 270
     },
-    "facing=west": {
+    "facing=west,extension=none": {
       "model": "aurorasdeco:block/wall_lantern_attachment"
+    },
+    "facing=north,extension=wall": {
+      "model": "aurorasdeco:block/wall_lantern_attachment_extended1",
+      "y": 90
+    },
+    "facing=east,extension=wall": {
+      "model": "aurorasdeco:block/wall_lantern_attachment_extended1",
+      "y": 180
+    },
+    "facing=south,extension=wall": {
+      "model": "aurorasdeco:block/wall_lantern_attachment_extended1",
+      "y": 270
+    },
+    "facing=west,extension=wall": {
+      "model": "aurorasdeco:block/wall_lantern_attachment_extended1"
+    },
+    "facing=north,extension=fence": {
+      "model": "aurorasdeco:block/wall_lantern_attachment_extended2",
+      "y": 90
+    },
+    "facing=east,extension=fence": {
+      "model": "aurorasdeco:block/wall_lantern_attachment_extended2",
+      "y": 180
+    },
+    "facing=south,extension=fence": {
+      "model": "aurorasdeco:block/wall_lantern_attachment_extended2",
+      "y": 270
+    },
+    "facing=west,extension=fence": {
+      "model": "aurorasdeco:block/wall_lantern_attachment_extended2"
     }
   }
 }

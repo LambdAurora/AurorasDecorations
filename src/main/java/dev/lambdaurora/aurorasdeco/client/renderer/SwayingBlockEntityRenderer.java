@@ -15,15 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.block.entity;
+package dev.lambdaurora.aurorasdeco.client.renderer;
 
-import net.minecraft.block.entity.BlockEntity;
+import dev.lambdaurora.aurorasdeco.block.entity.SwayingBlockEntity;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
-public abstract class SwayingBlockEntityRenderer<T extends BlockEntity> implements BlockEntityRenderer<T> {
+public abstract class SwayingBlockEntityRenderer<T extends SwayingBlockEntity> implements BlockEntityRenderer<T> {
     public float getNaturalSwayingAngle(T entity, float tickDelta) {
+        if (!entity.canNaturallySway())
+            return 0.f;
+
         BlockPos pos = entity.getPos();
 
         long time = 0;

@@ -43,7 +43,9 @@ public class AurorasDecoClient implements ClientModInitializer {
         BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE,
                 WindChimeBlockEntityRenderer::new);
 
-        BlockRenderLayerMap.INSTANCE.putBlock(AurorasDecoRegistry.WIND_CHIME_BLOCK, RenderLayer.getCutoutMipped());
+        BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutoutMipped(),
+                AurorasDecoRegistry.WALL_LANTERN_BLOCK,
+                AurorasDecoRegistry.WIND_CHIME_BLOCK);
 
         EntityModelLayerRegistry.registerModelLayer(WindChimeBlockEntityRenderer.WIND_CHIME_MODEL_LAYER,
                 WindChimeBlockEntityRenderer::getTexturedModelData);

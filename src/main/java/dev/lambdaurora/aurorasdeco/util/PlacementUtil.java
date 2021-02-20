@@ -15,18 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.block.state;
+package dev.lambdaurora.aurorasdeco.util;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Box;
 
-public final class PropertyUtil {
-    private PropertyUtil() {
+public final class PlacementUtil {
+    private PlacementUtil() {
         throw new UnsupportedOperationException("Someone tried to instantiate a singleton. How?");
     }
 
-    public static String toValueId(Identifier id) {
-        return id.toString()
-                .replace("minecraft:", "")
-                .replaceAll(":", "_");
+    public static boolean isShapeEqual(Box s1, Box s2) {
+        return s1.minX == s2.minX && s1.minY == s2.minY && s1.minZ == s2.minZ && s1.maxX == s2.maxX && s1.maxY == s2.maxY && s1.maxZ == s2.maxZ;
     }
 }

@@ -1,0 +1,40 @@
+{
+  "credit": "Made by LambdAurora",
+  "parent": "aurorasdeco:block/wall_lantern_attachment",
+  "elements": [
+    {
+      "name": "bar",
+      "from": [ 9, 13, 7 ],
+      "to": [ 21, 15, 9 ],
+      "faces": {
+        "north": { "uv": [ 2, 2, 13, 4 ], "texture": "#bar" },
+        "south": { "uv": [ 2, 3, 13, 5 ], "texture": "#bar" },
+        "west":  { "uv": [ 5, 4,  7, 6 ], "texture": "#bar" },
+        "up":    { "uv": [ 2, 3, 13, 5 ], "texture": "#bar" },
+        "down":  { "uv": [ 2, 3, 13, 5 ], "texture": "#bar" }
+      }
+    },
+    {
+      "name": "wall_attachment",
+      "from": [ 21, 7, 6 ],
+      "to": [ 22, 16, 10 ],
+      "faces": {
+        "north": {"uv": [ 11, 1, 12, 10 ], "texture": "#attachment"},
+        "east":  {"uv": [ 7, 1, 11, 10 ], "texture": "#attachment", "cullface": "east"},
+        "south": {"uv": [ 6, 1, 7, 10 ], "texture": "#attachment"},
+        "west":  {"uv": [ 7, 1, 11, 10 ], "texture": "#attachment"},
+        "up":    {"uv": [ 7, 0, 8, 4 ], "texture": "#attachment"},
+        "down":  {"uv": [ 8, 0, 9, 4 ], "texture": "#attachment"}
+      }
+    },
+    {
+      "name": "support",
+      "from": [ 16, 8, 8 ],
+      "to": [ 21, 13, 8 ],
+      "faces": {
+        "north": {"uv": [ 2, 11, 7, 16 ], "texture": "#attachment"},
+        "south": {"uv": [ 7, 11, 2, 16 ], "texture": "#attachment"}
+      }
+    }
+  ]
+}

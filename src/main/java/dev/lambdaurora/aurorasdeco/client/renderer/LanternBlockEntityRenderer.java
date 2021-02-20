@@ -19,13 +19,11 @@ package dev.lambdaurora.aurorasdeco.client.renderer;
 
 import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
-import dev.lambdaurora.aurorasdeco.block.entity.SwayingBlockEntityRenderer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
@@ -77,6 +75,7 @@ public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<Lante
         BlockState lanternState = lantern.getLantern().getDefaultState();
         VertexConsumer consumer = vertexConsumers.getBuffer(RenderLayers.getBlockLayer(lanternState));
         matrices.push();
+
         matrices.translate(8.f / 16.f, 12.f / 16.f, 8.f / 16.f);
         if (roll != 0.f)
             matrices.multiply(Vec3f.POSITIVE_Z.getRadialQuaternion(roll));
@@ -84,7 +83,8 @@ public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<Lante
             matrices.multiply(Vec3f.POSITIVE_X.getRadialQuaternion(pitch));
 
         int angle;
-        switch (lantern.getCachedState().get(WallLanternBlock.FACING)) {
+        Direction facing = lantern.getCachedState().get(WallLanternBlock.FACING);
+        switch (facing) {
             case NORTH:
                 angle = 90;
                 break;
@@ -99,9 +99,15 @@ public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<Lante
                 break;
         }
 
+        int extension = lantern.getCachedState().get(WallLanternBlock.EXTENSION).getOffset();
+        matrices.translate((-facing.getOffsetX() * extension) / 16.f,
+                0.f,
+                (-facing.getOffsetZ() * extension) / 16.f);
+
         matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(angle));
 
         matrices.translate(-8.f / 16.f, -10.f / 16.f, -8.f / 16.f);
+
         this.client.getBlockRenderManager().renderBlock(lanternState, pos, lantern.getWorld(), matrices, consumer,
                 false, this.random);
         matrices.pop();

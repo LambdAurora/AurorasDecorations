@@ -42,10 +42,7 @@ import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.*;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
@@ -77,11 +74,14 @@ import java.util.Map;
 public class WallLanternBlock extends BlockWithEntity {
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
     public static final IntProperty LIGHT = IntProperty.of("light", 0, 15);
+    public static final EnumProperty<ExtensionType> EXTENSION = AurorasDecoProperties.EXTENSION;
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
-    public static final VoxelShape LANTERN_HANG_SHAPE = Block.createCuboidShape(7.0, 11.0, 7.0, 9.0, 13.0, 9.0);
-    public static final Map<Direction, VoxelShape> ATTACHMENT_SHAPES;
+    public static final VoxelShape LANTERN_HANG_SHAPE = Block.createCuboidShape(7.0, 11.0, 7.0,
+            9.0, 13.0, 9.0);
+    public static final Map<Direction, Map<ExtensionType, VoxelShape>> ATTACHMENT_SHAPES;
 
-    private static final VoxelShape HOLDER_SHAPE = createCuboidShape(0.0, 8.0, 0.0, 16.0, 16.0, 16.0);
+    private static final VoxelShape HOLDER_SHAPE = createCuboidShape(0.0, 8.0, 0.0,
+            16.0, 16.0, 16.0);
 
     public WallLanternBlock() {
         super(FabricBlockSettings.copyOf(Blocks.LANTERN)
@@ -92,6 +92,7 @@ public class WallLanternBlock extends BlockWithEntity {
         this.setDefaultState(this.stateManager.getDefaultState()
                 .with(FACING, Direction.NORTH)
                 .with(LIGHT, 0)
+                .with(EXTENSION, ExtensionType.NONE)
                 .with(WATERLOGGED, false)
         );
 
@@ -103,6 +104,7 @@ public class WallLanternBlock extends BlockWithEntity {
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING);
         builder.add(LIGHT);
+        builder.add(EXTENSION);
         builder.add(WATERLOGGED);
     }
 
@@ -128,10 +130,11 @@ public class WallLanternBlock extends BlockWithEntity {
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         Direction direction = state.get(FACING);
-        BlockPos blockPos = pos.offset(direction.getOpposite());
-        BlockState blockState = world.getBlockState(blockPos);
-        return !VoxelShapes.matchesAnywhere(blockState.getSidesShape(world, blockPos).getFace(direction),
-                HOLDER_SHAPE, BooleanBiFunction.ONLY_SECOND);
+        BlockPos attachPos = pos.offset(direction.getOpposite());
+        BlockState attachState = world.getBlockState(attachPos);
+        return !VoxelShapes.matchesAnywhere(attachState.getSidesShape(world, attachPos).getFace(direction),
+                HOLDER_SHAPE, BooleanBiFunction.ONLY_SECOND)
+                || ExtensionType.getExtensionValue(attachState, attachPos, world) != ExtensionType.NONE;
     }
 
     @Override
@@ -150,7 +153,9 @@ public class WallLanternBlock extends BlockWithEntity {
                 Direction direction2 = direction.getOpposite();
                 state = state.with(FACING, direction2);
                 if (state.canPlaceAt(world, pos)) {
-                    return state;
+                    BlockPos attachPos = pos.offset(direction);
+                    return state.with(EXTENSION,
+                            ExtensionType.getExtensionValue(world.getBlockState(attachPos), attachPos, world));
                 }
             }
         }
@@ -183,14 +188,18 @@ public class WallLanternBlock extends BlockWithEntity {
         this.swing(world, state, hit, playerEntity, true);
     }
 
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        return this.swing(world, state, hit, player, true) ? ActionResult.success(world.isClient()) : ActionResult.PASS;
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+                              BlockHitResult hit) {
+        return this.swing(world, state, hit, player, true)
+                ? ActionResult.success(world.isClient()) : ActionResult.PASS;
     }
 
-    public boolean swing(World world, BlockState state, BlockHitResult hitResult, @Nullable PlayerEntity player, boolean hitResultIndependent) {
+    public boolean swing(World world, BlockState state, BlockHitResult hitResult, @Nullable PlayerEntity player,
+                         boolean hitResultIndependent) {
         Direction direction = hitResult.getSide();
         BlockPos blockPos = hitResult.getBlockPos();
-        boolean canSwing = !hitResultIndependent || this.isPointOnLantern(state, direction, hitResult.getPos().y - (double) blockPos.getY());
+        boolean canSwing = !hitResultIndependent
+                || this.isPointOnLantern(state, direction, hitResult.getPos().y - (double) blockPos.getY());
         if (canSwing) {
             this.swing(player, world, blockPos, direction, null);
 
@@ -223,7 +232,8 @@ public class WallLanternBlock extends BlockWithEntity {
             else
                 blockEntity.activate(direction, entity, lanternCollisionAxis);
             if (!previousColliding) {
-                world.playSound(null, pos, AurorasDecoRegistry.LANTERN_SWING_SOUND_EVENT, SoundCategory.BLOCKS, 2.0F, 1.0F);
+                world.playSound(null, pos,
+                        AurorasDecoRegistry.LANTERN_SWING_SOUND_EVENT, SoundCategory.BLOCKS, 2.0F, 1.0F);
                 world.emitGameEvent(entity, GameEvent.RING_BELL, pos);
             }
         }
@@ -280,7 +290,8 @@ public class WallLanternBlock extends BlockWithEntity {
     }
 
     @Override
-    public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+    public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(World world, BlockState state,
+                                                                            BlockEntityType<T> type) {
         return checkType(type, AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE,
                 world.isClient() ? LanternBlockEntity::clientTick : LanternBlockEntity::serverTick);
     }
@@ -312,7 +323,8 @@ public class WallLanternBlock extends BlockWithEntity {
             state = state.with(LIGHT, blockEntity.getLanternState().getLuminance());
         }
 
-        return direction.getOpposite() == state.get(FACING) && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : state;
+        return direction.getOpposite() == state.get(FACING) && !state.canPlaceAt(world, pos)
+                ? Blocks.AIR.getDefaultState() : state;
     }
 
     public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
@@ -328,32 +340,79 @@ public class WallLanternBlock extends BlockWithEntity {
     }
 
     static {
-        VoxelShape northShape;
+        double attachmentMaxY = 16.0;
+        double attachmentMinY = 10.0;
+
+        Map<ExtensionType, VoxelShape> northShape;
         {
-            VoxelShape wallAttachment = Block.createCuboidShape(6.0, 10.0, 15.0, 10.0, 16.0, 16.0);
-            VoxelShape barShape = Block.createCuboidShape(7.0, 13.0, 7.0, 9.0, 15.0, 15.0);
-            northShape = VoxelShapes.union(LANTERN_HANG_SHAPE, barShape, wallAttachment);
+            ImmutableMap.Builder<ExtensionType, VoxelShape> builder = new ImmutableMap.Builder<>();
+            VoxelShape wallAttachment = createCuboidShape(6.0, attachmentMinY - 3.0, 15.0,
+                    10.0, attachmentMaxY, 16.0);
+            builder.put(ExtensionType.NONE, VoxelShapes.union(LANTERN_HANG_SHAPE,
+                    createCuboidShape(7.0, 13.0, 7.0, 9.0, 15.0, 15.0),
+                    createCuboidShape(6.0, attachmentMinY, 15.0, 10.0, attachmentMaxY, 16.0)));
+            builder.put(ExtensionType.WALL, VoxelShapes.union(LANTERN_HANG_SHAPE.offset(0, 0, 0.125),
+                    createCuboidShape(7.0, 13.0, 7.0, 9.0, 15.0, 19.0),
+                    wallAttachment.offset(0, 0, 0.25)));
+            builder.put(ExtensionType.FENCE, VoxelShapes.union(LANTERN_HANG_SHAPE.offset(0, 0, 0.25),
+                    createCuboidShape(7.0, 13.0, 9.0, 9.0, 15.0, 21.0),
+                    wallAttachment.offset(0, 0, 0.375)));
+
+            northShape = builder.build();
         }
 
-        VoxelShape southShape;
+        Map<ExtensionType, VoxelShape> southShape;
         {
-            VoxelShape wallAttachment = Block.createCuboidShape(6.0, 10.0, 0.0, 10.0, 16.0, 1.0);
-            VoxelShape barShape = Block.createCuboidShape(7.0, 13.0, 1.0, 9.0, 15.0, 9.0);
-            southShape = VoxelShapes.union(LANTERN_HANG_SHAPE, barShape, wallAttachment);
+            ImmutableMap.Builder<ExtensionType, VoxelShape> builder = new ImmutableMap.Builder<>();
+            VoxelShape wallAttachment = createCuboidShape(6.0, attachmentMinY - 3.0, 0.0,
+                    10.0, attachmentMaxY, 1.0);
+            builder.put(ExtensionType.NONE, VoxelShapes.union(LANTERN_HANG_SHAPE,
+                    createCuboidShape(7.0, 13.0, 1.0, 9.0, 15.0, 9.0),
+                    createCuboidShape(6.0, attachmentMinY, 0.0, 10.0, attachmentMaxY, 1.0)));
+            builder.put(ExtensionType.WALL, VoxelShapes.union(LANTERN_HANG_SHAPE.offset(0, 0, -.125),
+                    createCuboidShape(7.0, 13.0, -3.0, 9.0, 15.0, 9.0),
+                    wallAttachment.offset(0, 0, -.25)));
+            builder.put(ExtensionType.FENCE, VoxelShapes.union(LANTERN_HANG_SHAPE.offset(0, 0, -.25),
+                    createCuboidShape(7.0, 13.0, -5.0, 9.0, 15.0, 7.0),
+                    wallAttachment.offset(0, 0, -.375)));
+
+            southShape = builder.build();
         }
 
-        VoxelShape westShape;
+        Map<ExtensionType, VoxelShape> westShape;
         {
-            VoxelShape wallAttachment = Block.createCuboidShape(15.0, 10.0, 6.0, 16.0, 16.0, 10.0);
-            VoxelShape barShape = Block.createCuboidShape(7.0, 13.0, 7.0, 15.0, 15.0, 9.0);
-            westShape = VoxelShapes.union(LANTERN_HANG_SHAPE, barShape, wallAttachment);
+            ImmutableMap.Builder<ExtensionType, VoxelShape> builder = new ImmutableMap.Builder<>();
+            VoxelShape wallAttachment = createCuboidShape(15.0, attachmentMinY - 3.0, 6.0,
+                    16.0, attachmentMaxY, 10.0);
+            builder.put(ExtensionType.NONE, VoxelShapes.union(LANTERN_HANG_SHAPE,
+                    createCuboidShape(7.0, 13.0, 7.0, 15.0, 15.0, 9.0),
+                    createCuboidShape(15.0, attachmentMinY, 6.0, 16.0, attachmentMaxY, 10.0)));
+            builder.put(ExtensionType.WALL, VoxelShapes.union(LANTERN_HANG_SHAPE.offset(0.125, 0, 0),
+                    createCuboidShape(7.0, 13.0, 7.0, 19.0, 15.0, 9.0),
+                    wallAttachment.offset(0.25, 0, 0)));
+            builder.put(ExtensionType.FENCE, VoxelShapes.union(LANTERN_HANG_SHAPE.offset(0.25, 0, 0),
+                    createCuboidShape(9.0, 13.0, 7.0, 21.0, 15.0, 9.0),
+                    wallAttachment.offset(0.375, 0, 0)));
+
+            westShape = builder.build();
         }
 
-        VoxelShape eastShape;
+        Map<ExtensionType, VoxelShape> eastShape;
         {
-            VoxelShape wallAttachment = Block.createCuboidShape(0.0, 10.0, 6.0, 1.0, 16.0, 10.0);
-            VoxelShape barShape = Block.createCuboidShape(1.0, 13.0, 7.0, 9.0, 15.0, 9.0);
-            eastShape = VoxelShapes.union(LANTERN_HANG_SHAPE, barShape, wallAttachment);
+            ImmutableMap.Builder<ExtensionType, VoxelShape> builder = new ImmutableMap.Builder<>();
+            VoxelShape wallAttachment = createCuboidShape(0.0, attachmentMinY - 3.0, 6.0,
+                    1.0, attachmentMaxY, 10.0);
+            builder.put(ExtensionType.NONE, VoxelShapes.union(LANTERN_HANG_SHAPE,
+                    createCuboidShape(1.0, 13.0, 7.0, 9.0, 15.0, 9.0),
+                    createCuboidShape(0.0, attachmentMinY, 6.0, 1.0, attachmentMaxY, 10.0)));
+            builder.put(ExtensionType.WALL, VoxelShapes.union(LANTERN_HANG_SHAPE.offset(-.125, 0, 0),
+                    createCuboidShape(-3.0, 13.0, 7.0, 9.0, 15.0, 9.0),
+                    wallAttachment.offset(-.25, 0, 0)));
+            builder.put(ExtensionType.FENCE, VoxelShapes.union(LANTERN_HANG_SHAPE.offset(-.25, 0, 0),
+                    createCuboidShape(-5.0, 13.0, 7.0, 7.0, 15.0, 9.0),
+                    wallAttachment.offset(-.375, 0, 0)));
+
+            eastShape = builder.build();
         }
 
         ATTACHMENT_SHAPES = Maps.newEnumMap(

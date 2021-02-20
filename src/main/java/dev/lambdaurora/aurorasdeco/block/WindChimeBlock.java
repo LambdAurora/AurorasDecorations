@@ -19,10 +19,7 @@ package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.block.entity.WindChimeBlockEntity;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.ShapeContext;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
@@ -36,6 +33,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
@@ -86,6 +84,15 @@ public class WindChimeBlock extends BlockWithEntity {
 
         return !VoxelShapes.matchesAnywhere(upState.getSidesShape(world, upPos).getFace(Direction.DOWN),
                 HOLDER_SHAPE, BooleanBiFunction.ONLY_SECOND);
+    }
+
+    /* Updates */
+
+    @Override
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world,
+                                                BlockPos pos, BlockPos posFrom) {
+        state = super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
+        return direction == Direction.UP && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : state;
     }
 
     /* Block Entity Stuff */
