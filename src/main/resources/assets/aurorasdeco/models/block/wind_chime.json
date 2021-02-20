@@ -52,5 +52,12 @@
         "down":  {"uv": [ 0, 0, 10, 10 ], "texture": "#wood"}
       }
     }
+  ],
+  "groups": [
+    {
+      "name": "attachment",
+      "origin": [ 8, 8, 8 ],
+      "children": [ 0, 1, 2, 3 ]
+    }
   ]
 }

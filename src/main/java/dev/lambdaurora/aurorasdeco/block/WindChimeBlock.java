@@ -27,17 +27,23 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
+import net.minecraft.tag.BlockTags;
+import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 public class WindChimeBlock extends BlockWithEntity {
     public static final VoxelShape SHAPE;
     public static final Box COLLISION_BOX;
+
+    private static final VoxelShape HOLDER_SHAPE = createCuboidShape(6.0, 0.0, 6.0, 10.0, 1.0, 10.0);
 
     public WindChimeBlock(Settings settings) {
         super(settings);
@@ -63,6 +69,23 @@ public class WindChimeBlock extends BlockWithEntity {
 
         if (windChime.getCollisionBox().intersects(entity.getBoundingBox()))
             windChime.startColliding(entity);
+    }
+
+    /* Placement */
+
+    @Override
+    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+        BlockPos upPos = pos.up();
+        BlockState upState = world.getBlockState(upPos);
+
+        if (upState.isIn(BlockTags.LEAVES))
+            return true;
+
+        if (upState.isOf(state.getBlock()))
+            return false;
+
+        return !VoxelShapes.matchesAnywhere(upState.getSidesShape(world, upPos).getFace(Direction.DOWN),
+                HOLDER_SHAPE, BooleanBiFunction.ONLY_SECOND);
     }
 
     /* Block Entity Stuff */

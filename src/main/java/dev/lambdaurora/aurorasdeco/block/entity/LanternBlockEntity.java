@@ -327,7 +327,7 @@ public class LanternBlockEntity extends BlockEntity implements BlockEntityClient
             lantern.swingTicks = 4;
         }
 
-        float maxTicks = lantern.getCachedState().getFluidState().isEmpty() ? 50 : 100;
+        float maxTicks = lantern.getCachedState().getFluidState().isEmpty() ? 60 : 100;
         if (lantern.swingTicks >= maxTicks) {
             lantern.swinging = false;
             lantern.swingTicks = 0;

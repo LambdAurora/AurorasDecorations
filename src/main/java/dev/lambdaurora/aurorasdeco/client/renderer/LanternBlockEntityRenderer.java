@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.client.renderer;
 
 import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
+import dev.lambdaurora.aurorasdeco.block.entity.SwayingBlockEntityRenderer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayers;
@@ -27,28 +28,28 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
 
 import java.util.Random;
 
-public class LanternBlockEntityRenderer implements BlockEntityRenderer<LanternBlockEntity> {
+public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<LanternBlockEntity> {
     private final MinecraftClient client = MinecraftClient.getInstance();
     private final Random random = new Random();
 
     public LanternBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
     }
 
-    private float maxAngle = 0.f;
-
     @Override
-    public void render(LanternBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
+    public void render(LanternBlockEntity lantern, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
                        int light, int overlay) {
-        boolean fluid = !entity.getCachedState().getFluidState().isEmpty();
-        float ticks = (float) entity.swingTicks + tickDelta;
+        BlockPos pos = lantern.getPos();
+        boolean fluid = !lantern.getCachedState().getFluidState().isEmpty();
+        float ticks = (float) lantern.swingTicks + tickDelta;
 
-        if (entity.isColliding() && ticks > 4) {
+        if (lantern.isColliding() && ticks > 4) {
             ticks = 4.f;
         }
         if (fluid)
@@ -56,21 +57,24 @@ public class LanternBlockEntityRenderer implements BlockEntityRenderer<LanternBl
 
         float pitch = 0.0F;
         float roll = 0.0F;
-        if (entity.isSwinging() || entity.isColliding()) {
+        if (lantern.isSwinging() || lantern.isColliding()) {
             float angle = MathHelper.sin(ticks / (float) Math.PI) / (4.f + ticks / 3.f);
-            this.maxAngle = Math.max(angle, maxAngle);
-            if (entity.lastSideHit == Direction.NORTH) {
+            if (lantern.lastSideHit == Direction.NORTH) {
                 pitch = -angle;
-            } else if (entity.lastSideHit == Direction.SOUTH) {
+            } else if (lantern.lastSideHit == Direction.SOUTH) {
                 pitch = angle;
-            } else if (entity.lastSideHit == Direction.EAST) {
+            } else if (lantern.lastSideHit == Direction.EAST) {
                 roll = -angle;
-            } else if (entity.lastSideHit == Direction.WEST) {
+            } else if (lantern.lastSideHit == Direction.WEST) {
                 roll = angle;
             }
+        } else {
+            float angle = this.getNaturalSwayingAngle(lantern, tickDelta);
+            if (lantern.getCachedState().get(WallLanternBlock.FACING).getAxis() == Direction.Axis.Z) roll = angle;
+            else pitch = angle;
         }
 
-        BlockState lanternState = entity.getLantern().getDefaultState();
+        BlockState lanternState = lantern.getLantern().getDefaultState();
         VertexConsumer consumer = vertexConsumers.getBuffer(RenderLayers.getBlockLayer(lanternState));
         matrices.push();
         matrices.translate(8.f / 16.f, 12.f / 16.f, 8.f / 16.f);
@@ -80,7 +84,7 @@ public class LanternBlockEntityRenderer implements BlockEntityRenderer<LanternBl
             matrices.multiply(Vec3f.POSITIVE_X.getRadialQuaternion(pitch));
 
         int angle;
-        switch (entity.getCachedState().get(WallLanternBlock.FACING)) {
+        switch (lantern.getCachedState().get(WallLanternBlock.FACING)) {
             case NORTH:
                 angle = 90;
                 break;
@@ -98,7 +102,7 @@ public class LanternBlockEntityRenderer implements BlockEntityRenderer<LanternBl
         matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(angle));
 
         matrices.translate(-8.f / 16.f, -10.f / 16.f, -8.f / 16.f);
-        this.client.getBlockRenderManager().renderBlock(lanternState, entity.getPos(), entity.getWorld(), matrices, consumer,
+        this.client.getBlockRenderManager().renderBlock(lanternState, pos, lantern.getWorld(), matrices, consumer,
                 false, this.random);
         matrices.pop();
     }

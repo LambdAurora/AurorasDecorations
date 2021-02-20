@@ -19,7 +19,6 @@ package dev.lambdaurora.aurorasdeco.client.renderer;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.entity.WindChimeBlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -40,8 +39,6 @@ public class WindChimeBlockEntityRenderer implements BlockEntityRenderer<WindChi
     public static final SpriteIdentifier WIND_CHIME_TEXTURE = new SpriteIdentifier(
             SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE,
             AurorasDeco.id("block/wind_chime"));
-
-    private final MinecraftClient client = MinecraftClient.getInstance();
 
     private final ModelPart root;
     private final List<ModelPart> chimes = new ArrayList<>();
