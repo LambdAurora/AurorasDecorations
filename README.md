@@ -25,6 +25,9 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
     - Swings!
     - Has special entity collision handling for swinging.
     - Supports modded lanterns.
+- Pet beds
+  - Cozy little beds for your little friends!
+  - Comes in all dye colors.
 - Wall candles
   - Candles can be put on walls.
   - They work the same as normal candles.
@@ -34,6 +37,10 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 Big flower pots and wall lanterns
 
 ![Big flower pot and Wall Lanterns](images/flower_pot_and_wall_lantern.png)
+
+Pet Beds
+
+![Pet Beds](images/pet_beds.png)
 
 Wall candles
 
