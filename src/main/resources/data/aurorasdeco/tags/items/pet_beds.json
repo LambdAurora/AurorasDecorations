@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "aurorasdeco:pet_bed/white",
+    "aurorasdeco:pet_bed/orange",
+    "aurorasdeco:pet_bed/magenta",
+    "aurorasdeco:pet_bed/light_blue",
+    "aurorasdeco:pet_bed/yellow",
+    "aurorasdeco:pet_bed/lime",
+    "aurorasdeco:pet_bed/pink",
+    "aurorasdeco:pet_bed/gray",
+    "aurorasdeco:pet_bed/light_gray",
+    "aurorasdeco:pet_bed/cyan",
+    "aurorasdeco:pet_bed/purple",
+    "aurorasdeco:pet_bed/blue",
+    "aurorasdeco:pet_bed/brown",
+    "aurorasdeco:pet_bed/green",
+    "aurorasdeco:pet_bed/red",
+    "aurorasdeco:pet_bed/black"
+  ]
+}

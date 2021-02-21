@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "aurorasdeco:pet_bed",
+  "pattern": [
+    "CC",
+    "SS"
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:purple_carpet"
+    },
+    "S": {
+      "tag": "minecraft:wooden_slabs"
+    }
+  },
+  "result": {
+    "item": "aurorasdeco:pet_bed/purple"
+  }
+}

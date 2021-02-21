@@ -1,0 +1,133 @@
+/*
+ * Copyright (c) 2020 LambdAurora <aurora42lambda@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package dev.lambdaurora.aurorasdeco.block;
+
+import com.google.common.collect.ImmutableMap;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.EnumMap;
+import java.util.Map;
+
+/**
+ * Represents a bed block for pets.
+ *
+ * @author LambdAurora
+ * @version 1.0.0
+ * @since 1.0.0
+ */
+public class PetBedBlock extends Block {
+    private static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+
+    private static final Map<Direction, VoxelShape> COLLISION_SHAPES;
+    private static final Map<Direction, VoxelShape> OUTLINE_SHAPES;
+
+    public PetBedBlock(Settings settings) {
+        super(settings);
+
+        this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
+    }
+
+    /* Shapes */
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return COLLISION_SHAPES.get(state.get(FACING));
+    }
+
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return OUTLINE_SHAPES.get(state.get(FACING));
+    }
+
+    /* Placement */
+
+    @Override
+    public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
+        Direction direction = ctx.getPlayerFacing();
+        return this.getDefaultState().with(FACING, direction.getOpposite());
+    }
+
+    static {
+        VoxelShape base = createCuboidShape(0.0, 0.0, 0.0, 16.0, 2.0, 16.0);
+
+        ImmutableMap.Builder<Direction, VoxelShape> shapes = new ImmutableMap.Builder<>();
+
+        shapes.put(Direction.NORTH, VoxelShapes.union(base,
+                createCuboidShape(0.0, 2.0, 1.0, 16.0, 4.0, 16.0)
+        ));
+        shapes.put(Direction.SOUTH, VoxelShapes.union(base,
+                createCuboidShape(0.0, 2.0, 0.0, 16.0, 4.0, 15.0)
+        ));
+        shapes.put(Direction.EAST, VoxelShapes.union(base,
+                createCuboidShape(0.0, 2.0, 0.0, 15.0, 4.0, 16.0)
+        ));
+        shapes.put(Direction.WEST, VoxelShapes.union(base,
+                createCuboidShape(1.0, 2.0, 0.0, 16.0, 4.0, 16.0)
+        ));
+
+        COLLISION_SHAPES = new EnumMap<>(shapes.build());
+
+        base = VoxelShapes.union(
+                base,
+                createCuboidShape(1.0, 2.0, 1.0, 15.0, 4.0, 15.0)
+        );
+
+        shapes = new ImmutableMap.Builder<>();
+
+        VoxelShape sidesX = VoxelShapes.union(
+                createCuboidShape(1.0, 2.0, 0.0, 15.0, 8.0, 1.0),
+                createCuboidShape(1.0, 2.0, 15.0, 15.0, 8.0, 16.0)
+        );
+        VoxelShape sidesZ = VoxelShapes.union(
+                createCuboidShape(0.0, 2.0, 1.0, 1.0, 8.0, 15.0),
+                createCuboidShape(15.0, 2.0, 1.0, 16.0, 8.0, 15.0)
+        );
+
+        shapes.put(Direction.NORTH, VoxelShapes.union(base, sidesZ,
+                createCuboidShape(0.0, 2.0, 15.0, 16.0, 8.0, 16.0)
+        ));
+        shapes.put(Direction.SOUTH, VoxelShapes.union(base, sidesZ,
+                createCuboidShape(0.0, 2.0, 0.0, 16.0, 8.0, 1.0)
+        ));
+        shapes.put(Direction.EAST, VoxelShapes.union(base, sidesX,
+                createCuboidShape(0.0, 2.0, 0.0, 1.0, 8.0, 16.0)
+        ));
+        shapes.put(Direction.WEST, VoxelShapes.union(base, sidesX,
+                createCuboidShape(15.0, 2.0, 0.0, 16.0, 8.0, 16.0)
+        ));
+
+        OUTLINE_SHAPES = new EnumMap<>(shapes.build());
+    }
+}

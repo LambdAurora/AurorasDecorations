@@ -1,0 +1,54 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "aurorasdeco:pet_bed/red"
+    ]
+  },
+  "criteria": {
+    "has_carpet": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "minecraft:carpets"
+          }
+        ]
+      }
+    },
+    "has_wood_slab": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "minecraft:wooden_slabs"
+          }
+        ]
+      }
+    },
+    "has_self": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "aurorasdeco:pet_beds"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "aurorasdeco:pet_bed/red"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_carpet",
+      "has_wood_slab",
+      "has_self",
+      "has_the_recipe"
+    ]
+  ]
+}

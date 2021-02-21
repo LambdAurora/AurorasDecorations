@@ -1,0 +1,66 @@
+{
+  "credit": "Made by LambdAurora",
+  "parent": "block/block",
+  "textures": {
+    "wood": "block/oak_planks",
+    "particle": "#wool"
+  },
+  "elements": [
+    {
+      "name": "base",
+      "from": [ 0, 0, 0 ],
+      "to": [ 16, 2, 16 ],
+      "faces": {
+        "north": {"uv": [ 0, 14, 16, 16 ], "texture": "#wood", "cullface": "north"},
+        "east":  {"uv": [ 0, 14, 16, 16 ], "texture": "#wood", "cullface": "east"},
+        "south": {"uv": [ 0, 14, 16, 16 ], "texture": "#wood", "cullface": "south"},
+        "west":  {"uv": [ 0, 14, 16, 16 ], "texture": "#wood", "cullface": "west"},
+        "up":    {"uv": [ 0, 0, 16, 16 ], "texture": "#wood"},
+        "down":  {"uv": [ 0, 0, 16, 16 ], "texture": "#wood", "cullface": "down"}
+      }
+    },
+    {
+      "name": "soft",
+      "from": [ 1, 2, 1 ],
+      "to": [ 15, 4, 15 ],
+      "faces": {
+        "north": {"uv": [ 1, 12, 15, 14 ], "texture": "#wool"},
+        "up":    {"uv": [ 1, 1, 15, 15 ], "texture": "#wool"}
+      }
+    },
+    {
+      "name": "back",
+      "from": [ 0, 2, 15 ],
+      "to": [ 16, 8, 16 ],
+      "faces": {
+        "north": {"uv": [ 0, 8, 16, 14 ], "texture": "#wood"},
+        "east":  {"uv": [ 0, 8, 1, 14 ], "texture": "#wood", "cullface": "east"},
+        "south": {"uv": [ 0, 8, 16, 14 ], "texture": "#wood", "cullface": "south"},
+        "west":  {"uv": [ 15, 8, 16, 14 ], "texture": "#wood", "cullface": "west"},
+        "up":    {"uv": [ 0, 0, 16, 1 ], "texture": "#wood"}
+      }
+    },
+    {
+      "name": "east_border",
+      "from": [ 15, 2, 1 ],
+      "to": [ 16, 8, 15 ],
+      "faces": {
+        "north": {"uv": [ 0, 8, 1, 14 ], "texture": "#wood"},
+        "east":  {"uv": [ 1, 8, 15, 14 ], "texture": "#wood", "cullface": "east"},
+        "west":  {"uv": [ 1, 8, 15, 14 ], "texture": "#wood"},
+        "up":    {"uv": [ 0, 1, 1, 15 ], "texture": "#wood"}
+      }
+    },
+    {
+      "name": "west_border",
+      "from": [ 0, 2, 1 ],
+      "to": [ 1, 8, 15 ],
+      "faces": {
+        "north": {"uv": [ 15, 8, 16, 14 ], "texture": "#wood"},
+        "east":  {"uv": [ 1, 8, 15, 14 ], "texture": "#wood"},
+        "west":  {"uv": [ 1, 8, 15, 14 ], "texture": "#wood", "cullface": "west"},
+        "up":    {"uv": [ 15, 1, 16, 15 ], "texture": "#wood"}
+      }
+    }
+  ]
+}

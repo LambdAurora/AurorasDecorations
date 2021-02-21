@@ -17,13 +17,18 @@
 
 package dev.lambdaurora.aurorasdeco.registry;
 
+import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import dev.lambdaurora.aurorasdeco.block.PetBedBlock;
 import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
 import dev.lambdaurora.aurorasdeco.block.WindChimeBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.*;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
 import dev.lambdaurora.aurorasdeco.block.entity.WindChimeBlockEntity;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.fabricmc.fabric.api.tag.TagRegistry;
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
@@ -34,6 +39,8 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Items;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.tag.Tag;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -109,6 +116,8 @@ public final class AurorasDecoRegistry {
             new SoundEvent(LANTERN_SWING_SOUND_ID)
     );
 
+    public static final Tag<Block> PET_BEDS = TagRegistry.block(AurorasDeco.id("pet_beds"));
+
     private static <T extends Block> T register(String name, T block) {
         return Registry.register(Registry.BLOCK, id(name), block);
     }
@@ -116,6 +125,14 @@ public final class AurorasDecoRegistry {
     private static <T extends Block> T registerWithItem(String name, T block, Item.Settings settings) {
         register(name, new BlockItem(register(name, block), settings));
         return block;
+    }
+
+    private static PetBedBlock registerPetBed(DyeColor color) {
+        return registerWithItem("pet_bed/" + color.getName(),
+                new PetBedBlock(FabricBlockSettings.of(Material.WOOL)
+                        .mapColor(color).breakByTool(FabricToolTags.AXES)
+                        .sounds(BlockSoundGroup.WOOD).strength(.2f).nonOpaque()),
+                new FabricItemSettings().group(ItemGroup.DECORATIONS));
     }
 
     private static <T extends BigFlowerPotBlock> T registerBigPotted(String name, Block plant, Item item, Function<PottedPlantType, T> block) {
@@ -143,5 +160,9 @@ public final class AurorasDecoRegistry {
                         type -> new BigPottedCactusBlock(type, BigPottedCactusBlock.POCKET_CACTUS_SHAPE)));
 
         delayed.forEach((id, block) -> Registry.register(Registry.BLOCK, id, block));
+
+        for (DyeColor color : DyeColor.values()) {
+            registerPetBed(color);
+        }
     }
 }

@@ -4,7 +4,11 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "BlockItemMixin",
-    "LanternMixin"
+    "CatEntityMixin",
+    "LanternMixin",
+    "ParrotEntityMixin",
+    "SitGoalMixin",
+    "WolfEntityMixin"
   ],
   "client": [
     "client.ModelLoaderMixin",

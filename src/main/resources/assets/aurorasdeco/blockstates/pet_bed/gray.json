@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "aurorasdeco:block/pet_bed/gray"
+    },
+    "facing=east": {
+      "model": "aurorasdeco:block/pet_bed/gray",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "aurorasdeco:block/pet_bed/gray",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "aurorasdeco:block/pet_bed/gray",
+      "y": 270
+    }
+  }
+}
