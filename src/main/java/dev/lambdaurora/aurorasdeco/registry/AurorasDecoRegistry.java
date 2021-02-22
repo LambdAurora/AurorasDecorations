@@ -18,10 +18,7 @@
 package dev.lambdaurora.aurorasdeco.registry;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.block.PetBedBlock;
-import dev.lambdaurora.aurorasdeco.block.PieBlock;
-import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
-import dev.lambdaurora.aurorasdeco.block.WindChimeBlock;
+import dev.lambdaurora.aurorasdeco.block.*;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.*;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
 import dev.lambdaurora.aurorasdeco.block.entity.WindChimeBlockEntity;
@@ -96,7 +93,13 @@ public final class AurorasDecoRegistry {
                     12.f, 21.f, 12.f
             )));
 
+    public static final BurntVineBlock BURNT_VINE_BLOCK = register("burnt_vine", new BurntVineBlock());
+
     public static final PieBlock PUMPKIN_PIE_BLOCK = register("pumpkin_pie", PieBlock.fromPieItem(Items.PUMPKIN_PIE));
+
+    public static final SturdyStoneBlock STURDY_STONE_BLOCK = registerWithItem("sturdy_stone",
+            new SturdyStoneBlock(FabricBlockSettings.of(Material.STONE).requiresTool().strength(3.5f)),
+            new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS));
 
     public static final WallLanternBlock WALL_LANTERN_BLOCK = register("wall_lantern", new WallLanternBlock());
     public static final WindChimeBlock WIND_CHIME_BLOCK = registerWithItem("wind_chime",

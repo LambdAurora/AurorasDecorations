@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/vine",
+  "textures": {
+    "vine": "aurorasdeco:block/burnt_vine"
+  }
+}

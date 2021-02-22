@@ -5,10 +5,12 @@
   "mixins": [
     "BlockItemMixin",
     "CatEntityMixin",
+    "FlintAndSteelItemMixin",
     "ItemMixin",
     "LanternMixin",
     "ParrotEntityMixin",
     "SitGoalMixin",
+    "VineBlockAccessor",
     "WolfEntityMixin"
   ],
   "client": [

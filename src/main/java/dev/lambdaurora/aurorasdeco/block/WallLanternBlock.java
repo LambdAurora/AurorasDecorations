@@ -252,8 +252,8 @@ public class WallLanternBlock extends BlockWithEntity {
             else
                 blockEntity.activate(direction, entity, lanternCollisionAxis);
             if (!previousColliding) {
-                world.playSound(null, pos,
-                        AurorasDecoRegistry.LANTERN_SWING_SOUND_EVENT, SoundCategory.BLOCKS, 2.0F, 1.0F);
+                world.playSound(null, pos, AurorasDecoRegistry.LANTERN_SWING_SOUND_EVENT, SoundCategory.BLOCKS,
+                        2.f, 1.f);
                 world.emitGameEvent(entity, GameEvent.RING_BELL, pos);
             }
         }

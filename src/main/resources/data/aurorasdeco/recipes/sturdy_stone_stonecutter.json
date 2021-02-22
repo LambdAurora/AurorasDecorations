@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "tag": "aurorasdeco:sturdy_stone_components"
+  },
+  "result": "aurorasdeco:sturdy_stone",
+  "count": 1
+}

@@ -27,6 +27,9 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.minecraft.client.color.world.BiomeColors;
+import net.minecraft.client.color.world.FoliageColors;
 import net.minecraft.client.render.RenderLayer;
 
 /**
@@ -42,13 +45,19 @@ public class AurorasDecoClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE, LanternBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE,
+                LanternBlockEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE,
                 WindChimeBlockEntityRenderer::new);
 
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutoutMipped(),
+                AurorasDecoRegistry.BURNT_VINE_BLOCK,
                 AurorasDecoRegistry.WALL_LANTERN_BLOCK,
                 AurorasDecoRegistry.WIND_CHIME_BLOCK);
+
+        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) ->
+                        world != null && pos != null ? BiomeColors.getFoliageColor(world, pos) : FoliageColors.getDefaultColor(),
+                AurorasDecoRegistry.BURNT_VINE_BLOCK);
 
         EntityModelLayerRegistry.registerModelLayer(WindChimeBlockEntityRenderer.WIND_CHIME_MODEL_LAYER,
                 WindChimeBlockEntityRenderer::getTexturedModelData);

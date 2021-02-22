@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "aurorasdeco:sturdy_stone",
+  "pattern": [
+    "SC",
+    "CS"
+  ],
+  "key": {
+    "C": {
+      "tag": "minecraft:stone_crafting_materials"
+    },
+    "S": {
+      "item": "minecraft:stone"
+    }
+  },
+  "result": {
+    "item": "aurorasdeco:sturdy_stone",
+    "count": 4
+  }
+}

@@ -17,8 +17,11 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 - Big Flower Pot Block
   - Can hold a plant, can dynamically support some modded plants (or new plants in Minecraft if the mod hasn't been updated).
   - Can hold tall plants.
+- Burnt-vine
+  - Use a flint of steel on a vine block to burn the tip of a vine.
+  - Burnt-vine is not able to grow.
 - Lanterns
-  - Can now be put on leaves.
+  - Can now be placed on top of leaves.
   - Wall Lantern
     - Lanterns can now be placed on walls!
     - Can be waterlogged.
@@ -32,6 +35,10 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
   Ever wished to share a pumpkin pie with your friends?
   Or just place it on a table to eat it later?
   Now you can!
+- Sturdy Stone
+  - Cannot be moved by pistons or slime/honey blocks.
+  - Can transmit state change in an observer chain.
+    Perfect as a dispenser or dropper replacement in some contraptions!
 - Wall candles
   - Candles can be put on walls.
   - They work the same as normal candles.
@@ -40,9 +47,13 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 
 ![Big flower pot and Wall Lanterns](images/flower_pot_and_wall_lantern.png)
 
+![Burning Vine Tips](images/burnt_vine.png)
+
 ![Pet Beds](images/pet_beds.png)
 
 ![Placeable Pumpkin Pie](images/placeable_pumpkin_pie.png)
+
+![Sturdy Stone](images/sturdy_stone.png)
 
 ![Wall Candles](images/wall_candles.png)
 
