@@ -59,6 +59,11 @@ public class PetBedBlock extends Block {
         builder.add(FACING);
     }
 
+    @Override
+    public boolean hasSidedTransparency(BlockState state) {
+        return true;
+    }
+
     /* Shapes */
 
     @Override

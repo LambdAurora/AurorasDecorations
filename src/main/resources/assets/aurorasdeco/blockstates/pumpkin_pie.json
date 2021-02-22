@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "bites=0": {
+      "model": "aurorasdeco:block/pie/pumpkin/0"
+    },
+    "bites=1": {
+      "model": "aurorasdeco:block/pie/pumpkin/1"
+    },
+    "bites=2": {
+      "model": "aurorasdeco:block/pie/pumpkin/2"
+    },
+    "bites=3": {
+      "model": "aurorasdeco:block/pie/pumpkin/3"
+    }
+  }
+}

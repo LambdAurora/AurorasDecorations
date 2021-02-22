@@ -28,21 +28,21 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 - Pet beds
   - Cozy little beds for your little friends!
   - Comes in all dye colors.
+- Placeable Pumpkin Pie  
+  Ever wished to share a pumpkin pie with your friends?
+  Or just place it on a table to eat it later?
+  Now you can!
 - Wall candles
   - Candles can be put on walls.
   - They work the same as normal candles.
 
 ## Pictures
 
-Big flower pots and wall lanterns
-
 ![Big flower pot and Wall Lanterns](images/flower_pot_and_wall_lantern.png)
-
-Pet Beds
 
 ![Pet Beds](images/pet_beds.png)
 
-Wall candles
+![Placeable Pumpkin Pie](images/placeable_pumpkin_pie.png)
 
 ![Wall Candles](images/wall_candles.png)
 

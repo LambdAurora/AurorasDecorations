@@ -171,6 +171,24 @@ public class WallLanternBlock extends BlockWithEntity {
         }
     }
 
+    /* Updates */
+
+    @Override
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world,
+                                                BlockPos pos, BlockPos posFrom) {
+        if (state.get(WATERLOGGED)) {
+            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
+
+        LanternBlockEntity blockEntity = AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
+        if (blockEntity != null) {
+            state = state.with(LIGHT, blockEntity.getLanternState().getLuminance());
+        }
+
+        return direction.getOpposite() == state.get(FACING) && !state.canPlaceAt(world, pos)
+                ? Blocks.AIR.getDefaultState() : state;
+    }
+
     /* Interaction */
 
     @Override
@@ -182,12 +200,14 @@ public class WallLanternBlock extends BlockWithEntity {
             return LanternBlockEntity.DEFAULT_LANTERN.getPickStack(world, pos, state);
     }
 
+    @Override
     public void onProjectileHit(World world, BlockState state, BlockHitResult hit, ProjectileEntity projectile) {
         Entity entity = projectile.getOwner();
         PlayerEntity playerEntity = entity instanceof PlayerEntity ? (PlayerEntity) entity : null;
         this.swing(world, state, hit, playerEntity, true);
     }
 
+    @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
                               BlockHitResult hit) {
         return this.swing(world, state, hit, player, true)
@@ -239,6 +259,7 @@ public class WallLanternBlock extends BlockWithEntity {
         }
     }
 
+    @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         if (world.isClient())
             return;
@@ -305,36 +326,24 @@ public class WallLanternBlock extends BlockWithEntity {
 
     /* Fluid */
 
+    @Override
     public FluidState getFluidState(BlockState state) {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
-    /* Updates */
+    /* Entity Stuff */
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world,
-                                                BlockPos pos, BlockPos posFrom) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
-
-        LanternBlockEntity blockEntity = AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
-        if (blockEntity != null) {
-            state = state.with(LIGHT, blockEntity.getLanternState().getLuminance());
-        }
-
-        return direction.getOpposite() == state.get(FACING) && !state.canPlaceAt(world, pos)
-                ? Blocks.AIR.getDefaultState() : state;
-    }
-
     public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
         return false;
     }
 
+    @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));
     }
 
+    @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         return state.rotate(mirror.getRotation(state.get(FACING)));
     }

@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.registry;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.PetBedBlock;
+import dev.lambdaurora.aurorasdeco.block.PieBlock;
 import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
 import dev.lambdaurora.aurorasdeco.block.WindChimeBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.*;
@@ -95,6 +96,8 @@ public final class AurorasDecoRegistry {
                     12.f, 21.f, 12.f
             )));
 
+    public static final PieBlock PUMPKIN_PIE_BLOCK = register("pumpkin_pie", PieBlock.fromPieItem(Items.PUMPKIN_PIE));
+
     public static final WallLanternBlock WALL_LANTERN_BLOCK = register("wall_lantern", new WallLanternBlock());
     public static final WindChimeBlock WIND_CHIME_BLOCK = registerWithItem("wind_chime",
             new WindChimeBlock(FabricBlockSettings.of(Material.DECORATION).nonOpaque().sounds(BlockSoundGroup.AMETHYST_BLOCK)),
@@ -131,7 +134,7 @@ public final class AurorasDecoRegistry {
         return registerWithItem("pet_bed/" + color.getName(),
                 new PetBedBlock(FabricBlockSettings.of(Material.WOOL)
                         .mapColor(color).breakByTool(FabricToolTags.AXES)
-                        .sounds(BlockSoundGroup.WOOD).strength(.2f).nonOpaque()),
+                        .sounds(BlockSoundGroup.WOOD).strength(.2f)),
                 new FabricItemSettings().group(ItemGroup.DECORATIONS));
     }
 

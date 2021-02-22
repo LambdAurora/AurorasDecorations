@@ -54,21 +54,6 @@ public class WindChimeBlock extends BlockWithEntity {
         return SHAPE;
     }
 
-    /* Interaction */
-
-    @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if (!world.isClient())
-            return;
-
-        WindChimeBlockEntity windChime = AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE.get(world, pos);
-        if (windChime == null)
-            return;
-
-        if (windChime.getCollisionBox().intersects(entity.getBoundingBox()))
-            windChime.startColliding(entity);
-    }
-
     /* Placement */
 
     @Override
@@ -93,6 +78,21 @@ public class WindChimeBlock extends BlockWithEntity {
                                                 BlockPos pos, BlockPos posFrom) {
         state = super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
         return direction == Direction.UP && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : state;
+    }
+
+    /* Interaction */
+
+    @Override
+    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+        if (!world.isClient())
+            return;
+
+        WindChimeBlockEntity windChime = AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE.get(world, pos);
+        if (windChime == null)
+            return;
+
+        if (windChime.getCollisionBox().intersects(entity.getBoundingBox()))
+            windChime.startColliding(entity);
     }
 
     /* Block Entity Stuff */

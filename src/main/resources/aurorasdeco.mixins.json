@@ -5,6 +5,7 @@
   "mixins": [
     "BlockItemMixin",
     "CatEntityMixin",
+    "ItemMixin",
     "LanternMixin",
     "ParrotEntityMixin",
     "SitGoalMixin",
