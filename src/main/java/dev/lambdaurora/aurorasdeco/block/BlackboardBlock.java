@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.block;
 
 import com.google.common.collect.ImmutableMap;
 import dev.lambdaurora.aurorasdeco.block.entity.BlackboardBlockEntity;
+import dev.lambdaurora.aurorasdeco.item.BlackboardItem;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -34,6 +35,7 @@ import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.loot.context.LootContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
@@ -60,6 +62,7 @@ import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -71,6 +74,7 @@ import java.util.Map;
  */
 public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+    public static final BooleanProperty LIT = Properties.LIT;
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     private static final Map<Direction, VoxelShape> SHAPES;
@@ -83,6 +87,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 
         this.setDefaultState(this.getDefaultState()
                 .with(FACING, Direction.NORTH)
+                .with(LIT, false)
                 .with(WATERLOGGED, false)
         );
     }
@@ -98,7 +103,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED);
+        builder.add(FACING, LIT, WATERLOGGED);
     }
 
     /* Shapes */
@@ -122,6 +127,11 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
         WorldView world = ctx.getWorld();
         BlockPos pos = ctx.getBlockPos();
         Direction[] directions = ctx.getPlacementDirections();
+
+        CompoundTag nbt = ctx.getStack().getSubTag("BlockEntityTag");
+        if (nbt != null && nbt.contains("lit")) {
+            state = state.with(LIT, nbt.getBoolean("lit"));
+        }
 
         for (Direction direction : directions) {
             if (direction.getAxis().isHorizontal()) {
@@ -240,6 +250,25 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 
                     world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos);
                     return ActionResult.success(world.isClient());
+                } else if (stack.isOf(Items.GLOW_INK_SAC) || stack.isOf(Items.INK_SAC)) {
+                    boolean lit = stack.isOf(Items.GLOW_INK_SAC);
+                    if (lit != state.get(LIT)) {
+                        if (lit) {
+                            world.playSound(null, pos, SoundEvents.ITEM_GLOW_INK_SAC_USE, SoundCategory.BLOCKS,
+                                    1.f, 1.f);
+                            world.setBlockState(pos, state.with(LIT, true));
+                        } else {
+                            world.playSound(null, pos, SoundEvents.ITEM_INK_SAC_USE, SoundCategory.BLOCKS,
+                                    1.f, 1.f);
+                            world.setBlockState(pos, state.with(LIT, false));
+                        }
+
+                        if (!player.isCreative()) {
+                            stack.decrement(1);
+                        }
+
+                        return ActionResult.success(world.isClient());
+                    }
                 }
             }
         }
@@ -273,6 +302,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
                     CompoundTag nbt = blackboard.writeBlackBoardNbt(new CompoundTag());
                     if (!nbt.isEmpty()) {
                         nbt.remove("custom_name");
+                        nbt.putBoolean("lit", state.get(LIT));
                         stack.putSubTag("BlockEntityTag", nbt);
                     }
                 }
@@ -300,11 +330,27 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
             CompoundTag nbt = blackboard.writeBlackBoardNbt(new CompoundTag());
             if (!nbt.isEmpty()) {
                 nbt.remove("custom_name");
+                nbt.putBoolean("lit", state.get(LIT));
                 stack.putSubTag("BlockEntityTag", nbt);
             }
         }
 
         return stack;
+    }
+
+    /* Loot table */
+
+    @Override
+    public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
+        List<ItemStack> droppedStacks = super.getDroppedStacks(state, builder);
+        if (!droppedStacks.isEmpty()) {
+            droppedStacks.forEach(stack -> {
+                if (stack.getItem() instanceof BlackboardItem) {
+                    stack.getOrCreateSubTag("BlockEntityTag").putBoolean("lit", state.get(LIT));
+                }
+            });
+        }
+        return droppedStacks;
     }
 
     /* Piston */
@@ -362,7 +408,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
     }
 
     static {
-        ImmutableMap.Builder<Direction, VoxelShape> builder = new ImmutableMap.Builder<>();
+        ImmutableMap.Builder<Direction, VoxelShape> builder = ImmutableMap.builder();
 
         builder.put(Direction.NORTH, createCuboidShape(0.0, 0.0, 15.0, 16.0, 16.0, 16.0));
         builder.put(Direction.EAST, createCuboidShape(0.0, 0.0, 0.0, 1.0, 16.0, 16.0));

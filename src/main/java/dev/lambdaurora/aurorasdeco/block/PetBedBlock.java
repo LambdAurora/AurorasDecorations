@@ -87,7 +87,7 @@ public class PetBedBlock extends Block {
     static {
         VoxelShape base = createCuboidShape(0.0, 0.0, 0.0, 16.0, 2.0, 16.0);
 
-        ImmutableMap.Builder<Direction, VoxelShape> shapes = new ImmutableMap.Builder<>();
+        ImmutableMap.Builder<Direction, VoxelShape> shapes = ImmutableMap.builder();
 
         shapes.put(Direction.NORTH, VoxelShapes.union(base,
                 createCuboidShape(0.0, 2.0, 1.0, 16.0, 4.0, 16.0)
@@ -109,7 +109,7 @@ public class PetBedBlock extends Block {
                 createCuboidShape(1.0, 2.0, 1.0, 15.0, 4.0, 15.0)
         );
 
-        shapes = new ImmutableMap.Builder<>();
+        shapes = ImmutableMap.builder();
 
         VoxelShape sidesX = VoxelShapes.union(
                 createCuboidShape(1.0, 2.0, 0.0, 15.0, 8.0, 1.0),

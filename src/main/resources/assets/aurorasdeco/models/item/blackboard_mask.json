@@ -1,0 +1,35 @@
+{
+  "parent": "aurorasdeco:block/blackboard",
+  "textures": {
+    "attachment": "aurorasdeco:item/blackboard_mask"
+  },
+  "elements": [
+    {
+      "name": "back",
+      "from": [ 0, 0, 32 ],
+      "to": [ 16, 16, 32 ],
+      "faces": {
+        "north": {"uv": [ 0, 0, 16, 16 ], "texture": "#attachment"},
+        "south": {"uv": [ 0, 0, 16, 16 ], "texture": "#attachment"}
+      }
+    },
+    {
+      "name": "side",
+      "from": [ 0, 0, 16 ],
+      "to": [ 0, 16, 32 ],
+      "faces": {
+        "east": {"uv": [ 0, 0, 16, 16 ], "texture": "#attachment"},
+        "west": {"uv": [ 0, 0, 16, 16 ], "texture": "#attachment"}
+      }
+    },
+    {
+      "name": "side",
+      "from": [ 16, 0, 16 ],
+      "to": [ 16, 16, 32 ],
+      "faces": {
+        "east": {"uv": [ 0, 0, 16, 16 ], "texture": "#attachment"},
+        "west": {"uv": [ 0, 0, 16, 16 ], "texture": "#attachment"}
+      }
+    }
+  ]
+}

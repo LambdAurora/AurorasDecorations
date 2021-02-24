@@ -52,7 +52,7 @@ public class BlackboardItem extends BlockItem {
         if (nbt != null && nbt.contains("pixels", NbtType.BYTE_ARRAY)) {
             return Optional.of(new BlackboardTooltipComponent(
                     Registry.ITEM.getId(this).getPath().replace("waxed_", ""),
-                    nbt.getByteArray("pixels"), this.locked));
+                    nbt.getByteArray("pixels"), nbt.getBoolean("lit"), this.locked));
         }
         return super.getTooltipData(stack);
     }

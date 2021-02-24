@@ -354,7 +354,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
         Map<ExtensionType, VoxelShape> northShape;
         {
-            ImmutableMap.Builder<ExtensionType, VoxelShape> builder = new ImmutableMap.Builder<>();
+            ImmutableMap.Builder<ExtensionType, VoxelShape> builder = ImmutableMap.builder();
             VoxelShape wallAttachment = createCuboidShape(6.0, attachmentMinY - 3.0, 15.0,
                     10.0, attachmentMaxY, 16.0);
             builder.put(ExtensionType.NONE, VoxelShapes.union(LANTERN_HANG_SHAPE,
@@ -372,7 +372,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
         Map<ExtensionType, VoxelShape> southShape;
         {
-            ImmutableMap.Builder<ExtensionType, VoxelShape> builder = new ImmutableMap.Builder<>();
+            ImmutableMap.Builder<ExtensionType, VoxelShape> builder = ImmutableMap.builder();
             VoxelShape wallAttachment = createCuboidShape(6.0, attachmentMinY - 3.0, 0.0,
                     10.0, attachmentMaxY, 1.0);
             builder.put(ExtensionType.NONE, VoxelShapes.union(LANTERN_HANG_SHAPE,
@@ -390,7 +390,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
         Map<ExtensionType, VoxelShape> westShape;
         {
-            ImmutableMap.Builder<ExtensionType, VoxelShape> builder = new ImmutableMap.Builder<>();
+            ImmutableMap.Builder<ExtensionType, VoxelShape> builder = ImmutableMap.builder();
             VoxelShape wallAttachment = createCuboidShape(15.0, attachmentMinY - 3.0, 6.0,
                     16.0, attachmentMaxY, 10.0);
             builder.put(ExtensionType.NONE, VoxelShapes.union(LANTERN_HANG_SHAPE,
@@ -408,7 +408,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
         Map<ExtensionType, VoxelShape> eastShape;
         {
-            ImmutableMap.Builder<ExtensionType, VoxelShape> builder = new ImmutableMap.Builder<>();
+            ImmutableMap.Builder<ExtensionType, VoxelShape> builder = ImmutableMap.builder();
             VoxelShape wallAttachment = createCuboidShape(0.0, attachmentMinY - 3.0, 6.0,
                     1.0, attachmentMaxY, 10.0);
             builder.put(ExtensionType.NONE, VoxelShapes.union(LANTERN_HANG_SHAPE,

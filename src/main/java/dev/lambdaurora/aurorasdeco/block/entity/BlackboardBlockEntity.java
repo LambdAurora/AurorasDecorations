@@ -65,8 +65,10 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
         byte colorId = (byte) (color.getId() + 1);
         if (this.pixels[y * 16 + x] != colorId) {
             this.pixels[y * 16 + x] = colorId;
-            if (this.getWorld() instanceof ServerWorld)
+            if (this.getWorld() instanceof ServerWorld) {
                 this.sync();
+                this.markDirty();
+            }
         }
     }
 
@@ -79,8 +81,10 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
     public void clearPixel(int x, int y) {
         if (this.pixels[y * 16 + x] != 0) {
             this.pixels[y * 16 + x] = 0;
-            if (this.getWorld() instanceof ServerWorld)
+            if (this.getWorld() instanceof ServerWorld) {
                 this.sync();
+                this.markDirty();
+            }
         }
     }
 
@@ -90,6 +94,7 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
     public void clear() {
         Arrays.fill(this.pixels, (byte) 0);
         this.sync();
+        this.markDirty();
     }
 
     /**

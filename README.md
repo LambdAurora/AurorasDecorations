@@ -17,6 +17,19 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 - Big Flower Pot Block
   - Can hold a plant, can dynamically support some modded plants (or new plants in Minecraft if the mod hasn't been updated).
   - Can hold tall plants.
+- Blackboards
+  - Come in two variants: blackboard and chalkboard (dark green).
+  - Players can edit them if not waxed.
+    - Dyes to write.
+    - Paper to clear a pixel.
+    - Water bottle to clear the whole blackboard and consume its water.
+    - Water bucket to clear the whole blackboard.
+    - Glow ink sack to make it glow.
+    - Ink sack to make it not glow.
+  - Can be waxed to be protected from edit and from water. Use honeycomb in a smithing table to wax them.
+  - Water-sensitive, if not waxed they will lose their content.
+  - Content can be cloned by combining an empty blackboard and a written blackboard in a crafting table.
+  - Can be worn as a mask.
 - Burnt-vine
   - Use a flint of steel on a vine block to burn the tip of a vine.
   - Burnt-vine is not able to grow.
@@ -46,6 +59,8 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 ## Pictures
 
 ![Big flower pot and Wall Lanterns](images/flower_pot_and_wall_lantern.png)
+
+![Blackboards](images/blackboards.png)
 
 ![Burning Vine Tips](images/burnt_vine.png)
 

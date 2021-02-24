@@ -58,12 +58,16 @@ public class BlackboardBlockEntityRenderer implements BlockEntityRenderer<Blackb
                        VertexConsumerProvider vertexConsumers, int light, int overlay) {
         BlockState state = blackboard.getCachedState();
 
+        if (state.get(BlackboardBlock.LIT)) {
+            light = 15728880;
+        }
+
         matrices.translate(0.5, 0.5, 0.5);
         float angle = -state.get(BlackboardBlock.FACING).asRotation();
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(angle));
         matrices.translate(-0.5, 0.5, -0.435);
 
-        matrices.scale(1.f, -1.f, 1.F);
+        matrices.scale(1.f, -1.f, 1.f);
 
         BlackboardTexture texture = blackboard.getTexture();
         if (texture != null) {

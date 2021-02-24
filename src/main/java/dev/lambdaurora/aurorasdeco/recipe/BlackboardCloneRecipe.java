@@ -76,6 +76,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
     public ItemStack craft(CraftingInventory inv) {
         byte[] pixels = new byte[256];
         ItemStack output = null;
+        boolean lit = false;
         Text customName = null;
 
         for (int slot = 0; slot < inv.size(); ++slot) {
@@ -84,8 +85,10 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
                 if (OUTPUT.test(craftStack) && !isInput(craftStack)) {
                     output = craftStack;
                 } else if (isInput(craftStack)) {
-                    System.arraycopy(craftStack.getSubTag("BlockEntityTag").getByteArray("pixels"), 0,
+                    CompoundTag nbt = craftStack.getSubTag("BlockEntityTag");
+                    System.arraycopy(nbt.getByteArray("pixels"), 0,
                             pixels, 0, 256);
+                    lit = nbt.getBoolean("lit");
                     if (craftStack.hasCustomName())
                         customName = craftStack.getName();
                 }
@@ -94,7 +97,9 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
 
 
         ItemStack out = output.copy();
-        out.getOrCreateSubTag("BlockEntityTag").putByteArray("pixels", pixels);
+        CompoundTag nbt = out.getOrCreateSubTag("BlockEntityTag");
+        nbt.putByteArray("pixels", pixels);
+        nbt.putBoolean("lit", lit);
 
         if (customName != null)
             out.setCustomName(customName);

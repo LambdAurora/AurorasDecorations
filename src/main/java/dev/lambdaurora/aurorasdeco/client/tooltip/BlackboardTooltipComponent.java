@@ -25,7 +25,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.item.TooltipData;
-import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -45,15 +44,19 @@ import net.minecraft.util.math.Matrix4f;
 @Environment(EnvType.CLIENT)
 public class BlackboardTooltipComponent implements TooltipComponent, TooltipData {
     private static final Identifier LOCK_ICON_TEXTURE = new Identifier("textures/gui/container/cartography_table.png");
+    private static final Identifier GLOW_TEXTURE = AurorasDeco.id("textures/gui/glowing_sprite.png");
 
     private final MinecraftClient client = MinecraftClient.getInstance();
     private final BlackboardBlockEntityRenderer.BlackboardTexture texture;
-    private final String background;
+    private final RenderLayer background;
+    private final boolean glowing;
     private final boolean locked;
 
-    public BlackboardTooltipComponent(String background, byte[] pixels, boolean locked) {
+    public BlackboardTooltipComponent(String background, byte[] pixels, boolean glowing, boolean locked) {
         this.texture = BlackboardBlockEntityRenderer.getOrCreateTexture();
-        this.background = background;
+        this.background = RenderLayer.getText(AurorasDeco.id("textures/block/" + background + ".png"));
+        ;
+        this.glowing = glowing;
         this.locked = locked;
         this.texture.update(pixels);
     }
@@ -76,41 +79,54 @@ public class BlackboardTooltipComponent implements TooltipComponent, TooltipData
         matrices.translate(x, y, z);
         matrices.scale(128.f, 128.f, 1);
 
-        int light = LightmapTextureManager.pack(15, 15);
-        RenderLayer background = RenderLayer.getText(AurorasDeco.id("textures/block/" + this.background + ".png"));
-
+        int light = 15728880;
         Matrix4f model = matrices.peek().getModel();
 
-        VertexConsumer vertices = vertexConsumers.getBuffer(background);
-        vertices.vertex(model, 0.f, 1.f, 0.f).color(255, 255, 255, 255)
-                .texture(0.f, 1.f).light(light).next();
-        vertices.vertex(model, 1.f, 1.f, 0.f).color(255, 255, 255, 255)
-                .texture(1.f, 1.f).light(light).next();
-        vertices.vertex(model, 1.f, 0.f, 0.f).color(255, 255, 255, 255)
-                .texture(1.f, 0.f).light(light).next();
-        vertices.vertex(model, 0.f, 0.f, 0.f).color(255, 255, 255, 255)
-                .texture(0.f, 0.f).light(light).next();
+        this.quad(this.background, 0.f, 0.f, 1.f, 1.f, model, vertexConsumers, light);
 
         this.texture.render(model, vertexConsumers, light);
+
+        if (this.glowing) {
+            matrices.push();
+            matrices.translate(0, 0, 1);
+            model = matrices.peek().getModel();
+
+            RenderLayer glow = RenderLayer.getText(GLOW_TEXTURE);
+
+            float speed = 600.f;
+            float offset = ((System.currentTimeMillis() % (int) speed) / speed);
+
+            offset *= 4.f;
+            offset = (float) (Math.floor(offset) / 4.f);
+
+            this.quad(glow, 0.f, offset, 1.f, offset + (0.25f), model, vertexConsumers, light);
+
+            matrices.pop();
+        }
 
         if (this.locked) {
             matrices.translate(.5f, .5f, 1);
             matrices.scale(.5f, .5f, 1.f);
             model = matrices.peek().getModel();
             RenderLayer locked = RenderLayer.getText(LOCK_ICON_TEXTURE);
-            vertices = vertexConsumers.getBuffer(locked);
-            vertices.vertex(model, 0.f, 1.f, 0.f).color(255, 255, 255, 255)
-                    .texture(0.f, .890625f).light(light).next();
-            vertices.vertex(model, 1.f, 1.f, 0.f).color(255, 255, 255, 255)
-                    .texture(.2421875f, .890625f).light(light).next();
-            vertices.vertex(model, 1.f, 0.f, 0.f).color(255, 255, 255, 255)
-                    .texture(.2421875f, .6484375f).light(light).next();
-            vertices.vertex(model, 0.f, 0.f, 0.f).color(255, 255, 255, 255)
-                    .texture(0.f, .6484375f).light(light).next();
+            this.quad(locked, 0.f, .6484375f, .2421875f, .890625f, model, vertexConsumers, light);
         }
 
         vertexConsumers.draw();
         matrices.pop();
         this.texture.pop();
+    }
+
+    private void quad(RenderLayer renderLayer, float uMin, float vMin, float uMax, float vMax,
+                      Matrix4f model, VertexConsumerProvider vertexConsumers, int light) {
+        VertexConsumer vertices = vertexConsumers.getBuffer(renderLayer);
+        vertices.vertex(model, 0.f, 1.f, 0.f).color(255, 255, 255, 255)
+                .texture(uMin, vMax).light(light).next();
+        vertices.vertex(model, 1.f, 1.f, 0.f).color(255, 255, 255, 255)
+                .texture(uMax, vMax).light(light).next();
+        vertices.vertex(model, 1.f, 0.f, 0.f).color(255, 255, 255, 255)
+                .texture(uMax, vMin).light(light).next();
+        vertices.vertex(model, 0.f, 0.f, 0.f).color(255, 255, 255, 255)
+                .texture(uMin, vMin).light(light).next();
     }
 }
