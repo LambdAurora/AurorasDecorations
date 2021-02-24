@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smithing",
+  "group": "aurorasdeco:blackboard",
+  "base": {
+    "item": "aurorasdeco:chalkboard"
+  },
+  "addition": {
+    "item": "minecraft:honeycomb"
+  },
+  "result": {
+    "item": "aurorasdeco:waxed_chalkboard"
+  }
+}

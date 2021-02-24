@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "aurorasdeco:block/blackboard"
+    },
+    "facing=east": {
+      "model": "aurorasdeco:block/blackboard",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "aurorasdeco:block/blackboard",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "aurorasdeco:block/blackboard",
+      "y": 270
+    }
+  }
+}

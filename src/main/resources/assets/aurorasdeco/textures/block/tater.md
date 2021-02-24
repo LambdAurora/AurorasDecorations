@@ -1,1 +1,0 @@
-`tater_face.png` and `tater_side.png` made by [Patbox](https://github.com/Patbox). 

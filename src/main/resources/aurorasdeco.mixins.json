@@ -15,7 +15,8 @@
   ],
   "client": [
     "client.ModelLoaderMixin",
-    "client.ReloadableResourceManagerImplMixin"
+    "client.ReloadableResourceManagerImplMixin",
+    "client.ScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

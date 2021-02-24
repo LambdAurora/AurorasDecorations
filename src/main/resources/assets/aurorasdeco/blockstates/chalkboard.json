@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "aurorasdeco:block/chalkboard"
+    },
+    "facing=east": {
+      "model": "aurorasdeco:block/chalkboard",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "aurorasdeco:block/chalkboard",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "aurorasdeco:block/chalkboard",
+      "y": 270
+    }
+  }
+}

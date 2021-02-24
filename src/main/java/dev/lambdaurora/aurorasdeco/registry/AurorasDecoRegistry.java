@@ -20,8 +20,11 @@ package dev.lambdaurora.aurorasdeco.registry;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.*;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.*;
+import dev.lambdaurora.aurorasdeco.block.entity.BlackboardBlockEntity;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
 import dev.lambdaurora.aurorasdeco.block.entity.WindChimeBlockEntity;
+import dev.lambdaurora.aurorasdeco.item.BlackboardItem;
+import dev.lambdaurora.aurorasdeco.recipe.BlackboardCloneRecipe;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -35,6 +38,9 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Items;
+import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.recipe.SpecialRecipeSerializer;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.tag.Tag;
@@ -45,6 +51,7 @@ import net.minecraft.util.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static dev.lambdaurora.aurorasdeco.AurorasDeco.id;
@@ -72,28 +79,46 @@ public final class AurorasDecoRegistry {
                             .allowsSpawning((state, world, pos, type) -> false)
             )
     );
-    public static final BigPottedCactusBlock BIG_POTTED_CACTUS_BLOCK = registerBigPotted("cactus", Blocks.CACTUS, Items.CACTUS,
+    public static final BigPottedCactusBlock BIG_POTTED_CACTUS_BLOCK = registerBigPotted("cactus",
+            Blocks.CACTUS, Items.CACTUS,
             type -> new BigPottedCactusBlock(type, BigPottedCactusBlock.CACTUS_SHAPE));
-    public static final BigStaticFlowerPot BIG_POTTED_BAMBOO_BLOCK = registerBigPotted("bamboo", Blocks.AIR, Items.BAMBOO,
+    public static final BigStaticFlowerPot BIG_POTTED_BAMBOO_BLOCK = registerBigPotted("bamboo",
+            Blocks.AIR, Items.BAMBOO,
             type -> new BigStaticFlowerPot(type, Block.createCuboidShape(
                     7.f, 14.f, 7.f,
                     9.f, 29.f, 9.f
             )));
-    public static final BigPottedAzaleaBlock BIG_POTTED_AZALEA_BLOCK = registerBigPotted("azalea", Blocks.AZALEA, Items.AZALEA,
+    public static final BigPottedAzaleaBlock BIG_POTTED_AZALEA_BLOCK = registerBigPotted("azalea",
+            Blocks.AZALEA, Items.AZALEA,
             BigPottedAzaleaBlock::new);
     public static final BigPottedAzaleaBlock BIG_POTTED_FLOWERING_AZALEA_BLOCK = registerBigPotted("flowering_azalea",
             Blocks.FLOWERING_AZALEA, Items.FLOWERING_AZALEA,
             BigPottedAzaleaBlock::new);
-    public static final BigPottedSweetBerryBushBlock BIG_POTTED_SWEET_BERRY_BUSH_BLOCK = registerBigPotted("sweet_berry_bush",
-            Blocks.SWEET_BERRY_BUSH, Items.SWEET_BERRIES,
-            BigPottedSweetBerryBushBlock::new);
-    public static final BigStaticFlowerPot BIG_POTTED_TATER_BLOCK = registerBigPotted("tater", Blocks.AIR, Items.POTATO,
+    public static final BigPottedSweetBerryBushBlock BIG_POTTED_SWEET_BERRY_BUSH_BLOCK =
+            registerBigPotted("sweet_berry_bush",
+                    Blocks.SWEET_BERRY_BUSH, Items.SWEET_BERRIES,
+                    BigPottedSweetBerryBushBlock::new);
+    public static final BigStaticFlowerPot BIG_POTTED_TATER_BLOCK = registerBigPotted("tater",
+            Blocks.AIR, Items.POTATO,
             type -> new BigStaticFlowerPot(type, Block.createCuboidShape(
                     4.f, 14.f, 4.f,
                     12.f, 21.f, 12.f
             )));
 
+    public static final BlackboardBlock BLACKBOARD_BLOCK = registerWithItem("blackboard",
+            new BlackboardBlock(FabricBlockSettings.of(Material.DECORATION).strength(.2f)
+                    .nonOpaque()
+                    .sounds(BlockSoundGroup.WOOD),
+                    false),
+            new FabricItemSettings().group(ItemGroup.DECORATIONS),
+            BlackboardItem::new);
+
     public static final BurntVineBlock BURNT_VINE_BLOCK = register("burnt_vine", new BurntVineBlock());
+
+    public static final BlackboardBlock CHALKBOARD_BLOCK = registerWithItem("chalkboard",
+            new BlackboardBlock(FabricBlockSettings.copyOf(BLACKBOARD_BLOCK), false),
+            new FabricItemSettings().group(ItemGroup.DECORATIONS),
+            BlackboardItem::new);
 
     public static final PieBlock PUMPKIN_PIE_BLOCK = register("pumpkin_pie", PieBlock.fromPieItem(Items.PUMPKIN_PIE));
 
@@ -102,10 +127,28 @@ public final class AurorasDecoRegistry {
             new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS));
 
     public static final WallLanternBlock WALL_LANTERN_BLOCK = register("wall_lantern", new WallLanternBlock());
+
+    public static final BlackboardBlock WAXED_BLACKBOARD_BLOCK = registerWithItem("waxed_blackboard",
+            new BlackboardBlock(FabricBlockSettings.copyOf(BLACKBOARD_BLOCK), true),
+            new FabricItemSettings().group(ItemGroup.DECORATIONS),
+            BlackboardItem::new);
+    public static final BlackboardBlock WAXED_CHALKBOARD_BLOCK = registerWithItem("waxed_chalkboard",
+            new BlackboardBlock(FabricBlockSettings.copyOf(BLACKBOARD_BLOCK), true),
+            new FabricItemSettings().group(ItemGroup.DECORATIONS),
+            BlackboardItem::new);
+
     public static final WindChimeBlock WIND_CHIME_BLOCK = registerWithItem("wind_chime",
-            new WindChimeBlock(FabricBlockSettings.of(Material.DECORATION).nonOpaque().sounds(BlockSoundGroup.AMETHYST_BLOCK)),
+            new WindChimeBlock(FabricBlockSettings.of(Material.DECORATION).nonOpaque()
+                    .sounds(BlockSoundGroup.AMETHYST_BLOCK)),
             new Item.Settings().group(ItemGroup.DECORATIONS));
 
+    public static final BlockEntityType<BlackboardBlockEntity> BLACKBOARD_BLOCK_ENTITY_TYPE = Registry.register(
+            Registry.BLOCK_ENTITY_TYPE,
+            id("blackboard"),
+            FabricBlockEntityTypeBuilder.create(BlackboardBlockEntity::new,
+                    BLACKBOARD_BLOCK, CHALKBOARD_BLOCK, WAXED_BLACKBOARD_BLOCK, WAXED_CHALKBOARD_BLOCK)
+                    .build()
+    );
     public static final BlockEntityType<LanternBlockEntity> LANTERN_BLOCK_ENTITY_TYPE = Registry.register(
             Registry.BLOCK_ENTITY_TYPE,
             id("lantern"),
@@ -118,9 +161,14 @@ public final class AurorasDecoRegistry {
     );
 
     public static final Identifier LANTERN_SWING_SOUND_ID = id("block.lantern.swing");
-    public static final SoundEvent LANTERN_SWING_SOUND_EVENT = Registry.register(Registry.SOUND_EVENT, LANTERN_SWING_SOUND_ID,
+    public static final SoundEvent LANTERN_SWING_SOUND_EVENT = Registry.register(Registry.SOUND_EVENT,
+            LANTERN_SWING_SOUND_ID,
             new SoundEvent(LANTERN_SWING_SOUND_ID)
     );
+
+    public static final SpecialRecipeSerializer<BlackboardCloneRecipe> BLACKBOARD_CLONE_RECIPE_SERIALIZER
+            = register("crafting_special_blackboard_clone",
+            new SpecialRecipeSerializer<>(BlackboardCloneRecipe::new));
 
     public static final Tag<Block> PET_BEDS = TagRegistry.block(AurorasDeco.id("pet_beds"));
 
@@ -129,7 +177,12 @@ public final class AurorasDecoRegistry {
     }
 
     private static <T extends Block> T registerWithItem(String name, T block, Item.Settings settings) {
-        register(name, new BlockItem(register(name, block), settings));
+        return registerWithItem(name, block, settings, BlockItem::new);
+    }
+
+    private static <T extends Block> T registerWithItem(String name, T block, Item.Settings settings,
+                                                        BiFunction<T, Item.Settings, BlockItem> factory) {
+        register(name, factory.apply(register(name, block), settings));
         return block;
     }
 
@@ -141,12 +194,17 @@ public final class AurorasDecoRegistry {
                 new FabricItemSettings().group(ItemGroup.DECORATIONS));
     }
 
-    private static <T extends BigFlowerPotBlock> T registerBigPotted(String name, Block plant, Item item, Function<PottedPlantType, T> block) {
+    private static <T extends BigFlowerPotBlock> T registerBigPotted(String name, Block plant, Item item,
+                                                                     Function<PottedPlantType, T> block) {
         return register("big_flower_pot/" + name, PottedPlantType.register(name, plant, item, block));
     }
 
     private static <T extends Item> T register(String name, T item) {
         return Registry.register(Registry.ITEM, id(name), item);
+    }
+
+    private static <R extends Recipe<?>, T extends RecipeSerializer<R>> T register(String name, T recipe) {
+        return Registry.register(Registry.RECIPE_SERIALIZER, id(name), recipe);
     }
 
     public static void init(Map<Identifier, Block> delayed) {

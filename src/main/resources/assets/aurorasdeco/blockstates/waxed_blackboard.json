@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "aurorasdeco:block/waxed_blackboard"
+    },
+    "facing=east": {
+      "model": "aurorasdeco:block/waxed_blackboard",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "aurorasdeco:block/waxed_blackboard",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "aurorasdeco:block/waxed_blackboard",
+      "y": 270
+    }
+  }
+}

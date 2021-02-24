@@ -17,6 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.client;
 
+import dev.lambdaurora.aurorasdeco.client.renderer.BlackboardBlockEntityRenderer;
 import dev.lambdaurora.aurorasdeco.client.renderer.LanternBlockEntityRenderer;
 import dev.lambdaurora.aurorasdeco.client.renderer.WindChimeBlockEntityRenderer;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
@@ -45,6 +46,8 @@ public class AurorasDecoClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE,
+                BlackboardBlockEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE,
                 LanternBlockEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE,

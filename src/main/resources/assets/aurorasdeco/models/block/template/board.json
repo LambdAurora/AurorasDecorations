@@ -1,0 +1,76 @@
+{
+  "credit": "Made by LambdAurora",
+  "parent": "block/block",
+  "textures": {
+    "wood": "minecraft:block/dark_oak_planks",
+    "particle": "#board"
+  },
+  "elements": [
+    {
+      "name": "board",
+      "from": [ 1, 1, 15 ],
+      "to": [ 15, 15, 16 ],
+      "faces": {
+        "north": {"uv": [ 1, 1, 15, 15 ], "texture": "#board"},
+        "south": {"uv": [ 1, 1, 15, 15 ], "texture": "#board", "cullface": "south"}
+      }
+    },
+    {
+      "name": "bottom",
+      "from": [ 0, 0, 15 ],
+      "to": [ 16, 1, 16 ],
+      "faces": {
+        "north": {"uv": [ 0, 15, 16, 16 ], "texture": "#board"},
+        "east":  {"uv": [ 0, 15, 1, 16 ], "texture": "#wood", "rotation": 90, "cullface": "east"},
+        "south": {"uv": [ 0, 15, 16, 16 ], "texture": "#wood", "cullface": "south"},
+        "west":  {"uv": [ 15, 15, 16, 16 ], "texture": "#wood", "rotation": 90, "cullface": "west"},
+        "down":  {"uv": [ 16, 15, 0, 16 ], "texture": "#wood", "cullface": "down"}
+      }
+    },
+    {
+      "name": "up",
+      "from": [ 0, 15, 15 ],
+      "to": [ 16, 16, 16 ],
+      "faces": {
+        "north": {"uv": [ 0, 0, 16, 1 ], "texture": "#board"},
+        "east":  {"uv": [ 0, 0, 1, 1 ], "texture": "#wood", "rotation": 90, "cullface": "east"},
+        "south": {"uv": [ 0, 0, 16, 1 ], "texture": "#wood", "cullface": "south"},
+        "west":  {"uv": [ 15, 0, 16, 1 ], "texture": "#wood", "rotation": 90, "cullface": "west"},
+        "up":    {"uv": [ 16, 0, 0, 1 ], "texture": "#wood", "cullface": "up"}
+      }
+    },
+    {
+      "name": "east",
+      "from": [ 0, 1, 15 ],
+      "to": [ 1, 15, 16 ],
+      "faces": {
+        "north": {"uv": [ 15, 1, 16, 15 ], "texture": "#board"},
+        "south": {"uv": [ 0, 1, 1, 15 ], "texture": "#wood", "cullface": "south"},
+        "west":  {"uv": [ 1, 14, 15, 15 ], "texture": "#wood", "rotation": 90, "cullface": "west"}
+      }
+    },
+    {
+      "name": "west",
+      "from": [ 15, 1, 15 ],
+      "to": [ 16, 15, 16 ],
+      "faces": {
+        "north": {"uv": [ 0, 1, 1, 15 ], "texture": "#board"},
+        "east":  {"uv": [ 1, 1, 15, 2 ], "texture": "#wood", "rotation": 90, "cullface": "east"},
+        "south": {"uv": [ 15, 1, 16, 15 ], "texture": "#wood", "cullface": "south"}
+      }
+    }
+  ],
+  "gui_light": "front",
+  "display": {
+    "gui": {
+      "rotation": [ 30, 225, 0 ],
+      "translation": [ 4, -2, 0 ],
+      "scale": [ 0.75, 0.75, 0.75 ]
+    },
+    "head": {
+      "rotation": [ 0, 0, 0 ],
+      "translation": [ 0, 0, -14.5 ],
+      "scale": [ 1, 1, 1 ]
+    }
+  }
+}

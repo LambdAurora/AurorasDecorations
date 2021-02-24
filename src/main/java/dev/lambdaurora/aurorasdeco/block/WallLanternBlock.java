@@ -71,7 +71,7 @@ import java.util.Map;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class WallLanternBlock extends BlockWithEntity {
+public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
     public static final IntProperty LIGHT = IntProperty.of("light", 0, 15);
     public static final EnumProperty<ExtensionType> EXTENSION = AurorasDecoProperties.EXTENSION;
