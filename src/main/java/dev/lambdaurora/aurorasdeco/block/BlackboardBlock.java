@@ -239,6 +239,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
                     }
 
                     world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos);
+                    return ActionResult.success(world.isClient());
                 }
             }
         }

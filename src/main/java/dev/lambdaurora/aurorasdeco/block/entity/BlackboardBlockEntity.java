@@ -62,9 +62,12 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
      * @param color the color
      */
     public void setPixel(int x, int y, DyeColor color) {
-        this.pixels[y * 16 + x] = (byte) (color.getId() + 1);
-        if (this.getWorld() instanceof ServerWorld)
-            this.sync();
+        byte colorId = (byte) (color.getId() + 1);
+        if (this.pixels[y * 16 + x] != colorId) {
+            this.pixels[y * 16 + x] = colorId;
+            if (this.getWorld() instanceof ServerWorld)
+                this.sync();
+        }
     }
 
     /**
@@ -74,9 +77,11 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
      * @param y the Y coordinate
      */
     public void clearPixel(int x, int y) {
-        this.pixels[y * 16 + x] = 0;
-        if (this.getWorld() instanceof ServerWorld)
-            this.sync();
+        if (this.pixels[y * 16 + x] != 0) {
+            this.pixels[y * 16 + x] = 0;
+            if (this.getWorld() instanceof ServerWorld)
+                this.sync();
+        }
     }
 
     /**
