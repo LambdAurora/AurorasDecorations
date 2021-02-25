@@ -7,7 +7,9 @@
   "authors": [
     "LambdAurora"
   ],
-  "contributors": [],
+  "contributors": [
+    "unascribed"
+  ],
   "contact": {
     "homepage": "https://modrinth.com/mod/aurorasdecorations",
     "sources": "https://github.com/LambdAurora/AurorasDecorations.git",
