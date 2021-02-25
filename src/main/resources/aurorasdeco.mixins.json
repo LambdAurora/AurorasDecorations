@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "BlockItemMixin",
+    "CandleBlockMixin",
     "CatEntityMixin",
     "FlintAndSteelItemMixin",
     "ItemMixin",

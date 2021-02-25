@@ -1,0 +1,50 @@
+/*
+ * Copyright (c) 2020 LambdAurora <aurora42lambda@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package dev.lambdaurora.aurorasdeco.block;
+
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.CandleBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraft.loot.context.LootContext;
+
+import java.util.List;
+
+public class ExtendedCandleBlock extends CandleBlock {
+    protected final CandleBlock parent;
+
+    public ExtendedCandleBlock(CandleBlock candleBlock) {
+        super(FabricBlockSettings.copyOf(candleBlock)
+                // Bump up a little bit the luminance,
+                // especially since the candles extending this are not on the floor.
+                .luminance((state) -> CandleBlock.STATE_TO_LUMINANCE.applyAsInt(state) + 2)
+        );
+        this.parent = candleBlock;
+    }
+
+    /* Loot table */
+
+    @Override
+    public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
+        BlockState parentState = this.parent.getDefaultState()
+                .with(CANDLES, state.get(CANDLES))
+                .with(LIT, state.get(LIT))
+                .with(WATERLOGGED, state.get(WATERLOGGED));
+        return parentState.getDroppedStacks(builder);
+    }
+}

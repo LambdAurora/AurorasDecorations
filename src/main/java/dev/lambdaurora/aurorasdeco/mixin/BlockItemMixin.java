@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.mixin;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
+import dev.lambdaurora.aurorasdeco.block.ChandelierBlock;
 import dev.lambdaurora.aurorasdeco.block.WallCandleBlock;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
 import net.minecraft.block.*;
@@ -52,6 +53,7 @@ public abstract class BlockItemMixin implements BlockItemAccessor {
     public abstract Block getBlock();
 
     private Block aurorasdeco$wallBlock = null;
+    private Block aurorasdeco$ceilingBlock = null;
 
     @Override
     public void aurorasdeco$setWallBlock(Block block) {
@@ -67,28 +69,46 @@ public abstract class BlockItemMixin implements BlockItemAccessor {
             if (candleId.getNamespace().equals("minecraft")) {
                 AurorasDeco.DELAYED_REGISTER_BLOCK.put(AurorasDeco.id("wall_" + candleId.getPath()),
                         this.aurorasdeco$wallBlock = new WallCandleBlock((CandleBlock) this.getBlock()));
+                AurorasDeco.DELAYED_REGISTER_BLOCK.put(AurorasDeco.id("chandelier/" + candleId.getPath()
+                                .replace("_candle", "")),
+                        this.aurorasdeco$ceilingBlock = new ChandelierBlock((CandleBlock) this.getBlock()));
                 map.put(this.aurorasdeco$wallBlock, item);
+                map.put(this.aurorasdeco$ceilingBlock, item);
             }
         }
     }
 
     @Inject(method = "getPlacementState", at = @At("HEAD"), cancellable = true)
     private void onGetPlacementState(ItemPlacementContext context, CallbackInfoReturnable<BlockState> cir) {
+        Direction[] placementDirections = context.getPlacementDirections();
+        WorldView world = context.getWorld();
+        BlockPos pos = context.getBlockPos();
+        BlockState placedState = world.getBlockState(pos);
+
+        if (this.aurorasdeco$ceilingBlock != null
+                && (placementDirections[0] == Direction.UP || placedState.isOf(this.aurorasdeco$ceilingBlock))) {
+            BlockState state = this.aurorasdeco$ceilingBlock.getPlacementState(context);
+
+            if (state != null && state.canPlaceAt(world, pos)
+                    && world.canPlace(state, pos, ShapeContext.absent())) {
+                cir.setReturnValue(state);
+                return;
+            }
+        }
+
         if (this.aurorasdeco$wallBlock != null) {
             BlockState wallState = this.aurorasdeco$wallBlock.getPlacementState(context);
             BlockState resultState = null;
-            WorldView world = context.getWorld();
-            BlockPos blockPos = context.getBlockPos();
 
             for (Direction direction : context.getPlacementDirections()) {
                 BlockState state = direction.getAxis().isVertical() ? this.getBlock().getPlacementState(context) : wallState;
-                if (state != null && state.canPlaceAt(world, blockPos)) {
+                if (state != null && state.canPlaceAt(world, pos)) {
                     resultState = state;
                     break;
                 }
             }
 
-            if (resultState != null && world.canPlace(resultState, blockPos, ShapeContext.absent()))
+            if (resultState != null && world.canPlace(resultState, pos, ShapeContext.absent()))
                 cir.setReturnValue(resultState);
         }
     }

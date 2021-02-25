@@ -1,0 +1,6 @@
+{
+  "parent": "aurorasdeco:block/template/chandelier_one",
+  "textures": {
+    "candle": "minecraft:block/green_candle"
+  }
+}

@@ -24,11 +24,8 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.context.LootContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.util.Util;
@@ -54,7 +51,7 @@ import java.util.Map;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class WallCandleBlock extends CandleBlock {
+public class WallCandleBlock extends ExtendedCandleBlock {
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
 
     private static final Int2ObjectMap<Map<Direction, VoxelShape>> SHAPES;
@@ -62,11 +59,8 @@ public class WallCandleBlock extends CandleBlock {
 
     private static final VoxelShape HOLDER_SHAPE = createCuboidShape(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
 
-    private final CandleBlock parent;
-
     public WallCandleBlock(CandleBlock candleBlock) {
-        super(FabricBlockSettings.copyOf(candleBlock));
-        this.parent = candleBlock;
+        super(candleBlock);
 
         this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
     }
@@ -124,17 +118,6 @@ public class WallCandleBlock extends CandleBlock {
                                                 BlockPos pos, BlockPos posFrom) {
         state = super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
         return direction.getOpposite() == state.get(FACING) && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : state;
-    }
-
-    /* Loot table */
-
-    @Override
-    public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
-        BlockState parentState = this.parent.getDefaultState()
-                .with(CANDLES, state.get(CANDLES))
-                .with(LIT, state.get(LIT))
-                .with(WATERLOGGED, state.get(WATERLOGGED));
-        return parentState.getDroppedStacks(builder);
     }
 
     /* Client */

@@ -33,6 +33,9 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 - Burnt-vine
   - Use a flint of steel on a vine block to burn the tip of a vine.
   - Burnt-vine is not able to grow.
+- Candles
+  - Can now be put on walls.
+  - Can now be put on ceilings as chandeliers.
 - Lanterns
   - Can now be placed on top of leaves.
   - Wall Lantern
@@ -52,9 +55,6 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
   - Cannot be moved by pistons or slime/honey blocks.
   - Can transmit state change in an observer chain.
     Perfect as a dispenser or dropper replacement in some contraptions!
-- Wall candles
-  - Candles can be put on walls.
-  - They work the same as normal candles.
 
 ## Pictures
 
@@ -63,6 +63,8 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 ![Blackboards](images/blackboards.png)
 
 ![Burning Vine Tips](images/burnt_vine.png)
+
+![Chandeliers](images/chandeliers.png)
 
 ![Pet Beds](images/pet_beds.png)
 

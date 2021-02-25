@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "candles=1": {
+      "model": "aurorasdeco:block/chandelier/one/lime"
+    },
+    "candles=2": {
+      "model": "aurorasdeco:block/chandelier/two/lime"
+    },
+    "candles=3": {
+      "model": "aurorasdeco:block/chandelier/three/lime"
+    },
+    "candles=4": {
+      "model": "aurorasdeco:block/chandelier/four/lime"
+    }
+  }
+}
