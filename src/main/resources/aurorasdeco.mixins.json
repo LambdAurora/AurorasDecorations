@@ -11,12 +11,15 @@
     "ItemFrameEntityMixin",
     "ItemMixin",
     "LanternMixin",
+    "LeadItemMixin",
+    "MobEntityAccessor",
     "ParrotEntityMixin",
     "SitGoalMixin",
     "VineBlockAccessor",
     "WolfEntityMixin"
   ],
   "client": [
+    "client.MobEntityRendererAccessor",
     "client.ModelLoaderMixin",
     "client.ReloadableResourceManagerImplMixin",
     "client.ScreenMixin"

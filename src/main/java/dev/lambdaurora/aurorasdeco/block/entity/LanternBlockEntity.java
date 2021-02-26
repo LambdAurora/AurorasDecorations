@@ -236,6 +236,15 @@ public class LanternBlockEntity extends SwayingBlockEntity implements BlockEntit
     }
 
     /**
+     * Returns the max swing ticks.
+     *
+     * @return the max swing ticks
+     */
+    public int getMaxSwingTicks() {
+        return this.getCachedState().getFluidState().isEmpty() ? 60 : 100;
+    }
+
+    /**
      * Swings the lantern in a given direction.
      *
      * @param direction the direction to swing to
@@ -266,6 +275,7 @@ public class LanternBlockEntity extends SwayingBlockEntity implements BlockEntit
         this.collisions.put(entity, lanternCollisionAxis);
         this.colliding = true;
         this.getWorld().addSyncedBlockEvent(this.getPos(), this.getCachedState().getBlock(), 2, 1);
+        this.getWorld().updateComparators(this.getPos(), this.getCachedState().getBlock());
 
         this.activate(direction);
     }
@@ -347,8 +357,7 @@ public class LanternBlockEntity extends SwayingBlockEntity implements BlockEntit
             lantern.swingTicks = 4;
         }
 
-        float maxTicks = lantern.getCachedState().getFluidState().isEmpty() ? 60 : 100;
-        if (lantern.swingTicks >= maxTicks) {
+        if (lantern.swingTicks >= lantern.getMaxSwingTicks()) {
             lantern.swinging = false;
             lantern.swingTicks = 0;
         }
@@ -383,6 +392,7 @@ public class LanternBlockEntity extends SwayingBlockEntity implements BlockEntit
         if (lantern.collisions.isEmpty() && lantern.isColliding()) {
             lantern.colliding = false;
             world.addSyncedBlockEvent(pos, state.getBlock(), 2, 0);
+            world.updateComparators(pos, state.getBlock());
         }
 
         if (state.get(WallLanternBlock.LIGHT) != lantern.getLanternState().getLuminance())
@@ -391,8 +401,13 @@ public class LanternBlockEntity extends SwayingBlockEntity implements BlockEntit
         if (originalState != state)
             world.setBlockState(pos, state);
 
-        if (canTick)
+        if (canTick) {
+            int oldSwingTicks = lantern.swingTicks;
             tick(lantern);
+            if (oldSwingTicks != lantern.swingTicks) {
+                world.updateComparators(pos, state.getBlock());
+            }
+        }
     }
 
     @Override

@@ -61,6 +61,8 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
   - Cannot be moved by pistons or slime/honey blocks.
   - Can transmit state change in an observer chain.
     Perfect as a dispenser or dropper replacement in some contraptions!
+- Tie leads to fences  
+  Leads can now be tied directly between two fences, rather than only fence-mob.
 
 ## Pictures
 
@@ -79,6 +81,8 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 ![Placeable Pumpkin Pie](images/placeable_pumpkin_pie.png)
 
 ![Sturdy Stone](images/sturdy_stone.png)
+
+![Tie leads to fences](images/leash_tweaks.png)
 
 ![Wall Candles](images/wall_candles.png)
 

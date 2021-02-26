@@ -23,11 +23,13 @@ import dev.lambdaurora.aurorasdeco.block.big_flower_pot.*;
 import dev.lambdaurora.aurorasdeco.block.entity.BlackboardBlockEntity;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
 import dev.lambdaurora.aurorasdeco.block.entity.WindChimeBlockEntity;
+import dev.lambdaurora.aurorasdeco.entity.FakeLeashKnotEntity;
 import dev.lambdaurora.aurorasdeco.item.BlackboardItem;
 import dev.lambdaurora.aurorasdeco.recipe.BlackboardCloneRecipe;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
@@ -35,7 +37,10 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.FenceGateBlock;
 import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -148,6 +153,8 @@ public final class AurorasDecoRegistry {
                     .sounds(BlockSoundGroup.AMETHYST_BLOCK)),
             new Item.Settings().group(ItemGroup.DECORATIONS));
 
+    /* Block Entities */
+
     public static final BlockEntityType<BlackboardBlockEntity> BLACKBOARD_BLOCK_ENTITY_TYPE = Registry.register(
             Registry.BLOCK_ENTITY_TYPE,
             id("blackboard"),
@@ -164,6 +171,21 @@ public final class AurorasDecoRegistry {
             Registry.BLOCK_ENTITY_TYPE,
             id("wind_chime"),
             FabricBlockEntityTypeBuilder.create(WindChimeBlockEntity::new, WIND_CHIME_BLOCK).build()
+    );
+
+    /* Entities */
+
+    public static final EntityType<FakeLeashKnotEntity> FAKE_LEASH_KNOT_ENTITY_TYPE = Registry.register(
+            Registry.ENTITY_TYPE,
+            id("fake_leash_knot"),
+            FabricEntityTypeBuilder.<FakeLeashKnotEntity>createMob()
+                    .entityFactory(FakeLeashKnotEntity::new)
+                    .dimensions(EntityDimensions.fixed(.375f, .5f))
+                    .defaultAttributes(MobEntity::createMobAttributes)
+                    .forceTrackedVelocityUpdates(false)
+                    .trackRangeChunks(10)
+                    .trackedUpdateRate(Integer.MAX_VALUE)
+                    .build()
     );
 
     /* Sounds */

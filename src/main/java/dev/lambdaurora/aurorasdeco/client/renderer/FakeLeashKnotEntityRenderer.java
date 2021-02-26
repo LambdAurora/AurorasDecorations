@@ -1,0 +1,79 @@
+/*
+ * Copyright (c) 2020 LambdAurora <aurora42lambda@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package dev.lambdaurora.aurorasdeco.client.renderer;
+
+import dev.lambdaurora.aurorasdeco.entity.FakeLeashKnotEntity;
+import dev.lambdaurora.aurorasdeco.mixin.client.MobEntityRendererAccessor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.render.entity.MobEntityRenderer;
+import net.minecraft.client.render.entity.model.EntityModelLayers;
+import net.minecraft.client.render.entity.model.LeashKnotEntityModel;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.Identifier;
+
+@Environment(EnvType.CLIENT)
+public class FakeLeashKnotEntityRenderer
+        extends MobEntityRenderer<FakeLeashKnotEntity, LeashKnotEntityModel<FakeLeashKnotEntity>> {
+    private static final Identifier TEXTURE = new Identifier("textures/entity/lead_knot.png");
+
+    public FakeLeashKnotEntityRenderer(EntityRendererFactory.Context context) {
+        super(context, new LeashKnotEntityModel<>(context.getPart(EntityModelLayers.LEASH_KNOT)), 1.f);
+        this.shadowRadius = 0.f;
+    }
+
+    @Override
+    public void render(FakeLeashKnotEntity fakeLeashKnot, float f, float tickDelta, MatrixStack matrices,
+                       VertexConsumerProvider vertexConsumers, int light) {
+        matrices.push();
+        matrices.scale(-1.f, -1.f, 1.f);
+
+        this.scale(fakeLeashKnot, matrices, tickDelta);
+
+        MinecraftClient client = MinecraftClient.getInstance();
+        boolean visible = this.isVisible(fakeLeashKnot);
+        boolean translucent = !visible && !fakeLeashKnot.isInvisibleTo(client.player);
+        boolean outline = client.hasOutline(fakeLeashKnot);
+        RenderLayer renderLayer = this.getRenderLayer(fakeLeashKnot, visible, translucent, outline);
+        if (renderLayer != null) {
+            VertexConsumer vertices = vertexConsumers.getBuffer(renderLayer);
+            int overlay = getOverlay(fakeLeashKnot, this.getAnimationCounter(fakeLeashKnot, tickDelta));
+            this.model.render(matrices, vertices, light, overlay, 1.f, 1.f, 1.f, translucent ? .15f : 1.f);
+        }
+
+        matrices.pop();
+
+        Entity holding = fakeLeashKnot.getHoldingEntity();
+        if (holding != null) {
+            ((MobEntityRendererAccessor<FakeLeashKnotEntity>) this).aurorasdeco$renderLeash(
+                    fakeLeashKnot, tickDelta, matrices, vertexConsumers, holding
+            );
+        }
+    }
+
+    @Override
+    public Identifier getTexture(FakeLeashKnotEntity entity) {
+        return TEXTURE;
+    }
+}

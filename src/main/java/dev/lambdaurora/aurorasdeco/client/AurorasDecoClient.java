@@ -19,10 +19,7 @@ package dev.lambdaurora.aurorasdeco.client;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
-import dev.lambdaurora.aurorasdeco.client.renderer.BlackboardBlockEntityRenderer;
-import dev.lambdaurora.aurorasdeco.client.renderer.BlackboardItemRenderer;
-import dev.lambdaurora.aurorasdeco.client.renderer.LanternBlockEntityRenderer;
-import dev.lambdaurora.aurorasdeco.client.renderer.WindChimeBlockEntityRenderer;
+import dev.lambdaurora.aurorasdeco.client.renderer.*;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
 import net.fabricmc.api.ClientModInitializer;
@@ -32,6 +29,7 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.minecraft.client.color.world.BiomeColors;
@@ -62,6 +60,9 @@ public class AurorasDecoClient implements ClientModInitializer {
                 LanternBlockEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE,
                 WindChimeBlockEntityRenderer::new);
+
+        EntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.FAKE_LEASH_KNOT_ENTITY_TYPE,
+                FakeLeashKnotEntityRenderer::new);
 
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutoutMipped(),
                 AurorasDecoRegistry.BURNT_VINE_BLOCK);

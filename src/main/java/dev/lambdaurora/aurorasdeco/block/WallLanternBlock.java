@@ -171,6 +171,16 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
         }
     }
 
+    @Override
+    public BlockState rotate(BlockState state, BlockRotation rotation) {
+        return state.with(FACING, rotation.rotate(state.get(FACING)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, BlockMirror mirror) {
+        return state.rotate(mirror.getRotation(state.get(FACING)));
+    }
+
     /* Updates */
 
     @Override
@@ -338,14 +348,26 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
         return false;
     }
 
+    /* Redstone */
+
     @Override
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(FACING, rotation.rotate(state.get(FACING)));
+    public boolean hasComparatorOutput(BlockState state) {
+        return true;
     }
 
     @Override
-    public BlockState mirror(BlockState state, BlockMirror mirror) {
-        return state.rotate(mirror.getRotation(state.get(FACING)));
+    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
+        LanternBlockEntity lantern = AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
+        if (lantern != null) {
+            if (lantern.isColliding()) {
+                return 15;
+            } else if (lantern.isSwinging()) {
+                int max = lantern.getMaxSwingTicks();
+                float progress = (max - lantern.swingTicks) / (float) max;
+                return (int) (progress * 14);
+            }
+        }
+        return 0;
     }
 
     static {
