@@ -3,10 +3,12 @@
   "package": "dev.lambdaurora.aurorasdeco.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "ArmorStandEntityMixin",
     "BlockItemMixin",
     "CandleBlockMixin",
     "CatEntityMixin",
     "FlintAndSteelItemMixin",
+    "ItemFrameEntityMixin",
     "ItemMixin",
     "LanternMixin",
     "ParrotEntityMixin",

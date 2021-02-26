@@ -14,6 +14,9 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 
 ### Features:
 
+- Armor stand
+  - Right-click with sticks to add arms.
+  - Shift-Right-click with shears to hide the base plate.
 - Big Flower Pot Block
   - Can hold a plant, can dynamically support some modded plants (or new plants in Minecraft if the mod hasn't been updated).
   - Can hold tall plants.
@@ -36,6 +39,8 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 - Candles
   - Can now be put on walls.
   - Can now be put on ceilings as chandeliers.
+- Item Frames can be made invisible when using shears on them while they hold an item.
+  After the item is removed, the item frame will be visible again.
 - Lanterns
   - Can now be placed on top of leaves.
   - Wall Lantern
@@ -44,6 +49,7 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
     - Swings!
     - Has special entity collision handling for swinging.
     - Supports modded lanterns.
+- Nether brick fence gate
 - Pet beds
   - Cozy little beds for your little friends!
   - Comes in all dye colors.
@@ -65,6 +71,8 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 ![Burning Vine Tips](images/burnt_vine.png)
 
 ![Chandeliers](images/chandeliers.png)
+
+![Nether Brick Fence Gate](images/nether_brick_fence_gate.png)
 
 ![Pet Beds](images/pet_beds.png)
 

@@ -32,6 +32,7 @@ import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.FenceGateBlock;
 import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EquipmentSlot;
@@ -121,6 +122,10 @@ public final class AurorasDecoRegistry {
             new FabricItemSettings().group(ItemGroup.DECORATIONS).equipmentSlot(stack -> EquipmentSlot.HEAD),
             BlackboardItem::new);
 
+    public static final FenceGateBlock NETHER_BRICK_FENCE_GATE = registerWithItem("nether_brick_fence_gate",
+            new FenceGateBlock(FabricBlockSettings.copyOf(Blocks.NETHER_BRICK_FENCE)),
+            new FabricItemSettings().group(ItemGroup.REDSTONE));
+
     public static final PieBlock PUMPKIN_PIE_BLOCK = register("pumpkin_pie", PieBlock.fromPieItem(Items.PUMPKIN_PIE));
 
     public static final SturdyStoneBlock STURDY_STONE_BLOCK = registerWithItem("sturdy_stone",
@@ -161,15 +166,31 @@ public final class AurorasDecoRegistry {
             FabricBlockEntityTypeBuilder.create(WindChimeBlockEntity::new, WIND_CHIME_BLOCK).build()
     );
 
+    /* Sounds */
+
     public static final Identifier LANTERN_SWING_SOUND_ID = id("block.lantern.swing");
     public static final SoundEvent LANTERN_SWING_SOUND_EVENT = Registry.register(Registry.SOUND_EVENT,
             LANTERN_SWING_SOUND_ID,
             new SoundEvent(LANTERN_SWING_SOUND_ID)
     );
+    public static final Identifier ARMOR_STAND_HIDE_BASE_PLATE_SOUND_ID = id("entity.armor_stand.hide_base_plate");
+    public static final SoundEvent ARMOR_STAND_HIDE_BASE_PLATE_SOUND_EVENT = Registry.register(Registry.SOUND_EVENT,
+            ARMOR_STAND_HIDE_BASE_PLATE_SOUND_ID,
+            new SoundEvent(ARMOR_STAND_HIDE_BASE_PLATE_SOUND_ID)
+    );
+    public static final Identifier ITEM_FRAME_HIDE_BACKGROUND_ID = id("entity.item_frame.hide_background");
+    public static final SoundEvent ITEM_FRAME_HIDE_BACKGROUND_EVENT = Registry.register(Registry.SOUND_EVENT,
+            ITEM_FRAME_HIDE_BACKGROUND_ID,
+            new SoundEvent(ITEM_FRAME_HIDE_BACKGROUND_ID)
+    );
+
+    /* Recipes */
 
     public static final SpecialRecipeSerializer<BlackboardCloneRecipe> BLACKBOARD_CLONE_RECIPE_SERIALIZER
             = register("crafting_special_blackboard_clone",
             new SpecialRecipeSerializer<>(BlackboardCloneRecipe::new));
+
+    /* Tags */
 
     public static final Tag<Block> PET_BEDS = TagRegistry.block(AurorasDeco.id("pet_beds"));
 

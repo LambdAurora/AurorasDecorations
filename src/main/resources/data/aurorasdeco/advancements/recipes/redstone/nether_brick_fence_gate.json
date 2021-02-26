@@ -1,0 +1,65 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "aurorasdeco:nether_brick_fence_gate"
+    ]
+  },
+  "criteria": {
+    "has_nether_brick": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:nether_brick"
+          }
+        ]
+      }
+    },
+    "has_nether_bricks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:nether_bricks"
+          }
+        ]
+      }
+    },
+    "has_nether_brick_fence": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:nether_brick_fence"
+          }
+        ]
+      }
+    },
+    "has_self": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "aurorasdeco:nether_brick_fence_gate"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "aurorasdeco:nether_brick_fence_gate"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_nether_brick",
+      "has_nether_bricks",
+      "has_nether_brick_fence",
+      "has_self",
+      "has_the_recipe"
+    ]
+  ]
+}

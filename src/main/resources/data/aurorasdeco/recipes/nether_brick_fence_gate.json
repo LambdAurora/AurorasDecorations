@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#B#",
+    "#B#"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:nether_brick"
+    },
+    "B": {
+      "item": "minecraft:nether_bricks"
+    }
+  },
+  "result": {
+    "item": "aurorasdeco:nether_brick_fence_gate",
+    "count": 2
+  }
+}

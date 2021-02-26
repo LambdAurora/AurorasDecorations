@@ -9,5 +9,20 @@
       "block/lantern/break6"
     ],
     "subtitle": "subtitles.aurorasdeco.block.lantern.swing"
+  },
+  "entity.armor_stand.hide_base_plate": {
+    "sounds": [
+      "entity/itemframe/remove_item1",
+      "entity/itemframe/remove_item2",
+      "entity/itemframe/remove_item3",
+      "entity/itemframe/remove_item4"
+    ],
+    "subtitle": "subtitles.aurorasdeco.entity.armor_stand.hide_base_plate"
+  },
+  "entity.item_frame.hide_background": {
+    "sounds": [
+      "mob/sheep/shear"
+    ],
+    "subtitle": "subtitles.item.shears.shear"
   }
 }

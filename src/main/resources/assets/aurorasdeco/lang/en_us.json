@@ -6,6 +6,8 @@
   "block.aurorasdeco.chalkboard": "Chalkboard",
   "block.aurorasdeco.waxed_chalkboard": "Waxed Chalkboard",
 
+  "block.aurorasdeco.nether_brick_fence_gate": "Nether Brick Fence Gate",
+
   "block.aurorasdeco.pet_bed.black": "Black Pet Bed",
   "block.aurorasdeco.pet_bed.blue": "Blue Pet Bed",
   "block.aurorasdeco.pet_bed.brown": "Brown Pet Bed",
@@ -27,5 +29,6 @@
 
   "block.aurorasdeco.wind_chime": "Wind Chime",
 
-  "subtitles.aurorasdeco.block.lantern.swing": "Lantern swings"
+  "subtitles.aurorasdeco.block.lantern.swing": "Lantern swings",
+  "subtitles.aurorasdeco.entity.armor_stand.hide_base_plate": "Hide armor stand base plate"
 }

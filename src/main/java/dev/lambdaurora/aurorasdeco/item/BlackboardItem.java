@@ -23,10 +23,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.client.item.TooltipData;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.World;
 
 import java.util.Optional;
 
@@ -43,6 +47,31 @@ public class BlackboardItem extends BlockItem {
     public BlackboardItem(BlackboardBlock blackboardBlock, Settings settings) {
         super(blackboardBlock, settings);
         this.locked = blackboardBlock.isLocked();
+    }
+
+    @Override
+    public void onCraft(ItemStack stack, World world, PlayerEntity player) {
+        this.ensureValidStack(stack);
+    }
+
+    @Override
+    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
+        if (this.isIn(group))
+            stacks.add(this.getDefaultStack());
+    }
+
+    @Override
+    public ItemStack getDefaultStack() {
+        return this.ensureValidStack(new ItemStack(this));
+    }
+
+    private ItemStack ensureValidStack(ItemStack stack) {
+        if (stack.getSubTag("BlockEntityTag") == null) {
+            CompoundTag nbt = stack.getOrCreateSubTag("BlockEntityTag");
+            nbt.putBoolean("lit", false);
+            nbt.putByteArray("pixels", new byte[256]);
+        }
+        return stack;
     }
 
     @Environment(EnvType.CLIENT)

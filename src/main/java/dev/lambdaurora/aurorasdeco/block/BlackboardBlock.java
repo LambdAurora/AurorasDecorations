@@ -298,14 +298,10 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
         if (blackboard != null) {
             if (!world.isClient() && playerEntity.isCreative()) {
                 ItemStack stack = new ItemStack(this);
-                if (!blackboard.isEmpty()) {
-                    CompoundTag nbt = blackboard.writeBlackBoardNbt(new CompoundTag());
-                    if (!nbt.isEmpty()) {
-                        nbt.remove("custom_name");
-                        nbt.putBoolean("lit", state.get(LIT));
-                        stack.putSubTag("BlockEntityTag", nbt);
-                    }
-                }
+                CompoundTag nbt = blackboard.writeBlackBoardNbt(new CompoundTag());
+                nbt.remove("custom_name");
+                nbt.putBoolean("lit", state.get(LIT));
+                stack.putSubTag("BlockEntityTag", nbt);
 
                 if (blackboard.hasCustomName()) {
                     stack.setCustomName(blackboard.getCustomName());
@@ -328,11 +324,9 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
         BlackboardBlockEntity blackboard = AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE.get(world, pos);
         if (blackboard != null) {
             CompoundTag nbt = blackboard.writeBlackBoardNbt(new CompoundTag());
-            if (!nbt.isEmpty()) {
-                nbt.remove("custom_name");
-                nbt.putBoolean("lit", state.get(LIT));
-                stack.putSubTag("BlockEntityTag", nbt);
-            }
+            nbt.remove("custom_name");
+            nbt.putBoolean("lit", state.get(LIT));
+            stack.putSubTag("BlockEntityTag", nbt);
         }
 
         return stack;
