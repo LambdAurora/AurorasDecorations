@@ -22,14 +22,18 @@ import dev.lambdaurora.aurorasdeco.block.*;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.*;
 import dev.lambdaurora.aurorasdeco.block.entity.BlackboardBlockEntity;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
+import dev.lambdaurora.aurorasdeco.block.entity.ShelfBlockEntity;
 import dev.lambdaurora.aurorasdeco.block.entity.WindChimeBlockEntity;
 import dev.lambdaurora.aurorasdeco.entity.FakeLeashKnotEntity;
 import dev.lambdaurora.aurorasdeco.item.BlackboardItem;
 import dev.lambdaurora.aurorasdeco.recipe.BlackboardCloneRecipe;
+import dev.lambdaurora.aurorasdeco.screen.ShelfScreenHandler;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
@@ -48,6 +52,7 @@ import net.minecraft.item.Items;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialRecipeSerializer;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.tag.Tag;
@@ -153,6 +158,16 @@ public final class AurorasDecoRegistry {
                     .sounds(BlockSoundGroup.AMETHYST_BLOCK)),
             new Item.Settings().group(ItemGroup.DECORATIONS));
 
+    public static final Block[] SHELF_BLOCKS = WoodType.stream().map(woodType ->
+            registerWithItem("shelf/" + woodType.getPathName(),
+                    new ShelfBlock(FabricBlockSettings.of(Material.WOOD, woodType.getMapColor())
+                            .nonOpaque()
+                            .strength(2.f, 3.f)
+                            .breakByTool(FabricToolTags.AXES)
+                            .sounds(BlockSoundGroup.WOOD)),
+                    new FabricItemSettings().group(ItemGroup.DECORATIONS))
+    ).toArray(ShelfBlock[]::new);
+
     /* Block Entities */
 
     public static final BlockEntityType<BlackboardBlockEntity> BLACKBOARD_BLOCK_ENTITY_TYPE = Registry.register(
@@ -167,10 +182,20 @@ public final class AurorasDecoRegistry {
             id("lantern"),
             FabricBlockEntityTypeBuilder.create(LanternBlockEntity::new, WALL_LANTERN_BLOCK).build()
     );
+    public static final BlockEntityType<ShelfBlockEntity> SHELF_BLOCK_ENTITY_TYPE = Registry.register(
+            Registry.BLOCK_ENTITY_TYPE,
+            id("shelf"),
+            FabricBlockEntityTypeBuilder.create(ShelfBlockEntity::new, SHELF_BLOCKS).build()
+    );
     public static final BlockEntityType<WindChimeBlockEntity> WIND_CHIME_BLOCK_ENTITY_TYPE = Registry.register(
             Registry.BLOCK_ENTITY_TYPE,
             id("wind_chime"),
             FabricBlockEntityTypeBuilder.create(WindChimeBlockEntity::new, WIND_CHIME_BLOCK).build()
+    );
+
+    public static final ScreenHandlerType<ShelfScreenHandler> SHELF_SCREEN_HANDLER_TYPE = ScreenHandlerRegistry.registerExtended(
+            AurorasDeco.id("shelf"),
+            ShelfScreenHandler::new
     );
 
     /* Entities */
@@ -215,6 +240,7 @@ public final class AurorasDecoRegistry {
     /* Tags */
 
     public static final Tag<Block> PET_BEDS = TagRegistry.block(AurorasDeco.id("pet_beds"));
+    public static final Tag<Block> SHELVES = TagRegistry.block(AurorasDeco.id("shelves"));
 
     private static <T extends Block> T register(String name, T block) {
         return Registry.register(Registry.BLOCK, id(name), block);
@@ -272,5 +298,8 @@ public final class AurorasDecoRegistry {
         for (DyeColor color : DyeColor.values()) {
             registerPetBed(color);
         }
+
+        FlammableBlockRegistry.getDefaultInstance().add(PET_BEDS, 10, 30);
+        FlammableBlockRegistry.getDefaultInstance().add(SHELVES, 5, 20);
     }
 }

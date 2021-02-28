@@ -18,18 +18,25 @@
 package dev.lambdaurora.aurorasdeco.resource;
 
 import com.google.common.collect.Sets;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import dev.lambdaurora.aurorasdeco.block.ShelfBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
+import dev.lambdaurora.aurorasdeco.registry.WoodType;
+import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.resource.ModResourcePack;
+import net.fabricmc.fabric.impl.resource.loader.ModResourcePackUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModMetadata;
+import net.minecraft.resource.AbstractFileResourcePack;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.resource.metadata.ResourceMetadataReader;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,24 +47,86 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class AurorasDecoPack implements ModResourcePack {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Set<String> NAMESPACES = Sets.newHashSet(AurorasDeco.NAMESPACE);
 
     private final Map<String, byte[]> resources = new Object2ObjectOpenHashMap<>();
+    private final ResourceType type;
 
-    public AurorasDecoPack() {
+    public AurorasDecoPack(ResourceType type) {
+        this.type = type;
     }
 
     public AurorasDecoPack rebuild(ResourceType type) {
-        return type == ResourceType.CLIENT_RESOURCES ? this.rebuildClient() : this;
+        return type == ResourceType.CLIENT_RESOURCES ? this.rebuildClient() : this.rebuildData();
+    }
+
+    private void registerShelfBlockState(WoodType type) {
+        String blockStatePath = "assets/aurorasdeco/blockstates/shelf/" + type.getPathName() + ".json";
+
+        JsonObject root = new JsonObject();
+        JsonObject variants = new JsonObject();
+
+        Direction[] directions = Direction.values();
+        for (ShelfBlock.PartType part : ShelfBlock.PartType.getValues()) {
+            for (Direction direction : directions) {
+                if (!direction.getAxis().isHorizontal())
+                    continue;
+                JsonObject variant = new JsonObject();
+                variant.addProperty("model",
+                        "aurorasdeco:block/shelf/" + type.getPathName() + "/" + part.asString());
+                switch (direction) {
+                    case EAST:
+                        variant.addProperty("y", 90);
+                        break;
+                    case SOUTH:
+                        variant.addProperty("y", 180);
+                        break;
+                    case WEST:
+                        variant.addProperty("y", 270);
+                        break;
+                }
+
+                variants.add("type=" + part.asString() + ",facing=" + direction.asString(), variant);
+            }
+        }
+
+        root.add("variants", variants);
+
+        this.putJson(blockStatePath, root);
+    }
+
+    private void registerShelfBlockModel(WoodType type) {
+        ShelfBlock.PartType.getValues().forEach(part -> {
+            String path = "assets/aurorasdeco/models/block/shelf/" + type.getPathName() + '/' + part.asString() + ".json";
+            JsonObject root = new JsonObject();
+            root.addProperty("parent", "aurorasdeco:block/template/shelf_" + part.asString());
+            JsonObject textures = new JsonObject();
+            textures.addProperty("planks", type.getPlanksTexture().toString());
+            textures.addProperty("log", type.getLogTexture().toString());
+            root.add("textures", textures);
+            this.putJson(path, root);
+        });
+    }
+
+    private void registerShelfItemModel(WoodType type) {
+        String path = "assets/aurorasdeco/models/item/shelf/" + type.getPathName() + ".json";
+        JsonObject root = new JsonObject();
+        root.addProperty("parent", "aurorasdeco:block/shelf/" + type.getPathName() + "/bottom");
+        this.putJson(path, root);
     }
 
     public AurorasDecoPack rebuildClient() {
@@ -78,17 +147,120 @@ public class AurorasDecoPack implements ModResourcePack {
                             baseBigFlowerPotJson);
                 });
 
+        WoodType.stream().forEach(type -> {
+            this.registerShelfBlockState(type);
+            this.registerShelfBlockModel(type);
+            this.registerShelfItemModel(type);
+        });
+
+        return this;
+    }
+
+    private void registerShelfRecipe(WoodType type) {
+        String shelfPath = "shelf/" + type.getPathName();
+
+        String path = "data/aurorasdeco/recipes/" + shelfPath + ".json";
+
+        JsonObject root = new JsonObject();
+        root.addProperty("type", "minecraft:crafting_shaped");
+        root.addProperty("group", "aurorasdeco:shelf");
+        root.add("pattern", AuroraUtil.jsonArray(new Object[]{"###", "S S"}));
+        JsonObject key = new JsonObject();
+        JsonObject slab = new JsonObject();
+        slab.addProperty("item", type.getSlabId().toString());
+        key.add("#", slab);
+        JsonObject stick = new JsonObject();
+        stick.addProperty("item", "minecraft:stick");
+        key.add("S", stick);
+        root.add("key", key);
+        JsonObject result = new JsonObject();
+        result.addProperty("item", "aurorasdeco:" + shelfPath);
+        result.addProperty("count", 2);
+        root.add("result", result);
+
+        this.putJson(path, root);
+
+        this.registerShelfRecipeAdvancement(type, shelfPath);
+    }
+
+    private void registerShelfRecipeAdvancement(WoodType type, String shelfPath) {
+        String path = "data/aurorasdeco/advancements/recipes/decorations/" + shelfPath + ".json";
+
+        Identifier shelfId = AurorasDeco.id(shelfPath);
+
+        JsonObject root = new JsonObject();
+        root.addProperty("parent", "minecraft:recipes/root");
+        JsonObject rewards = new JsonObject();
+        rewards.add("recipes", AuroraUtil.jsonArray(new Object[]{shelfId}));
+        root.add("rewards", rewards);
+
+        JsonObject criteria = new JsonObject();
+        criteria.add("has_slab", AuroraUtil.inventoryChangedCriteria("item", type.getSlabId()));
+        criteria.add("has_stick",
+                AuroraUtil.inventoryChangedCriteria("item", new Identifier("minecraft", "stick")));
+        criteria.add("has_self", AuroraUtil.inventoryChangedCriteria("tag", AurorasDeco.id("shelves")));
+        criteria.add("has_recipe", AuroraUtil.recipeUnlockedCriteria(shelfId));
+
+        root.add("criteria", criteria);
+        root.add("requirements", AuroraUtil.jsonArray(new Object[]{
+                AuroraUtil.jsonArray(new Object[]{"has_slab", "has_stick", "has_self", "has_recipe"})
+        }));
+
+        this.putJson(path, root);
+    }
+
+    private void registerTag(String[] types, Identifier id, Stream<Identifier> entries) {
+        JsonObject root = new JsonObject();
+        root.addProperty("replace", false);
+        JsonArray values = new JsonArray();
+
+        entries.forEach(value -> values.add(value.toString()));
+
+        root.add("values", values);
+
+        for (String type : types) {
+            this.putJson("data/" + id.getNamespace() + "/tags/" + type + "/" + id.getPath() + ".json",
+                    root);
+        }
+    }
+
+    public AurorasDecoPack rebuildData() {
+        this.resources.clear();
+
+        WoodType.stream().forEach(type -> {
+            String lootTablePath = "data/aurorasdeco/loot_tables/blocks/shelf/" + type.getPathName() + ".json";
+
+            this.putJson(lootTablePath,
+                    AuroraUtil.simpleBlockLootTable(AurorasDeco.id("shelf/" + type.getPathName()), true));
+
+            this.registerShelfRecipe(type);
+        });
+
+        this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("shelves"), WoodType.stream()
+                .map(type -> AurorasDeco.id("shelf/" + type.getPathName())));
+
         return this;
     }
 
     public void putResource(String resource, byte[] data) {
         this.resources.put(resource, data);
+
+        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+            try {
+                Path path = Paths.get("debug", "aurorasdeco").resolve(resource);
+                Files.createDirectories(path.getParent());
+                Files.write(path, data, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void putJson(String resource, JsonObject json) {
         StringWriter stringWriter = new StringWriter();
         JsonWriter jsonWriter = new JsonWriter(stringWriter);
         jsonWriter.setLenient(true);
+        jsonWriter.setIndent("  ");
         try {
             Streams.write(json, jsonWriter);
         } catch (IOException e) {
@@ -104,6 +276,12 @@ public class AurorasDecoPack implements ModResourcePack {
 
     @Override
     public @Nullable InputStream openRoot(String fileName) throws IOException {
+        if (ModResourcePackUtil.containsDefault(this.getFabricModMetadata(), fileName)) {
+            return ModResourcePackUtil.openDefault(this.getFabricModMetadata(),
+                    this.type,
+                    fileName);
+        }
+
         byte[] data;
         if ((data = this.resources.get(fileName)) != null) {
             return new ByteArrayInputStream(data);
@@ -113,14 +291,16 @@ public class AurorasDecoPack implements ModResourcePack {
 
     @Override
     public InputStream open(ResourceType type, Identifier id) throws IOException {
-        if (type == ResourceType.SERVER_DATA) throw new IOException("Reading server data from Aurora's Decorations client resource pack");
+        if (type != this.type)
+            throw new IOException("Reading data from the wrong resource pack.");
         return this.openRoot(type.getDirectory() + "/" + id.getNamespace() + "/" + id.getPath());
     }
 
     @Override
-    public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix, int maxDepth, Predicate<String> pathFilter) {
-        if (type == ResourceType.SERVER_DATA) return Collections.emptyList();
-        String start = "assets/" + namespace + "/" + prefix;
+    public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix, int maxDepth,
+                                                Predicate<String> pathFilter) {
+        if (type != this.type) return Collections.emptyList();
+        String start = type.getDirectory() + "/" + namespace + "/" + prefix;
         return this.resources.keySet().stream()
                 .filter(s -> s.startsWith(start) && pathFilter.test(s))
                 .map(AurorasDecoPack::fromPath)
@@ -141,7 +321,30 @@ public class AurorasDecoPack implements ModResourcePack {
     @Nullable
     @Override
     public <T> T parseMetadata(ResourceMetadataReader<T> metaReader) throws IOException {
-        return null;
+        InputStream inputStream = this.openRoot("pack.mcmeta");
+        Throwable error = null;
+
+        T metadata;
+        try {
+            metadata = AbstractFileResourcePack.parseMetadata(metaReader, inputStream);
+        } catch (Throwable e) {
+            error = e;
+            throw e;
+        } finally {
+            if (inputStream != null) {
+                if (error != null) {
+                    try {
+                        inputStream.close();
+                    } catch (Throwable e) {
+                        error.addSuppressed(e);
+                    }
+                } else {
+                    inputStream.close();
+                }
+            }
+        }
+
+        return metadata;
     }
 
     @Override
@@ -151,11 +354,13 @@ public class AurorasDecoPack implements ModResourcePack {
 
     @Override
     public void close() {
-        this.resources.clear();
+        if (this.type == ResourceType.CLIENT_RESOURCES)
+            this.resources.clear();
     }
 
     private static Identifier fromPath(String path) {
-        String[] split = path.split("/", 2);
+        String[] split = path.replaceAll("((assets)|(data))/", "").split("/", 2);
+
         return new Identifier(split[0], split[1]);
     }
 }

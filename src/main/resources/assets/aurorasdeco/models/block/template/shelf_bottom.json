@@ -1,0 +1,47 @@
+{
+  "credit": "Made by LambdAurora",
+  "parent": "aurorasdeco:block/template/shelf_base",
+  "elements": [
+    {
+      "from": [ 0, 2, 12 ],
+      "to": [ 16, 3, 16 ],
+      "faces": {
+        "north": {"uv": [ 0, 13, 16, 14 ], "texture": "#planks"},
+        "east":  {"uv": [ 0, 9, 1, 13 ], "rotation": 90, "texture": "#planks"},
+        "south": {"uv": [ 0, 13, 16, 14 ], "texture": "#planks", "cullface": "south"},
+        "west":  {"uv": [ 15, 10, 16, 14 ], "rotation": 90, "texture": "#planks"},
+        "up":    {"uv": [ 0, 1, 16, 5 ], "texture": "#planks"},
+        "down":  {"uv": [ 0, 10, 16, 14 ], "texture": "#planks"}
+      }
+    },
+    {
+      "from": [ 2, 0, 15 ],
+      "to": [ 4, 2, 16 ],
+      "faces": {
+        "north": {"uv": [ 11, 12, 13, 14 ], "texture": "#log"},
+        "east":  {"uv": [ 2, 8, 3, 10 ], "texture": "#log"},
+        "south": {"uv": [ 3, 14, 5, 16 ], "texture": "#log", "cullface": "south"},
+        "west":  {"uv": [ 14, 14, 15, 16 ], "texture": "#log"},
+        "down":  {"uv": [ 2, 1, 4, 2 ], "texture": "#log", "cullface": "down"}
+      }
+    },
+    {
+      "from": [ 12, 0, 15 ],
+      "to": [ 14, 2, 16 ],
+      "faces": {
+        "north": {"uv": [ 6, 12, 8, 14 ], "texture": "#log"},
+        "east":  {"uv": [ 4, 7, 5, 9 ], "texture": "#log"},
+        "south": {"uv": [ 11, 12, 13, 14 ], "texture": "#log", "cullface": "south"},
+        "west":  {"uv": [ 14, 11, 15, 13 ], "texture": "#log"},
+        "down":  {"uv": [ 12, 0, 14, 1 ], "texture": "#log", "cullface": "down"}
+      }
+    }
+  ],
+  "groups": [
+    {
+      "name": "shelf",
+      "origin": [ 8, 8, 8 ],
+      "children": [ 0, 1, 2 ]
+    }
+  ]
+}

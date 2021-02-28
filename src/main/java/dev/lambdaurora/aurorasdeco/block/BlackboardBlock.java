@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableMap;
 import dev.lambdaurora.aurorasdeco.block.entity.BlackboardBlockEntity;
 import dev.lambdaurora.aurorasdeco.item.BlackboardItem;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
@@ -228,13 +229,13 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
                 } else if ((stack.isOf(Items.PAPER) || stack.getItem() instanceof DyeItem)
                         && !state.get(WATERLOGGED)) {
                     int x;
-                    int y = (int) (posMod(hit.getPos().getY(), 1) * 16.0);
+                    int y = (int) (AuroraUtil.posMod(hit.getPos().getY(), 1) * 16.0);
                     y = 15 - y;
 
                     if (facing.getAxis() == Direction.Axis.Z) {
-                        x = (int) (posMod(hit.getPos().getX(), 1) * 16.0);
+                        x = (int) (AuroraUtil.posMod(hit.getPos().getX(), 1) * 16.0);
                     } else {
-                        x = 15 - (int) (posMod(hit.getPos().getZ(), 1) * 16.0);
+                        x = 15 - (int) (AuroraUtil.posMod(hit.getPos().getZ(), 1) * 16.0);
                     }
                     if (facing.getDirection() == Direction.AxisDirection.NEGATIVE) {
                         x = 15 - x;
@@ -273,12 +274,6 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
             }
         }
         return super.onUse(state, world, pos, player, hand, hit);
-    }
-
-    private static double posMod(double n, double d) {
-        double v = n % d;
-        if (v < 0) v = d + v;
-        return v;
     }
 
     private boolean tryClear(World world, BlackboardBlockEntity blackboard) {

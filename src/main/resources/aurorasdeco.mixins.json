@@ -13,6 +13,7 @@
     "LanternMixin",
     "LeadItemMixin",
     "MobEntityAccessor",
+    "ModResourcePackCreatorMixin",
     "ParrotEntityMixin",
     "SitGoalMixin",
     "VineBlockAccessor",

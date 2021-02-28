@@ -10,6 +10,24 @@
     ],
     "subtitle": "subtitles.aurorasdeco.block.lantern.swing"
   },
+  "block.shelf.add_item": {
+    "sounds": [
+      "entity/itemframe/add_item1",
+      "entity/itemframe/add_item2",
+      "entity/itemframe/add_item3",
+      "entity/itemframe/add_item4"
+    ],
+    "subtitle": "subtitles.aurorasdeco.block.shelf.remove_item"
+  },
+  "block.shelf.remove_item": {
+    "sounds": [
+      "entity/itemframe/remove_item1",
+      "entity/itemframe/remove_item2",
+      "entity/itemframe/remove_item3",
+      "entity/itemframe/remove_item4"
+    ],
+    "subtitle": "subtitles.aurorasdeco.block.shelf.remove_item"
+  },
   "entity.armor_stand.hide_base_plate": {
     "sounds": [
       "entity/itemframe/remove_item1",

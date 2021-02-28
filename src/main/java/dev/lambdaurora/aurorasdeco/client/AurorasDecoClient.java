@@ -20,6 +20,7 @@ package dev.lambdaurora.aurorasdeco.client;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
 import dev.lambdaurora.aurorasdeco.client.renderer.*;
+import dev.lambdaurora.aurorasdeco.client.screen.ShelfScreen;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
 import net.fabricmc.api.ClientModInitializer;
@@ -32,10 +33,12 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistr
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.color.world.FoliageColors;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.ModelIdentifier;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -48,7 +51,7 @@ import net.minecraft.util.registry.Registry;
  */
 @Environment(EnvType.CLIENT)
 public class AurorasDecoClient implements ClientModInitializer {
-    public static final AurorasDecoPack RESOURCE_PACK = new AurorasDecoPack();
+    public static final AurorasDecoPack RESOURCE_PACK = new AurorasDecoPack(ResourceType.CLIENT_RESOURCES);
     public static final ModelIdentifier BLACKBOARD_MASK = new ModelIdentifier(AurorasDeco.id("blackboard_mask"),
             "inventory");
 
@@ -58,6 +61,8 @@ public class AurorasDecoClient implements ClientModInitializer {
                 BlackboardBlockEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE,
                 LanternBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE,
+                ShelfBlockEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE,
                 WindChimeBlockEntityRenderer::new);
 
@@ -74,6 +79,8 @@ public class AurorasDecoClient implements ClientModInitializer {
         this.registerBlackboardItemRenderer(AurorasDecoRegistry.CHALKBOARD_BLOCK);
         this.registerBlackboardItemRenderer(AurorasDecoRegistry.WAXED_BLACKBOARD_BLOCK);
         this.registerBlackboardItemRenderer(AurorasDecoRegistry.WAXED_CHALKBOARD_BLOCK);
+
+        ScreenRegistry.register(AurorasDecoRegistry.SHELF_SCREEN_HANDLER_TYPE, ShelfScreen::new);
 
         ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) ->
                         world != null && pos != null ? BiomeColors.getFoliageColor(world, pos) : FoliageColors.getDefaultColor(),

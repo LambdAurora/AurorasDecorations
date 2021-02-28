@@ -53,7 +53,7 @@ public abstract class ReloadableResourceManagerImplMixin {
     )
     private void onBeginMonitoredReload(Executor prepareExecutor, Executor applyExecutor, CompletableFuture<Unit> initialStage,
                                         List<ResourcePack> packs, CallbackInfoReturnable<ResourceReloadMonitor> cir) {
-        if (type == ResourceType.CLIENT_RESOURCES) {
+        if (this.type == ResourceType.CLIENT_RESOURCES) {
             this.addPack(AurorasDecoClient.RESOURCE_PACK.rebuild(this.type));
         }
     }

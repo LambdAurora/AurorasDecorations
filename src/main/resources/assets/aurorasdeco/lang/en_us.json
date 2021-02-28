@@ -25,10 +25,24 @@
   "block.aurorasdeco.pet_bed.white": "White Pet Bed",
   "block.aurorasdeco.pet_bed.yellow": "Yellow Pet Bed",
 
+  "block.aurorasdeco.shelf.oak": "Oak Shelf",
+  "block.aurorasdeco.shelf.spruce": "Spruce Shelf",
+  "block.aurorasdeco.shelf.birch": "Birch Shelf",
+  "block.aurorasdeco.shelf.jungle": "Jungle Shelf",
+  "block.aurorasdeco.shelf.acacia": "Acacia Shelf",
+  "block.aurorasdeco.shelf.dark_oak": "Dark Oak Shelf",
+  "block.aurorasdeco.shelf.crimson": "Crimson Shelf",
+  "block.aurorasdeco.shelf.warped": "Warped Shelf",
+  "block.aurorasdeco.shelf.blockus.bamboo": "Bamboo Shelf",
+  "block.aurorasdeco.shelf.blockus.charred": "Charred Shelf",
+  "block.aurorasdeco.shelf.blockus.white_oak": "White Oak Shelf",
+
   "block.aurorasdeco.sturdy_stone": "Sturdy Stone",
 
   "block.aurorasdeco.wind_chime": "Wind Chime",
 
   "subtitles.aurorasdeco.block.lantern.swing": "Lantern swings",
+  "subtitles.aurorasdeco.block.shelf.add_item": "Shelf fills",
+  "subtitles.aurorasdeco.block.shelf.swing": "Shelf empties",
   "subtitles.aurorasdeco.entity.armor_stand.hide_base_plate": "Hide armor stand base plate"
 }

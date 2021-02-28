@@ -57,6 +57,14 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
   Ever wished to share a pumpkin pie with your friends?
   Or just place it on a table to eat it later?
   Now you can!
+- Shelves
+  - Comes in every wood types.
+    - Supports some modded wood types.
+  - Can be put on the bottom or/and the top of the side of a block.
+  - Stores up to 8 stacks that are displayed in-world.
+  - Right-click with an item will place it into the shelf.
+  - Left-click with an empty world in survival will emptied the targeted item.
+  - Waterloggable.
 - Sturdy Stone
   - Cannot be moved by pistons or slime/honey blocks.
   - Can transmit state change in an observer chain.
@@ -79,6 +87,8 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 ![Pet Beds](images/pet_beds.png)
 
 ![Placeable Pumpkin Pie](images/placeable_pumpkin_pie.png)
+
+![Shelves](images/shelves.png)
 
 ![Sturdy Stone](images/sturdy_stone.png)
 

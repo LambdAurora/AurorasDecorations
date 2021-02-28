@@ -17,7 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.block;
 
-import dev.lambdaurora.aurorasdeco.util.PlacementUtil;
+import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FenceBlock;
@@ -80,9 +80,9 @@ public enum ExtensionType implements StringIdentifiable {
         VoxelShape shape = state.getSidesShape(world, pos);
         if (shape != VoxelShapes.empty()) {
             Box box = shape.getBoundingBox();
-            if (block instanceof FenceBlock || state.isIn(BlockTags.FENCES) || PlacementUtil.isShapeEqual(FENCE_SHAPE, box))
+            if (block instanceof FenceBlock || state.isIn(BlockTags.FENCES) || AuroraUtil.isShapeEqual(FENCE_SHAPE, box))
                 return FENCE;
-            if (block instanceof WallBlock || state.isIn(BlockTags.WALLS) || PlacementUtil.isShapeEqual(WALL_SHAPE, box))
+            if (block instanceof WallBlock || state.isIn(BlockTags.WALLS) || AuroraUtil.isShapeEqual(WALL_SHAPE, box))
                 return WALL;
         }
 
