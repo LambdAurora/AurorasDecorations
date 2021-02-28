@@ -1,0 +1,56 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "page": "aurorasdeco:special/book/page"
+  },
+  "elements": [
+    {
+      "name": "body",
+      "from": [ 7, 0.5, 5 ],
+      "to": [ 9, 9.5, 10 ],
+      "faces": {
+        "south": {"uv": [ 0, 0, 2, 10 ], "texture": "#page"},
+        "up":    {"uv": [ 0, 0, 2, 5 ], "texture": "#page"},
+        "down":  {"uv": [ 0, 0, 2, 5 ], "rotation": 180, "texture": "#page"}
+      }
+    },
+    {
+      "from": [ 9, 0, 5 ],
+      "to": [ 9, 10, 11 ],
+      "faces": {
+        "east": {"uv": [ 0, 0, 6, 10 ], "texture": "#book"},
+        "west": {"uv": [ 14, 0, 8, 10 ], "texture": "#book"}
+      }
+    },
+    {
+      "from": [ 7, 0, 5 ],
+      "to": [ 7, 10, 11 ],
+      "faces": {
+        "east": {"uv": [ 8, 0, 14, 10 ], "texture": "#book"},
+        "west": {"uv": [ 6, 0, 0, 10 ], "texture": "#book"}
+      }
+    },
+    {
+      "from": [ 7, 4, 11 ],
+      "to": [ 9, 6, 11 ],
+      "faces": {
+        "north": {"uv": [ 4, 12, 6, 14 ], "texture": "#book"},
+        "south": {"uv": [ 4, 12, 6, 14 ], "texture": "#book"}
+      }
+    },
+    {
+      "from": [ 7, 0, 5 ],
+      "to": [ 9, 10, 5 ],
+      "faces": {
+        "north": {"uv": [ 6, 0, 8, 10 ], "texture": "#book"},
+        "south": {"uv": [ 14, 0, 16, 10 ], "texture": "#book"}
+      }
+    }
+  ],
+  "display": {
+    "fixed": {
+      "scale": [ 2, 2, 2 ],
+      "translation": [ 0, 12, 0 ]
+    }
+  }
+}

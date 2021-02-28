@@ -1,0 +1,8 @@
+{
+  "credit": "Made by LambdAurora",
+  "parent": "aurorasdeco:item/special/book/book2",
+  "textures": {
+    "book": "aurorasdeco:special/book/blue_book",
+    "book2": "aurorasdeco:special/book/red_medium_book"
+  }
+}

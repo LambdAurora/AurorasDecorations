@@ -1,0 +1,8 @@
+{
+  "match": {
+    "item": "minecraft:enchanted_book"
+  },
+  "models": [
+    "aurorasdeco:special/book/enchanted_book"
+  ]
+}

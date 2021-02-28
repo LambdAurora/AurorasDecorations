@@ -88,6 +88,8 @@ public class AurorasDecoClient implements ClientModInitializer {
 
         EntityModelLayerRegistry.registerModelLayer(WindChimeBlockEntityRenderer.WIND_CHIME_MODEL_LAYER,
                 WindChimeBlockEntityRenderer::getTexturedModelData);
+
+        ModelLoadingRegistry.INSTANCE.registerModelProvider(RenderRule::reload);
     }
 
     private void registerBlackboardItemRenderer(BlackboardBlock blackboard) {

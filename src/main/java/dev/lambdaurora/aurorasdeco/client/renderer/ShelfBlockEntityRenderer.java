@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.client.renderer;
 
 import dev.lambdaurora.aurorasdeco.block.ShelfBlock;
 import dev.lambdaurora.aurorasdeco.block.entity.ShelfBlockEntity;
+import dev.lambdaurora.aurorasdeco.client.RenderRule;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
@@ -31,6 +32,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3f;
 
+/**
+ * Represents the shelf block entity renderer.
+ *
+ * @author LambdAurora
+ * @version 1.0.0
+ * @since 1.0.0
+ */
 public class ShelfBlockEntityRenderer implements BlockEntityRenderer<ShelfBlockEntity> {
     public ShelfBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
     }
@@ -68,16 +76,23 @@ public class ShelfBlockEntityRenderer implements BlockEntityRenderer<ShelfBlockE
                 if (stack.isEmpty())
                     continue;
 
-                BakedModel model = renderer.getHeldItemModel(stack, shelf.getWorld(), null, 0);
+                BakedModel model;
+                RenderRule rule = RenderRule.getRenderRule(stack);
+                if (rule != null)
+                    model = rule.getModel(stack);
+                else
+                    model = renderer.getHeldItemModel(stack, shelf.getWorld(), null, 0);
+
                 matrices.push();
                 if (model.hasDepth()) {
                     matrices.translate(0, -0.2, 0);
                 }
 
                 renderer.renderItem(stack,
-                        ModelTransformation.Mode.FIXED,
+                        ModelTransformation.Mode.FIXED, false,
+                        matrices, vertexConsumers,
                         light, overlay,
-                        matrices, vertexConsumers, 0);
+                        model);
                 matrices.pop();
             }
             matrices.pop();

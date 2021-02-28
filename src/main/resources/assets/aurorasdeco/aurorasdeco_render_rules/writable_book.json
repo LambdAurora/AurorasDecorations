@@ -1,0 +1,8 @@
+{
+  "match": {
+    "item": "minecraft:writable_book"
+  },
+  "models": [
+    "aurorasdeco:special/book/book_and_quill"
+  ]
+}
