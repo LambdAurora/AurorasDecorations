@@ -25,6 +25,8 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.tag.TagRegistry;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.util.ModelIdentifier;
@@ -35,6 +37,7 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -63,23 +66,38 @@ public class RenderRule {
     private static final JsonParser PARSER = new JsonParser();
 
     private final MinecraftClient client = MinecraftClient.getInstance();
-    private final List<ModelIdentifier> models;
+    private final List<Model> models;
 
-    public RenderRule(List<ModelIdentifier> models) {
+    public RenderRule(List<Model> models) {
         this.models = models;
     }
 
-    public ModelIdentifier getModelId(ItemStack stack) {
+    public @Nullable Model getModelId(ItemStack stack, BlockState state, long seed) {
         if (this.models.size() == 1) {
-            return this.models.get(0);
+            Model model = this.models.get(0);
+            return model.test(stack, state) ? model : null;
         } else {
-            int i = Math.abs(Objects.hash(stack.getCount(), stack.getName().asString()) % this.models.size());
-            return this.models.get(i);
+            final int i = Math.abs(Objects.hash(stack.getCount(), stack.getName().asString(), seed) % this.models.size());
+            int actualI = i;
+
+            Model model;
+            do {
+                model = this.models.get(actualI);
+
+                actualI++;
+                if (actualI >= this.models.size())
+                    actualI = 0;
+
+                if (actualI == i)
+                    return null;
+            } while (!model.test(stack, state));
+            return model;
         }
     }
 
-    public BakedModel getModel(ItemStack stack) {
-        return this.client.getBakedModelManager().getModel(this.getModelId(stack));
+    public @Nullable BakedModel getModel(ItemStack stack, BlockState state, long seed) {
+        Model model = this.getModelId(stack, state, seed);
+        return model == null ? null : model.getModel();
     }
 
     public static @Nullable RenderRule getRenderRule(ItemStack stack) {
@@ -99,6 +117,18 @@ public class RenderRule {
         return null;
     }
 
+    public static BakedModel getModel(ItemStack stack, BlockState state, World world, long seed) {
+        BakedModel model = null;
+
+        RenderRule rule = RenderRule.getRenderRule(stack);
+        if (rule != null)
+            model = rule.getModel(stack, state, seed);
+
+        if (model == null)
+            return MinecraftClient.getInstance().getItemRenderer().getHeldItemModel(stack, world, null, 0);
+        return model;
+    }
+
     public static void reload(ResourceManager manager, Consumer<Identifier> out) {
         ITEM_RULES.clear();
         TAG_RULES.clear();
@@ -110,18 +140,18 @@ public class RenderRule {
                 if (element.isJsonObject()) {
                     JsonObject root = element.getAsJsonObject();
 
-                    List<ModelIdentifier> modelsId = new ArrayList<>();
-                    JsonArray models = root.getAsJsonArray("models");
-                    models.forEach(modelElement -> {
-                        if (modelElement.isJsonPrimitive()) {
-                            modelsId.add(new ModelIdentifier(new Identifier(modelElement.getAsString()), "inventory"));
-                        }
+                    List<Model> models = new ArrayList<>();
+                    JsonArray modelsJson = root.getAsJsonArray("models");
+                    modelsJson.forEach(modelElement -> {
+                        Model model = Model.readModelPredicate(id, modelElement);
+                        if (model != null)
+                            models.add(model);
                     });
 
-                    if (modelsId.isEmpty())
+                    if (models.isEmpty())
                         return;
 
-                    RenderRule renderRule = new RenderRule(modelsId);
+                    RenderRule renderRule = new RenderRule(models);
 
                     JsonObject match = root.getAsJsonObject("match");
                     boolean success = false;
@@ -142,11 +172,89 @@ public class RenderRule {
                     }
 
                     if (success)
-                        modelsId.forEach(out);
+                        models.forEach(model -> out.accept(model.getModelId()));
                 }
             } catch (Exception e) {
                 LOGGER.error("Failed to read render rule {}. {}", id, e);
             }
         });
+    }
+
+    public static class Model {
+        private final ModelIdentifier modelId;
+        private final @Nullable Block restrictedBlock;
+        private final @Nullable Tag<Block> restrictedBlockTag;
+
+        public Model(ModelIdentifier modelId, @Nullable Block restrictedBlock, @Nullable Tag<Block> restrictedBlockTag) {
+            this.modelId = modelId;
+            this.restrictedBlock = restrictedBlock;
+            this.restrictedBlockTag = restrictedBlockTag;
+        }
+
+        public ModelIdentifier getModelId() {
+            return this.modelId;
+        }
+
+        public boolean test(ItemStack stack, BlockState state) {
+            if (this.restrictedBlock != null) {
+                if (!state.isOf(this.restrictedBlock))
+                    return false;
+            } else if (this.restrictedBlockTag != null) {
+                if (!state.isIn(this.restrictedBlockTag))
+                    return false;
+            }
+            return true;
+        }
+
+        public BakedModel getModel() {
+            return MinecraftClient.getInstance().getBakedModelManager().getModel(this.modelId);
+        }
+
+        public static @Nullable Model readModelPredicate(Identifier manifest, JsonElement json) {
+            if (json.isJsonPrimitive()) {
+                Identifier modelId = Identifier.tryParse(json.getAsString());
+                if (modelId == null) {
+                    LOGGER.error("Failed to parse model identifier {} in render rule {}.", json.getAsString(), manifest);
+                    return null;
+                }
+
+                return new Model(new ModelIdentifier(modelId, "inventory"), null, null);
+            }
+
+            JsonObject object = json.getAsJsonObject();
+
+            if (!object.has("model")) {
+                LOGGER.error("Failed to parse model entry in render rule {}, missing model field.", manifest);
+                return null;
+            }
+
+            Identifier modelId = Identifier.tryParse(object.get("model").getAsString());
+            if (modelId == null) {
+                LOGGER.error("Failed to parse model identifier {} in render rule {}.", json.getAsString(), manifest);
+                return null;
+            }
+
+            Block restrictedBlock = null;
+            Tag<Block> restrictedBlockTag = null;
+            if (object.has("restrict_to")) {
+                JsonObject restrict = object.getAsJsonObject("restrict_to");
+                if (restrict.has("block")) {
+                    Identifier blockId = Identifier.tryParse(restrict.get("block").getAsString());
+                    if (blockId == null) {
+                        LOGGER.error("Failed to parse block identifier in render rule {}.", manifest);
+                    } else {
+                        restrictedBlock = Registry.BLOCK.get(blockId);
+                    }
+                } else if (restrict.has("tag")) {
+                    Identifier blockId = Identifier.tryParse(restrict.get("tag").getAsString());
+                    if (blockId == null) {
+                        LOGGER.error("Failed to parse tag identifier in render rule {}.", manifest);
+                    } else {
+                        restrictedBlockTag = TagRegistry.block(blockId);
+                    }
+                }
+            }
+            return new Model(new ModelIdentifier(modelId, "inventory"), restrictedBlock, restrictedBlockTag);
+        }
     }
 }

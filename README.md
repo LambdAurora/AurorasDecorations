@@ -53,6 +53,8 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 - Pet beds
   - Cozy little beds for your little friends!
   - Comes in all dye colors.
+- Placeable books and enchanted books  
+  You can now place piles of books in your world!
 - Placeable Pumpkin Pie  
   Ever wished to share a pumpkin pie with your friends?
   Or just place it on a table to eat it later?
@@ -87,6 +89,8 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 ![Pet Beds](images/pet_beds.png)
 
 ![Placeable Pumpkin Pie](images/placeable_pumpkin_pie.png)
+
+![Placeable books](images/in_world_books.png)
 
 ![Shelves](images/shelves.png)
 

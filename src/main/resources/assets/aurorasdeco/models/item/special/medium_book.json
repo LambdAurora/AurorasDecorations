@@ -43,11 +43,5 @@
         "south": {"uv": [ 14, 0, 16, 8 ], "texture": "#book"}
       }
     }
-  ],
-  "display": {
-    "fixed": {
-      "scale": [ 2, 2, 2 ],
-      "translation": [ 0, 12, 0 ]
-    }
-  }
+  ]
 }

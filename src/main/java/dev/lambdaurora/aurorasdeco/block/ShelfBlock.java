@@ -25,6 +25,7 @@ import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -41,6 +42,7 @@ import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -189,13 +191,15 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
             world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
 
-        return direction.getOpposite() == state.get(FACING) && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : state;
+        return direction.getOpposite() == state.get(FACING) && !state.canPlaceAt(world, pos)
+                ? Blocks.AIR.getDefaultState() : state;
     }
 
     /* Interaction */
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+                              BlockHitResult hit) {
         if (!world.isClient()) {
             ShelfBlockEntity shelf = AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE.get(world, pos);
 
@@ -220,7 +224,8 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
 
                     int slot = y * 4 + x;
                     ItemStack stack = shelf.getStack(slot);
-                    if (stack.isEmpty() || (ItemStack.canCombine(stack, handStack) && stack.getCount() < stack.getMaxCount())) {
+                    if (stack.isEmpty()
+                            || (ItemStack.canCombine(stack, handStack) && stack.getCount() < stack.getMaxCount())) {
                         if (stack.isEmpty()) {
                             stack = handStack.copy();
                             stack.setCount(1);
@@ -279,7 +284,16 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
                     player.setStackInHand(Hand.MAIN_HAND, stack.copy());
                     shelf.removeStack(slot);
                 } else {
+                    ItemEntity item = new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                            stack.copy());
+                    float speed = world.random.nextFloat() * .5f;
+                    float angle = world.random.nextFloat() * 6.2831855f;
+                    item.setVelocity(-MathHelper.sin(angle) * speed,
+                            0.20000000298023224,
+                            MathHelper.cos(angle) * speed);
+                    world.spawnEntity(item);
 
+                    shelf.removeStack(slot);
                 }
                 world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos);
             }

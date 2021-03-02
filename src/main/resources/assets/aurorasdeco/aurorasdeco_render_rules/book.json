@@ -8,8 +8,18 @@
   "models": [
     "aurorasdeco:special/book/blue_book",
     "aurorasdeco:special/book/book1",
-    "aurorasdeco:special/book/book2",
-    "aurorasdeco:special/book/book2_red",
+    {
+      "model": "aurorasdeco:special/book/book2",
+      "restrict_to": {
+        "tag": "aurorasdeco:shelves"
+      }
+    },
+    {
+      "model": "aurorasdeco:special/book/book2_red",
+      "restrict_to": {
+        "tag": "aurorasdeco:shelves"
+      }
+    },
     "aurorasdeco:special/book/green_book",
     "aurorasdeco:special/book/green_medium_book",
     "aurorasdeco:special/book/red_medium_book"

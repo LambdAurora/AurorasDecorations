@@ -76,12 +76,7 @@ public class ShelfBlockEntityRenderer implements BlockEntityRenderer<ShelfBlockE
                 if (stack.isEmpty())
                     continue;
 
-                BakedModel model;
-                RenderRule rule = RenderRule.getRenderRule(stack);
-                if (rule != null)
-                    model = rule.getModel(stack);
-                else
-                    model = renderer.getHeldItemModel(stack, shelf.getWorld(), null, 0);
+                BakedModel model = RenderRule.getModel(stack, shelf.getCachedState(), shelf.getWorld(), 0);
 
                 matrices.push();
                 if (model.hasDepth()) {

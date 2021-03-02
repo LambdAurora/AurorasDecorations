@@ -1,0 +1,6 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "particle": "aurorasdeco:special/book/simple_book"
+  }
+}

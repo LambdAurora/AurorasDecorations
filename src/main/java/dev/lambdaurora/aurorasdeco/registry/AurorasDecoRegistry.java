@@ -18,12 +18,10 @@
 package dev.lambdaurora.aurorasdeco.registry;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import dev.lambdaurora.aurorasdeco.accessor.ItemExtensions;
 import dev.lambdaurora.aurorasdeco.block.*;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.*;
-import dev.lambdaurora.aurorasdeco.block.entity.BlackboardBlockEntity;
-import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
-import dev.lambdaurora.aurorasdeco.block.entity.ShelfBlockEntity;
-import dev.lambdaurora.aurorasdeco.block.entity.WindChimeBlockEntity;
+import dev.lambdaurora.aurorasdeco.block.entity.*;
 import dev.lambdaurora.aurorasdeco.entity.FakeLeashKnotEntity;
 import dev.lambdaurora.aurorasdeco.item.BlackboardItem;
 import dev.lambdaurora.aurorasdeco.recipe.BlackboardCloneRecipe;
@@ -125,6 +123,10 @@ public final class AurorasDecoRegistry {
             new FabricItemSettings().group(ItemGroup.DECORATIONS).equipmentSlot(stack -> EquipmentSlot.HEAD),
             BlackboardItem::new);
 
+    public static final BookPileBlock BOOK_PILE_BLOCK = register("book_pile",
+            new BookPileBlock(FabricBlockSettings.of(Material.DECORATION).strength(.2f)
+                    .nonOpaque()));
+
     public static final BurntVineBlock BURNT_VINE_BLOCK = register("burnt_vine", new BurntVineBlock());
 
     public static final BlackboardBlock CHALKBOARD_BLOCK = registerWithItem("chalkboard",
@@ -176,6 +178,11 @@ public final class AurorasDecoRegistry {
             FabricBlockEntityTypeBuilder.create(BlackboardBlockEntity::new,
                     BLACKBOARD_BLOCK, CHALKBOARD_BLOCK, WAXED_BLACKBOARD_BLOCK, WAXED_CHALKBOARD_BLOCK)
                     .build()
+    );
+    public static final BlockEntityType<BookPileBlockEntity> BOOK_PILE_BLOCK_ENTITY_TYPE = Registry.register(
+            Registry.BLOCK_ENTITY_TYPE,
+            id("book_pile"),
+            FabricBlockEntityTypeBuilder.create(BookPileBlockEntity::new, BOOK_PILE_BLOCK).build()
     );
     public static final BlockEntityType<LanternBlockEntity> LANTERN_BLOCK_ENTITY_TYPE = Registry.register(
             Registry.BLOCK_ENTITY_TYPE,
@@ -301,5 +308,8 @@ public final class AurorasDecoRegistry {
 
         FlammableBlockRegistry.getDefaultInstance().add(PET_BEDS, 10, 30);
         FlammableBlockRegistry.getDefaultInstance().add(SHELVES, 5, 20);
+
+        ((ItemExtensions) Items.BOOK).makePlaceable(BOOK_PILE_BLOCK);
+        ((ItemExtensions) Items.ENCHANTED_BOOK).makePlaceable(BOOK_PILE_BLOCK);
     }
 }
