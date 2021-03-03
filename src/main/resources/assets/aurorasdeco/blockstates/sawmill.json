@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "aurorasdeco:block/sawmill"
+    },
+    "facing=east": {
+      "model": "aurorasdeco:block/sawmill",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "aurorasdeco:block/sawmill",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "aurorasdeco:block/sawmill",
+      "y": 270
+    }
+  }
+}

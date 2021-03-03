@@ -3,6 +3,7 @@
   "package": "dev.lambdaurora.aurorasdeco.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "AbstractBlockAccessor",
     "ArmorStandEntityMixin",
     "BlockItemMixin",
     "CandleBlockMixin",
@@ -15,11 +16,13 @@
     "MobEntityAccessor",
     "ModResourcePackCreatorMixin",
     "ParrotEntityMixin",
+    "RecipeManagerMixin",
     "SitGoalMixin",
     "VineBlockAccessor",
     "WolfEntityMixin"
   ],
   "client": [
+    "client.ClientRecipeBookMixin",
     "client.MobEntityRendererAccessor",
     "client.ModelLoaderMixin",
     "client.ReloadableResourceManagerImplMixin",

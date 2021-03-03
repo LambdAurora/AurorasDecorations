@@ -20,6 +20,7 @@ package dev.lambdaurora.aurorasdeco.client;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
 import dev.lambdaurora.aurorasdeco.client.renderer.*;
+import dev.lambdaurora.aurorasdeco.client.screen.SawmillScreen;
 import dev.lambdaurora.aurorasdeco.client.screen.ShelfScreen;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
@@ -70,10 +71,13 @@ public class AurorasDecoClient implements ClientModInitializer {
 
         EntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.FAKE_LEASH_KNOT_ENTITY_TYPE,
                 FakeLeashKnotEntityRenderer::new);
+        EntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.SIT_ENTITY_TYPE,
+                SitEntityRenderer::new);
 
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutoutMipped(),
                 AurorasDecoRegistry.BURNT_VINE_BLOCK);
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(),
+                AurorasDecoRegistry.SAWMILL_BLOCK,
                 AurorasDecoRegistry.WALL_LANTERN_BLOCK,
                 AurorasDecoRegistry.WIND_CHIME_BLOCK);
 
@@ -82,10 +86,12 @@ public class AurorasDecoClient implements ClientModInitializer {
         this.registerBlackboardItemRenderer(AurorasDecoRegistry.WAXED_BLACKBOARD_BLOCK);
         this.registerBlackboardItemRenderer(AurorasDecoRegistry.WAXED_CHALKBOARD_BLOCK);
 
+        ScreenRegistry.register(AurorasDecoRegistry.SAWMILL_SCREEN_HANDLER_TYPE, SawmillScreen::new);
         ScreenRegistry.register(AurorasDecoRegistry.SHELF_SCREEN_HANDLER_TYPE, ShelfScreen::new);
 
         ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) ->
-                        world != null && pos != null ? BiomeColors.getFoliageColor(world, pos) : FoliageColors.getDefaultColor(),
+                        world != null && pos != null
+                                ? BiomeColors.getFoliageColor(world, pos) : FoliageColors.getDefaultColor(),
                 AurorasDecoRegistry.BURNT_VINE_BLOCK);
 
         EntityModelLayerRegistry.registerModelLayer(WindChimeBlockEntityRenderer.WIND_CHIME_MODEL_LAYER,

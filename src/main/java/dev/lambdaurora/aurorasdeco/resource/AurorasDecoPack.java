@@ -17,7 +17,6 @@
 
 package dev.lambdaurora.aurorasdeco.resource;
 
-import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.internal.Streams;
@@ -51,18 +50,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class AurorasDecoPack implements ModResourcePack {
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final Set<String> NAMESPACES = Sets.newHashSet(AurorasDeco.NAMESPACE);
 
+    private final Set<String> namespaces = new HashSet<>();
     private final Map<String, byte[]> resources = new Object2ObjectOpenHashMap<>();
     private final ResourceType type;
 
@@ -130,6 +126,7 @@ public class AurorasDecoPack implements ModResourcePack {
     }
 
     public AurorasDecoPack rebuildClient() {
+        this.namespaces.add("aurorasdeco");
         JsonObject baseBigFlowerPotJson = new JsonObject();
 
         {
@@ -195,11 +192,11 @@ public class AurorasDecoPack implements ModResourcePack {
         root.add("rewards", rewards);
 
         JsonObject criteria = new JsonObject();
-        criteria.add("has_slab", AuroraUtil.inventoryChangedCriteria("item", type.getSlabId()));
+        criteria.add("has_slab", Datagen.inventoryChangedCriteria("item", type.getSlabId()));
         criteria.add("has_stick",
-                AuroraUtil.inventoryChangedCriteria("item", new Identifier("minecraft", "stick")));
-        criteria.add("has_self", AuroraUtil.inventoryChangedCriteria("tag", AurorasDeco.id("shelves")));
-        criteria.add("has_recipe", AuroraUtil.recipeUnlockedCriteria(shelfId));
+                Datagen.inventoryChangedCriteria("item", new Identifier("minecraft", "stick")));
+        criteria.add("has_self", Datagen.inventoryChangedCriteria("tag", AurorasDeco.id("shelves")));
+        criteria.add("has_recipe", Datagen.recipeUnlockedCriteria(shelfId));
 
         root.add("criteria", criteria);
         root.add("requirements", AuroraUtil.jsonArray(new Object[]{
@@ -226,18 +223,21 @@ public class AurorasDecoPack implements ModResourcePack {
 
     public AurorasDecoPack rebuildData() {
         this.resources.clear();
+        this.namespaces.clear();
 
         WoodType.stream().forEach(type -> {
-            String lootTablePath = "data/aurorasdeco/loot_tables/blocks/shelf/" + type.getPathName() + ".json";
-
-            this.putJson(lootTablePath,
-                    AuroraUtil.simpleBlockLootTable(AurorasDeco.id("shelf/" + type.getPathName()), true));
+            Identifier shelfId = AurorasDeco.id("shelf/" + type.getPathName());
+            Datagen.registerSimpleBlockLootTable(shelfId, shelfId, true);
 
             this.registerShelfRecipe(type);
         });
 
         this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("shelves"), WoodType.stream()
                 .map(type -> AurorasDeco.id("shelf/" + type.getPathName())));
+
+        Datagen.registerSimpleRecipesUnlock();
+
+        LOGGER.info("Registered " + this.resources.size() + " resources.");
 
         return this;
     }
@@ -249,11 +249,19 @@ public class AurorasDecoPack implements ModResourcePack {
             try {
                 Path path = Paths.get("debug", "aurorasdeco").resolve(resource);
                 Files.createDirectories(path.getParent());
-                Files.write(path, data, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+                Files.write(path, data, StandardOpenOption.CREATE, StandardOpenOption.WRITE,
+                        StandardOpenOption.TRUNCATE_EXISTING);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void putJson(ResourceType type, Identifier id, JsonObject json) {
+        this.namespaces.add(id.getNamespace());
+
+        String path = Datagen.toPath(id, type) + ".json";
+        this.putJson(path, json);
     }
 
     public void putJson(String resource, JsonObject json) {
@@ -315,7 +323,7 @@ public class AurorasDecoPack implements ModResourcePack {
 
     @Override
     public Set<String> getNamespaces(ResourceType type) {
-        return NAMESPACES;
+        return this.namespaces;
     }
 
     @Nullable
@@ -354,8 +362,10 @@ public class AurorasDecoPack implements ModResourcePack {
 
     @Override
     public void close() {
-        if (this.type == ResourceType.CLIENT_RESOURCES)
+        if (this.type == ResourceType.CLIENT_RESOURCES) {
             this.resources.clear();
+            this.namespaces.clear();
+        }
     }
 
     private static Identifier fromPath(String path) {

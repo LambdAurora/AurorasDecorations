@@ -21,8 +21,10 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,12 +72,27 @@ public class WoodType {
         return this.logTexture;
     }
 
+    public Identifier getPlanksId() {
+        return new Identifier(this.id.getNamespace(), this.getId().getPath() + "_planks");
+    }
+
     public Identifier getSlabId() {
         return new Identifier(this.id.getNamespace(), this.getId().getPath() + "_slab");
     }
 
     public MapColor getMapColor() {
         return this.mapColor;
+    }
+
+    public static @Nullable WoodType getFromPlanks(ItemConvertible block) {
+        Identifier id = Registry.ITEM.getId(block.asItem());
+
+        for (WoodType type : WOOD_TYPES) {
+            if (type.getPlanksId().equals(id))
+                return type;
+        }
+
+        return null;
     }
 
     public static WoodType register(WoodType woodType) {

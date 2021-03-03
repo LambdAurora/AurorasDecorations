@@ -23,8 +23,12 @@ import dev.lambdaurora.aurorasdeco.block.*;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.*;
 import dev.lambdaurora.aurorasdeco.block.entity.*;
 import dev.lambdaurora.aurorasdeco.entity.FakeLeashKnotEntity;
+import dev.lambdaurora.aurorasdeco.entity.SitEntity;
 import dev.lambdaurora.aurorasdeco.item.BlackboardItem;
 import dev.lambdaurora.aurorasdeco.recipe.BlackboardCloneRecipe;
+import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
+import dev.lambdaurora.aurorasdeco.resource.Datagen;
+import dev.lambdaurora.aurorasdeco.screen.SawmillScreenHandler;
 import dev.lambdaurora.aurorasdeco.screen.ShelfScreenHandler;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -42,6 +46,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -49,10 +54,12 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.SpecialRecipeSerializer;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.stat.StatFormatter;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
@@ -65,6 +72,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static dev.lambdaurora.aurorasdeco.AurorasDeco.id;
+import static net.minecraft.stat.Stats.CUSTOM;
 
 /**
  * Represents the Aurora's Decorations registry.
@@ -140,6 +148,9 @@ public final class AurorasDecoRegistry {
 
     public static final PieBlock PUMPKIN_PIE_BLOCK = register("pumpkin_pie", PieBlock.fromPieItem(Items.PUMPKIN_PIE));
 
+    public static final SawmillBlock SAWMILL_BLOCK = registerWithItem("sawmill", new SawmillBlock(),
+            new FabricItemSettings().group(ItemGroup.DECORATIONS));
+
     public static final SturdyStoneBlock STURDY_STONE_BLOCK = registerWithItem("sturdy_stone",
             new SturdyStoneBlock(FabricBlockSettings.of(Material.STONE).requiresTool().strength(3.5f)),
             new FabricItemSettings().group(ItemGroup.REDSTONE));
@@ -160,9 +171,9 @@ public final class AurorasDecoRegistry {
                     .sounds(BlockSoundGroup.AMETHYST_BLOCK)),
             new Item.Settings().group(ItemGroup.DECORATIONS));
 
-    public static final Block[] SHELF_BLOCKS = WoodType.stream().map(woodType ->
+    public static final ShelfBlock[] SHELF_BLOCKS = WoodType.stream().map(woodType ->
             registerWithItem("shelf/" + woodType.getPathName(),
-                    new ShelfBlock(FabricBlockSettings.of(Material.WOOD, woodType.getMapColor())
+                    new ShelfBlock(woodType, FabricBlockSettings.of(Material.WOOD, woodType.getMapColor())
                             .nonOpaque()
                             .strength(2.f, 3.f)
                             .breakByTool(FabricToolTags.AXES)
@@ -200,10 +211,11 @@ public final class AurorasDecoRegistry {
             FabricBlockEntityTypeBuilder.create(WindChimeBlockEntity::new, WIND_CHIME_BLOCK).build()
     );
 
-    public static final ScreenHandlerType<ShelfScreenHandler> SHELF_SCREEN_HANDLER_TYPE = ScreenHandlerRegistry.registerExtended(
-            AurorasDeco.id("shelf"),
-            ShelfScreenHandler::new
-    );
+    public static final ScreenHandlerType<SawmillScreenHandler> SAWMILL_SCREEN_HANDLER_TYPE =
+            ScreenHandlerRegistry.registerSimple(id("sawmill"), SawmillScreenHandler::new);
+
+    public static final ScreenHandlerType<ShelfScreenHandler> SHELF_SCREEN_HANDLER_TYPE =
+            ScreenHandlerRegistry.registerExtended(id("shelf"), ShelfScreenHandler::new);
 
     /* Entities */
 
@@ -219,6 +231,20 @@ public final class AurorasDecoRegistry {
                     .trackedUpdateRate(Integer.MAX_VALUE)
                     .build()
     );
+    public static final EntityType<SitEntity> SIT_ENTITY_TYPE = Registry.register(
+            Registry.ENTITY_TYPE,
+            id("sit"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, SitEntity::new)
+                    .dimensions(EntityDimensions.fixed(.25f, 0))
+                    .disableSaving()
+                    .disableSummon()
+                    .trackRangeChunks(10)
+                    .build()
+    );
+
+    /* Stats */
+
+    public static final Identifier INTERACT_WITH_SAWMILL = register("interact_with_sawmill", StatFormatter.DEFAULT);
 
     /* Sounds */
 
@@ -243,6 +269,11 @@ public final class AurorasDecoRegistry {
     public static final SpecialRecipeSerializer<BlackboardCloneRecipe> BLACKBOARD_CLONE_RECIPE_SERIALIZER
             = register("crafting_special_blackboard_clone",
             new SpecialRecipeSerializer<>(BlackboardCloneRecipe::new));
+
+    public static final Identifier WOODCUTTING_RECIPE_ID = id("woodcutting");
+    public static final RecipeType<WoodcuttingRecipe> WOODCUTTING_RECIPE_TYPE = registerRecipeType("woodcutting");
+    public static final RecipeSerializer<WoodcuttingRecipe> WOODCUTTING_RECIPE_SERIALIZER
+            = register("woodcutting", WoodcuttingRecipe.SERIALIZER);
 
     /* Tags */
 
@@ -284,6 +315,21 @@ public final class AurorasDecoRegistry {
         return Registry.register(Registry.RECIPE_SERIALIZER, id(name), recipe);
     }
 
+    private static <T extends Recipe<?>> RecipeType<T> registerRecipeType(final String id) {
+        return Registry.register(Registry.RECIPE_TYPE, id(id), new RecipeType<T>() {
+            public String toString() {
+                return id;
+            }
+        });
+    }
+
+    private static Identifier register(String id, StatFormatter statFormatter) {
+        Identifier identifier = id(id);
+        Registry.register(Registry.CUSTOM_STAT, id, identifier);
+        CUSTOM.getOrCreateStat(identifier, statFormatter);
+        return identifier;
+    }
+
     public static void init(Map<Identifier, Block> delayed) {
         List<BigFlowerPotBlock> plants = new ArrayList<>();
         Registry.BLOCK.forEach(block -> {
@@ -306,10 +352,26 @@ public final class AurorasDecoRegistry {
             registerPetBed(color);
         }
 
+        WoodType.stream().forEach(woodType ->
+                registerWithItem("log_stump/" + woodType.getPathName(),
+                        new LogStumpBlock(FabricBlockSettings.of(Material.WOOD, woodType.getMapColor())
+                                .nonOpaque()
+                                .strength(2.f, 3.f)
+                                .breakByTool(FabricToolTags.AXES)
+                                .sounds(BlockSoundGroup.WOOD)),
+                        new FabricItemSettings().group(ItemGroup.DECORATIONS))
+        );
+
         FlammableBlockRegistry.getDefaultInstance().add(PET_BEDS, 10, 30);
         FlammableBlockRegistry.getDefaultInstance().add(SHELVES, 5, 20);
 
         ((ItemExtensions) Items.BOOK).makePlaceable(BOOK_PILE_BLOCK);
         ((ItemExtensions) Items.ENCHANTED_BOOK).makePlaceable(BOOK_PILE_BLOCK);
+
+        Datagen.registerDefaultWoodcuttingRecipes();
+        for (ShelfBlock shelf : SHELF_BLOCKS) {
+            Datagen.tryRegisterWoodcuttingRecipeFor(Registry.ITEM.get(shelf.woodType.getPlanksId()), AurorasDeco.NAMESPACE,
+                    Registry.BLOCK.getId(shelf).getPath(), "", 1, "decorations");
+        }
     }
 }

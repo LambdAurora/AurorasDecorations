@@ -19,7 +19,7 @@ package dev.lambdaurora.aurorasdeco.util;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 
@@ -38,6 +38,13 @@ public final class AuroraUtil {
         return s1.minX == s2.minX && s1.minY == s2.minY && s1.minZ == s2.minZ && s1.maxX == s2.maxX && s1.maxY == s2.maxY && s1.maxZ == s2.maxZ;
     }
 
+    public static Identifier appendWithNamespace(String prefix, Identifier id) {
+        String path = id.getPath();
+        if (!id.getNamespace().equals("minecraft") && !id.getNamespace().equals("aurorasdeco"))
+            path = id.getNamespace() + '/' + path;
+        return AurorasDeco.id(prefix + '/' + path);
+    }
+
     public static JsonArray jsonArray(Object[] elements) {
         JsonArray array = new JsonArray();
         for (Object element : elements) {
@@ -54,60 +61,5 @@ public final class AuroraUtil {
 
         }
         return array;
-    }
-
-    public static JsonObject inventoryChangedCriteria(String type, Identifier item) {
-        JsonObject root = new JsonObject();
-        root.addProperty("trigger", "minecraft:inventory_changed");
-        JsonObject conditions = new JsonObject();
-        JsonArray items = new JsonArray();
-        JsonObject child = new JsonObject();
-        child.addProperty(type, item.toString());
-        conditions.add("items", items);
-        root.add("conditions", conditions);
-        return root;
-    }
-
-    public static JsonObject recipeUnlockedCriteria(Identifier recipe) {
-        JsonObject root = new JsonObject();
-        root.addProperty("trigger", "minecraft:recipe_unlocked");
-        JsonObject conditions = new JsonObject();
-        conditions.addProperty("recipe", recipe.toString());
-        root.add("conditions", conditions);
-        return root;
-    }
-
-    public static JsonObject simpleBlockLootTable(Identifier id, boolean copyName) {
-        JsonObject root = new JsonObject();
-        root.addProperty("type", "minecraft:block");
-        JsonArray pools = new JsonArray();
-        {
-            JsonObject pool = new JsonObject();
-            pool.addProperty("rolls", 1.0);
-            pool.addProperty("bonus_rolls", 0.0);
-
-            JsonArray entries = new JsonArray();
-
-            JsonObject entry = new JsonObject();
-            entry.addProperty("type", "minecraft:item");
-            entry.addProperty("name", id.toString());
-
-            if (copyName) {
-                JsonObject function = new JsonObject();
-                function.addProperty("function", "minecraft:copy_name");
-                function.addProperty("source", "block_entity");
-                entry.add("functions", jsonArray(new JsonObject[]{function}));
-            }
-
-            entries.add(entry);
-
-            pool.add("entries", entries);
-
-            pools.add(pool);
-        }
-
-        root.add("pools", pools);
-
-        return root;
     }
 }

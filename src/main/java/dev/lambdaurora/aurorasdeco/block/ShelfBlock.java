@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import dev.lambdaurora.aurorasdeco.block.entity.ShelfBlockEntity;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -69,8 +70,12 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
     private static final Map<Direction, Map<PartType, VoxelShape>> SHAPES;
     private static final Map<PartType, VoxelShape> VALID_ATTACHMENTS;
 
-    public ShelfBlock(Settings settings) {
+    public final WoodType woodType;
+
+    public ShelfBlock(WoodType woodType, Settings settings) {
         super(settings);
+
+        this.woodType = woodType;
 
         this.setDefaultState(this.getDefaultState()
                 .with(TYPE, PartType.BOTTOM)

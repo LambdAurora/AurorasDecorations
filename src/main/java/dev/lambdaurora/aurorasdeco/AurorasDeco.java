@@ -21,7 +21,9 @@ import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigPottedCactusBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
+import dev.lambdaurora.aurorasdeco.resource.Datagen;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
@@ -58,12 +60,21 @@ public class AurorasDeco implements ModInitializer {
                 if (potBlock != null)
                     Registry.register(Registry.BLOCK, id("big_flower_pot/" + potBlock.getPlantType().getId()), potBlock);
             }
+
+            Datagen.registerWoodcuttingRecipesForBlockVariants(object);
         });
         RegistryEntryAddedCallback.event(Registry.ITEM).register((rawId, id, object) -> {
             if (id.toString().equals("pockettools:pocket_cactus")) {
                 Registry.register(Registry.BLOCK, id("big_flower_pot/pocket_cactus"),
                         PottedPlantType.register("pocket_cactus", Blocks.POTTED_CACTUS, object,
                                 type -> new BigPottedCactusBlock(type, BigPottedCactusBlock.POCKET_CACTUS_SHAPE)));
+            }
+
+            WoodType woodType = WoodType.getFromPlanks(object);
+            if (woodType != null) {
+                Datagen.tryRegisterWoodcuttingRecipeFor(Registry.ITEM.get(woodType.getPlanksId()),
+                        AurorasDeco.NAMESPACE, "shelf/" + woodType.getPathName(), "",
+                        1, "decorations");
             }
         });
     }
