@@ -118,8 +118,6 @@ public class FakeLeashKnotEntity extends MobEntity {
 
     @Override
     public ActionResult interactAt(PlayerEntity player, Vec3d hitPos, Hand hand) {
-        if (!this.world.isClient()) {
-        }
         return ActionResult.success(this.world.isClient());
     }
 

@@ -22,6 +22,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import dev.lambdaurora.aurorasdeco.block.StumpBlock;
+import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
 import dev.lambdaurora.aurorasdeco.mixin.AbstractBlockAccessor;
 import dev.lambdaurora.aurorasdeco.recipe.RecipeSerializerExtended;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
@@ -41,6 +43,7 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -94,6 +97,19 @@ public class Datagen {
         RECIPES.computeIfAbsent(recipe.getType(),
                 recipeType -> new ArrayList<>()).add(recipe);
         RECIPES_CATEGORIES.put(recipe, category);
+    }
+
+    public static JsonObject blockModelBase(Identifier parent) {
+        JsonObject root = new JsonObject();
+        root.addProperty("parent", parent.toString());
+        return root;
+    }
+
+    public static JsonObject blockModelTextures(JsonObject root, Map<String, Identifier> textures) {
+        JsonObject texturesJson = new JsonObject();
+        textures.forEach((key, id) -> texturesJson.addProperty(key, id.toString()));
+        root.add("textures", texturesJson);
+        return root;
     }
 
     public static JsonObject inventoryChangedCriteria(String type, Identifier item) {
@@ -217,6 +233,10 @@ public class Datagen {
 
             pool.add("entries", entries);
 
+            JsonObject survivesExplosion = new JsonObject();
+            survivesExplosion.addProperty("condition", "minecraft:survives_explosion");
+            pool.add("conditions", jsonArray(new Object[]{survivesExplosion}));
+
             pools.add(pool);
         }
 
@@ -225,7 +245,7 @@ public class Datagen {
         return root;
     }
 
-    public static void registerSimpleBlockLootTable(Block block) {
+    public static void dropsSelf(Block block) {
         registerSimpleBlockLootTable(Registry.BLOCK.getId(block), Registry.ITEM.getId(block.asItem()),
                 block instanceof BlockWithEntity);
     }
@@ -311,6 +331,16 @@ public class Datagen {
         Registry.BLOCK.stream().filter(block -> ((AbstractBlockAccessor) block).getMaterial() == Material.WOOD
                 || ((AbstractBlockAccessor) block).getMaterial() == Material.NETHER_WOOD)
                 .forEach(Datagen::registerWoodcuttingRecipesForBlockVariants);
+
+        StumpBlock.streamLogStumps().forEach(block -> {
+            if (block.getWoodType().getLog() == null)
+                return;
+            WoodcuttingRecipe recipe = new WoodcuttingRecipe(
+                    AurorasDeco.id("woodcutting/stump/" + block.getWoodType().getPathName()),
+                    "log_stump", Ingredient.ofItems(block.getWoodType().getLog()),
+                    new ItemStack(block));
+            registerRecipe(recipe, "decorations");
+        });
     }
 
     private static void tryRegisterWoodcuttingRecipeFor(ItemConvertible planks, String basePath, String type, int count,
@@ -334,7 +364,135 @@ public class Datagen {
         }
     }
 
+    public static void generateModels() {
+        StumpBlock.streamLogStumps().forEach(block -> {
+            BlockStateBuilder builder = new BlockStateBuilder(block);
+
+            Identifier model;
+            if (block.getWoodType().getLogType().equals("stem")) {
+                model = new ModelBuilder(StumpBlock.STEM_STUMP_MODEL)
+                        .texture("log_side", block.getWoodType().getLogSideTexture())
+                        .texture("log_top", block.getWoodType().getLogTopTexture())
+                        .texture("mushroom", block.getWoodType().getLeavesTexture())
+                        .register(block);
+                for (Direction direction : Direction.values()) {
+                    if (direction.getAxis().isHorizontal())
+                        builder.addToVariant("", model, (int) direction.asRotation());
+                }
+            } else {
+                model = new ModelBuilder(StumpBlock.LOG_STUMP_MODEL)
+                        .texture("log_side", block.getWoodType().getLogSideTexture())
+                        .texture("log_top", block.getWoodType().getLogTopTexture())
+                        .texture("leaf", AurorasDeco.id("block/log_stump_leaf"))
+                        .register(block);
+                Identifier brownMushroomModel = new ModelBuilder(StumpBlock.LOG_STUMP_BROWN_MUSHROOM_MODEL)
+                        .texture("log_side", block.getWoodType().getLogSideTexture())
+                        .texture("log_top", block.getWoodType().getLogTopTexture())
+                        .texture("leaf", AurorasDeco.id("block/log_stump_leaf"))
+                        .texture("mushroom", new Identifier("block/brown_mushroom_block"))
+                        .register(AurorasDeco.id("block/stump/"
+                                + block.getWoodType().getPathName() + "_brown_mushroom"));
+                Identifier redMushroomModel = new ModelBuilder(StumpBlock.LOG_STUMP_RED_MUSHROOM_MODEL)
+                        .texture("log_side", block.getWoodType().getLogSideTexture())
+                        .texture("log_top", block.getWoodType().getLogTopTexture())
+                        .texture("leaf", AurorasDeco.id("block/log_stump_leaf"))
+                        .texture("mushroom", new Identifier("block/red_mushroom_block"))
+                        .register(AurorasDeco.id("block/stump/"
+                                + block.getWoodType().getPathName() + "_red_mushroom"));
+
+                for (Direction direction : Direction.values()) {
+                    if (direction.getAxis().isHorizontal()) {
+                        int rotation = (int) direction.asRotation();
+                        builder.addToVariant("", model, rotation);
+                        builder.addToVariant("", brownMushroomModel, rotation);
+                        builder.addToVariant("", redMushroomModel, rotation);
+                    }
+                }
+            }
+
+            new ModelBuilder(model).register(AurorasDeco.id("item/stump/" + block.getWoodType().getPathName()));
+
+            builder.register();
+        });
+    }
+
     public static String toPath(Identifier id, ResourceType type) {
         return type.getDirectory() + '/' + id.getNamespace() + '/' + id.getPath();
+    }
+
+    public static class BlockStateBuilder {
+        private final JsonObject json = new JsonObject();
+        private final Identifier id;
+        private final JsonObject variantsJson = new JsonObject();
+        private final Map<String, JsonArray> variants = new Object2ObjectOpenHashMap<>();
+
+        public BlockStateBuilder(Block block) {
+            Identifier id = Registry.BLOCK.getId(block);
+            this.id = new Identifier(id.getNamespace(), "blockstates/" + id.getPath());
+
+            this.json.add("variants", variantsJson);
+        }
+
+        public BlockStateBuilder addToVariant(String variant, Identifier modelId) {
+            return this.addToVariant(variant, modelId, 0);
+        }
+
+        public BlockStateBuilder addToVariant(String variant, Identifier modelId, int y) {
+            JsonObject model = new JsonObject();
+            model.addProperty("model", modelId.toString());
+            if (y != 0)
+                model.addProperty("y", y);
+
+            this.variants.computeIfAbsent(variant, v -> {
+                JsonArray array = new JsonArray();
+                this.variantsJson.add(v, array);
+                return array;
+            }).add(model);
+
+            return this;
+        }
+
+        public JsonObject toJson() {
+            return this.json;
+        }
+
+        public void register() {
+            AurorasDecoClient.RESOURCE_PACK.putJson(ResourceType.CLIENT_RESOURCES, this.id, this.toJson());
+        }
+    }
+
+    public static class ModelBuilder {
+        private final JsonObject json = new JsonObject();
+        private JsonObject textures;
+
+        public ModelBuilder(Identifier parent) {
+            this.json.addProperty("parent", parent.toString());
+        }
+
+        public ModelBuilder texture(String name, Identifier id) {
+            if (this.textures == null) {
+                this.json.add("textures", this.textures = new JsonObject());
+            }
+
+            this.textures.addProperty(name, id.toString());
+
+            return this;
+        }
+
+        public JsonObject toJson() {
+            return this.json;
+        }
+
+        public Identifier register(Block block) {
+            Identifier id = Registry.BLOCK.getId(block);
+            return this.register(new Identifier(id.getNamespace(), "block/" + id.getPath()));
+        }
+
+        public Identifier register(Identifier id) {
+            AurorasDecoClient.RESOURCE_PACK.putJson(ResourceType.CLIENT_RESOURCES,
+                    new Identifier(id.getNamespace(), "models/" + id.getPath()),
+                    this.toJson());
+            return id;
+        }
     }
 }

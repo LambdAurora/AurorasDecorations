@@ -23,7 +23,7 @@ import dev.lambdaurora.aurorasdeco.block.*;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.*;
 import dev.lambdaurora.aurorasdeco.block.entity.*;
 import dev.lambdaurora.aurorasdeco.entity.FakeLeashKnotEntity;
-import dev.lambdaurora.aurorasdeco.entity.SitEntity;
+import dev.lambdaurora.aurorasdeco.entity.SeatEntity;
 import dev.lambdaurora.aurorasdeco.item.BlackboardItem;
 import dev.lambdaurora.aurorasdeco.recipe.BlackboardCloneRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
@@ -231,11 +231,11 @@ public final class AurorasDecoRegistry {
                     .trackedUpdateRate(Integer.MAX_VALUE)
                     .build()
     );
-    public static final EntityType<SitEntity> SIT_ENTITY_TYPE = Registry.register(
+    public static final EntityType<SeatEntity> SIT_ENTITY_TYPE = Registry.register(
             Registry.ENTITY_TYPE,
             id("sit"),
-            FabricEntityTypeBuilder.create(SpawnGroup.MISC, SitEntity::new)
-                    .dimensions(EntityDimensions.fixed(.25f, 0))
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, SeatEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.f, 0.f))
                     .disableSaving()
                     .disableSummon()
                     .trackRangeChunks(10)
@@ -279,6 +279,7 @@ public final class AurorasDecoRegistry {
 
     public static final Tag<Block> PET_BEDS = TagRegistry.block(AurorasDeco.id("pet_beds"));
     public static final Tag<Block> SHELVES = TagRegistry.block(AurorasDeco.id("shelves"));
+    public static final Tag<Block> STUMPS = TagRegistry.block(AurorasDeco.id("stumps"));
 
     private static <T extends Block> T register(String name, T block) {
         return Registry.register(Registry.BLOCK, id(name), block);
@@ -352,15 +353,16 @@ public final class AurorasDecoRegistry {
             registerPetBed(color);
         }
 
-        WoodType.stream().forEach(woodType ->
-                registerWithItem("log_stump/" + woodType.getPathName(),
-                        new LogStumpBlock(FabricBlockSettings.of(Material.WOOD, woodType.getMapColor())
-                                .nonOpaque()
-                                .strength(2.f, 3.f)
-                                .breakByTool(FabricToolTags.AXES)
-                                .sounds(BlockSoundGroup.WOOD)),
-                        new FabricItemSettings().group(ItemGroup.DECORATIONS))
-        );
+        WoodType.stream().forEach(woodType -> {
+            if (woodType.hasLog()) {
+                Block block = registerWithItem("stump/" + woodType.getPathName(),
+                        new StumpBlock(woodType),
+                        new FabricItemSettings().group(ItemGroup.DECORATIONS));
+
+                if (woodType.isFlammable())
+                    FlammableBlockRegistry.getDefaultInstance().add(block, 5, 5);
+            }
+        });
 
         FlammableBlockRegistry.getDefaultInstance().add(PET_BEDS, 10, 30);
         FlammableBlockRegistry.getDefaultInstance().add(SHELVES, 5, 20);

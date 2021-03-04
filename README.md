@@ -59,6 +59,9 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
   Ever wished to share a pumpkin pie with your friends?
   Or just place it on a table to eat it later?
   Now you can!
+- Sawmill
+  - Craft many wooden blocks with a similar mechanic as the stonecutter.
+  - Reduce the cost in wood of certain blocks like trapdoors.
 - Shelves
   - Comes in every wood types.
     - Supports some modded wood types.
@@ -67,6 +70,9 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
   - Right-click with an item will place it into the shelf.
   - Left-click with an empty world in survival will emptied the targeted item.
   - Waterloggable.
+- Stumps
+  - Cozy seat.
+  - Made using logs in a sawmill.
 - Sturdy Stone
   - Cannot be moved by pistons or slime/honey blocks.
   - Can transmit state change in an observer chain.
@@ -91,6 +97,8 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 ![Placeable Pumpkin Pie](images/placeable_pumpkin_pie.png)
 
 ![Placeable books](images/in_world_books.png)
+
+![Sawmill & Stumps](images/sawmill_and_stumps.png)
 
 ![Shelves](images/shelves.png)
 

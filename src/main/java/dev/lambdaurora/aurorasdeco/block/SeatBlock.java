@@ -17,26 +17,44 @@
 
 package dev.lambdaurora.aurorasdeco.block;
 
-import dev.lambdaurora.aurorasdeco.entity.SitEntity;
+import dev.lambdaurora.aurorasdeco.entity.SeatEntity;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 
-public interface SittableBlock {
-    default boolean sit(World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+public interface SeatBlock {
+    default boolean canBeUsed(BlockState state) {
+        return true;
+    }
+
+    default boolean canSit(World world, BlockPos pos, BlockState state) {
+        for (PlayerEntity player : world.getNonSpectatingEntities(PlayerEntity.class, new Box(pos))) {
+            if (player.hasVehicle()) {
+                if (player.getVehicle() instanceof SeatEntity)
+                    return false;
+            }
+        }
+        return this.canBeUsed(state);
+    }
+
+    default boolean sit(World world, BlockPos pos, BlockState state, PlayerEntity player, ItemStack stack) {
         if (world.isClient())
             return stack.isEmpty();
         else if (!stack.isEmpty())
             return false;
-
-        SitEntity sitEntity = AurorasDecoRegistry.SIT_ENTITY_TYPE.create(world);
-        if (sitEntity == null)
+        else if (!this.canSit(world, pos, state))
             return false;
-        sitEntity.setPos(pos.getX() + .5f, pos.getY() + this.getSitYOffset(), pos.getZ() + .5f);
-        world.spawnEntity(sitEntity);
-        player.startRiding(sitEntity, true);
+
+        SeatEntity seatEntity = AurorasDecoRegistry.SIT_ENTITY_TYPE.create(world);
+        if (seatEntity == null)
+            return false;
+        seatEntity.setPosition(pos.getX() + .5f, pos.getY() + this.getSitYOffset(), pos.getZ() + .5f);
+        world.spawnEntity(seatEntity);
+        player.startRiding(seatEntity, false);
 
         return true;
     }

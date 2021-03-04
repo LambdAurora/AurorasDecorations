@@ -23,6 +23,7 @@ import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.ShelfBlock;
+import dev.lambdaurora.aurorasdeco.block.StumpBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
@@ -112,7 +113,7 @@ public class AurorasDecoPack implements ModResourcePack {
             root.addProperty("parent", "aurorasdeco:block/template/shelf_" + part.asString());
             JsonObject textures = new JsonObject();
             textures.addProperty("planks", type.getPlanksTexture().toString());
-            textures.addProperty("log", type.getLogTexture().toString());
+            textures.addProperty("log", type.getLogSideTexture().toString());
             root.add("textures", textures);
             this.putJson(path, root);
         });
@@ -149,6 +150,8 @@ public class AurorasDecoPack implements ModResourcePack {
             this.registerShelfBlockModel(type);
             this.registerShelfItemModel(type);
         });
+
+        Datagen.generateModels();
 
         return this;
     }
@@ -231,6 +234,8 @@ public class AurorasDecoPack implements ModResourcePack {
 
             this.registerShelfRecipe(type);
         });
+
+        StumpBlock.streamLogStumps().forEach(Datagen::dropsSelf);
 
         this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("shelves"), WoodType.stream()
                 .map(type -> AurorasDeco.id("shelf/" + type.getPathName())));

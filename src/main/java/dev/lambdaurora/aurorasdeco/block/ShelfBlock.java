@@ -27,6 +27,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -122,7 +123,7 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
             if (this.canPlaceAt(placedState, world, pos))
                 return placedState.with(TYPE, PartType.DOUBLE);
         } else {
-            FluidState fluid = ctx.getWorld().getFluidState(pos);
+            FluidState fluid = world.getFluidState(pos);
             BlockState state = this.getDefaultState().with(WATERLOGGED, fluid.getFluid() == Fluids.WATER);
 
             Direction side = ctx.getSide();
@@ -185,6 +186,16 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
     @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         return state.rotate(mirror.getRotation(state.get(FACING)));
+    }
+
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        ShelfBlockEntity shelf = AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE.get(world, pos);
+        if (shelf != null) {
+            if (stack.hasCustomName()) {
+                shelf.setCustomName(stack.getName());
+            }
+        }
     }
 
     /* Updates */

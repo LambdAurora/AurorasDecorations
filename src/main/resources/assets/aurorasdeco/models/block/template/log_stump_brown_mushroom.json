@@ -1,0 +1,8 @@
+{
+  "credit": "Made by LambdAurora",
+  "parent": "aurorasdeco:block/template/log_stump_mushroom",
+  "textures": {
+    "particle": "#log_side",
+    "mushroom": "brown_mushroom_block"
+  }
+}

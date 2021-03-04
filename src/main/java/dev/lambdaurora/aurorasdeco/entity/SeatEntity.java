@@ -17,22 +17,47 @@
 
 package dev.lambdaurora.aurorasdeco.entity;
 
-import dev.lambdaurora.aurorasdeco.block.SittableBlock;
+import dev.lambdaurora.aurorasdeco.block.SeatBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class SitEntity extends Entity {
-    public SitEntity(EntityType<?> type, World world) {
+public class SeatEntity extends Entity {
+    public SeatEntity(EntityType<?> type, World world) {
         super(type, world);
+
+        this.noClip = true;
     }
 
     @Override
     protected void initDataTracker() {
+    }
+
+    @Override
+    public double getMountedHeightOffset() {
+        return 0;
+    }
+
+    @Override
+    public Vec3d updatePassengerForDismount(LivingEntity passenger) {
+        Vec3d vec = super.updatePassengerForDismount(passenger);
+
+        if (this.getEntityWorld().getBlockState(this.getBlockPos().up()).isAir()) {
+            return new Vec3d(vec.x, this.getBlockY() + 1, vec.z);
+        }
+
+        return vec;
+    }
+
+    @Override
+    public boolean hasNoGravity() {
+        return true;
     }
 
     /* Serialization */
@@ -59,14 +84,12 @@ public class SitEntity extends Entity {
         super.tick();
 
         BlockState state = this.getEntityWorld().getBlockState(this.getBlockPos());
-        if (!(state.getBlock() instanceof SittableBlock))
+        if (!(state.getBlock() instanceof SeatBlock) || !this.hasPassengers())
             this.discard();
     }
 
     @Override
     protected void removePassenger(Entity passenger) {
         super.removePassenger(passenger);
-        if (!this.hasPassengers())
-            this.discard();
     }
 }

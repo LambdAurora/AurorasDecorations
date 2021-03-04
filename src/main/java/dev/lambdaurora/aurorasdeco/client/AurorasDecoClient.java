@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.client;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
+import dev.lambdaurora.aurorasdeco.block.StumpBlock;
 import dev.lambdaurora.aurorasdeco.client.renderer.*;
 import dev.lambdaurora.aurorasdeco.client.screen.SawmillScreen;
 import dev.lambdaurora.aurorasdeco.client.screen.ShelfScreen;
@@ -28,6 +29,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;
@@ -35,6 +37,8 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
+import net.minecraft.client.color.block.BlockColorProvider;
+import net.minecraft.client.color.item.ItemColorProvider;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.color.world.FoliageColors;
 import net.minecraft.client.render.RenderLayer;
@@ -72,7 +76,7 @@ public class AurorasDecoClient implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.FAKE_LEASH_KNOT_ENTITY_TYPE,
                 FakeLeashKnotEntityRenderer::new);
         EntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.SIT_ENTITY_TYPE,
-                SitEntityRenderer::new);
+                SeatEntityRenderer::new);
 
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutoutMipped(),
                 AurorasDecoRegistry.BURNT_VINE_BLOCK);
@@ -80,6 +84,23 @@ public class AurorasDecoClient implements ClientModInitializer {
                 AurorasDecoRegistry.SAWMILL_BLOCK,
                 AurorasDecoRegistry.WALL_LANTERN_BLOCK,
                 AurorasDecoRegistry.WIND_CHIME_BLOCK);
+
+        StumpBlock.streamLogStumps()
+                .forEach(block -> BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout()));
+
+        ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
+            StumpBlock.streamLogStumps()
+                    .forEach(block -> {
+                        BlockColorProvider blockColorProvider = block.getWoodType().getLeavesColorProvider();
+                        if (blockColorProvider != null) {
+                            ColorProviderRegistry.BLOCK.register(blockColorProvider, block);
+                        }
+                        ItemColorProvider itemColorProvider = block.getWoodType().getLeavesItemColorProvider();
+                        if (itemColorProvider != null) {
+                            ColorProviderRegistry.ITEM.register(itemColorProvider, block);
+                        }
+                    });
+        });
 
         this.registerBlackboardItemRenderer(AurorasDecoRegistry.BLACKBOARD_BLOCK);
         this.registerBlackboardItemRenderer(AurorasDecoRegistry.CHALKBOARD_BLOCK);

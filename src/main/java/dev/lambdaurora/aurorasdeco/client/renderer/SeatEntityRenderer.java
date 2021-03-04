@@ -17,7 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.client.renderer;
 
-import dev.lambdaurora.aurorasdeco.entity.SitEntity;
+import dev.lambdaurora.aurorasdeco.entity.SeatEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.Frustum;
@@ -26,18 +26,18 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
-public class SitEntityRenderer extends EntityRenderer<SitEntity> {
-    public SitEntityRenderer(EntityRendererFactory.Context ctx) {
+public class SeatEntityRenderer extends EntityRenderer<SeatEntity> {
+    public SeatEntityRenderer(EntityRendererFactory.Context ctx) {
         super(ctx);
     }
 
     @Override
-    public boolean shouldRender(SitEntity entity, Frustum frustum, double x, double y, double z) {
+    public boolean shouldRender(SeatEntity entity, Frustum frustum, double x, double y, double z) {
         return false;
     }
 
     @Override
-    public Identifier getTexture(SitEntity entity) {
+    public Identifier getTexture(SeatEntity entity) {
         return null;
     }
 }

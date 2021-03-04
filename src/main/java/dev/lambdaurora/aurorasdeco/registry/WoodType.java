@@ -17,11 +17,19 @@
 
 package dev.lambdaurora.aurorasdeco.registry;
 
+import dev.lambdaurora.aurorasdeco.mixin.AbstractBlockAccessor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
+import net.minecraft.block.Material;
+import net.minecraft.client.color.block.BlockColorProvider;
+import net.minecraft.client.color.item.ItemColorProvider;
 import net.minecraft.item.ItemConvertible;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
@@ -37,19 +45,31 @@ import java.util.stream.Stream;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class WoodType {
+public final class WoodType {
     private static final List<WoodType> WOOD_TYPES = new ArrayList<>();
 
     private final Identifier id;
+    private final String logType;
+    private final boolean flammable;
     private final Identifier planksTexture;
-    private final Identifier logTexture;
+    private final Identifier leavesId;
+    private final Identifier leavesTexture;
+    public final Material material;
     private final MapColor mapColor;
+    public final BlockSoundGroup logSoundGroup;
 
-    public WoodType(Identifier id, Identifier planksTexture, Identifier logTexture, MapColor color) {
+    public WoodType(Identifier id, String logType, boolean flammable, Identifier planksTexture, Identifier leavesId,
+                    Material material, MapColor color,
+                    BlockSoundGroup logSoundGroup) {
         this.id = id;
+        this.logType = logType;
+        this.flammable = flammable;
         this.planksTexture = planksTexture;
-        this.logTexture = logTexture;
+        this.leavesId = leavesId;
+        this.leavesTexture = new Identifier(leavesId.getNamespace(), "block/" + leavesId.getPath());
+        this.material = material;
         this.mapColor = color;
+        this.logSoundGroup = logSoundGroup;
     }
 
     public Identifier getId() {
@@ -64,12 +84,44 @@ public class WoodType {
         return path;
     }
 
+    public boolean hasLog() {
+        return !this.logType.equals("none");
+    }
+
+    public String getLogType() {
+        return this.logType;
+    }
+
+    public boolean isFlammable() {
+        return this.flammable;
+    }
+
     public Identifier getPlanksTexture() {
         return this.planksTexture;
     }
 
-    public Identifier getLogTexture() {
-        return this.logTexture;
+    public Identifier getLogSideTexture() {
+        if (!this.hasLog())
+            return this.getPlanksTexture();
+        return new Identifier(this.id.getNamespace(), "block/" + this.id.getPath() + '_' + this.logType);
+    }
+
+    public Identifier getLogTopTexture() {
+        if (!this.hasLog())
+            return this.getPlanksTexture();
+        return new Identifier(this.id.getNamespace(), "block/" + this.id.getPath() + '_' + this.logType + "_top");
+    }
+
+    public @Nullable Block getLog() {
+        if (!this.hasLog())
+            return null;
+        return Registry.BLOCK.get(new Identifier(this.id.getNamespace(), this.id.getPath() + '_' + this.logType));
+    }
+
+    public @Nullable Block getLeaves() {
+        if (!this.hasLog())
+            return null;
+        return Registry.BLOCK.get(this.leavesId);
     }
 
     public Identifier getPlanksId() {
@@ -80,8 +132,22 @@ public class WoodType {
         return new Identifier(this.id.getNamespace(), this.getId().getPath() + "_slab");
     }
 
+    public Identifier getLeavesTexture() {
+        return this.leavesTexture;
+    }
+
     public MapColor getMapColor() {
         return this.mapColor;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public BlockColorProvider getLeavesColorProvider() {
+        return ColorProviderRegistry.BLOCK.get(this.getLeaves());
+    }
+
+    @Environment(EnvType.CLIENT)
+    public ItemColorProvider getLeavesItemColorProvider() {
+        return ColorProviderRegistry.ITEM.get(this.getLeaves());
     }
 
     public static @Nullable WoodType getFromPlanks(ItemConvertible block) {
@@ -100,56 +166,115 @@ public class WoodType {
         return woodType;
     }
 
-    public static WoodType registerFromPlanks(Block block) {
-        Identifier blockId = Registry.BLOCK.getId(block);
-        Identifier id = new Identifier(blockId.getNamespace(), blockId.getPath().replace("_planks", ""));
-        return register(id,
-                new Identifier(id.getNamespace(), "block/" + id.getPath() + "_planks"),
-                new Identifier(id.getNamespace(), "block/" + id.getPath() + "_log"),
-                block.getDefaultMapColor()
-        );
-    }
-
-    public static WoodType register(Identifier id, MapColor mapColor) {
-        return register(id,
-                new Identifier(id.getNamespace(), "block/" + id.getPath() + "_planks"),
-                new Identifier(id.getNamespace(), "block/" + id.getPath() + "_log"),
-                mapColor
-        );
-    }
-
-    public static WoodType register(Identifier id, Identifier planksTexture, Identifier logTexture, MapColor mapColor) {
-        return register(new WoodType(id, planksTexture, logTexture, mapColor));
-    }
-
     public static Stream<WoodType> stream() {
         return WOOD_TYPES.stream();
     }
 
     static {
-        registerFromPlanks(Blocks.OAK_PLANKS);
-        registerFromPlanks(Blocks.SPRUCE_PLANKS);
-        registerFromPlanks(Blocks.BIRCH_PLANKS);
-        registerFromPlanks(Blocks.JUNGLE_PLANKS);
-        registerFromPlanks(Blocks.ACACIA_PLANKS);
-        registerFromPlanks(Blocks.DARK_OAK_PLANKS);
-        register(new Identifier("crimson"),
-                new Identifier("block/crimson_planks"),
-                new Identifier("block/crimson_stem"),
-                Blocks.CRIMSON_PLANKS.getDefaultMapColor());
-        register(new Identifier("warped"),
-                new Identifier("block/warped_planks"),
-                new Identifier("block/warped_stem"),
-                Blocks.WARPED_PLANKS.getDefaultMapColor());
+        builder(Blocks.OAK_PLANKS).register();
+        builder(Blocks.SPRUCE_PLANKS).register();
+        builder(Blocks.BIRCH_PLANKS).register();
+        builder(Blocks.JUNGLE_PLANKS).register();
+        builder(Blocks.ACACIA_PLANKS).register();
+        builder(Blocks.DARK_OAK_PLANKS).register();
+        builder(Blocks.CRIMSON_PLANKS).leavesId(new Identifier("nether_wart_block"))
+                .logSoundGroup(BlockSoundGroup.NETHER_STEM)
+                .register();
+        builder(Blocks.WARPED_PLANKS).logSoundGroup(BlockSoundGroup.NETHER_STEM).register();
 
         if (FabricLoader.getInstance().isModLoaded("blockus")) {
-            register(new Identifier("blockus", "bamboo"),
-                    new Identifier("blockus", "block/bamboo_planks"),
-                    new Identifier("blockus", "block/bamboo_planks"), MapColor.PALE_YELLOW);
-            register(new Identifier("blockus", "charred"),
-                    new Identifier("blockus", "block/charred_planks"),
-                    new Identifier("blockus", "block/charred_planks"), MapColor.TERRACOTTA_GRAY);
-            register(new Identifier("blockus", "white_oak"), MapColor.TERRACOTTA_WHITE);
+            new Builder(new Identifier("blockus", "bamboo"))
+                    .logType("none")
+                    .mapColor(MapColor.PALE_YELLOW)
+                    .register();
+            new Builder(new Identifier("blockus", "charred"))
+                    .logType("none")
+                    .mapColor(MapColor.TERRACOTTA_GRAY)
+                    .register();
+            new Builder(new Identifier("blockus", "white_oak"))
+                    .mapColor(MapColor.TERRACOTTA_WHITE)
+                    .register();
+        }
+    }
+
+    public static Builder builder(Block block) {
+        Identifier blockId = Registry.BLOCK.getId(block);
+        Identifier id = new Identifier(blockId.getNamespace(), blockId.getPath().replace("_planks", ""));
+        Material material = ((AbstractBlockAccessor) block).getMaterial();
+        Builder builder = new Builder(id)
+                .material(material)
+                .mapColor(block.getDefaultMapColor())
+                .logSoundGroup(block.getSoundGroup(block.getDefaultState()));
+        if (material == Material.NETHER_WOOD)
+            builder.logType("stem").flammable(false);
+        return builder;
+    }
+
+    private static class Builder {
+        final Identifier id;
+        boolean flammable = true;
+        Identifier planksTexture;
+        Identifier leavesId;
+        boolean customLeavesId = false;
+        String logType = "log";
+        Material material = Material.WOOD;
+        MapColor mapColor = Material.WOOD.getColor();
+        BlockSoundGroup logSoundGroup = BlockSoundGroup.WOOD;
+
+        public Builder(Identifier id) {
+            this.id = id;
+            this.planksTexture = new Identifier(id.getNamespace(), "block/" + id.getPath() + "_planks");
+            this.leavesId = new Identifier(this.id.getNamespace(), this.id.getPath() + "_leaves");
+        }
+
+        public Builder planksTexture(Identifier id) {
+            this.planksTexture = id;
+            return this;
+        }
+
+        public Builder logType(String type) {
+            this.logType = type;
+            if (!this.customLeavesId && type.equals("stem")) {
+                this.leavesId = new Identifier(this.id.getNamespace(), this.id.getPath() + "_wart_block");
+            }
+            return this;
+        }
+
+        public Builder flammable(boolean flammable) {
+            this.flammable = flammable;
+            return this;
+        }
+
+        public Builder leavesId(Identifier id) {
+            this.leavesId = id;
+            this.customLeavesId = true;
+            return this;
+        }
+
+        public Builder material(Material material) {
+            this.material = material;
+            return this;
+        }
+
+        public Builder mapColor(MapColor color) {
+            this.mapColor = color;
+            return this;
+        }
+
+        public Builder logSoundGroup(BlockSoundGroup soundGroup) {
+            this.logSoundGroup = soundGroup;
+            return this;
+        }
+
+        public WoodType build() {
+            return new WoodType(
+                    this.id, this.logType, this.flammable, this.planksTexture, this.leavesId,
+                    this.material, this.mapColor, this.logSoundGroup
+            );
+        }
+
+        public void register() {
+            WoodType.register(this.build());
         }
     }
 }
