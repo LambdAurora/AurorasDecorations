@@ -35,9 +35,9 @@ import java.util.function.Consumer;
  * <p>
  * It's just me not having actually worked on the virtual resource pack API in Fabric API so I have to do stupid stuff like this.
  */
-@Mixin(value = ModResourcePackCreator.class, remap = false)
+@Mixin(ModResourcePackCreator.class)
 public class ModResourcePackCreatorMixin {
-    @Shadow
+    @Shadow(remap = false)
     @Final
     private ResourceType type;
 
