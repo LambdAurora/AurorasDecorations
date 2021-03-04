@@ -23,6 +23,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.screen.NamedScreenHandlerFactory;
@@ -40,6 +41,9 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 /**
@@ -51,6 +55,8 @@ import net.minecraft.world.World;
  */
 public final class SawmillBlock extends Block {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+
+    private static final VoxelShape SHAPE;
 
     public SawmillBlock() {
         super(FabricBlockSettings.of(Material.WOOD).nonOpaque().strength(2.5f).sounds(BlockSoundGroup.WOOD));
@@ -66,6 +72,18 @@ public final class SawmillBlock extends Block {
     @Override
     public boolean hasSidedTransparency(BlockState state) {
         return true;
+    }
+
+    /* Shapes */
+
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return SHAPE;
+    }
+
+    @Override
+    public VoxelShape getRaycastShape(BlockState state, BlockView world, BlockPos pos) {
+        return VoxelShapes.fullCube();
     }
 
     /* Placement */
@@ -104,5 +122,16 @@ public final class SawmillBlock extends Block {
         return new SimpleNamedScreenHandlerFactory((syncId, playerInventory, player) ->
                 new SawmillScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(world, pos)),
                 new TranslatableText(this.getTranslationKey()));
+    }
+
+    static {
+        SHAPE = VoxelShapes.union(
+                createCuboidShape(0, 14, 0, 16, 16, 16),
+                createCuboidShape(3, 12, 3, 13, 14, 13),
+                createCuboidShape(0, 0, 0, 3, 14, 3),
+                createCuboidShape(0, 0, 13, 3, 14, 16),
+                createCuboidShape(13, 0, 13, 16, 14, 16),
+                createCuboidShape(13, 0, 0, 16, 14, 3)
+        );
     }
 }

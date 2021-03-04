@@ -54,7 +54,7 @@ public interface SeatBlock {
             return false;
         seatEntity.setPosition(pos.getX() + .5f, pos.getY() + this.getSitYOffset(), pos.getZ() + .5f);
         world.spawnEntity(seatEntity);
-        player.startRiding(seatEntity, false);
+        player.startRiding(seatEntity, true);
 
         return true;
     }
