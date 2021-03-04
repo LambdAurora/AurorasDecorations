@@ -5,6 +5,7 @@
   "mixins": [
     "AbstractBlockAccessor",
     "ArmorStandEntityMixin",
+    "BlockAccessor",
     "BlockItemMixin",
     "CandleBlockMixin",
     "CatEntityMixin",

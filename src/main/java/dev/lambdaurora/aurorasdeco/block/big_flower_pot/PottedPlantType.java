@@ -79,6 +79,8 @@ public final class PottedPlantType {
     }
 
     public static BigFlowerPotBlock register(String id, Block plant, Item item) {
+        if (id.equals("ecotones/blueberry_bush")) // Love ecotones <3
+            return register(id, plant, item, BigPottedSweetBerryBushBlock::new);
         return register(id, plant, item, BigFlowerPotBlock::new);
     }
 

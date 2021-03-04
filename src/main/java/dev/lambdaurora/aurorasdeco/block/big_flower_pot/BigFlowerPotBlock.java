@@ -152,7 +152,8 @@ public class BigFlowerPotBlock extends Block {
                     player.dropItem(droppedStack, false);
                 }
             } else {
-                ItemEntity itemEntity = new ItemEntity(world, pos.getX() + .5f, pos.getY() + 1.5f, pos.getZ() + .5f, droppedStack);
+                ItemEntity itemEntity = new ItemEntity(world, pos.getX() + .5f, pos.getY() + 1.5f, pos.getZ() + .5f,
+                        droppedStack);
                 float speed = world.random.nextFloat() * .5f;
                 float angle = world.random.nextFloat() * 6.2831855f;
                 itemEntity.setVelocity(-MathHelper.sin(angle) * speed, 0.20000000298023224D, MathHelper.cos(angle) * speed);

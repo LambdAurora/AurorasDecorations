@@ -17,37 +17,33 @@
 
 package dev.lambdaurora.aurorasdeco.block.big_flower_pot;
 
-import net.minecraft.block.*;
+import dev.lambdaurora.aurorasdeco.mixin.BlockAccessor;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Fertilizable;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.LootTables;
 import net.minecraft.loot.context.LootContext;
-import net.minecraft.loot.context.LootContextParameters;
-import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.IntProperty;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -58,41 +54,31 @@ import java.util.Random;
  * @since 1.0.0
  */
 public class BigPottedSweetBerryBushBlock extends BigFlowerPotBlock implements Fertilizable {
-    public static final IntProperty AGE = SweetBerryBushBlock.AGE;
-
-    private static final VoxelShape SMALL_SHAPE = VoxelShapes.union(BIG_FLOWER_POT_SHAPE, createCuboidShape(
-            4.f, 14.f, 4.f,
-            12.f, 18.f, 12.f
-    ));
-    private static final VoxelShape LARGE_SHAPE;
     private static final Box SWEET_BERRY_BUSH_BOX;
+
+    private final Map<BlockState, VoxelShape> shapeCache = new Object2ObjectOpenHashMap<>();
 
     public BigPottedSweetBerryBushBlock(PottedPlantType type) {
         super(type);
 
-        this.setDefaultState(this.getDefaultState().with(AGE, 0));
-    }
+        StateManager.Builder<Block, BlockState> builder = new StateManager.Builder<>(this);
+        this.appendProperties(builder);
+        ((BlockAccessor) this.getPlant()).aurorasdeco$appendProperties(builder);
+        ((BlockAccessor) this).setStateManager(builder.build(Block::getDefaultState, BlockState::new));
 
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-        builder.add(AGE);
+        this.setDefaultState(remap(type.getPlant().getDefaultState(), this.stateManager.getDefaultState()));
     }
 
     @Override
     public BlockState getPlantState(BlockState potState) {
-        return super.getPlantState(potState).with(AGE, potState.get(AGE));
+        return remap(potState, super.getPlantState(potState));
     }
 
     /* Shapes */
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        if (state.get(AGE) == 0) {
-            return SMALL_SHAPE;
-        } else {
-            return state.get(AGE) < 3 ? LARGE_SHAPE : BIG_FLOWER_POT_POTTED_FULL_CUBE_SHAPE;
-        }
+        return this.shapeCache.computeIfAbsent(state, s -> shape(s, world, pos));
     }
 
     @Override
@@ -104,50 +90,32 @@ public class BigPottedSweetBerryBushBlock extends BigFlowerPotBlock implements F
 
     @Override
     public boolean hasRandomTicks(BlockState state) {
-        return state.get(AGE) < 3;
+        return this.getPlant().hasRandomTicks(state);
     }
 
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        int i = state.get(AGE);
-        if (i < 3 && random.nextInt(5) == 0 && world.getBaseLightLevel(pos.up(), 0) >= 9) {
-            world.setBlockState(pos, state.with(AGE, i + 1), 0b10);
-        }
+        this.getPlant().randomTick(state, world, pos, random);
     }
 
     /* Interaction */
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        int age = state.get(AGE);
-        boolean mature = age == 3;
-        if (!mature && player.getStackInHand(hand).isOf(Items.BONE_MEAL)) {
+        ActionResult result = this.getPlant().onUse(state, world, pos, player, hand, hit);
+        if (result.isAccepted())
+            return result;
+        else if (player.getStackInHand(hand).isOf(Items.BONE_MEAL))
             return ActionResult.PASS;
-        } else if (age > 1) {
-            int count = 1 + world.random.nextInt(2);
-            dropStack(world, pos, new ItemStack(this.getPlant().asItem(), count + (mature ? 1 : 0)));
-            world.playSound(null, pos, SoundEvents.ITEM_SWEET_BERRIES_PICK_FROM_BUSH, SoundCategory.BLOCKS,
-                    1.f, .8f + world.random.nextFloat() * .4f);
-            world.setBlockState(pos, state.with(AGE, 1), 0b10);
-            return ActionResult.success(world.isClient());
-        } else {
+        else
             return super.onUse(state, world, pos, player, hand, hit);
-        }
     }
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         Box selfBox = SWEET_BERRY_BUSH_BOX.offset(pos);
-        if (entity instanceof LivingEntity && entity.getType() != EntityType.FOX && entity.getType() != EntityType.BEE
-                && selfBox.intersects(entity.getBoundingBox())) {
-            entity.slowMovement(state, new Vec3d(0.800000011920929, 0.75, 0.800000011920929));
-            if (!world.isClient() && state.get(AGE) > 0 && (entity.lastRenderX != entity.getX() || entity.lastRenderZ != entity.getZ())) {
-                double d = Math.abs(entity.getX() - entity.lastRenderX);
-                double e = Math.abs(entity.getZ() - entity.lastRenderZ);
-                if (d >= 0.003000000026077032 || e >= 0.003000000026077032) {
-                    entity.damage(DamageSource.SWEET_BERRY_BUSH, 1.f);
-                }
-            }
+        if (selfBox.intersects(entity.getBoundingBox())) {
+            this.getPlant().onEntityCollision(state, world, pos, entity);
         }
     }
 
@@ -155,37 +123,58 @@ public class BigPottedSweetBerryBushBlock extends BigFlowerPotBlock implements F
 
     @Override
     public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
-        Identifier identifier = this.getLootTableId();
-        List<ItemStack> stacks = super.getDroppedStacks(state, builder);
-
-        if (identifier == LootTables.EMPTY) {
-            return stacks;
-        } else {
-            LootContext lootContext = builder.parameter(LootContextParameters.BLOCK_STATE, state).build(LootContextTypes.BLOCK);
-            ServerWorld serverWorld = lootContext.getWorld();
-            LootTable lootTable = serverWorld.getServer().getLootManager().getTable(identifier);
-            List<ItemStack> loot = lootTable.generateLoot(lootContext);
-            loot.addAll(stacks);
-            return loot;
-        }
+        List<ItemStack> drops = new ArrayList<>(super.getDroppedStacks(state, builder));
+        drops.addAll(this.getPlantState(state).getDroppedStacks(builder));
+        return drops;
     }
 
     /* Fertilizable stuff */
 
     @Override
     public boolean isFertilizable(BlockView world, BlockPos pos, BlockState state, boolean isClient) {
-        return state.get(AGE) < 3;
+        return ((Fertilizable) this.getPlant()).isFertilizable(world, pos, state, isClient);
     }
 
     @Override
     public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) {
-        return true;
+        return ((Fertilizable) this.getPlant()).canGrow(world, random, pos, state);
     }
 
     @Override
     public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
-        int age = Math.min(3, state.get(AGE) + 1);
-        world.setBlockState(pos, state.with(AGE, age), 0b10);
+        ((Fertilizable) this.getPlant()).grow(world, random, pos, state);
+    }
+
+    private static BlockState remap(BlockState src, BlockState dst) {
+        for (Property<?> property : src.getProperties()) {
+            dst = remapProperty(src, property, dst);
+        }
+        return dst;
+    }
+
+    private static <T extends Comparable<T>> BlockState remapProperty(BlockState src, Property<T> property, BlockState dst) {
+        if (dst.contains(property))
+            dst = dst.with(property, src.get(property));
+        return dst;
+    }
+
+    private VoxelShape shape(BlockState state, BlockView world, BlockPos pos) {
+        VoxelShape plantShape = this.getPlant().getOutlineShape(state, world, pos, ShapeContext.absent());
+        float ratio = .65f;
+        float offset = (1.f - ratio) / 2.f;
+        return VoxelShapes.union(BIG_FLOWER_POT_SHAPE, resize(plantShape, ratio).offset(offset, .8f, offset));
+    }
+
+    private static VoxelShape resize(VoxelShape shape, double factor) {
+        List<VoxelShape> shapes = new ArrayList<>();
+        shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
+            shapes.add(VoxelShapes.cuboid(minX * factor, minY * factor, minZ * factor,
+                    maxX * factor, maxY * factor, maxZ * factor));
+        });
+
+        if (shapes.size() == 1)
+            return shapes.get(0);
+        return shapes.stream().collect(VoxelShapes::empty, VoxelShapes::union, VoxelShapes::union).simplify();
     }
 
     static {
@@ -193,7 +182,6 @@ public class BigPottedSweetBerryBushBlock extends BigFlowerPotBlock implements F
                 3.f, 14.f, 3.f,
                 13.f, 23.5f, 13.f
         );
-        LARGE_SHAPE = VoxelShapes.union(BIG_FLOWER_POT_SHAPE, largeSweetBerryBushShape);
         SWEET_BERRY_BUSH_BOX = largeSweetBerryBushShape.getBoundingBox();
     }
 }

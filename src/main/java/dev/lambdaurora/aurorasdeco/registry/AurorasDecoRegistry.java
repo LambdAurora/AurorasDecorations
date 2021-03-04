@@ -159,11 +159,11 @@ public final class AurorasDecoRegistry {
 
     public static final BlackboardBlock WAXED_BLACKBOARD_BLOCK = registerWithItem("waxed_blackboard",
             new BlackboardBlock(FabricBlockSettings.copyOf(BLACKBOARD_BLOCK), true),
-            new FabricItemSettings().group(ItemGroup.DECORATIONS).equipmentSlot(stack -> EquipmentSlot.HEAD),
+            new FabricItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
             BlackboardItem::new);
     public static final BlackboardBlock WAXED_CHALKBOARD_BLOCK = registerWithItem("waxed_chalkboard",
             new BlackboardBlock(FabricBlockSettings.copyOf(BLACKBOARD_BLOCK), true),
-            new FabricItemSettings().group(ItemGroup.DECORATIONS).equipmentSlot(stack -> EquipmentSlot.HEAD),
+            new FabricItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
             BlackboardItem::new);
 
     public static final WindChimeBlock WIND_CHIME_BLOCK = registerWithItem("wind_chime",
