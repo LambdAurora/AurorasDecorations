@@ -43,6 +43,7 @@ public class FakeLeashKnotEntityRenderer
         this.shadowRadius = 0.f;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void render(FakeLeashKnotEntity fakeLeashKnot, float f, float tickDelta, MatrixStack matrices,
                        VertexConsumerProvider vertexConsumers, int light) {
