@@ -62,9 +62,9 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
             ItemStack stack = inv.getStack(slot);
 
             if (INPUT.test(stack)) {
-                if (OUTPUT.test(stack))
+                if (OUTPUT.test(stack) && !this.isInput(stack))
                     hasOutput = true;
-                if (isInput(stack))
+                else if (this.isInput(stack))
                     hasInput = true;
                 count++;
             }
@@ -82,9 +82,9 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
         for (int slot = 0; slot < inv.size(); ++slot) {
             ItemStack craftStack = inv.getStack(slot);
             if (!craftStack.isEmpty()) {
-                if (OUTPUT.test(craftStack) && !isInput(craftStack)) {
+                if (OUTPUT.test(craftStack) && !this.isInput(craftStack)) {
                     output = craftStack;
-                } else if (isInput(craftStack)) {
+                } else if (this.isInput(craftStack)) {
                     CompoundTag nbt = craftStack.getSubTag("BlockEntityTag");
                     System.arraycopy(nbt.getByteArray("pixels"), 0,
                             pixels, 0, 256);
