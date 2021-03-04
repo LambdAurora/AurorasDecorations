@@ -26,6 +26,7 @@ import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
 import dev.lambdaurora.aurorasdeco.resource.Datagen;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -50,6 +51,8 @@ public class AurorasDeco implements ModInitializer {
     @ApiStatus.Internal
     public static final Map<Identifier, Block> DELAYED_REGISTER_BLOCK = new Object2ObjectOpenHashMap<>();
 
+    private boolean hasRegisteredRecipes = false;
+
     @Override
     public void onInitialize() {
         AurorasDecoRegistry.init(DELAYED_REGISTER_BLOCK);
@@ -60,21 +63,12 @@ public class AurorasDeco implements ModInitializer {
                 if (potBlock != null)
                     Registry.register(Registry.BLOCK, id("big_flower_pot/" + potBlock.getPlantType().getId()), potBlock);
             }
-
-            Datagen.registerWoodcuttingRecipesForBlockVariants(object);
         });
         RegistryEntryAddedCallback.event(Registry.ITEM).register((rawId, id, object) -> {
             if (id.toString().equals("pockettools:pocket_cactus")) {
                 Registry.register(Registry.BLOCK, id("big_flower_pot/pocket_cactus"),
                         PottedPlantType.register("pocket_cactus", Blocks.POTTED_CACTUS, object,
                                 type -> new BigPottedCactusBlock(type, BigPottedCactusBlock.POCKET_CACTUS_SHAPE)));
-            }
-
-            WoodType woodType = WoodType.getFromPlanks(object);
-            if (woodType != null) {
-                Datagen.tryRegisterWoodcuttingRecipeFor(Registry.ITEM.get(woodType.getPlanksId()),
-                        AurorasDeco.NAMESPACE, "shelf/" + woodType.getPathName(), "",
-                        1, "decorations");
             }
         });
     }

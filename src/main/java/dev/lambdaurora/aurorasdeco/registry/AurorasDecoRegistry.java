@@ -233,9 +233,9 @@ public final class AurorasDecoRegistry {
                     .trackedUpdateRate(Integer.MAX_VALUE)
                     .build()
     );
-    public static final EntityType<SeatEntity> SIT_ENTITY_TYPE = Registry.register(
+    public static final EntityType<SeatEntity> SEAT_ENTITY_TYPE = Registry.register(
             Registry.ENTITY_TYPE,
-            id("sit"),
+            id("seat"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, SeatEntity::new)
                     .dimensions(EntityDimensions.fixed(0.f, 0.f))
                     .disableSaving()
@@ -375,11 +375,5 @@ public final class AurorasDecoRegistry {
 
         ((ItemExtensions) Items.BOOK).makePlaceable(BOOK_PILE_BLOCK);
         ((ItemExtensions) Items.ENCHANTED_BOOK).makePlaceable(BOOK_PILE_BLOCK);
-
-        Datagen.registerDefaultWoodcuttingRecipes();
-        for (ShelfBlock shelf : SHELF_BLOCKS) {
-            Datagen.tryRegisterWoodcuttingRecipeFor(Registry.ITEM.get(shelf.woodType.getPlanksId()), AurorasDeco.NAMESPACE,
-                    Registry.BLOCK.getId(shelf).getPath(), "", 1, "decorations");
-        }
     }
 }

@@ -49,7 +49,7 @@ public interface SeatBlock {
         else if (!this.canSit(world, pos, state))
             return false;
 
-        SeatEntity seatEntity = AurorasDecoRegistry.SIT_ENTITY_TYPE.create(world);
+        SeatEntity seatEntity = AurorasDecoRegistry.SEAT_ENTITY_TYPE.create(world);
         if (seatEntity == null)
             return false;
         seatEntity.setPosition(pos.getX() + .5f, pos.getY() + this.getSitYOffset(), pos.getZ() + .5f);

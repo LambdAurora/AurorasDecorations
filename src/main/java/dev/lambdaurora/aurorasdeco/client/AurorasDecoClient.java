@@ -75,7 +75,7 @@ public class AurorasDecoClient implements ClientModInitializer {
 
         EntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.FAKE_LEASH_KNOT_ENTITY_TYPE,
                 FakeLeashKnotEntityRenderer::new);
-        EntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.SIT_ENTITY_TYPE,
+        EntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.SEAT_ENTITY_TYPE,
                 SeatEntityRenderer::new);
 
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutoutMipped(),

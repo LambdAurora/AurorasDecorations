@@ -48,6 +48,7 @@ import java.util.stream.Stream;
 public final class WoodType {
     private static final List<WoodType> WOOD_TYPES = new ArrayList<>();
 
+
     private final Identifier id;
     private final String logType;
     private final boolean flammable;
@@ -112,10 +113,14 @@ public final class WoodType {
         return new Identifier(this.id.getNamespace(), "block/" + this.id.getPath() + '_' + this.logType + "_top");
     }
 
+    public Identifier getLogId() {
+        return new Identifier(this.id.getNamespace(), this.id.getPath() + '_' + this.logType);
+    }
+
     public @Nullable Block getLog() {
         if (!this.hasLog())
             return null;
-        return Registry.BLOCK.get(new Identifier(this.id.getNamespace(), this.id.getPath() + '_' + this.logType));
+        return Registry.BLOCK.get(this.getLogId());
     }
 
     public @Nullable Block getLeaves() {
@@ -155,6 +160,17 @@ public final class WoodType {
 
         for (WoodType type : WOOD_TYPES) {
             if (type.getPlanksId().equals(id))
+                return type;
+        }
+
+        return null;
+    }
+
+    public static @Nullable WoodType getFromLog(ItemConvertible block) {
+        Identifier id = Registry.ITEM.getId(block.asItem());
+
+        for (WoodType type : WOOD_TYPES) {
+            if (type.getLogId().equals(id))
                 return type;
         }
 

@@ -42,6 +42,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
+import javax.xml.crypto.Data;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,6 +63,8 @@ public class AurorasDecoPack implements ModResourcePack {
     private final Set<String> namespaces = new HashSet<>();
     private final Map<String, byte[]> resources = new Object2ObjectOpenHashMap<>();
     private final ResourceType type;
+
+    private boolean hasRegisteredOneTimeResources = false;
 
     public AurorasDecoPack(ResourceType type) {
         this.type = type;
@@ -227,6 +230,11 @@ public class AurorasDecoPack implements ModResourcePack {
     public AurorasDecoPack rebuildData() {
         this.resources.clear();
         this.namespaces.clear();
+
+        if(!this.hasRegisteredOneTimeResources) {
+            Datagen.registerDefaultWoodcuttingRecipes();
+            this.hasRegisteredOneTimeResources = true;
+        }
 
         WoodType.stream().forEach(type -> {
             Identifier shelfId = AurorasDeco.id("shelf/" + type.getPathName());

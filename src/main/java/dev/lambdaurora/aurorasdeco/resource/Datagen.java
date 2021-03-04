@@ -22,11 +22,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import dev.lambdaurora.aurorasdeco.block.ShelfBlock;
 import dev.lambdaurora.aurorasdeco.block.StumpBlock;
 import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
 import dev.lambdaurora.aurorasdeco.mixin.AbstractBlockAccessor;
 import dev.lambdaurora.aurorasdeco.recipe.RecipeSerializerExtended;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.loader.api.FabricLoader;
@@ -94,8 +96,15 @@ public class Datagen {
     }
 
     public static void registerRecipe(Recipe<?> recipe, String category) {
-        RECIPES.computeIfAbsent(recipe.getType(),
-                recipeType -> new ArrayList<>()).add(recipe);
+        List<Recipe<?>> recipes = RECIPES.computeIfAbsent(recipe.getType(),
+                recipeType -> new ArrayList<>());
+
+        for (Recipe<?> other : recipes) {
+            if (other.getId().equals(recipe.getId()))
+                return;
+        }
+
+        recipes.add(recipe);
         RECIPES_CATEGORIES.put(recipe, category);
     }
 
@@ -331,6 +340,11 @@ public class Datagen {
         Registry.BLOCK.stream().filter(block -> ((AbstractBlockAccessor) block).getMaterial() == Material.WOOD
                 || ((AbstractBlockAccessor) block).getMaterial() == Material.NETHER_WOOD)
                 .forEach(Datagen::registerWoodcuttingRecipesForBlockVariants);
+
+        for (ShelfBlock shelf : AurorasDecoRegistry.SHELF_BLOCKS) {
+            Datagen.tryRegisterWoodcuttingRecipeFor(Registry.ITEM.get(shelf.woodType.getPlanksId()), AurorasDeco.NAMESPACE,
+                    Registry.BLOCK.getId(shelf).getPath(), "", 1, "decorations");
+        }
 
         StumpBlock.streamLogStumps().forEach(block -> {
             if (block.getWoodType().getLog() == null)
