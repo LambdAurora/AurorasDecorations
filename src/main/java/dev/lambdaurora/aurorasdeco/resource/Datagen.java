@@ -186,7 +186,7 @@ public class Datagen {
             i++;
         }
 
-        criteria.add("has_self", inventoryChangedCriteria(Ingredient.ofStacks(recipe.getOutput())));
+        criteria.add("has_self", inventoryChangedCriteria(Ingredient.ofItems(recipe.getOutput().getItem())));
         criteria.add("has_the_recipe", recipeUnlockedCriteria(recipe.getId()));
         root.add("criteria", criteria);
 
