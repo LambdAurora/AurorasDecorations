@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:husbandry/tame_an_animal",
+  "display": {
+    "icon": {
+      "item": "aurorasdeco:pet_bed/red"
+    },
+    "title": {
+      "translate": "advancements.aurorasdeco.husbandry.pet_use_pet_bed.title"
+    },
+    "description": {
+      "translate": "advancements.aurorasdeco.husbandry.pet_use_pet_bed.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "pet_use_pet_bed": {
+      "trigger": "aurorasdeco:pet_use_pet_bed",
+      "conditions": {
+        "block": {
+          "tag": "aurorasdeco:pet_beds"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "pet_use_pet_bed"
+    ]
+  ]
+}

@@ -10,6 +10,7 @@
     "CandleBlockMixin",
     "CatEntityMixin",
     "FlintAndSteelItemMixin",
+    "FoxEntityAccessor",
     "ItemFrameEntityMixin",
     "ItemMixin",
     "LanternMixin",

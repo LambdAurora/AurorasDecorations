@@ -23,6 +23,7 @@ import net.minecraft.entity.ai.goal.MoveToTargetPosGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.WorldView;
@@ -58,7 +59,6 @@ public abstract class SleepInPetBedGoal extends MoveToTargetPosGoal {
                 return false;
             if (tameable.isSitting())
                 return false;
-
         }
 
         boolean result = super.canStart();
@@ -100,6 +100,8 @@ public abstract class SleepInPetBedGoal extends MoveToTargetPosGoal {
         } else {
             reached = true;
             --this.tryingTime;
+
+            AurorasDecoRegistry.PET_USE_PET_BED_CRITERION.trigger(this.mob, (ServerWorld) this.mob.getEntityWorld(), targetPos);
         }
 
         this.setInSleepingPosition(reached);

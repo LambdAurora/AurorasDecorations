@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.registry;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.accessor.ItemExtensions;
+import dev.lambdaurora.aurorasdeco.advancement.PetUsePetBedCriterion;
 import dev.lambdaurora.aurorasdeco.block.*;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.*;
 import dev.lambdaurora.aurorasdeco.block.entity.*;
@@ -31,6 +32,7 @@ import dev.lambdaurora.aurorasdeco.resource.Datagen;
 import dev.lambdaurora.aurorasdeco.screen.SawmillScreenHandler;
 import dev.lambdaurora.aurorasdeco.screen.ShelfScreenHandler;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.fabric.api.object.builder.v1.advancement.CriterionRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
@@ -280,6 +282,10 @@ public final class AurorasDecoRegistry {
     public static final Tag<Block> PET_BEDS = TagRegistry.block(AurorasDeco.id("pet_beds"));
     public static final Tag<Block> SHELVES = TagRegistry.block(AurorasDeco.id("shelves"));
     public static final Tag<Block> STUMPS = TagRegistry.block(AurorasDeco.id("stumps"));
+
+    /* Advancement Criteria */
+
+    public static final PetUsePetBedCriterion PET_USE_PET_BED_CRITERION = CriterionRegistry.register(new PetUsePetBedCriterion());
 
     private static <T extends Block> T register(String name, T block) {
         return Registry.register(Registry.BLOCK, id(name), block);
