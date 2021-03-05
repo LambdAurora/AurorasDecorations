@@ -207,12 +207,12 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
         if (!this.isLocked() && hit.getSide() == facing) {
             BlackboardBlockEntity blackboard = AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE.get(world, pos);
             if (blackboard != null) {
-                if (stack.isOf(Items.WATER_BUCKET) && tryClear(world, blackboard)) {
+                if (stack.isOf(Items.WATER_BUCKET) && this.tryClear(world, blackboard)) {
                     world.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS,
                             2.f, 1.f);
                     return ActionResult.success(world.isClient());
                 } else if (stack.isOf(Items.POTION) && PotionUtil.getPotion(stack) == Potions.WATER
-                        && tryClear(world, blackboard)) {
+                        && this.tryClear(world, blackboard)) {
                     player.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
                     if (!player.getAbilities().creativeMode) {
                         stack.decrement(1);

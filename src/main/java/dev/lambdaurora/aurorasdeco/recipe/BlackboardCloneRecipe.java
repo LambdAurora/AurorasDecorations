@@ -17,6 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.recipe;
 
+import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.inventory.CraftingInventory;
@@ -74,7 +75,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
 
     @Override
     public ItemStack craft(CraftingInventory inv) {
-        byte[] pixels = new byte[256];
+        Blackboard blackboard = null;
         ItemStack output = null;
         boolean lit = false;
         Text customName = null;
@@ -86,8 +87,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
                     output = craftStack;
                 } else if (this.isInput(craftStack)) {
                     CompoundTag nbt = craftStack.getSubTag("BlockEntityTag");
-                    System.arraycopy(nbt.getByteArray("pixels"), 0,
-                            pixels, 0, 256);
+                    blackboard = Blackboard.fromNbt(nbt);
                     lit = nbt.getBoolean("lit");
                     if (craftStack.hasCustomName())
                         customName = craftStack.getName();
@@ -99,7 +99,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
         ItemStack out = output.copy();
         out.setCount(1);
         CompoundTag nbt = out.getOrCreateSubTag("BlockEntityTag");
-        nbt.putByteArray("pixels", pixels);
+        blackboard.writeNbt(nbt);
         nbt.putBoolean("lit", lit);
 
         if (customName != null)

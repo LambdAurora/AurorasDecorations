@@ -17,17 +17,30 @@
 
 package dev.lambdaurora.aurorasdeco.item;
 
+import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
 import dev.lambdaurora.aurorasdeco.client.tooltip.BlackboardTooltipComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.NbtType;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipData;
+import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.potion.PotionUtil;
+import net.minecraft.potion.Potions;
+import net.minecraft.screen.slot.Slot;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.ClickType;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
@@ -47,6 +60,40 @@ public class BlackboardItem extends BlockItem {
     public BlackboardItem(BlackboardBlock blackboardBlock, Settings settings) {
         super(blackboardBlock, settings);
         this.locked = blackboardBlock.isLocked();
+    }
+
+    @Override
+    public boolean onClicked(ItemStack self, ItemStack otherStack, Slot slot, ClickType clickType, PlayerInventory playerInventory) {
+        if (clickType == ClickType.RIGHT) {
+            if (otherStack.isOf(Items.WATER_BUCKET)
+                    || (otherStack.isOf(Items.POTION) && PotionUtil.getPotion(otherStack) == Potions.WATER)) {
+                CompoundTag nbt = self.getOrCreateSubTag("BlockEntityTag");
+                Blackboard blackboard = Blackboard.fromNbt(nbt);
+                if (blackboard.isEmpty())
+                    return false;
+                blackboard.clear();
+                blackboard.writeNbt(nbt);
+
+                MinecraftClient client = MinecraftClient.getInstance();
+                if (otherStack.isOf(Items.POTION)) {
+                    if (!playerInventory.player.getAbilities().creativeMode) {
+                        ItemStack newStack = new ItemStack(Items.GLASS_BOTTLE);
+                        if (otherStack.getCount() != 1) {
+                            otherStack.decrement(1);
+                            playerInventory.insertStack(newStack);
+                        } else {
+                            playerInventory.setCursorStack(newStack);
+                        }
+                    }
+                    client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.ITEM_BOTTLE_EMPTY, 1.f, 1.f));
+                } else {
+                    client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.ITEM_BUCKET_EMPTY, 1.f, 1.f));
+                }
+
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

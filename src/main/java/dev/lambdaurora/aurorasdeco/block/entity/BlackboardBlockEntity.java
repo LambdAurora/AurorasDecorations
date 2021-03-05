@@ -17,6 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.block.entity;
 
+import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.client.renderer.BlackboardBlockEntityRenderer;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.fabricmc.api.EnvType;
@@ -34,8 +35,6 @@ import net.minecraft.util.Nameable;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-
 /**
  * Represents a blackboard block entity, stores the pixels of a blackboard.
  *
@@ -47,7 +46,7 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
     @Environment(EnvType.CLIENT)
     private BlackboardBlockEntityRenderer.BlackboardTexture texture = null;
 
-    private final byte[] pixels = new byte[256];
+    private final Blackboard blackboard = new Blackboard();
     private @Nullable Text customName;
 
     public BlackboardBlockEntity(BlockPos pos, BlockState state) {
@@ -62,9 +61,7 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
      * @param color the color
      */
     public void setPixel(int x, int y, DyeColor color) {
-        byte colorId = (byte) (color.getId() + 1);
-        if (this.pixels[y * 16 + x] != colorId) {
-            this.pixels[y * 16 + x] = colorId;
+        if (this.blackboard.setPixel(x, y, color)) {
             if (this.getWorld() instanceof ServerWorld) {
                 this.sync();
                 this.markDirty();
@@ -79,8 +76,7 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
      * @param y the Y coordinate
      */
     public void clearPixel(int x, int y) {
-        if (this.pixels[y * 16 + x] != 0) {
-            this.pixels[y * 16 + x] = 0;
+        if (this.blackboard.clearPixel(x, y)) {
             if (this.getWorld() instanceof ServerWorld) {
                 this.sync();
                 this.markDirty();
@@ -92,7 +88,7 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
      * Clears the blackboard.
      */
     public void clear() {
-        Arrays.fill(this.pixels, (byte) 0);
+        this.blackboard.clear();
         this.sync();
         this.markDirty();
     }
@@ -103,11 +99,7 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
      * @return {@code true} if empty, else {@code false}
      */
     public boolean isEmpty() {
-        for (byte b : this.pixels) {
-            if (b != 0)
-                return false;
-        }
-        return true;
+        return this.blackboard.isEmpty();
     }
 
     @Override
@@ -152,10 +144,7 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
     }
 
     public void readBlackBoardNbt(CompoundTag nbt) {
-        byte[] pixels = nbt.getByteArray("pixels");
-        if (pixels.length == 256) {
-            System.arraycopy(pixels, 0, this.pixels, 0, 256);
-        }
+        this.blackboard.readNbt(nbt);
 
         if (nbt.contains("custom_name", NbtType.STRING)) {
             this.customName = Text.Serializer.fromJson(nbt.getString("custom_name"));
@@ -163,7 +152,7 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
     }
 
     public CompoundTag writeBlackBoardNbt(CompoundTag nbt) {
-        nbt.putByteArray("pixels", this.pixels);
+        this.blackboard.writeNbt(nbt);
         if (this.customName != null) {
             nbt.putString("custom_name", Text.Serializer.toJson(this.customName));
         }
@@ -175,7 +164,7 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
         this.readBlackBoardNbt(nbt);
         if (this.texture == null)
             this.texture = BlackboardBlockEntityRenderer.getOrCreateTexture();
-        this.texture.update(this.pixels);
+        this.texture.update(this.blackboard.getPixels());
     }
 
     @Override

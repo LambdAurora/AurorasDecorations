@@ -55,7 +55,6 @@ public class BlackboardTooltipComponent implements TooltipComponent, TooltipData
     public BlackboardTooltipComponent(String background, byte[] pixels, boolean glowing, boolean locked) {
         this.texture = BlackboardBlockEntityRenderer.getOrCreateTexture();
         this.background = RenderLayer.getText(AurorasDeco.id("textures/block/" + background + ".png"));
-        ;
         this.glowing = glowing;
         this.locked = locked;
         this.texture.update(pixels);
