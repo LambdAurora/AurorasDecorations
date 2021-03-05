@@ -97,6 +97,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
 
 
         ItemStack out = output.copy();
+        out.setCount(1);
         CompoundTag nbt = out.getOrCreateSubTag("BlockEntityTag");
         nbt.putByteArray("pixels", pixels);
         nbt.putBoolean("lit", lit);
@@ -131,7 +132,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
             if (!invStack.isEmpty()) {
                 if (invStack.getItem().hasRecipeRemainder()) {
                     defaultedList.set(i, new ItemStack(invStack.getItem().getRecipeRemainder()));
-                } else if (isInput(invStack)) {
+                } else if (this.isInput(invStack)) {
                     ItemStack remainder = invStack.copy();
                     remainder.setCount(1);
                     defaultedList.set(i, remainder);
