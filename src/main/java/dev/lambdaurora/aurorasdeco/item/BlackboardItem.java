@@ -23,10 +23,7 @@ import dev.lambdaurora.aurorasdeco.client.tooltip.BlackboardTooltipComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.NbtType;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipData;
-import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.BlockItem;
@@ -37,8 +34,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ClickType;
 import net.minecraft.util.collection.DefaultedList;
@@ -74,7 +69,6 @@ public class BlackboardItem extends BlockItem {
                 blackboard.clear();
                 blackboard.writeNbt(nbt);
 
-                MinecraftClient client = MinecraftClient.getInstance();
                 if (otherStack.isOf(Items.POTION)) {
                     if (!playerInventory.player.getAbilities().creativeMode) {
                         ItemStack newStack = new ItemStack(Items.GLASS_BOTTLE);
@@ -85,9 +79,9 @@ public class BlackboardItem extends BlockItem {
                             playerInventory.setCursorStack(newStack);
                         }
                     }
-                    client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.ITEM_BOTTLE_EMPTY, 1.f, 1.f));
+                    playerInventory.player.playSound(SoundEvents.ITEM_BOTTLE_EMPTY, 1.f, 1.f);
                 } else {
-                    client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.ITEM_BUCKET_EMPTY, 1.f, 1.f));
+                    playerInventory.player.playSound(SoundEvents.ITEM_BUCKET_EMPTY, 1.f, 1.f);
                 }
 
                 return true;
