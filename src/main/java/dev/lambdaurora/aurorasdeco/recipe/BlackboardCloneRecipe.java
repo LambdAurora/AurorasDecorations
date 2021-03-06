@@ -77,7 +77,6 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
     public ItemStack craft(CraftingInventory inv) {
         Blackboard blackboard = null;
         ItemStack output = null;
-        boolean lit = false;
         Text customName = null;
 
         for (int slot = 0; slot < inv.size(); ++slot) {
@@ -88,7 +87,6 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
                 } else if (this.isInput(craftStack)) {
                     CompoundTag nbt = craftStack.getSubTag("BlockEntityTag");
                     blackboard = Blackboard.fromNbt(nbt);
-                    lit = nbt.getBoolean("lit");
                     if (craftStack.hasCustomName())
                         customName = craftStack.getName();
                 }
@@ -100,7 +98,6 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
         out.setCount(1);
         CompoundTag nbt = out.getOrCreateSubTag("BlockEntityTag");
         blackboard.writeNbt(nbt);
-        nbt.putBoolean("lit", lit);
 
         if (customName != null)
             out.setCustomName(customName);

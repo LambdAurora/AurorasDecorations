@@ -109,8 +109,8 @@ public class BlackboardItem extends BlockItem {
     private ItemStack ensureValidStack(ItemStack stack) {
         if (stack.getSubTag("BlockEntityTag") == null) {
             CompoundTag nbt = stack.getOrCreateSubTag("BlockEntityTag");
-            nbt.putBoolean("lit", false);
-            nbt.putByteArray("pixels", new byte[256]);
+            Blackboard blackboard = new Blackboard();
+            blackboard.writeNbt(nbt);
         }
         return stack;
     }

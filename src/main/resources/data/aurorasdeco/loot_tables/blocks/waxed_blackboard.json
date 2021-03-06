@@ -20,6 +20,16 @@
                   "source": "pixels",
                   "target": "BlockEntityTag.pixels",
                   "op": "replace"
+                },
+                {
+                  "source": "version",
+                  "target": "BlockEntityTag.version",
+                  "op": "replace"
+                },
+                {
+                  "source": "lit",
+                  "target": "BlockEntityTag.lit",
+                  "op": "replace"
                 }
               ]
             }

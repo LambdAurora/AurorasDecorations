@@ -155,6 +155,10 @@ public class Blackboard {
         return blackboard;
     }
 
+    public static boolean shouldConvert(CompoundTag nbt) {
+        return !nbt.contains("version", NbtType.INT);
+    }
+
     private static void convert01(Blackboard blackboard) {
         for (int i = 0; i < blackboard.pixels.length; i++) {
             blackboard.pixels[i] *= 4;

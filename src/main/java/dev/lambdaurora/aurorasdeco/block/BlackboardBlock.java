@@ -163,6 +163,18 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
                 blackboard.setCustomName(stack.getName());
             }
 
+            CompoundTag nbt = stack.getSubTag("BlockEntityTag");
+            if (nbt != null && Blackboard.shouldConvert(nbt)) {
+                Blackboard blackboardData = new Blackboard();
+                blackboardData.readNbt(nbt);
+                for (int y = 0; y < 16; y++) {
+                    for (int x = 0; x < 16; x++) {
+                        byte color = blackboardData.getPixel(x, y);
+                        blackboard.setPixel(x, y, Blackboard.getColor(color / 4), color & 3);
+                    }
+                }
+            }
+
             if (state.get(WATERLOGGED)) {
                 if (!this.isLocked() && !blackboard.isEmpty())
                     blackboard.clear();
