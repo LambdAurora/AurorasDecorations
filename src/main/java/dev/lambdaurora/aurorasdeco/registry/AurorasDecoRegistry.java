@@ -18,6 +18,7 @@
 package dev.lambdaurora.aurorasdeco.registry;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.accessor.ItemExtensions;
 import dev.lambdaurora.aurorasdeco.advancement.PetUsePetBedCriterion;
 import dev.lambdaurora.aurorasdeco.block.*;
@@ -345,6 +346,7 @@ public final class AurorasDecoRegistry {
                     plants.add(potBlock);
             }
         });
+        Registry.ITEM.forEach(item -> Blackboard.Color.tryRegisterColorFromItem(Registry.ITEM.getId(item), item));
 
         plants.forEach(pot -> register("big_flower_pot/" + pot.getPlantType().getId(), pot));
 

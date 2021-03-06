@@ -21,12 +21,9 @@ import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigPottedCactusBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
-import dev.lambdaurora.aurorasdeco.resource.Datagen;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -51,8 +48,6 @@ public class AurorasDeco implements ModInitializer {
     @ApiStatus.Internal
     public static final Map<Identifier, Block> DELAYED_REGISTER_BLOCK = new Object2ObjectOpenHashMap<>();
 
-    private boolean hasRegisteredRecipes = false;
-
     @Override
     public void onInitialize() {
         AurorasDecoRegistry.init(DELAYED_REGISTER_BLOCK);
@@ -70,6 +65,8 @@ public class AurorasDeco implements ModInitializer {
                         PottedPlantType.register("pocket_cactus", Blocks.POTTED_CACTUS, object,
                                 type -> new BigPottedCactusBlock(type, BigPottedCactusBlock.POCKET_CACTUS_SHAPE)));
             }
+
+            Blackboard.Color.tryRegisterColorFromItem(id, object);
         });
     }
 

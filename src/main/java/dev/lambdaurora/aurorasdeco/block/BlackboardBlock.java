@@ -18,8 +18,8 @@
 package dev.lambdaurora.aurorasdeco.block;
 
 import com.google.common.collect.ImmutableMap;
+import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.block.entity.BlackboardBlockEntity;
-import dev.lambdaurora.aurorasdeco.item.BlackboardItem;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import net.fabricmc.api.EnvType;
@@ -32,11 +32,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.loot.context.LootContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
@@ -47,6 +45,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.tag.ItemTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
@@ -63,7 +62,6 @@ import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -207,6 +205,9 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
         if (!this.isLocked() && hit.getSide() == facing) {
             BlackboardBlockEntity blackboard = AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE.get(world, pos);
             if (blackboard != null) {
+                Blackboard.Color color = Blackboard.getColorFromItem(stack.getItem());
+                boolean isBoneMeal = stack.isOf(Items.BONE_MEAL);
+                boolean isCoal = stack.isIn(ItemTags.COALS);
                 if (stack.isOf(Items.WATER_BUCKET) && this.tryClear(world, blackboard)) {
                     world.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS,
                             2.f, 1.f);
@@ -226,8 +227,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
                     world.playSound(null, pos, SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS,
                             2.f, 1.f);
                     return ActionResult.success(world.isClient());
-                } else if ((stack.isOf(Items.PAPER) || stack.getItem() instanceof DyeItem)
-                        && !state.get(WATERLOGGED)) {
+                } else if ((color != null || isBoneMeal || isCoal) && !state.get(WATERLOGGED)) {
                     int x;
                     int y = (int) (AuroraUtil.posMod(hit.getPos().getY(), 1) * 16.0);
                     y = 15 - y;
@@ -243,14 +243,12 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 
                     player.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
 
-                    if (stack.isOf(Items.PAPER)) {
-                        blackboard.clearPixel(x, y);
-                    } else {
-                        blackboard.setPixel(x, y, ((DyeItem) stack.getItem()).getColor());
-                    }
+                    this.changePixel(blackboard, x, y, color, isBoneMeal, isCoal);
 
                     world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos);
                     return ActionResult.success(world.isClient());
+                } else if (stack.isOf(Items.BONE_MEAL)) {
+
                 } else if (stack.isOf(Items.GLOW_INK_SAC) || stack.isOf(Items.INK_SAC)) {
                     boolean lit = stack.isOf(Items.GLOW_INK_SAC);
                     if (lit != state.get(LIT)) {
@@ -276,6 +274,21 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
         return super.onUse(state, world, pos, player, hand, hit);
     }
 
+    private void changePixel(BlackboardBlockEntity blackboard, int x, int y,
+                             @Nullable Blackboard.Color color, boolean isBoneMeal, boolean isCoal) {
+        byte colorData = blackboard.getColor(x, y);
+        int shade = colorData & 3;
+        if (color != null) {
+            blackboard.setPixel(x, y, color, 0);
+        } else if (isBoneMeal) {
+            if (shade > 0)
+                blackboard.setPixel(x, y, Blackboard.getColor(colorData / 4), shade - 1);
+        } else if (isCoal) {
+            if (shade < 3)
+                blackboard.setPixel(x, y, Blackboard.getColor(colorData / 4), shade + 1);
+        }
+    }
+
     private boolean tryClear(World world, BlackboardBlockEntity blackboard) {
         if (!blackboard.isEmpty()) {
             if (!world.isClient())
@@ -295,7 +308,6 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
                 ItemStack stack = new ItemStack(this);
                 CompoundTag nbt = blackboard.writeBlackBoardNbt(new CompoundTag());
                 nbt.remove("custom_name");
-                nbt.putBoolean("lit", state.get(LIT));
                 stack.putSubTag("BlockEntityTag", nbt);
 
                 if (blackboard.hasCustomName()) {
@@ -320,26 +332,10 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
         if (blackboard != null) {
             CompoundTag nbt = blackboard.writeBlackBoardNbt(new CompoundTag());
             nbt.remove("custom_name");
-            nbt.putBoolean("lit", state.get(LIT));
             stack.putSubTag("BlockEntityTag", nbt);
         }
 
         return stack;
-    }
-
-    /* Loot table */
-
-    @Override
-    public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
-        List<ItemStack> droppedStacks = super.getDroppedStacks(state, builder);
-        if (!droppedStacks.isEmpty()) {
-            droppedStacks.forEach(stack -> {
-                if (stack.getItem() instanceof BlackboardItem) {
-                    stack.getOrCreateSubTag("BlockEntityTag").putBoolean("lit", state.get(LIT));
-                }
-            });
-        }
-        return droppedStacks;
     }
 
     /* Piston */

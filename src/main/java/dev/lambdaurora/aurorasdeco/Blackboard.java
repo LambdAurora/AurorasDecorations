@@ -17,8 +17,18 @@
 
 package dev.lambdaurora.aurorasdeco;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.fabricmc.fabric.api.util.NbtType;
+import net.minecraft.item.DyeItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
@@ -30,7 +40,11 @@ import java.util.Arrays;
  * @since 1.0.0
  */
 public class Blackboard {
+    public static final Int2ObjectMap<Color> COLORS = new Int2ObjectOpenHashMap<>();
+    private static final Object2ObjectMap<Item, Color> ITEM_TO_COLOR = new Object2ObjectOpenHashMap<>();
+
     private final byte[] pixels = new byte[256];
+    private boolean lit;
 
     public Blackboard() {
     }
@@ -44,6 +58,15 @@ public class Blackboard {
         return this.pixels;
     }
 
+    public byte getPixel(int x, int y) {
+        return this.pixels[y * 16 + x];
+    }
+
+    public int getColor(int x, int y) {
+        int id = this.getPixel(x, y);
+        return getColor(id / 4).getRenderColor(id & 3);
+    }
+
     /**
      * Sets the pixel color at the specified coordinates.
      *
@@ -51,10 +74,12 @@ public class Blackboard {
      * @param y the Y coordinate
      * @param color the color
      */
-    public boolean setPixel(int x, int y, DyeColor color) {
-        byte colorId = (byte) (color.getId() + 1);
-        if (this.pixels[y * 16 + x] != colorId) {
-            this.pixels[y * 16 + x] = colorId;
+    public boolean setPixel(int x, int y, Color color, int shade) {
+        byte id = (byte) (color.getId() * 4 + shade);
+        if (color == Color.EMPTY)
+            id = 0;
+        if (this.pixels[y * 16 + x] != id) {
+            this.pixels[y * 16 + x] = id;
             return true;
         }
         return false;
@@ -94,6 +119,14 @@ public class Blackboard {
         return true;
     }
 
+    public boolean isLit() {
+        return this.lit;
+    }
+
+    public void setLit(boolean lit) {
+        this.lit = lit;
+    }
+
     /* Serialization */
 
     public void readNbt(CompoundTag nbt) {
@@ -101,10 +134,18 @@ public class Blackboard {
         if (pixels.length == 256) {
             System.arraycopy(pixels, 0, this.pixels, 0, 256);
         }
+
+        this.lit = nbt.getBoolean("lit");
+
+        if (!nbt.contains("version", NbtType.INT)) {
+            convert01(this);
+        }
     }
 
     public CompoundTag writeNbt(CompoundTag nbt) {
         nbt.putByteArray("pixels", this.pixels);
+        nbt.putBoolean("lit", this.isLit());
+        nbt.putInt("version", 1);
         return nbt;
     }
 
@@ -112,5 +153,116 @@ public class Blackboard {
         Blackboard blackboard = new Blackboard();
         blackboard.readNbt(nbt);
         return blackboard;
+    }
+
+    private static void convert01(Blackboard blackboard) {
+        for (int i = 0; i < blackboard.pixels.length; i++) {
+            blackboard.pixels[i] *= 4;
+        }
+    }
+
+    public static Color getColor(int color) {
+        return COLORS.getOrDefault(color, Color.EMPTY);
+    }
+
+    public static @Nullable Color getColorFromItem(Item item) {
+        return ITEM_TO_COLOR.get(item);
+    }
+
+    /**
+     * Represents a blackboard color.
+     */
+    public static class Color {
+        public static final Color EMPTY = new Color(0, 0x00000000, Items.PAPER);
+        public static final byte FREE_COLOR_SPACE = (byte) (DyeColor.values().length + 1);
+        public static final Color SWEET_BERRIES = new Color(FREE_COLOR_SPACE, 0xffbb0000, Items.SWEET_BERRIES);
+        public static final Color GLOW_BERRIES = new Color(FREE_COLOR_SPACE + 1, 0xffff9737, Items.GLOW_BERRIES);
+
+        public static final int BLUEBERRIES_COLOR = 0xff006ac6;
+
+        private final byte id;
+        private final int color;
+        private final Item item;
+
+        private Color(int id, int color, Item item) {
+            this.id = (byte) id;
+            this.color = color;
+            this.item = item;
+
+            COLORS.put(id, this);
+            ITEM_TO_COLOR.put(item, this);
+        }
+
+        public byte getId() {
+            return this.id;
+        }
+
+        /**
+         * Returns the color in the ABGR format.
+         *
+         * @return the color in the ABGR format
+         */
+        public int getColor() {
+            return this.color;
+        }
+
+        /**
+         * Returns the render color in the ABGR format.
+         *
+         * @param shade the shade
+         * @return the render color in the ABGR format
+         */
+        public int getRenderColor(int shade) {
+            if (this.getId() == 0)
+                return this.getColor();
+
+            int factor = 220;
+            if (shade == 3) {
+                factor = 135;
+            }
+
+            if (shade == 2) {
+                factor = 180;
+            }
+
+            if (shade == 1) {
+                factor = 220;
+            }
+
+            if (shade == 0) {
+                factor = 255;
+            }
+
+            int color = this.getColor();
+            int red = (color >> 16 & 255) * factor / 255;
+            int green = (color >> 8 & 255) * factor / 255;
+            int blue = (color & 255) * factor / 255;
+            return 0xff000000 | blue << 16 | green << 8 | red;
+        }
+
+        public Item getItem() {
+            return this.item;
+        }
+
+        public static Color fromDye(DyeItem dyeItem) {
+            DyeColor color = dyeItem.getColor();
+
+            if (COLORS.containsKey(color.getId() + 1)) {
+                return COLORS.get(color.getId() + 1);
+            }
+
+            int red = (int) (color.getColorComponents()[0] * 255.f);
+            int green = (int) (color.getColorComponents()[1] * 255.f);
+            int blue = (int) (color.getColorComponents()[2] * 255.f);
+            return new Color(color.getId() + 1, 0xff000000 | (red << 16) | (green << 8) | blue, dyeItem);
+        }
+
+        public static void tryRegisterColorFromItem(Identifier id, Item item) {
+            if (item instanceof DyeItem) {
+                fromDye((DyeItem) item);
+            } else if (id.getNamespace().equals("ecotones") && id.getPath().equals("blueberries")) {
+                new Color(FREE_COLOR_SPACE + 2, BLUEBERRIES_COLOR, item);
+            }
+        }
     }
 }

@@ -18,6 +18,7 @@
 package dev.lambdaurora.aurorasdeco.block.entity;
 
 import dev.lambdaurora.aurorasdeco.Blackboard;
+import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
 import dev.lambdaurora.aurorasdeco.client.renderer.BlackboardBlockEntityRenderer;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.fabricmc.api.EnvType;
@@ -30,7 +31,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.Nameable;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
@@ -46,11 +46,15 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
     @Environment(EnvType.CLIENT)
     private BlackboardBlockEntityRenderer.BlackboardTexture texture = null;
 
-    private final Blackboard blackboard = new Blackboard();
+    private final Blackboard blackboard = new AssignedBlackboard();
     private @Nullable Text customName;
 
     public BlackboardBlockEntity(BlockPos pos, BlockState state) {
         super(AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE, pos, state);
+    }
+
+    public byte getColor(int x, int y) {
+        return this.blackboard.getPixel(x, y);
     }
 
     /**
@@ -60,23 +64,8 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
      * @param y the Y coordinate
      * @param color the color
      */
-    public void setPixel(int x, int y, DyeColor color) {
-        if (this.blackboard.setPixel(x, y, color)) {
-            if (this.getWorld() instanceof ServerWorld) {
-                this.sync();
-                this.markDirty();
-            }
-        }
-    }
-
-    /**
-     * Clears the pixel at the specified coordinates.
-     *
-     * @param x the X coordinate
-     * @param y the Y coordinate
-     */
-    public void clearPixel(int x, int y) {
-        if (this.blackboard.clearPixel(x, y)) {
+    public void setPixel(int x, int y, Blackboard.Color color, int shade) {
+        if (this.blackboard.setPixel(x, y, color, shade)) {
             if (this.getWorld() instanceof ServerWorld) {
                 this.sync();
                 this.markDirty();
@@ -164,11 +153,22 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
         this.readBlackBoardNbt(nbt);
         if (this.texture == null)
             this.texture = BlackboardBlockEntityRenderer.getOrCreateTexture();
-        this.texture.update(this.blackboard.getPixels());
+        this.texture.update(this.blackboard);
     }
 
     @Override
     public CompoundTag toClientTag(CompoundTag nbt) {
         return this.writeBlackBoardNbt(nbt);
+    }
+
+    private class AssignedBlackboard extends Blackboard {
+        @Override
+        public boolean isLit() {
+            return BlackboardBlockEntity.this.getCachedState().get(BlackboardBlock.LIT);
+        }
+
+        @Override
+        public void setLit(boolean lit) {
+        }
     }
 }

@@ -17,6 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.client.renderer;
 
+import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -92,8 +93,9 @@ public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.Dynam
 
             if (this.texture == null)
                 this.texture = BlackboardBlockEntityRenderer.getOrCreateTexture();
-            this.texture.update(nbt.getByteArray("pixels"));
-            this.texture.render(matrices.peek().getModel(), vertexConsumers, nbt.getBoolean("lit") ? 15728880 : light);
+            Blackboard blackboard = Blackboard.fromNbt(nbt);
+            this.texture.update(blackboard);
+            this.texture.render(matrices.peek().getModel(), vertexConsumers, blackboard.isLit() ? 15728880 : light);
         }
 
         matrices.pop();

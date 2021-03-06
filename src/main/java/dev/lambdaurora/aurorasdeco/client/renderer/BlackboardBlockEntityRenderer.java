@@ -17,6 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.client.renderer;
 
+import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
 import dev.lambdaurora.aurorasdeco.block.entity.BlackboardBlockEntity;
 import net.fabricmc.api.EnvType;
@@ -30,7 +31,6 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3f;
@@ -113,26 +113,13 @@ public class BlackboardBlockEntityRenderer implements BlockEntityRenderer<Blackb
                     .texture(0.f, 0.f).light(light).next();
         }
 
-        public void update(byte[] pixels) {
+        public void update(Blackboard blackboard) {
             for (int y = 0; y < 16; y++) {
                 for (int x = 0; x < 16; x++) {
-                    this.texture.getImage().setPixelColor(x, y, this.getColor(pixels[y * 16 + x]));
+                    this.texture.getImage().setPixelColor(x, y, blackboard.getColor(x, y));
                 }
             }
             this.texture.upload();
-        }
-
-        private int getColor(byte pixel) {
-            if (pixel == 0)
-                return 0x00000000;
-
-            DyeColor color = DyeColor.byId(pixel - 1);
-
-            int red = (int) (color.getColorComponents()[0] * 255.f);
-            int green = (int) (color.getColorComponents()[1] * 255.f);
-            int blue = (int) (color.getColorComponents()[2] * 255.f);
-
-            return 0xff000000 | (blue << 16) | (green << 8) | red;
         }
 
         public void pop() {

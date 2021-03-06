@@ -18,6 +18,7 @@
 package dev.lambdaurora.aurorasdeco.client.tooltip;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.client.renderer.BlackboardBlockEntityRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -49,15 +50,15 @@ public class BlackboardTooltipComponent implements TooltipComponent, TooltipData
     private final MinecraftClient client = MinecraftClient.getInstance();
     private final BlackboardBlockEntityRenderer.BlackboardTexture texture;
     private final RenderLayer background;
-    private final boolean glowing;
+    private final Blackboard blackboard;
     private final boolean locked;
 
-    public BlackboardTooltipComponent(String background, byte[] pixels, boolean glowing, boolean locked) {
+    public BlackboardTooltipComponent(String background, Blackboard blackboard, boolean locked) {
         this.texture = BlackboardBlockEntityRenderer.getOrCreateTexture();
         this.background = RenderLayer.getText(AurorasDeco.id("textures/block/" + background + ".png"));
-        this.glowing = glowing;
+        this.blackboard = blackboard;
         this.locked = locked;
-        this.texture.update(pixels);
+        this.texture.update(blackboard);
     }
 
     @Override
@@ -85,7 +86,7 @@ public class BlackboardTooltipComponent implements TooltipComponent, TooltipData
 
         this.texture.render(model, vertexConsumers, light);
 
-        if (this.glowing) {
+        if (this.blackboard.isLit()) {
             matrices.push();
             matrices.translate(0, 0, 1);
             model = matrices.peek().getModel();

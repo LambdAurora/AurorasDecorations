@@ -120,9 +120,10 @@ public class BlackboardItem extends BlockItem {
     public Optional<TooltipData> getTooltipData(ItemStack stack) {
         CompoundTag nbt = stack.getSubTag("BlockEntityTag");
         if (nbt != null && nbt.contains("pixels", NbtType.BYTE_ARRAY)) {
+            Blackboard blackboard = Blackboard.fromNbt(nbt);
             return Optional.of(new BlackboardTooltipComponent(
                     Registry.ITEM.getId(this).getPath().replace("waxed_", ""),
-                    nbt.getByteArray("pixels"), nbt.getBoolean("lit"), this.locked));
+                    blackboard, this.locked));
         }
         return super.getTooltipData(stack);
     }

@@ -42,7 +42,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
-import javax.xml.crypto.Data;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -231,7 +230,7 @@ public class AurorasDecoPack implements ModResourcePack {
         this.resources.clear();
         this.namespaces.clear();
 
-        if(!this.hasRegisteredOneTimeResources) {
+        if (!this.hasRegisteredOneTimeResources) {
             Datagen.registerDefaultWoodcuttingRecipes();
             this.hasRegisteredOneTimeResources = true;
         }
