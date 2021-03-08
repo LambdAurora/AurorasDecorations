@@ -24,15 +24,18 @@ import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Nameable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkSectionPos;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -42,7 +45,8 @@ import org.jetbrains.annotations.Nullable;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class BlackboardBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Nameable {
+public class BlackboardBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Nameable,
+        RenderAttachmentBlockEntity {
     @Environment(EnvType.CLIENT)
     private BlackboardBlockEntityRenderer.BlackboardTexture texture = null;
 
@@ -70,6 +74,14 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
                 this.sync();
                 this.markDirty();
             }
+        }
+    }
+
+    public void copy(Blackboard source) {
+        this.blackboard.copy(source);
+        if (this.getWorld() instanceof ServerWorld) {
+            this.sync();
+            this.markDirty();
         }
     }
 
@@ -116,10 +128,25 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
                 : new TranslatableText(this.getCachedState().getBlock().getTranslationKey());
     }
 
+    public boolean isLocked() {
+        return ((BlackboardBlock) this.getCachedState().getBlock()).isLocked();
+    }
+
+    /* Client */
+
     @Environment(EnvType.CLIENT)
     public BlackboardBlockEntityRenderer.BlackboardTexture getTexture() {
         return this.texture;
     }
+
+    @Override
+    public @Nullable Object getRenderAttachmentData() {
+        if (this.isLocked() && !this.blackboard.isEmpty())
+            return this.blackboard;
+        return null;
+    }
+
+    /* Serialization */
 
     @Override
     public void fromTag(CompoundTag nbt) {
@@ -151,9 +178,16 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
     @Override
     public void fromClientTag(CompoundTag nbt) {
         this.readBlackBoardNbt(nbt);
-        if (this.texture == null)
-            this.texture = BlackboardBlockEntityRenderer.getOrCreateTexture();
-        this.texture.update(this.blackboard);
+        if (!this.isLocked()) {
+            if (this.texture == null)
+                this.texture = BlackboardBlockEntityRenderer.getOrCreateTexture();
+            this.texture.update(this.blackboard);
+        }
+
+        if (((BlackboardBlock) this.getCachedState().getBlock()).isLocked() && !this.blackboard.isEmpty()) {
+            ChunkSectionPos pos = ChunkSectionPos.from(this.getPos());
+            ((ClientWorld) world).scheduleBlockRenders(pos.getX(), pos.getY(), pos.getZ());
+        }
     }
 
     @Override

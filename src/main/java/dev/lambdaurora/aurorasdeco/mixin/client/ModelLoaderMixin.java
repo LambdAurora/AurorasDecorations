@@ -21,6 +21,7 @@ import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.client.model.UnbakedBigFlowerPotModel;
+import dev.lambdaurora.aurorasdeco.client.model.UnbakedBlackboardModel;
 import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.util.ModelIdentifier;
@@ -45,13 +46,20 @@ public abstract class ModelLoaderMixin {
 
     @Inject(method = "putModel", at = @At("HEAD"), cancellable = true)
     private void onPutModel(Identifier id, UnbakedModel unbakedModel, CallbackInfo ci) {
-        if (id instanceof ModelIdentifier && !(unbakedModel instanceof UnbakedBigFlowerPotModel)) {
+        if (id instanceof ModelIdentifier
+                && !(unbakedModel instanceof UnbakedBigFlowerPotModel)
+                && !(unbakedModel instanceof UnbakedBlackboardModel)) {
             ModelIdentifier modelId = (ModelIdentifier) id;
             if (!modelId.getVariant().equals("inventory")) {
-                if (modelId.getNamespace().equals(AurorasDeco.NAMESPACE) && modelId.getPath().startsWith("big_flower_pot/")) {
-                    BigFlowerPotBlock potBlock = PottedPlantType.fromId(modelId.getPath().substring("big_flower_pot/".length())).getPot();
-                    if (potBlock.hasDynamicModel()) {
-                        this.putModel(id, new UnbakedBigFlowerPotModel(unbakedModel));
+                if (modelId.getNamespace().equals(AurorasDeco.NAMESPACE)) {
+                    if (modelId.getPath().startsWith("big_flower_pot/")) {
+                        BigFlowerPotBlock potBlock = PottedPlantType.fromId(modelId.getPath().substring("big_flower_pot/".length())).getPot();
+                        if (potBlock.hasDynamicModel()) {
+                            this.putModel(id, new UnbakedBigFlowerPotModel(unbakedModel));
+                            ci.cancel();
+                        }
+                    } else if (modelId.getPath().startsWith("waxed_") && modelId.getPath().endsWith("board")) {
+                        this.putModel(id, new UnbakedBlackboardModel(unbakedModel));
                         ci.cancel();
                     }
                 }

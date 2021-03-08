@@ -86,6 +86,16 @@ public class Blackboard {
     }
 
     /**
+     * Copies the blackboard data to this blackboard.
+     *
+     * @param source the blackboard to copy
+     */
+    public void copy(Blackboard source) {
+        System.arraycopy(source.pixels, 0, this.pixels, 0, this.pixels.length);
+        this.setLit(source.isLit());
+    }
+
+    /**
      * Clears the pixel at the specified coordinates.
      *
      * @param x the X coordinate

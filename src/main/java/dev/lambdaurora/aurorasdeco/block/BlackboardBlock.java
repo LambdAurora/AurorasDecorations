@@ -157,27 +157,21 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        BlackboardBlockEntity blackboard = AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE.get(world, pos);
+        BlackboardBlockEntity blackboard = this.getBlackboardEntity(world, pos);
+        ;
         if (blackboard != null) {
             if (stack.hasCustomName()) {
                 blackboard.setCustomName(stack.getName());
             }
 
             CompoundTag nbt = stack.getSubTag("BlockEntityTag");
+            if (state.get(WATERLOGGED) && !this.isLocked())
+                return;
+
             if (nbt != null && Blackboard.shouldConvert(nbt)) {
                 Blackboard blackboardData = new Blackboard();
                 blackboardData.readNbt(nbt);
-                for (int y = 0; y < 16; y++) {
-                    for (int x = 0; x < 16; x++) {
-                        byte color = blackboardData.getPixel(x, y);
-                        blackboard.setPixel(x, y, Blackboard.getColor(color / 4), color & 3);
-                    }
-                }
-            }
-
-            if (state.get(WATERLOGGED)) {
-                if (!this.isLocked() && !blackboard.isEmpty())
-                    blackboard.clear();
+                blackboard.copy(blackboardData);
             }
         }
     }
@@ -195,7 +189,8 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
             return Blocks.AIR.getDefaultState();
 
         if (!this.isLocked()) {
-            BlackboardBlockEntity blackboard = AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE.get(world, pos);
+            BlackboardBlockEntity blackboard = this.getBlackboardEntity(world, pos);
+            ;
             if (blackboard != null && !world.isClient()) {
                 if (state.get(WATERLOGGED) && !blackboard.isEmpty()) {
                     blackboard.clear();
@@ -215,7 +210,8 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
         Direction facing = state.get(FACING);
 
         if (!this.isLocked() && hit.getSide() == facing) {
-            BlackboardBlockEntity blackboard = AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE.get(world, pos);
+            BlackboardBlockEntity blackboard = this.getBlackboardEntity(world, pos);
+            ;
             if (blackboard != null) {
                 Blackboard.Color color = Blackboard.getColorFromItem(stack.getItem());
                 boolean isBoneMeal = stack.isOf(Items.BONE_MEAL);
@@ -314,7 +310,8 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity playerEntity) {
-        BlackboardBlockEntity blackboard = AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE.get(world, pos);
+        BlackboardBlockEntity blackboard = this.getBlackboardEntity(world, pos);
+        ;
         if (blackboard != null) {
             if (!world.isClient() && playerEntity.isCreative()) {
                 ItemStack stack = new ItemStack(this);
@@ -340,7 +337,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
     @Override
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
         ItemStack stack = super.getPickStack(world, pos, state);
-        BlackboardBlockEntity blackboard = AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE.get(world, pos);
+        BlackboardBlockEntity blackboard = this.getBlackboardEntity(world, pos);
         if (blackboard != null) {
             CompoundTag nbt = blackboard.writeBlackBoardNbt(new CompoundTag());
             nbt.remove("custom_name");
@@ -369,6 +366,13 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
         return AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE.instantiate(pos, state);
     }
 
+    public @Nullable BlackboardBlockEntity getBlackboardEntity(BlockView world, BlockPos pos) {
+        BlockEntity entity = world.getBlockEntity(pos);
+        if (entity instanceof BlackboardBlockEntity)
+            return (BlackboardBlockEntity) entity;
+        return null;
+    }
+
     /* Fluid */
 
     @Override
@@ -385,7 +389,8 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
                 world.setBlockState(pos, state.with(Properties.WATERLOGGED, true), 3);
                 world.getFluidTickScheduler().schedule(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
 
-                BlackboardBlockEntity blackboard = AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE.get(world, pos);
+                BlackboardBlockEntity blackboard = this.getBlackboardEntity(world, pos);
+                ;
                 if (blackboard != null && !this.isLocked()) {
                     if (!blackboard.isEmpty()) {
                         blackboard.clear();

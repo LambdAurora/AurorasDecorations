@@ -56,6 +56,9 @@ public class BlackboardBlockEntityRenderer implements BlockEntityRenderer<Blackb
     @Override
     public void render(BlackboardBlockEntity blackboard, float tickDelta, MatrixStack matrices,
                        VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        if (blackboard.isLocked())
+            return;
+
         BlockState state = blackboard.getCachedState();
 
         if (state.get(BlackboardBlock.LIT)) {
