@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SLS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "L": {
+      "item": "minecraft:lantern"
+    }
+  },
+  "result": {
+    "item": "aurorasdeco:amethyst_lantern"
+  }
+}

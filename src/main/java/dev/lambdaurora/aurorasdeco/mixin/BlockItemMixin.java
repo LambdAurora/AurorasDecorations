@@ -21,7 +21,8 @@ import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
 import dev.lambdaurora.aurorasdeco.block.ChandelierBlock;
 import dev.lambdaurora.aurorasdeco.block.WallCandleBlock;
-import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
+import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
+import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
 import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -63,7 +64,9 @@ public abstract class BlockItemMixin implements BlockItemAccessor {
     @Inject(method = "appendBlocks", at = @At("RETURN"))
     private void onAppendBlocks(Map<Block, Item> map, Item item, CallbackInfo ci) {
         if (this.getBlock() instanceof LanternBlock) {
-            LanternBlockEntity.registerLantern(item, this.getBlock());
+            WallLanternBlock lanternBlock = LanternRegistry.fromItem(item);
+            if (lanternBlock != null)
+                this.aurorasdeco$setWallBlock(lanternBlock);
         } else if (this.getBlock() instanceof CandleBlock) {
             Identifier candleId = Registry.BLOCK.getId(this.getBlock());
             if (candleId.getNamespace().equals("minecraft")) {

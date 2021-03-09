@@ -22,6 +22,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import dev.lambdaurora.aurorasdeco.block.AmethystLanternBlock;
 import dev.lambdaurora.aurorasdeco.block.ShelfBlock;
 import dev.lambdaurora.aurorasdeco.block.StumpBlock;
 import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
@@ -29,6 +30,7 @@ import dev.lambdaurora.aurorasdeco.mixin.AbstractBlockAccessor;
 import dev.lambdaurora.aurorasdeco.recipe.RecipeSerializerExtended;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.loader.api.FabricLoader;
@@ -66,6 +68,18 @@ import static dev.lambdaurora.aurorasdeco.util.AuroraUtil.jsonArray;
  */
 public class Datagen {
     public static final Logger LOGGER = LogManager.getLogger("aurorasdeco:datagen");
+
+    private static final Identifier WALL_LANTERN_ATTACHMENT
+            = AurorasDeco.id("block/wall_lantern_attachment");
+    private static final Identifier WALL_LANTERN_ATTACHMENT_EXTENDED1
+            = AurorasDeco.id("block/wall_lantern_attachment_extended1");
+    private static final Identifier WALL_LANTERN_ATTACHMENT_EXTENDED2
+            = AurorasDeco.id("block/wall_lantern_attachment_extended2");
+
+    private static final Identifier TEMPLATE_LANTERN_MODEL = new Identifier("block/template_lantern");
+    private static final Identifier TEMPLATE_HANGING_LANTERN_MODEL = new Identifier("block/template_hanging_lantern");
+
+    private static final Direction[] DIRECTIONS = Direction.values();
 
     private static final Pattern PLANKS_TO_BASE_ID = Pattern.compile("[_/]planks$");
     private static final Pattern PLANKS_SEPARATOR_DETECTOR = Pattern.compile("[/]planks$");
@@ -380,16 +394,16 @@ public class Datagen {
 
     public static void generateModels() {
         StumpBlock.streamLogStumps().forEach(block -> {
-            BlockStateBuilder builder = new BlockStateBuilder(block);
+            BlockStateBuilder builder = blockStateBuilder(block);
 
             Identifier model;
             if (block.getWoodType().getLogType().equals("stem")) {
-                model = new ModelBuilder(StumpBlock.STEM_STUMP_MODEL)
+                model = modelBuilder(StumpBlock.STEM_STUMP_MODEL)
                         .texture("log_side", block.getWoodType().getLogSideTexture())
                         .texture("log_top", block.getWoodType().getLogTopTexture())
                         .texture("mushroom", block.getWoodType().getLeavesTexture())
                         .register(block);
-                for (Direction direction : Direction.values()) {
+                for (Direction direction : DIRECTIONS) {
                     if (direction.getAxis().isHorizontal())
                         builder.addToVariant("", model, (int) direction.asRotation());
                 }
@@ -399,14 +413,14 @@ public class Datagen {
                         .texture("log_top", block.getWoodType().getLogTopTexture())
                         .texture("leaf", AurorasDeco.id("block/log_stump_leaf"))
                         .register(block);
-                Identifier brownMushroomModel = new ModelBuilder(StumpBlock.LOG_STUMP_BROWN_MUSHROOM_MODEL)
+                Identifier brownMushroomModel = modelBuilder(StumpBlock.LOG_STUMP_BROWN_MUSHROOM_MODEL)
                         .texture("log_side", block.getWoodType().getLogSideTexture())
                         .texture("log_top", block.getWoodType().getLogTopTexture())
                         .texture("leaf", AurorasDeco.id("block/log_stump_leaf"))
                         .texture("mushroom", new Identifier("block/brown_mushroom_block"))
                         .register(AurorasDeco.id("block/stump/"
                                 + block.getWoodType().getPathName() + "_brown_mushroom"));
-                Identifier redMushroomModel = new ModelBuilder(StumpBlock.LOG_STUMP_RED_MUSHROOM_MODEL)
+                Identifier redMushroomModel = modelBuilder(StumpBlock.LOG_STUMP_RED_MUSHROOM_MODEL)
                         .texture("log_side", block.getWoodType().getLogSideTexture())
                         .texture("log_top", block.getWoodType().getLogTopTexture())
                         .texture("leaf", AurorasDeco.id("block/log_stump_leaf"))
@@ -414,7 +428,7 @@ public class Datagen {
                         .register(AurorasDeco.id("block/stump/"
                                 + block.getWoodType().getPathName() + "_red_mushroom"));
 
-                for (Direction direction : Direction.values()) {
+                for (Direction direction : DIRECTIONS) {
                     if (direction.getAxis().isHorizontal()) {
                         int rotation = (int) direction.asRotation();
                         builder.addToVariant("", model, rotation);
@@ -428,10 +442,56 @@ public class Datagen {
 
             builder.register();
         });
+
+        blockStateBuilder(AurorasDecoRegistry.AMETHYST_LANTERN_BLOCK)
+                .addToVariant("hanging=false", modelBuilder(TEMPLATE_LANTERN_MODEL)
+                        .texture("lantern", AmethystLanternBlock.BLOCK_TEXTURE)
+                        .register(AurorasDecoRegistry.AMETHYST_LANTERN_BLOCK))
+                .addToVariant("hanging=true", modelBuilder(TEMPLATE_HANGING_LANTERN_MODEL)
+                        .texture("lantern", AmethystLanternBlock.BLOCK_TEXTURE)
+                        .register(AmethystLanternBlock.HANGING_MODEL))
+                .register();
+
+        generateSimpleItemModel(AurorasDecoRegistry.AMETHYST_LANTERN_BLOCK.asItem());
+
+        LanternRegistry.forEach((lanternId, wallLantern) -> {
+            BlockStateBuilder builder = blockStateBuilder(wallLantern);
+            for (Direction direction : DIRECTIONS) {
+                if (direction.getAxis().isHorizontal()) {
+                    int rotation = (int) (direction.getOpposite().asRotation() + 90) % 360;
+                    builder.addToVariant("facing=" + direction.getName() + ",extension=none", WALL_LANTERN_ATTACHMENT,
+                            rotation);
+                    builder.addToVariant("facing=" + direction.getName() + ",extension=wall", WALL_LANTERN_ATTACHMENT_EXTENDED1,
+                            rotation);
+                    builder.addToVariant("facing=" + direction.getName() + ",extension=fence", WALL_LANTERN_ATTACHMENT_EXTENDED2,
+                            rotation);
+                }
+            }
+            builder.register();
+        });
+    }
+
+    private static void generateSimpleItemModel(Item item) {
+        Identifier itemId = Registry.ITEM.getId(item);
+        generateSimpleItemModel(new Identifier(itemId.getNamespace(), "item/" + itemId.getPath()));
+    }
+
+    private static void generateSimpleItemModel(Identifier id) {
+        modelBuilder(new Identifier("item/generated"))
+                .texture("layer0", id)
+                .register(id);
     }
 
     public static String toPath(Identifier id, ResourceType type) {
         return type.getDirectory() + '/' + id.getNamespace() + '/' + id.getPath();
+    }
+
+    public static BlockStateBuilder blockStateBuilder(Block block) {
+        return new BlockStateBuilder(block);
+    }
+
+    public static ModelBuilder modelBuilder(Identifier parent) {
+        return new ModelBuilder(parent);
     }
 
     public static class BlockStateBuilder {

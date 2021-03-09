@@ -75,7 +75,7 @@ public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<Lante
             else pitch = angle;
         }
 
-        BlockState lanternState = lantern.getLantern().getDefaultState();
+        BlockState lanternState = lantern.getLanternState();
         VertexConsumer consumer = vertexConsumers.getBuffer(RenderLayers.getBlockLayer(lanternState));
         matrices.push();
 

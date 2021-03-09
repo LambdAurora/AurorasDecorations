@@ -36,14 +36,13 @@ import net.fabricmc.fabric.api.object.builder.v1.advancement.CriterionRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
+import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FenceGateBlock;
-import net.minecraft.block.Material;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -54,6 +53,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Items;
+import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
@@ -66,6 +66,7 @@ import net.minecraft.tag.Tag;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.poi.PointOfInterestType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,10 +85,13 @@ import static net.minecraft.stat.Stats.CUSTOM;
  * @since 1.0.0
  */
 public final class AurorasDecoRegistry {
+    public static final LanternBlock AMETHYST_LANTERN_BLOCK = registerWithItem("amethyst_lantern",
+            new AmethystLanternBlock(), new FabricItemSettings().group(ItemGroup.DECORATIONS));
+
     public static final BigFlowerPotBlock BIG_FLOWER_POT_BLOCK = registerWithItem(
             "big_flower_pot",
             PottedPlantType.register("none", Blocks.AIR, Items.AIR),
-            new Item.Settings().group(ItemGroup.DECORATIONS)
+            new FabricItemSettings().group(ItemGroup.DECORATIONS)
     );
     public static final BigFlowerPotBlock.PlantAir PLANT_AIR_BLOCK = register(
             "plant_air",
@@ -157,7 +161,17 @@ public final class AurorasDecoRegistry {
             new SturdyStoneBlock(FabricBlockSettings.of(Material.STONE).requiresTool().strength(3.5f)),
             new FabricItemSettings().group(ItemGroup.REDSTONE));
 
-    public static final WallLanternBlock WALL_LANTERN_BLOCK = register("wall_lantern", new WallLanternBlock());
+    public static final WallLanternBlock WALL_LANTERN_BLOCK = register("wall_lantern",
+            new WallLanternBlock((LanternBlock) Blocks.LANTERN));
+    public static final WallLanternBlock WALL_SOUL_LANTERN_BLOCK = register("wall_lantern/soul",
+            new WallLanternBlock((LanternBlock) Blocks.SOUL_LANTERN));
+    public static final BlockEntityType<LanternBlockEntity> WALL_LANTERN_BLOCK_ENTITY_TYPE = Registry.register(
+            Registry.BLOCK_ENTITY_TYPE,
+            id("lantern"),
+            FabricBlockEntityTypeBuilder.create(LanternBlockEntity::new, WALL_LANTERN_BLOCK, WALL_SOUL_LANTERN_BLOCK).build()
+    );
+
+    public static final WallLanternBlock AMETHYST_WALL_LANTERN_BLOCK = LanternRegistry.registerWallLantern(AMETHYST_LANTERN_BLOCK);
 
     public static final BlackboardBlock WAXED_BLACKBOARD_BLOCK = registerWithItem("waxed_blackboard",
             new BlackboardBlock(FabricBlockSettings.copyOf(BLACKBOARD_BLOCK), true),
@@ -196,11 +210,6 @@ public final class AurorasDecoRegistry {
             Registry.BLOCK_ENTITY_TYPE,
             id("book_pile"),
             FabricBlockEntityTypeBuilder.create(BookPileBlockEntity::new, BOOK_PILE_BLOCK).build()
-    );
-    public static final BlockEntityType<LanternBlockEntity> LANTERN_BLOCK_ENTITY_TYPE = Registry.register(
-            Registry.BLOCK_ENTITY_TYPE,
-            id("lantern"),
-            FabricBlockEntityTypeBuilder.create(LanternBlockEntity::new, WALL_LANTERN_BLOCK).build()
     );
     public static final BlockEntityType<ShelfBlockEntity> SHELF_BLOCK_ENTITY_TYPE = Registry.register(
             Registry.BLOCK_ENTITY_TYPE,
@@ -283,6 +292,18 @@ public final class AurorasDecoRegistry {
     public static final Tag<Block> SHELVES = TagRegistry.block(AurorasDeco.id("shelves"));
     public static final Tag<Block> STUMPS = TagRegistry.block(AurorasDeco.id("stumps"));
 
+    /* Particles */
+
+    public static final DefaultParticleType AMETHYST_GLINT = registerParticle("amethyst_glint");
+
+    /* POI */
+
+    public static final PointOfInterestType AMETHYST_LANTERN_POI = PointOfInterestHelper.register(
+            AurorasDeco.id("amethyst_lantern"),
+            0, 2,
+            AMETHYST_LANTERN_BLOCK, AMETHYST_WALL_LANTERN_BLOCK
+    );
+
     /* Advancement Criteria */
 
     public static final PetUsePetBedCriterion PET_USE_PET_BED_CRITERION = CriterionRegistry.register(new PetUsePetBedCriterion());
@@ -299,6 +320,10 @@ public final class AurorasDecoRegistry {
                                                         BiFunction<T, Item.Settings, BlockItem> factory) {
         register(name, factory.apply(register(name, block), settings));
         return block;
+    }
+
+    private static DefaultParticleType registerParticle(String name) {
+        return Registry.register(Registry.PARTICLE_TYPE, AurorasDeco.id(name), FabricParticleTypes.simple());
     }
 
     private static PetBedBlock registerPetBed(DyeColor color) {
@@ -344,6 +369,8 @@ public final class AurorasDecoRegistry {
                 BigFlowerPotBlock potBlock = PottedPlantType.registerFromBlock(block);
                 if (potBlock != null)
                     plants.add(potBlock);
+            } else {
+                LanternRegistry.tryRegisterWallLantern(block, Registry.BLOCK.getId(block));
             }
         });
         Registry.ITEM.forEach(item -> Blackboard.Color.tryRegisterColorFromItem(Registry.ITEM.getId(item), item));

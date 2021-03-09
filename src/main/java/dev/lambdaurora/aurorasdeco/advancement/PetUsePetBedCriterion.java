@@ -19,7 +19,7 @@ package dev.lambdaurora.aurorasdeco.advancement;
 
 import com.google.gson.JsonObject;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.mixin.FoxEntityAccessor;
+import dev.lambdaurora.aurorasdeco.mixin.entity.FoxEntityAccessor;
 import net.minecraft.advancement.criterion.AbstractCriterion;
 import net.minecraft.advancement.criterion.AbstractCriterionConditions;
 import net.minecraft.entity.LivingEntity;

@@ -15,11 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.mixin;
+package dev.lambdaurora.aurorasdeco.mixin.entity;
 
-import dev.lambdaurora.aurorasdeco.entity.goal.TameableSleepInPetBedGoal;
+import dev.lambdaurora.aurorasdeco.entity.goal.CatSleepInPetBedGoal;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.ParrotEntity;
+import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,17 +27,21 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ParrotEntity.class)
-public abstract class ParrotEntityMixin extends TameableEntity {
-    protected ParrotEntityMixin(EntityType<? extends TameableEntity> entityType, World world) {
+@Mixin(CatEntity.class)
+public abstract class CatEntityMixin extends TameableEntity {
+    protected CatEntityMixin(EntityType<? extends TameableEntity> entityType, World world) {
         super(entityType, world);
     }
 
     @Inject(
             method = "initGoals",
-            at = @At("RETURN")
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/entity/ai/goal/GoalSelector;add(ILnet/minecraft/entity/ai/goal/Goal;)V",
+                    ordinal = 7
+            )
     )
     private void onInitGoals(CallbackInfo ci) {
-        this.goalSelector.add(2, new TameableSleepInPetBedGoal(this, 0.8));
+        this.goalSelector.add(7, new CatSleepInPetBedGoal((CatEntity) (Object) this, 0.8));
     }
 }

@@ -1,0 +1,54 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "aurorasdeco:amethyst_lantern"
+    ]
+  },
+  "criteria": {
+    "has_amethyst_shard": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:amethyst_shard"
+          }
+        ]
+      }
+    },
+    "has_lantern": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:lantern"
+          }
+        ]
+      }
+    },
+    "has_self": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "aurorasdeco:amethyst_lantern"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "aurorasdeco:amethyst_lantern"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_amethyst_shard",
+      "has_lantern",
+      "has_self",
+      "has_the_recipe"
+    ]
+  ]
+}

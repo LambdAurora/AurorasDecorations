@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.mixin;
+package dev.lambdaurora.aurorasdeco.mixin.entity;
 
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.nbt.CompoundTag;

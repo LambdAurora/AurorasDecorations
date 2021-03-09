@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.mixin;
+package dev.lambdaurora.aurorasdeco.mixin.entity;
 
 import dev.lambdaurora.aurorasdeco.entity.goal.TameableSleepInPetBedGoal;
 import net.minecraft.entity.EntityType;

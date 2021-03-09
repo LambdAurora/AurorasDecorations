@@ -17,7 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.entity;
 
-import dev.lambdaurora.aurorasdeco.mixin.MobEntityAccessor;
+import dev.lambdaurora.aurorasdeco.mixin.entity.MobEntityAccessor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;

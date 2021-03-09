@@ -21,6 +21,7 @@ import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigPottedCactusBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.api.ModInitializer;
@@ -57,6 +58,8 @@ public class AurorasDeco implements ModInitializer {
                 BigFlowerPotBlock potBlock = PottedPlantType.registerFromBlock(object);
                 if (potBlock != null)
                     Registry.register(Registry.BLOCK, id("big_flower_pot/" + potBlock.getPlantType().getId()), potBlock);
+            } else {
+                LanternRegistry.tryRegisterWallLantern(object, id);
             }
         });
         RegistryEntryAddedCallback.event(Registry.ITEM).register((rawId, id, object) -> {

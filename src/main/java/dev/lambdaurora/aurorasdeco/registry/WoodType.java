@@ -48,7 +48,6 @@ import java.util.stream.Stream;
 public final class WoodType {
     private static final List<WoodType> WOOD_TYPES = new ArrayList<>();
 
-
     private final Identifier id;
     private final String logType;
     private final boolean flammable;

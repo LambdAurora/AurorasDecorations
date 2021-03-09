@@ -15,17 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.mixin;
+package dev.lambdaurora.aurorasdeco.accessor;
 
-import net.minecraft.entity.passive.FoxEntity;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Invoker;
+import net.minecraft.block.Block;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.Set;
 
-@Mixin(FoxEntity.class)
-public interface FoxEntityAccessor {
-    @Invoker("getTrustedUuids")
-    List<UUID> aurorasdeco$getTrustedUuids();
+public interface BlockEntityTypeAccessor {
+    Set<Block> aurorasdeco$getMutableSupportedBlocks();
+
+    void aurorasdeco$addSupportedBlock(Block block);
 }

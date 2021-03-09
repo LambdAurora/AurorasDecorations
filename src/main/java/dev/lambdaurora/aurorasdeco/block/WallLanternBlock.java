@@ -22,27 +22,31 @@ import com.google.common.collect.Maps;
 import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContext;
-import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.*;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
@@ -63,6 +67,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Represents a wall lantern.
@@ -73,7 +78,6 @@ import java.util.Map;
  */
 public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
-    public static final IntProperty LIGHT = IntProperty.of("light", 0, 15);
     public static final EnumProperty<ExtensionType> EXTENSION = AurorasDecoProperties.EXTENSION;
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public static final VoxelShape LANTERN_HANG_SHAPE = Block.createCuboidShape(7.0, 11.0, 7.0,
@@ -83,34 +87,43 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
     private static final VoxelShape HOLDER_SHAPE = createCuboidShape(0.0, 8.0, 0.0,
             16.0, 16.0, 16.0);
 
-    public WallLanternBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.LANTERN)
-                .breakByTool(FabricToolTags.PICKAXES)
-                .luminance(state -> state.get(LIGHT))
-                .dynamicBounds());
+    private final LanternBlock lanternBlock;
+
+    public WallLanternBlock(LanternBlock lantern) {
+        super(FabricBlockSettings.copyOf(lantern));
+
+        this.lanternBlock = lantern;
 
         this.setDefaultState(this.stateManager.getDefaultState()
                 .with(FACING, Direction.NORTH)
-                .with(LIGHT, 0)
                 .with(EXTENSION, ExtensionType.NONE)
                 .with(WATERLOGGED, false)
         );
 
-        LanternBlockEntity.streamLanternItems().filter(item -> item instanceof BlockItemAccessor)
-                .forEach(item -> ((BlockItemAccessor) item).aurorasdeco$setWallBlock(this));
+        Item item = lantern.asItem();
+        if (item instanceof BlockItem) {
+            ((BlockItemAccessor) item).aurorasdeco$setWallBlock(this);
+        }
+    }
+
+    public LanternBlock getLanternBlock() {
+        return this.lanternBlock;
+    }
+
+    public BlockState getLanternState() {
+        return this.getLanternBlock().getDefaultState();
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING);
-        builder.add(LIGHT);
         builder.add(EXTENSION);
         builder.add(WATERLOGGED);
     }
 
     @Override
     public String getTranslationKey() {
-        return this.asItem().getTranslationKey();
+        return this.lanternBlock.getTranslationKey();
     }
 
     @Override
@@ -122,7 +135,16 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return LanternBlockEntity.getOutlineShape(world, pos, state);
+        Direction facing = state.get(WallLanternBlock.FACING);
+        ExtensionType extension = state.get(WallLanternBlock.EXTENSION);
+        return VoxelShapes.union(
+                this.getLanternState().getOutlineShape(world, pos)
+                        .offset((-facing.getOffsetX() * extension.getOffset()) / 16.0,
+                                2.0 / 16.0,
+                                (-facing.getOffsetZ() * extension.getOffset()) / 16.0),
+                WallLanternBlock.ATTACHMENT_SHAPES.get(facing)
+                        .get(extension)
+        );
     }
 
     /* Placement */
@@ -145,8 +167,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
         FluidState fluidState = world.getFluidState(pos);
         Direction[] directions = ctx.getPlacementDirections();
 
-        state = state.with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER)
-                .with(LIGHT, LanternBlockEntity.getLuminanceFromItem(ctx.getStack().getItem()));
+        state = state.with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
 
         for (Direction direction : directions) {
             if (direction.getAxis().isHorizontal()) {
@@ -161,14 +182,6 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
         }
 
         return null;
-    }
-
-    @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        LanternBlockEntity blockEntity = AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
-        if (blockEntity != null) {
-            blockEntity.setLanternFromItem(itemStack.getItem());
-        }
     }
 
     @Override
@@ -190,11 +203,6 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
             world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
 
-        LanternBlockEntity blockEntity = AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
-        if (blockEntity != null) {
-            state = state.with(LIGHT, blockEntity.getLanternState().getLuminance());
-        }
-
         return direction.getOpposite() == state.get(FACING) && !state.canPlaceAt(world, pos)
                 ? Blocks.AIR.getDefaultState() : state;
     }
@@ -203,11 +211,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-        LanternBlockEntity blockEntity = AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
-        if (blockEntity != null)
-            return blockEntity.getLantern().getPickStack(world, pos, state);
-        else
-            return LanternBlockEntity.DEFAULT_LANTERN.getPickStack(world, pos, state);
+        return this.getLanternBlock().getPickStack(world, pos, this.getLanternState());
     }
 
     @Override
@@ -250,7 +254,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
     public void swing(@Nullable Entity entity, World world, BlockPos pos, @Nullable Direction direction,
                       @Nullable Direction.Axis lanternCollisionAxis) {
-        LanternBlockEntity blockEntity = AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
+        LanternBlockEntity blockEntity = AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
         if (!world.isClient() && blockEntity != null) {
             if (direction == null) {
                 direction = world.getBlockState(pos).get(FACING);
@@ -276,7 +280,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
         if (entity instanceof ProjectileEntity)
             return;
 
-        LanternBlockEntity blockEntity = AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
+        LanternBlockEntity blockEntity = AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
         if (blockEntity == null)
             return;
 
@@ -300,12 +304,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
-        BlockEntity blockEntity = builder.getNullable(LootContextParameters.BLOCK_ENTITY);
-        BlockState lanternState = LanternBlockEntity.DEFAULT_LANTERN.getDefaultState();
-        if (blockEntity instanceof LanternBlockEntity) {
-            lanternState = ((LanternBlockEntity) blockEntity).getLanternState();
-        }
-        return lanternState.getDroppedStacks(builder);
+        return this.getLanternState().getDroppedStacks(builder);
     }
 
     /* Block Entity Stuff */
@@ -317,13 +316,13 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE.instantiate(pos, state);
+        return AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE.instantiate(pos, state);
     }
 
     @Override
     public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(World world, BlockState state,
                                                                             BlockEntityType<T> type) {
-        return checkType(type, AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE,
+        return checkType(type, AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE,
                 world.isClient() ? LanternBlockEntity::clientTick : LanternBlockEntity::serverTick);
     }
 
@@ -357,7 +356,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
-        LanternBlockEntity lantern = AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
+        LanternBlockEntity lantern = AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
         if (lantern != null) {
             if (lantern.isColliding()) {
                 return 15;
@@ -368,6 +367,14 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
             }
         }
         return 0;
+    }
+
+    /* Visual */
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+        this.getLanternBlock().randomDisplayTick(state, world, pos, random);
     }
 
     static {

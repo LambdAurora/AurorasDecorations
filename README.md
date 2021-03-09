@@ -14,6 +14,11 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 
 ### Features:
 
+- Amethyst Lantern
+  - Cancels natural mob spawning in a 32 blocks radius around it.
+  - Mobs are afraid of it.
+  - Helps curing zombie villagers.
+  - Can be crafted with 2 amethyst shards and one lantern.
 - Armor stand
   - Right-click with sticks to add arms.
   - Shift-Right-click with shears to hide the base plate.
@@ -81,6 +86,8 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
   Leads can now be tied directly between two fences, rather than only fence-mob.
 
 ## Pictures
+
+![Amethyst Lantern](images/amethyst_lantern.png)
 
 ![Big flower pot and Wall Lanterns](images/flower_pot_and_wall_lantern.png)
 

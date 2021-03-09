@@ -20,6 +20,7 @@ package dev.lambdaurora.aurorasdeco.client;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
 import dev.lambdaurora.aurorasdeco.block.StumpBlock;
+import dev.lambdaurora.aurorasdeco.client.particle.AmethystGlintParticle;
 import dev.lambdaurora.aurorasdeco.client.renderer.*;
 import dev.lambdaurora.aurorasdeco.client.screen.SawmillScreen;
 import dev.lambdaurora.aurorasdeco.client.screen.ShelfScreen;
@@ -31,6 +32,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
@@ -66,7 +68,7 @@ public class AurorasDecoClient implements ClientModInitializer {
                 BlackboardBlockEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE,
                 BookPileEntityRenderer::new);
-        BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE,
+        BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE,
                 LanternBlockEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE,
                 ShelfBlockEntityRenderer::new);
@@ -81,9 +83,11 @@ public class AurorasDecoClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutoutMipped(),
                 AurorasDecoRegistry.BURNT_VINE_BLOCK);
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(),
+                AurorasDecoRegistry.AMETHYST_LANTERN_BLOCK,
                 AurorasDecoRegistry.SAWMILL_BLOCK,
-                AurorasDecoRegistry.WALL_LANTERN_BLOCK,
                 AurorasDecoRegistry.WIND_CHIME_BLOCK);
+
+        ParticleFactoryRegistry.getInstance().register(AurorasDecoRegistry.AMETHYST_GLINT, AmethystGlintParticle.Factory::new);
 
         StumpBlock.streamLogStumps()
                 .forEach(block -> BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout()));

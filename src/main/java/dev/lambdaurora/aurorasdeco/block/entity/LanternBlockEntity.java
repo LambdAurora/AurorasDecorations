@@ -17,35 +17,22 @@
 
 package dev.lambdaurora.aurorasdeco.block.entity;
 
-import com.google.common.collect.Maps;
-import dev.lambdaurora.aurorasdeco.block.ExtensionType;
 import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import dev.lambdaurora.aurorasdeco.util.MapUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
-import net.fabricmc.fabric.api.util.NbtType;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.Item;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.EmptyBlockView;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 /**
  * Represents a Lantern Block Entity for the wall lanterns.
@@ -54,14 +41,10 @@ import java.util.stream.Stream;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class LanternBlockEntity extends SwayingBlockEntity implements BlockEntityClientSerializable {
+public class LanternBlockEntity extends SwayingBlockEntity {
     public static final Block DEFAULT_LANTERN = Blocks.LANTERN;
 
-    private static final Map<Block, Map<Direction, Map<ExtensionType, VoxelShape>>> SHAPES = new Object2ObjectOpenHashMap<>();
-    private static final Map<Item, Block> ITEM_BLOCK_MAP = new Object2ObjectOpenHashMap<>();
-
     private Block lantern = DEFAULT_LANTERN;
-    private VoxelShape outlineShape;
 
     public int swingTicks;
     private boolean swinging;
@@ -75,45 +58,7 @@ public class LanternBlockEntity extends SwayingBlockEntity implements BlockEntit
     private final Map<Entity, Direction.Axis> collisions = new Object2ObjectOpenHashMap<>();
 
     public LanternBlockEntity(BlockPos pos, BlockState state) {
-        super(AurorasDecoRegistry.LANTERN_BLOCK_ENTITY_TYPE, pos, state);
-
-        this.updateShape();
-    }
-
-    public static Block getLanternFromItem(Item item) {
-        return ITEM_BLOCK_MAP.getOrDefault(item, DEFAULT_LANTERN);
-    }
-
-    public static Stream<Item> streamLanternItems() {
-        return ITEM_BLOCK_MAP.keySet().stream();
-    }
-
-    public static int getLuminanceFromItem(Item item) {
-        return getLanternFromItem(item).getDefaultState().getLuminance();
-    }
-
-    public static void registerLantern(Item item, Block block) {
-        ITEM_BLOCK_MAP.put(item, block);
-
-        if (!block.hasDynamicBounds()) {
-            VoxelShape lanternShape = block.getDefaultState().getOutlineShape(EmptyBlockView.INSTANCE, BlockPos.ORIGIN)
-                    .offset(0, 2.0 / 16.0, 0);
-
-            SHAPES.put(block, WallLanternBlock.FACING.getValues().stream()
-                    .collect(Maps.toImmutableEnumMap(Function.<Direction>identity(),
-                            direction -> MapUtil.mapWithEnumKey(WallLanternBlock.ATTACHMENT_SHAPES.get(direction),
-                                    (key, input) -> {
-                                        VoxelShape shape = lanternShape;
-                                        if (key != ExtensionType.NONE) {
-                                            shape = shape.offset(
-                                                    (-direction.getOffsetX() * key.getOffset()) / 16.0,
-                                                    0,
-                                                    (-direction.getOffsetZ() * key.getOffset()) / 16.0
-                                            );
-                                        }
-                                        return VoxelShapes.union(shape, input);
-                                    }))));
-        }
+        super(AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE, pos, state);
     }
 
     @Override
@@ -137,74 +82,7 @@ public class LanternBlockEntity extends SwayingBlockEntity implements BlockEntit
      * @return the lantern as block state
      */
     public BlockState getLanternState() {
-        return this.getLantern().getDefaultState();
-    }
-
-    /**
-     * Sets the lantern of this wall lantern.
-     *
-     * @param lantern the lantern
-     */
-    public void setLantern(Block lantern) {
-        if (lantern instanceof LanternBlock && this.lantern != lantern) {
-            this.lantern = lantern;
-            this.updateLantern();
-            this.markDirty();
-        }
-    }
-
-    private void updateLantern() {
-        this.updateCollisionBoxes();
-        this.updateShape();
-    }
-
-    private void updateShape() {
-        if (this.lantern.hasDynamicBounds()) {
-            this.outlineShape = null;
-        } else {
-            this.outlineShape = SHAPES.get(this.lantern).get(this.getCachedState().get(WallLanternBlock.FACING))
-                    .get(this.getCachedState().get(WallLanternBlock.EXTENSION));
-        }
-    }
-
-    /**
-     * Returns the outline shape of this wall lantern.
-     *
-     * @return the outline shape
-     */
-    public VoxelShape getOutlineShape() {
-        if (this.outlineShape == null) {
-            Direction facing = this.getCachedState().get(WallLanternBlock.FACING);
-            ExtensionType extension = this.getCachedState().get(WallLanternBlock.EXTENSION);
-            return VoxelShapes.union(
-                    this.lantern.getDefaultState().getOutlineShape(this.getWorld(), this.getPos())
-                            .offset((-facing.getOffsetX() * extension.getOffset()) / 16.0,
-                                    2.0 / 16.0,
-                                    (-facing.getOffsetZ() * extension.getOffset()) / 16.0),
-                    WallLanternBlock.ATTACHMENT_SHAPES.get(facing)
-                            .get(extension)
-            );
-        }
-        return this.outlineShape;
-    }
-
-    public static VoxelShape getOutlineShape(BlockView world, BlockPos pos, BlockState state) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof LanternBlockEntity) {
-            return ((LanternBlockEntity) blockEntity).getOutlineShape();
-        }
-        return SHAPES.get(DEFAULT_LANTERN)
-                .get(state.get(WallLanternBlock.FACING))
-                .get(state.get(WallLanternBlock.EXTENSION));
-    }
-
-    /**
-     * Sets the lantern from an item.
-     *
-     * @param item the item
-     */
-    public void setLanternFromItem(Item item) {
-        this.setLantern(getLanternFromItem(item));
+        return ((WallLanternBlock) this.getCachedState().getBlock()).getLanternState();
     }
 
     /**
@@ -294,39 +172,6 @@ public class LanternBlockEntity extends SwayingBlockEntity implements BlockEntit
         this.lanternCollisionBoxZ = box.expand(0, 0, 0.1).offset(pos);
     }
 
-    /* Serialization */
-
-    @Override
-    public void fromTag(CompoundTag tag) {
-        super.fromTag(tag);
-        this.fromClientTag(tag);
-    }
-
-    @Override
-    public CompoundTag toTag(CompoundTag compound) {
-        return this.toClientTag(super.toTag(compound));
-    }
-
-    @Override
-    public void fromClientTag(CompoundTag compound) {
-        Block lantern = DEFAULT_LANTERN;
-        if (compound.contains("lantern", NbtType.STRING)) {
-            Block block = Registry.BLOCK.get(new Identifier(compound.getString("lantern")));
-            if (block instanceof LanternBlock) {
-                lantern = block;
-            }
-        }
-
-        this.lantern = lantern;
-        this.updateLantern();
-    }
-
-    @Override
-    public CompoundTag toClientTag(CompoundTag compound) {
-        compound.putString("lantern", Registry.BLOCK.getId(this.lantern).toString());
-        return compound;
-    }
-
     /* Syncing */
 
     @Override
@@ -369,8 +214,6 @@ public class LanternBlockEntity extends SwayingBlockEntity implements BlockEntit
     }
 
     public static void serverTick(World world, BlockPos pos, BlockState state, LanternBlockEntity lantern) {
-        BlockState originalState = state;
-
         boolean canTick = true;
 
         if (!lantern.collisions.isEmpty()) {
@@ -395,12 +238,6 @@ public class LanternBlockEntity extends SwayingBlockEntity implements BlockEntit
             world.updateComparators(pos, state.getBlock());
         }
 
-        if (state.get(WallLanternBlock.LIGHT) != lantern.getLanternState().getLuminance())
-            state = state.with(WallLanternBlock.LIGHT, lantern.getLanternState().getLuminance());
-
-        if (originalState != state)
-            world.setBlockState(pos, state);
-
         if (canTick) {
             int oldSwingTicks = lantern.swingTicks;
             tick(lantern);
@@ -413,6 +250,6 @@ public class LanternBlockEntity extends SwayingBlockEntity implements BlockEntit
     @Override
     public void setCachedState(BlockState state) {
         super.setCachedState(state);
-        this.updateShape();
+        this.updateCollisionBoxes();
     }
 }
