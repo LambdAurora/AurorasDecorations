@@ -37,7 +37,7 @@ import java.util.Random;
  * @since 1.0.0
  */
 public class AmethystLanternBlock extends LanternBlock {
-    public static final Identifier BLOCK_TEXTURE =  AurorasDeco.id("block/amethyst_lantern");
+    public static final Identifier BLOCK_TEXTURE = AurorasDeco.id("block/amethyst_lantern");
     public static final Identifier HANGING_MODEL = AurorasDeco.id("block/hanging_amethyst_lantern");
     public static final int EFFECT_RADIUS = 32;
 

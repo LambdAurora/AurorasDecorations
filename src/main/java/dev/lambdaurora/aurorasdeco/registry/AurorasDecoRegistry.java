@@ -141,6 +141,10 @@ public final class AurorasDecoRegistry {
             new BookPileBlock(FabricBlockSettings.of(Material.DECORATION).strength(.2f)
                     .nonOpaque()));
 
+    public static final BrazierBlock BRAZIER_BLOCK = registerWithItem("brazier",
+            new BrazierBlock(15),
+            new FabricItemSettings().group(ItemGroup.DECORATIONS));
+
     public static final BurntVineBlock BURNT_VINE_BLOCK = register("burnt_vine", new BurntVineBlock());
 
     public static final BlackboardBlock CHALKBOARD_BLOCK = registerWithItem("chalkboard",

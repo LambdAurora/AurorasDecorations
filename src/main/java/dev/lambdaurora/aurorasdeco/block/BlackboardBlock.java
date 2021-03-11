@@ -190,7 +190,6 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 
         if (!this.isLocked()) {
             BlackboardBlockEntity blackboard = this.getBlackboardEntity(world, pos);
-            ;
             if (blackboard != null && !world.isClient()) {
                 if (state.get(WATERLOGGED) && !blackboard.isEmpty()) {
                     blackboard.clear();

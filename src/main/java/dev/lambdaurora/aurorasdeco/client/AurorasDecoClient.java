@@ -84,8 +84,10 @@ public class AurorasDecoClient implements ClientModInitializer {
                 AurorasDecoRegistry.BURNT_VINE_BLOCK);
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(),
                 AurorasDecoRegistry.AMETHYST_LANTERN_BLOCK,
+                AurorasDecoRegistry.BRAZIER_BLOCK,
                 AurorasDecoRegistry.SAWMILL_BLOCK,
-                AurorasDecoRegistry.WIND_CHIME_BLOCK);
+                AurorasDecoRegistry.WIND_CHIME_BLOCK
+        );
 
         ParticleFactoryRegistry.getInstance().register(AurorasDecoRegistry.AMETHYST_GLINT, AmethystGlintParticle.Factory::new);
 
