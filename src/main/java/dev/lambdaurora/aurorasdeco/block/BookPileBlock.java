@@ -130,7 +130,7 @@ public class BookPileBlock extends BlockWithEntity implements Waterloggable {
                 if (!player.getAbilities().creativeMode)
                     stack.decrement(1);
 
-                world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos);
+                world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
 
                 return ActionResult.success(world.isClient());
             }
@@ -150,7 +150,7 @@ public class BookPileBlock extends BlockWithEntity implements Waterloggable {
                         i--;
                     player.setStackInHand(hand, bookPile.removeBook(i));
 
-                    world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
 
                     return ActionResult.success(world.isClient());
                 }

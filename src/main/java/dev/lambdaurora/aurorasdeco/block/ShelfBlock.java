@@ -254,7 +254,7 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
                             handStack.decrement(difference);
                         }
                         shelf.setStack(slot, stack);
-                        world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos);
+                        world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                         return ActionResult.SUCCESS;
                     }
                 }
@@ -311,7 +311,7 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
 
                     shelf.removeStack(slot);
                 }
-                world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos);
+                world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
             }
         }
     }

@@ -215,12 +215,12 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
                 Blackboard.Color color = Blackboard.getColorFromItem(stack.getItem());
                 boolean isBoneMeal = stack.isOf(Items.BONE_MEAL);
                 boolean isCoal = stack.isIn(ItemTags.COALS);
-                if (stack.isOf(Items.WATER_BUCKET) && this.tryClear(world, blackboard)) {
+                if (stack.isOf(Items.WATER_BUCKET) && this.tryClear(world, blackboard, player)) {
                     world.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS,
                             2.f, 1.f);
                     return ActionResult.success(world.isClient());
                 } else if (stack.isOf(Items.POTION) && PotionUtil.getPotion(stack) == Potions.WATER
-                        && this.tryClear(world, blackboard)) {
+                        && this.tryClear(world, blackboard, player)) {
                     player.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
                     if (!player.getAbilities().creativeMode) {
                         stack.decrement(1);
@@ -252,7 +252,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 
                     this.changePixel(blackboard, x, y, color, isBoneMeal, isCoal);
 
-                    world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos);
+                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                     return ActionResult.success(world.isClient());
                 } else if (stack.isOf(Items.BONE_MEAL)) {
 
@@ -296,12 +296,12 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
         }
     }
 
-    private boolean tryClear(World world, BlackboardBlockEntity blackboard) {
+    private boolean tryClear(World world, BlackboardBlockEntity blackboard, @Nullable PlayerEntity player) {
         if (!blackboard.isEmpty()) {
             if (!world.isClient())
                 blackboard.clear();
 
-            world.emitGameEvent(GameEvent.BLOCK_CHANGE, blackboard.getPos());
+            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, blackboard.getPos());
             return true;
         }
         return false;
