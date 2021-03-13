@@ -6,12 +6,8 @@
     "AbstractBlockAccessor",
     "BlockAccessor",
     "BlockEntityTypeMixin",
-    "BlockItemMixin",
     "CandleBlockMixin",
-    "FlintAndSteelItemMixin",
-    "ItemMixin",
-    "LanternMixin",
-    "LeadItemMixin",
+    "LanternBlockMixin",
     "ModResourcePackCreatorMixin",
     "RecipeManagerMixin",
     "SpawnHelperMixin",
@@ -25,7 +21,12 @@
     "entity.ParrotEntityMixin",
     "entity.SitGoalMixin",
     "entity.WolfEntityMixin",
-    "entity.ZombieVillagerEntityMixin"
+    "entity.ZombieVillagerEntityMixin",
+    "item.BlockItemMixin",
+    "item.FlintAndSteelItemMixin",
+    "item.ItemMixin",
+    "item.LeadItemMixin",
+    "item.ShovelItemMixin"
   ],
   "client": [
     "client.ClientRecipeBookMixin",

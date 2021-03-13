@@ -15,8 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.mixin;
+package dev.lambdaurora.aurorasdeco.mixin.item;
 
+import dev.lambdaurora.aurorasdeco.block.BrazierBlock;
 import dev.lambdaurora.aurorasdeco.block.BurntVineBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -26,6 +27,7 @@ import net.minecraft.item.ItemUsageContext;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -67,6 +69,16 @@ public class FlintAndSteelItemMixin {
                     world.addParticle(ParticleTypes.FLAME, x + random, y + random, z + random,
                             0.0, 0.0, 0.0);
                 }
+            }
+
+            cir.setReturnValue(ActionResult.success(world.isClient()));
+        } else if (BrazierBlock.canBeLit(state)) {
+            world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS,
+                    1.f, world.getRandom().nextFloat() * .4f + .8f);
+            world.setBlockState(pos, state.with(Properties.LIT, true), 11);
+            world.emitGameEvent(player, GameEvent.BLOCK_PLACE, pos);
+            if (player != null) {
+                context.getStack().damage(1, player, p -> p.sendToolBreakStatus(context.getHand()));
             }
 
             cir.setReturnValue(ActionResult.success(world.isClient()));

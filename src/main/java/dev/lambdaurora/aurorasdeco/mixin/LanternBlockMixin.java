@@ -37,7 +37,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
  * @since 1.0.0
  */
 @Mixin(LanternBlock.class)
-public abstract class LanternMixin {
+public abstract class LanternBlockMixin {
     @Inject(method = "canPlaceAt", at = @At("RETURN"), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
     public void canPlaceAt(BlockState state, WorldView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir, Direction direction) {
         if (direction == Direction.DOWN) {

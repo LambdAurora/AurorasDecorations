@@ -1,11 +1,8 @@
 {
   "credit": "Made by LambdAurora",
-  "parent": "block/block",
+  "parent": "aurorasdeco:block/brazier/brazier",
   "textures": {
-    "particle": "aurorasdeco:block/brazier/plate",
-    "side": "aurorasdeco:block/brazier/side",
-    "plate": "aurorasdeco:block/brazier/plate",
-    "coal": "aurorasdeco:block/brazier/coal"
+    "soul": "block/soul_sand"
   },
   "elements": [
     {
@@ -157,8 +154,8 @@
       "from": [ 2, 5, 2 ],
       "to": [ 14, 5, 14 ],
       "faces": {
-        "up":   {"uv": [ 0, 0, 12, 12 ], "texture": "#plate"},
-        "down": {"uv": [ 0, 0, 12, 12 ], "texture": "#plate"}
+        "up":   {"uv": [ 0, 0, 12, 12 ], "texture": "#soul"},
+        "down": {"uv": [ 0, 0, 12, 12 ], "texture": "#soul"}
       }
     },
     {
@@ -220,11 +217,11 @@
       "rotation": {"angle": -22.5, "axis": "z", "origin": [ 10, 5.5, 6 ]},
       "faces": {
         "north": {"uv": [ 0, 4, 4, 5 ], "texture": "#coal"},
-        "east":  {"uv": [ 1, 4, 4, 5 ], "texture": "#coal"},
+        "east": {"uv": [ 1, 4, 4, 5 ], "texture": "#coal"},
         "south": {"uv": [ 0, 4, 4, 5 ], "texture": "#coal"},
-        "west":  {"uv": [ 0, 4, 3, 5 ], "texture": "#coal"},
-        "up":    {"uv": [ 0, 0, 4, 3 ], "texture": "#coal"},
-        "down":  {"uv": [ 0, 1, 4, 4 ], "texture": "#coal"}
+        "west": {"uv": [ 0, 4, 3, 5 ], "texture": "#coal"},
+        "up": {"uv": [ 0, 0, 4, 3 ], "texture": "#coal"},
+        "down": {"uv": [ 0, 1, 4, 4 ], "texture": "#coal"}
       }
     },
     {
@@ -256,7 +253,6 @@
       }
     }
   ],
-  "gui_light": "front",
   "groups": [
     {
       "name": "legs",
@@ -271,7 +267,7 @@
     {
       "name": "plate",
       "origin": [ 8, 8, 8 ],
-      "children": [12, 13]
+      "children": [ 12, 13 ]
     },
     {
       "name": "coal",

@@ -4,6 +4,7 @@
 
   "block.aurorasdeco.amethyst_lantern": "Amethyst Lantern",
   "block.aurorasdeco.big_flower_pot": "Big Flower Pot",
+  "block.aurorasdeco.brazier": "Brazier",
 
   "block.aurorasdeco.blackboard": "Blackboard",
   "block.aurorasdeco.waxed_blackboard": "Waxed Blackboard",
@@ -43,6 +44,8 @@
   "block.aurorasdeco.shelf.blockus.charred": "Charred Shelf",
   "block.aurorasdeco.shelf.blockus.white_oak": "White Oak Shelf",
 
+  "block.aurorasdeco.soul_brazier": "Soul Brazier",
+
   "block.aurorasdeco.stump.oak": "Oak Stump",
   "block.aurorasdeco.stump.spruce": "Spruce Stump",
   "block.aurorasdeco.stump.birch": "Birch Stump",
@@ -59,6 +62,7 @@
 
   "stat.aurorasdeco.interact_with_sawmill": "Interactions with Sawmill",
 
+  "subtitles.aurorasdeco.block.brazier.crackle": "Brazier crackles",
   "subtitles.aurorasdeco.block.lantern.swing": "Lantern swings",
   "subtitles.aurorasdeco.block.shelf.add_item": "Shelf fills",
   "subtitles.aurorasdeco.block.shelf.swing": "Shelf empties",

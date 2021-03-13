@@ -54,6 +54,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Items;
 import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
@@ -141,10 +142,6 @@ public final class AurorasDecoRegistry {
             new BookPileBlock(FabricBlockSettings.of(Material.DECORATION).strength(.2f)
                     .nonOpaque()));
 
-    public static final BrazierBlock BRAZIER_BLOCK = registerWithItem("brazier",
-            new BrazierBlock(15),
-            new FabricItemSettings().group(ItemGroup.DECORATIONS));
-
     public static final BurntVineBlock BURNT_VINE_BLOCK = register("burnt_vine", new BurntVineBlock());
 
     public static final BlackboardBlock CHALKBOARD_BLOCK = registerWithItem("chalkboard",
@@ -190,6 +187,13 @@ public final class AurorasDecoRegistry {
             new WindChimeBlock(FabricBlockSettings.of(Material.DECORATION).nonOpaque()
                     .sounds(BlockSoundGroup.AMETHYST_BLOCK)),
             new Item.Settings().group(ItemGroup.DECORATIONS));
+
+    public static final BrazierBlock BRAZIER_BLOCK = registerWithItem("brazier",
+            new BrazierBlock(MapColor.BRIGHT_RED, 1, 15, ParticleTypes.FLAME),
+            new FabricItemSettings().group(ItemGroup.DECORATIONS));
+    public static final BrazierBlock SOUL_BRAZIER_BLOCK = registerWithItem("soul_brazier",
+            new BrazierBlock(MapColor.LIGHT_BLUE, 2, 10, ParticleTypes.SOUL),
+            new FabricItemSettings().group(ItemGroup.DECORATIONS));
 
     public static final ShelfBlock[] SHELF_BLOCKS = WoodType.stream().map(woodType ->
             registerWithItem("shelf/" + woodType.getPathName(),
@@ -263,21 +267,10 @@ public final class AurorasDecoRegistry {
 
     /* Sounds */
 
-    public static final Identifier LANTERN_SWING_SOUND_ID = id("block.lantern.swing");
-    public static final SoundEvent LANTERN_SWING_SOUND_EVENT = Registry.register(Registry.SOUND_EVENT,
-            LANTERN_SWING_SOUND_ID,
-            new SoundEvent(LANTERN_SWING_SOUND_ID)
-    );
-    public static final Identifier ARMOR_STAND_HIDE_BASE_PLATE_SOUND_ID = id("entity.armor_stand.hide_base_plate");
-    public static final SoundEvent ARMOR_STAND_HIDE_BASE_PLATE_SOUND_EVENT = Registry.register(Registry.SOUND_EVENT,
-            ARMOR_STAND_HIDE_BASE_PLATE_SOUND_ID,
-            new SoundEvent(ARMOR_STAND_HIDE_BASE_PLATE_SOUND_ID)
-    );
-    public static final Identifier ITEM_FRAME_HIDE_BACKGROUND_ID = id("entity.item_frame.hide_background");
-    public static final SoundEvent ITEM_FRAME_HIDE_BACKGROUND_EVENT = Registry.register(Registry.SOUND_EVENT,
-            ITEM_FRAME_HIDE_BACKGROUND_ID,
-            new SoundEvent(ITEM_FRAME_HIDE_BACKGROUND_ID)
-    );
+    public static final SoundEvent BRAZIER_CRACKLE_SOUND_EVENT = registerSound("block.brazier.crackle");
+    public static final SoundEvent LANTERN_SWING_SOUND_EVENT = registerSound("block.lantern.swing");
+    public static final SoundEvent ARMOR_STAND_HIDE_BASE_PLATE_SOUND_EVENT = registerSound("entity.armor_stand.hide_base_plate");
+    public static final SoundEvent ITEM_FRAME_HIDE_BACKGROUND_EVENT = registerSound("entity.item_frame.hide_background");
 
     /* Recipes */
 
@@ -292,6 +285,7 @@ public final class AurorasDecoRegistry {
 
     /* Tags */
 
+    public static final Tag<Block> BRAZIERS = TagRegistry.block(AurorasDeco.id("braziers"));
     public static final Tag<Block> PET_BEDS = TagRegistry.block(AurorasDeco.id("pet_beds"));
     public static final Tag<Block> SHELVES = TagRegistry.block(AurorasDeco.id("shelves"));
     public static final Tag<Block> STUMPS = TagRegistry.block(AurorasDeco.id("stumps"));
@@ -357,6 +351,11 @@ public final class AurorasDecoRegistry {
                 return id;
             }
         });
+    }
+
+    private static SoundEvent registerSound(String path) {
+        Identifier id = id(path);
+        return Registry.register(Registry.SOUND_EVENT, id, new SoundEvent(id));
     }
 
     private static Identifier register(String id, StatFormatter statFormatter) {

@@ -44,9 +44,11 @@ import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
@@ -109,17 +111,19 @@ public class Datagen {
         LOGGER.info("Loaded {} additional recipes", recipeCount[0]);
     }
 
-    public static void registerRecipe(Recipe<?> recipe, String category) {
+    public static Recipe<?> registerRecipe(Recipe<?> recipe, String category) {
         List<Recipe<?>> recipes = RECIPES.computeIfAbsent(recipe.getType(),
                 recipeType -> new ArrayList<>());
 
         for (Recipe<?> other : recipes) {
             if (other.getId().equals(recipe.getId()))
-                return;
+                return other;
         }
 
         recipes.add(recipe);
         RECIPES_CATEGORIES.put(recipe, category);
+
+        return recipe;
     }
 
     public static JsonObject blockModelBase(Identifier parent) {
@@ -204,6 +208,8 @@ public class Datagen {
         JsonArray requirements = new JsonArray();
         int i = 0;
         for (Ingredient ingredient : recipe.getPreviewInputs()) {
+            if (ingredient.isEmpty())
+                continue;
             criteria.add("has_" + i, inventoryChangedCriteria(ingredient));
             requirements.add("has_" + i);
             i++;
@@ -344,6 +350,18 @@ public class Datagen {
                         "small_stems", 1, "building_blocks");
             }
         }
+    }
+
+    public static void registerDefaultRecipes() {
+        Ingredient ironIngot = Ingredient.ofItems(Items.IRON_INGOT);
+        registerRecipe(new ShapedRecipe(AurorasDeco.id("brazier"), "", 3, 2,
+                        DefaultedList.copyOf(Ingredient.EMPTY, ironIngot, Ingredient.ofItems(Items.CAMPFIRE), ironIngot,
+                                Ingredient.EMPTY, ironIngot, Ingredient.EMPTY), new ItemStack(AurorasDecoRegistry.BRAZIER_BLOCK)),
+                "decorations");
+        registerRecipe(new ShapedRecipe(AurorasDeco.id("soul_brazier"), "", 3, 2,
+                        DefaultedList.copyOf(Ingredient.EMPTY, ironIngot, Ingredient.ofItems(Items.SOUL_CAMPFIRE), ironIngot,
+                                Ingredient.EMPTY, ironIngot, Ingredient.EMPTY), new ItemStack(AurorasDecoRegistry.SOUL_BRAZIER_BLOCK)),
+                "decorations");
     }
 
     public static void registerDefaultWoodcuttingRecipes() {

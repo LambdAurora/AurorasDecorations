@@ -1,0 +1,38 @@
+{
+  "variants": {
+    "lit=false": [
+      {
+        "model": "aurorasdeco:block/brazier/soul_brazier"
+      },
+      {
+        "model": "aurorasdeco:block/brazier/soul_brazier",
+        "y": 90
+      },
+      {
+        "model": "aurorasdeco:block/brazier/soul_brazier",
+        "y": 180
+      },
+      {
+        "model": "aurorasdeco:block/brazier/soul_brazier",
+        "y": 270
+      }
+    ],
+    "lit=true": [
+      {
+        "model": "aurorasdeco:block/brazier/soul_brazier_lit"
+      },
+      {
+        "model": "aurorasdeco:block/brazier/soul_brazier_lit",
+        "y": 90
+      },
+      {
+        "model": "aurorasdeco:block/brazier/soul_brazier_lit",
+        "y": 180
+      },
+      {
+        "model": "aurorasdeco:block/brazier/soul_brazier_lit",
+        "y": 270
+      }
+    ]
+  }
+}

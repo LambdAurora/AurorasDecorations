@@ -1,11 +1,10 @@
 {
   "credit": "Made by LambdAurora",
-  "parent": "block/block",
+  "parent": "aurorasdeco:block/brazier/brazier",
   "textures": {
-    "particle": "aurorasdeco:block/brazier/plate",
-    "side": "aurorasdeco:block/brazier/side",
-    "plate": "aurorasdeco:block/brazier/plate",
-    "coal": "aurorasdeco:block/brazier/coal"
+    "coal": "aurorasdeco:block/brazier/soul_coal_lit",
+    "fire": "block/soul_campfire_fire",
+    "soul": "block/soul_sand"
   },
   "elements": [
     {
@@ -157,8 +156,8 @@
       "from": [ 2, 5, 2 ],
       "to": [ 14, 5, 14 ],
       "faces": {
-        "up":   {"uv": [ 0, 0, 12, 12 ], "texture": "#plate"},
-        "down": {"uv": [ 0, 0, 12, 12 ], "texture": "#plate"}
+        "up":   {"uv": [ 0, 0, 12, 12 ], "texture": "#soul"},
+        "down": {"uv": [ 0, 0, 12, 12 ], "texture": "#soul"}
       }
     },
     {
@@ -220,11 +219,11 @@
       "rotation": {"angle": -22.5, "axis": "z", "origin": [ 10, 5.5, 6 ]},
       "faces": {
         "north": {"uv": [ 0, 4, 4, 5 ], "texture": "#coal"},
-        "east":  {"uv": [ 1, 4, 4, 5 ], "texture": "#coal"},
+        "east": {"uv": [ 1, 4, 4, 5 ], "texture": "#coal"},
         "south": {"uv": [ 0, 4, 4, 5 ], "texture": "#coal"},
-        "west":  {"uv": [ 0, 4, 3, 5 ], "texture": "#coal"},
-        "up":    {"uv": [ 0, 0, 4, 3 ], "texture": "#coal"},
-        "down":  {"uv": [ 0, 1, 4, 4 ], "texture": "#coal"}
+        "west": {"uv": [ 0, 4, 3, 5 ], "texture": "#coal"},
+        "up": {"uv": [ 0, 0, 4, 3 ], "texture": "#coal"},
+        "down": {"uv": [ 0, 1, 4, 4 ], "texture": "#coal"}
       }
     },
     {
@@ -254,9 +253,28 @@
         "up":    {"uv": [ 6, 0, 9, 4 ], "texture": "#coal"},
         "down":  {"uv": [ 6, 0, 9, 4 ], "texture": "#coal"}
       }
+    },
+    {
+      "from": [ 8, 5, 2 ],
+      "to": [ 8, 16, 14 ],
+      "shade": false,
+      "rotation": {"angle": 45, "axis": "y", "origin": [ 8, 0, 8 ]},
+      "faces": {
+        "east": {"uv": [ 2, 0, 14, 11 ], "texture": "#fire"},
+        "west": {"uv": [ 2, 0, 14, 11 ], "texture": "#fire"}
+      }
+    },
+    {
+      "from": [ 8, 5, 2 ],
+      "to": [ 8, 16, 14 ],
+      "shade": false,
+      "rotation": {"angle": -45, "axis": "y", "origin": [ 8, 0, 8 ]},
+      "faces": {
+        "east": {"uv": [ 2, 0, 14, 11 ], "texture": "#fire"},
+        "west": {"uv": [ 2, 0, 14, 11 ], "texture": "#fire"}
+      }
     }
   ],
-  "gui_light": "front",
   "groups": [
     {
       "name": "legs",
@@ -271,12 +289,18 @@
     {
       "name": "plate",
       "origin": [ 8, 8, 8 ],
-      "children": [12, 13]
+      "children": [ 12, 13 ]
     },
     {
       "name": "coal",
       "origin": [ 0, 0, 0 ],
       "children": [ 14, 15, 16, 17, 18, 19, 20 ]
+    },
+    {
+      "name": "flame",
+      "origin": [ 8, 8, 8 ],
+      "shade": false,
+      "children": [ 21, 22 ]
     }
   ]
 }

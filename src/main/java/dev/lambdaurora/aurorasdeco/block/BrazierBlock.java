@@ -17,20 +17,30 @@
 
 package dev.lambdaurora.aurorasdeco.block;
 
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.*;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -53,21 +63,35 @@ public class BrazierBlock extends Block implements Waterloggable {
     public static final BooleanProperty LIT = Properties.LIT;
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
-    private static final VoxelShape SHAPE = VoxelShapes.union(
-            createCuboidShape(2, 0, 2, 14, 16, 14),
+    private static final VoxelShape COLLISION_SHAPE = VoxelShapes.union(
+            createCuboidShape(2, 0, 2, 14, 6, 14),
             createCuboidShape(7, 0, 0, 9, 1, 2),
             createCuboidShape(7, 0, 14, 9, 1, 16),
             createCuboidShape(0, 0, 7, 2, 1, 9),
             createCuboidShape(14, 0, 7, 16, 1, 9)
     );
+    private static final VoxelShape FLAME_SHAPE = createCuboidShape(2, 6, 2, 14, 16, 14);
+    private static final VoxelShape OUTLINE_SHAPE = VoxelShapes.union(
+            COLLISION_SHAPE,
+            FLAME_SHAPE
+    );
+    private static final Box FLAME_BOX = FLAME_SHAPE.getBoundingBox();
 
-    public BrazierBlock(int luminance) {
+    private final ParticleEffect particle;
+    private final int fireDamage;
+
+    public BrazierBlock(MapColor color, int fireDamage, int luminance, ParticleEffect particle) {
         super(
-                FabricBlockSettings.of(Material.DECORATION)
-                        .strength(.4f)
+                FabricBlockSettings.of(Material.DECORATION, color)
+                        .strength(2.f)
+                        .breakByTool(FabricToolTags.PICKAXES)
                         .nonOpaque()
                         .luminance(state -> state.get(LIT) ? luminance : 0)
+                        .sounds(BlockSoundGroup.METAL)
         );
+
+        this.fireDamage = fireDamage;
+        this.particle = particle;
 
         this.setDefaultState(this.getDefaultState().with(LIT, false).with(WATERLOGGED, false));
     }
@@ -80,8 +104,13 @@ public class BrazierBlock extends Block implements Waterloggable {
     /* Shapes */
 
     @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return COLLISION_SHAPE;
+    }
+
+    @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return SHAPE;
+        return OUTLINE_SHAPE;
     }
 
     /* Placement */
@@ -96,6 +125,17 @@ public class BrazierBlock extends Block implements Waterloggable {
     }
 
     /* Interaction */
+
+    @Override
+    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+        Box box = FLAME_BOX.offset(pos);
+        if (box.intersects(entity.getBoundingBox()) && !entity.isFireImmune() && state.get(LIT)
+                && entity instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entity)) {
+            entity.damage(DamageSource.IN_FIRE, (float) this.fireDamage);
+        }
+
+        super.onEntityCollision(state, world, pos, entity);
+    }
 
     /* Updates */
 
@@ -139,6 +179,26 @@ public class BrazierBlock extends Block implements Waterloggable {
         }
     }
 
+    /* Client */
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+        if (state.get(LIT)) {
+            if (random.nextInt(10) == 0) {
+                world.playSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                        AurorasDecoRegistry.BRAZIER_CRACKLE_SOUND_EVENT, SoundCategory.BLOCKS,
+                        .5f + random.nextFloat(), random.nextFloat() * .7f + .6f, false);
+            }
+
+            world.addParticle(this.particle,
+                    pos.getX() + random.nextDouble() * 0.625 + 0.1875,
+                    pos.getY() + 0.375 + random.nextDouble() * 0.4,
+                    pos.getZ() + random.nextDouble() * 0.625 + 0.1875,
+                    0, 0, 0);
+        }
+    }
+
     public static void extinguish(@Nullable Entity entity, WorldAccess world, BlockPos pos, BlockState state) {
         if (!world.isClient()) {
             world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS,
@@ -159,5 +219,13 @@ public class BrazierBlock extends Block implements Waterloggable {
                 pos.getY() + random.nextDouble() + random.nextDouble(),
                 pos.getZ() + 0.5 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
                 0.0, 0.07, 0.0);
+    }
+
+    public static boolean canBeLit(BlockState state) {
+        return state.isIn(AurorasDecoRegistry.BRAZIERS, s -> s.contains(LIT) && !state.get(LIT));
+    }
+
+    public static boolean canBeUnlit(BlockState state) {
+        return state.isIn(AurorasDecoRegistry.BRAZIERS, s -> s.contains(LIT) && state.get(LIT));
     }
 }

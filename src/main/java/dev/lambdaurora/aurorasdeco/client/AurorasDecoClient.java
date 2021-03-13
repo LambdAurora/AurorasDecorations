@@ -86,6 +86,7 @@ public class AurorasDecoClient implements ClientModInitializer {
                 AurorasDecoRegistry.AMETHYST_LANTERN_BLOCK,
                 AurorasDecoRegistry.BRAZIER_BLOCK,
                 AurorasDecoRegistry.SAWMILL_BLOCK,
+                AurorasDecoRegistry.SOUL_BRAZIER_BLOCK,
                 AurorasDecoRegistry.WIND_CHIME_BLOCK
         );
 

@@ -25,6 +25,7 @@ import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.ShelfBlock;
 import dev.lambdaurora.aurorasdeco.block.StumpBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -231,9 +232,13 @@ public class AurorasDecoPack implements ModResourcePack {
         this.namespaces.clear();
 
         if (!this.hasRegisteredOneTimeResources) {
+            Datagen.registerDefaultRecipes();
             Datagen.registerDefaultWoodcuttingRecipes();
             this.hasRegisteredOneTimeResources = true;
         }
+
+        Datagen.dropsSelf(AurorasDecoRegistry.BRAZIER_BLOCK);
+        Datagen.dropsSelf(AurorasDecoRegistry.SOUL_BRAZIER_BLOCK);
 
         WoodType.stream().forEach(type -> {
             Identifier shelfId = AurorasDeco.id("shelf/" + type.getPathName());

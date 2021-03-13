@@ -38,6 +38,10 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
   - Water-sensitive, if not waxed they will lose their content.
   - Content can be cloned by combining an empty blackboard and a written blackboard in a crafting table.
   - Can be worn as a mask.
+- Braziers
+  - A new nice light source crafted with iron ingots and a campfire.
+  - Burns entities that stands inside them.
+  - Comes in normal and soul variants.
 - Burnt-vine
   - Use a flint of steel on a vine block to burn the tip of a vine.
   - Burnt-vine is not able to grow.
@@ -92,6 +96,8 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 ![Big flower pot and Wall Lanterns](images/flower_pot_and_wall_lantern.png)
 
 ![Blackboards](images/blackboards.png)
+
+![Braziers](images/braziers.png)
 
 ![Burning Vine Tips](images/burnt_vine.png)
 

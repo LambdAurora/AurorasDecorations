@@ -1,4 +1,15 @@
 {
+  "block.brazier.crackle": {
+    "sounds": [
+      "block/campfire/crackle1",
+      "block/campfire/crackle2",
+      "block/campfire/crackle3",
+      "block/campfire/crackle4",
+      "block/campfire/crackle5",
+      "block/campfire/crackle6"
+    ],
+    "subtitle": "subtitles.aurorasdeco.block.brazier.crackle"
+  },
   "block.lantern.swing": {
     "sounds": [
       "block/lantern/break1",
