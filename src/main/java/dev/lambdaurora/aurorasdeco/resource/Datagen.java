@@ -24,6 +24,7 @@ import com.google.gson.JsonObject;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.AmethystLanternBlock;
 import dev.lambdaurora.aurorasdeco.block.ShelfBlock;
+import dev.lambdaurora.aurorasdeco.block.SleepingBagBlock;
 import dev.lambdaurora.aurorasdeco.block.StumpBlock;
 import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
 import dev.lambdaurora.aurorasdeco.mixin.AbstractBlockAccessor;
@@ -47,6 +48,7 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.tag.ItemTags;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
@@ -59,6 +61,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static dev.lambdaurora.aurorasdeco.AurorasDeco.id;
 import static dev.lambdaurora.aurorasdeco.util.AuroraUtil.jsonArray;
 
 /**
@@ -71,15 +74,15 @@ import static dev.lambdaurora.aurorasdeco.util.AuroraUtil.jsonArray;
 public class Datagen {
     public static final Logger LOGGER = LogManager.getLogger("aurorasdeco:datagen");
 
-    private static final Identifier WALL_LANTERN_ATTACHMENT
-            = AurorasDeco.id("block/wall_lantern_attachment");
-    private static final Identifier WALL_LANTERN_ATTACHMENT_EXTENDED1
-            = AurorasDeco.id("block/wall_lantern_attachment_extended1");
-    private static final Identifier WALL_LANTERN_ATTACHMENT_EXTENDED2
-            = AurorasDeco.id("block/wall_lantern_attachment_extended2");
+    private static final Identifier WALL_LANTERN_ATTACHMENT = id("block/wall_lantern_attachment");
+    private static final Identifier WALL_LANTERN_ATTACHMENT_EXTENDED1 = id("block/wall_lantern_attachment_extended1");
+    private static final Identifier WALL_LANTERN_ATTACHMENT_EXTENDED2 = id("block/wall_lantern_attachment_extended2");
 
     private static final Identifier TEMPLATE_LANTERN_MODEL = new Identifier("block/template_lantern");
     private static final Identifier TEMPLATE_HANGING_LANTERN_MODEL = new Identifier("block/template_hanging_lantern");
+    private static final Identifier TEMPLATE_SLEEPING_BAG_FOOT_MODEL = id("block/template/sleeping_bag_foot");
+    private static final Identifier TEMPLATE_SLEEPING_BAG_HEAD_MODEL = id("block/template/sleeping_bag_head");
+    private static final Identifier TEMPLATE_SLEEPING_BAG_ITEM_MODEL = id("item/template/sleeping_bag");
 
     private static final Direction[] DIRECTIONS = Direction.values();
 
@@ -354,13 +357,15 @@ public class Datagen {
 
     public static void registerDefaultRecipes() {
         Ingredient ironIngot = Ingredient.ofItems(Items.IRON_INGOT);
-        registerRecipe(new ShapedRecipe(AurorasDeco.id("brazier"), "", 3, 2,
+        registerRecipe(new ShapedRecipe(id("brazier"), "", 3, 2,
                         DefaultedList.copyOf(Ingredient.EMPTY, ironIngot, Ingredient.ofItems(Items.CAMPFIRE), ironIngot,
-                                Ingredient.EMPTY, ironIngot, Ingredient.EMPTY), new ItemStack(AurorasDecoRegistry.BRAZIER_BLOCK)),
+                                Ingredient.EMPTY, ironIngot, Ingredient.EMPTY),
+                        new ItemStack(AurorasDecoRegistry.BRAZIER_BLOCK)),
                 "decorations");
-        registerRecipe(new ShapedRecipe(AurorasDeco.id("soul_brazier"), "", 3, 2,
+        registerRecipe(new ShapedRecipe(id("soul_brazier"), "", 3, 2,
                         DefaultedList.copyOf(Ingredient.EMPTY, ironIngot, Ingredient.ofItems(Items.SOUL_CAMPFIRE), ironIngot,
-                                Ingredient.EMPTY, ironIngot, Ingredient.EMPTY), new ItemStack(AurorasDecoRegistry.SOUL_BRAZIER_BLOCK)),
+                                Ingredient.EMPTY, ironIngot, Ingredient.EMPTY),
+                        new ItemStack(AurorasDecoRegistry.SOUL_BRAZIER_BLOCK)),
                 "decorations");
     }
 
@@ -382,7 +387,7 @@ public class Datagen {
             if (block.getWoodType().getLog() == null)
                 return;
             WoodcuttingRecipe recipe = new WoodcuttingRecipe(
-                    AurorasDeco.id("woodcutting/stump/" + block.getWoodType().getPathName()),
+                    id("woodcutting/stump/" + block.getWoodType().getPathName()),
                     "log_stump", Ingredient.ofItems(block.getWoodType().getLog()),
                     new ItemStack(block));
             registerRecipe(recipe, "decorations");
@@ -429,21 +434,21 @@ public class Datagen {
                 model = new ModelBuilder(StumpBlock.LOG_STUMP_MODEL)
                         .texture("log_side", block.getWoodType().getLogSideTexture())
                         .texture("log_top", block.getWoodType().getLogTopTexture())
-                        .texture("leaf", AurorasDeco.id("block/log_stump_leaf"))
+                        .texture("leaf", id("block/log_stump_leaf"))
                         .register(block);
                 Identifier brownMushroomModel = modelBuilder(StumpBlock.LOG_STUMP_BROWN_MUSHROOM_MODEL)
                         .texture("log_side", block.getWoodType().getLogSideTexture())
                         .texture("log_top", block.getWoodType().getLogTopTexture())
-                        .texture("leaf", AurorasDeco.id("block/log_stump_leaf"))
+                        .texture("leaf", id("block/log_stump_leaf"))
                         .texture("mushroom", new Identifier("block/brown_mushroom_block"))
-                        .register(AurorasDeco.id("block/stump/"
+                        .register(id("block/stump/"
                                 + block.getWoodType().getPathName() + "_brown_mushroom"));
                 Identifier redMushroomModel = modelBuilder(StumpBlock.LOG_STUMP_RED_MUSHROOM_MODEL)
                         .texture("log_side", block.getWoodType().getLogSideTexture())
                         .texture("log_top", block.getWoodType().getLogTopTexture())
-                        .texture("leaf", AurorasDeco.id("block/log_stump_leaf"))
+                        .texture("leaf", id("block/log_stump_leaf"))
                         .texture("mushroom", new Identifier("block/red_mushroom_block"))
-                        .register(AurorasDeco.id("block/stump/"
+                        .register(id("block/stump/"
                                 + block.getWoodType().getPathName() + "_red_mushroom"));
 
                 for (Direction direction : DIRECTIONS) {
@@ -456,9 +461,51 @@ public class Datagen {
                 }
             }
 
-            new ModelBuilder(model).register(AurorasDeco.id("item/stump/" + block.getWoodType().getPathName()));
+            new ModelBuilder(model).register(id("item/stump/" + block.getWoodType().getPathName()));
 
             builder.register();
+        });
+
+        SleepingBagBlock.forEach(sleepingBag -> {
+            DyeColor color = sleepingBag.getColor();
+            BlockStateBuilder builder = blockStateBuilder(sleepingBag);
+
+            Identifier footSideTexture = id("block/sleeping_bag/" + color.getName() + "/foot_side");
+            Identifier footTopTexture = id("block/sleeping_bag/" + color.getName() + "/foot_top");
+            Identifier footModel = modelBuilder(TEMPLATE_SLEEPING_BAG_FOOT_MODEL)
+                    .texture("side", footSideTexture)
+                    .texture("top", footTopTexture)
+                    .register(id("block/sleeping_bag/" + color.getName() + "/foot"));
+
+            Identifier headBottomTexture = id("block/sleeping_bag/" + color.getName() + "/head_bottom");
+            Identifier headSideTexture = id("block/sleeping_bag/" + color.getName() + "/head_side");
+            Identifier headTopTexture = id("block/sleeping_bag/" + color.getName() + "/head_top");
+            Identifier headModel = modelBuilder(TEMPLATE_SLEEPING_BAG_HEAD_MODEL)
+                    .texture("bottom", headBottomTexture)
+                    .texture("side", headSideTexture)
+                    .texture("top", headTopTexture)
+                    .register(id("block/sleeping_bag/" + color.getName() + "/head"));
+
+            for (Direction direction : DIRECTIONS) {
+                if (direction.getAxis().isHorizontal()) {
+                    builder.addToVariant("part=foot,facing=" + direction.getName(),
+                            footModel,
+                            ((int) direction.asRotation() + 180) % 360);
+                    builder.addToVariant("part=head,facing=" + direction.getName(),
+                            headModel,
+                            ((int) direction.asRotation() + 180) % 360);
+                }
+            }
+
+            builder.register();
+
+            modelBuilder(TEMPLATE_SLEEPING_BAG_ITEM_MODEL)
+                    .texture("foot_side", footSideTexture)
+                    .texture("foot_top", footTopTexture)
+                    .texture("head_bottom", headBottomTexture)
+                    .texture("head_side", headSideTexture)
+                    .texture("head_top", headTopTexture)
+                    .register(id("item/" + Registry.ITEM.getId(sleepingBag.asItem()).getPath()));
         });
 
         blockStateBuilder(AurorasDecoRegistry.AMETHYST_LANTERN_BLOCK)
@@ -477,12 +524,12 @@ public class Datagen {
             for (Direction direction : DIRECTIONS) {
                 if (direction.getAxis().isHorizontal()) {
                     int rotation = (int) (direction.getOpposite().asRotation() + 90) % 360;
-                    builder.addToVariant("facing=" + direction.getName() + ",extension=none", WALL_LANTERN_ATTACHMENT,
-                            rotation);
-                    builder.addToVariant("facing=" + direction.getName() + ",extension=wall", WALL_LANTERN_ATTACHMENT_EXTENDED1,
-                            rotation);
-                    builder.addToVariant("facing=" + direction.getName() + ",extension=fence", WALL_LANTERN_ATTACHMENT_EXTENDED2,
-                            rotation);
+                    builder.addToVariant("facing=" + direction.getName() + ",extension=none",
+                            WALL_LANTERN_ATTACHMENT, rotation);
+                    builder.addToVariant("facing=" + direction.getName() + ",extension=wall",
+                            WALL_LANTERN_ATTACHMENT_EXTENDED1, rotation);
+                    builder.addToVariant("facing=" + direction.getName() + ",extension=fence",
+                            WALL_LANTERN_ATTACHMENT_EXTENDED2, rotation);
                 }
             }
             builder.register();

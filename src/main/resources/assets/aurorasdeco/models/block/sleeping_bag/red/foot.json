@@ -1,0 +1,7 @@
+{
+  "parent": "aurorasdeco:block/template/sleeping_bag_foot",
+  "textures": {
+    "side": "aurorasdeco:block/sleeping_bag/red/foot_side",
+    "top": "aurorasdeco:block/sleeping_bag/red/foot_top"
+  }
+}

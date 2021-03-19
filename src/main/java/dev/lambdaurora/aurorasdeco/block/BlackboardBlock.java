@@ -158,7 +158,6 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         BlackboardBlockEntity blackboard = this.getBlackboardEntity(world, pos);
-        ;
         if (blackboard != null) {
             if (stack.hasCustomName()) {
                 blackboard.setCustomName(stack.getName());
@@ -254,8 +253,6 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 
                     world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                     return ActionResult.success(world.isClient());
-                } else if (stack.isOf(Items.BONE_MEAL)) {
-
                 } else if (stack.isOf(Items.GLOW_INK_SAC) || stack.isOf(Items.INK_SAC)) {
                     boolean lit = stack.isOf(Items.GLOW_INK_SAC);
                     if (lit != state.get(LIT)) {
@@ -310,7 +307,6 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity playerEntity) {
         BlackboardBlockEntity blackboard = this.getBlackboardEntity(world, pos);
-        ;
         if (blackboard != null) {
             if (!world.isClient() && playerEntity.isCreative()) {
                 ItemStack stack = new ItemStack(this);
@@ -389,7 +385,6 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
                 world.getFluidTickScheduler().schedule(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
 
                 BlackboardBlockEntity blackboard = this.getBlackboardEntity(world, pos);
-                ;
                 if (blackboard != null && !this.isLocked()) {
                     if (!blackboard.isEmpty()) {
                         blackboard.clear();

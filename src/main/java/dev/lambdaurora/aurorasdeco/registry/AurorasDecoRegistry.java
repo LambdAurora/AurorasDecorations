@@ -386,9 +386,16 @@ public final class AurorasDecoRegistry {
 
         delayed.forEach((id, block) -> Registry.register(Registry.BLOCK, id, block));
 
-        for (DyeColor color : DyeColor.values()) {
+        DyeColor[] colors = DyeColor.values();
+        for (DyeColor color : colors) {
             registerPetBed(color);
         }
+        for (DyeColor color : colors) {
+            SleepingBagBlock block = SleepingBagBlock.register(color);
+            register("sleeping_bag/" + block.getColor().getName(),
+                    new BlockItem(block, new FabricItemSettings().maxCount(1).group(ItemGroup.DECORATIONS)));
+        }
+        SleepingBagBlock.appendToPointOfInterest(PointOfInterestType.HOME);
 
         WoodType.stream().forEach(woodType -> {
             if (woodType.hasLog()) {

@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "part=foot,facing=north": {
+      "model": "aurorasdeco:block/sleeping_bag/red/foot"
+    },
+    "part=foot,facing=east": {
+      "model": "aurorasdeco:block/sleeping_bag/red/foot",
+      "y": 90
+    },
+    "part=foot,facing=south": {
+      "model": "aurorasdeco:block/sleeping_bag/red/foot",
+      "y": 180
+    },
+    "part=foot,facing=west": {
+      "model": "aurorasdeco:block/sleeping_bag/red/foot",
+      "y": 270
+    },
+    "part=head,facing=north": {
+      "model": "aurorasdeco:block/sleeping_bag/red/head"
+    },
+    "part=head,facing=east": {
+      "model": "aurorasdeco:block/sleeping_bag/red/head",
+      "y": 90
+    },
+    "part=head,facing=south": {
+      "model": "aurorasdeco:block/sleeping_bag/red/head",
+      "y": 180
+    },
+    "part=head,facing=west": {
+      "model": "aurorasdeco:block/sleeping_bag/red/head",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "aurorasdeco:block/template/sleeping_bag_head",
+  "textures": {
+    "bottom": "aurorasdeco:block/sleeping_bag/red/head_bottom",
+    "side": "aurorasdeco:block/sleeping_bag/red/head_side",
+    "top": "aurorasdeco:block/sleeping_bag/red/head_top"
+  }
+}

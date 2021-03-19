@@ -44,6 +44,23 @@
   "block.aurorasdeco.shelf.blockus.charred": "Charred Shelf",
   "block.aurorasdeco.shelf.blockus.white_oak": "White Oak Shelf",
 
+  "block.aurorasdeco.sleeping_bag.black": "Black Sleeping Bag",
+  "block.aurorasdeco.sleeping_bag.blue": "Blue Sleeping Bag",
+  "block.aurorasdeco.sleeping_bag.brown": "Brown Sleeping Bag",
+  "block.aurorasdeco.sleeping_bag.cyan": "Cyan Sleeping Bag",
+  "block.aurorasdeco.sleeping_bag.gray": "Gray Sleeping Bag",
+  "block.aurorasdeco.sleeping_bag.green": "Green Sleeping Bag",
+  "block.aurorasdeco.sleeping_bag.light_blue": "Light Blue Sleeping Bag",
+  "block.aurorasdeco.sleeping_bag.light_gray": "Light Gray Sleeping Bag",
+  "block.aurorasdeco.sleeping_bag.lime": "Lime Sleeping Bag",
+  "block.aurorasdeco.sleeping_bag.magenta": "Magenta Sleeping Bag",
+  "block.aurorasdeco.sleeping_bag.orange": "Orange Sleeping Bag",
+  "block.aurorasdeco.sleeping_bag.pink": "Pink Sleeping Bag",
+  "block.aurorasdeco.sleeping_bag.purple": "Purple Sleeping Bag",
+  "block.aurorasdeco.sleeping_bag.red": "Red Sleeping Bag",
+  "block.aurorasdeco.sleeping_bag.white": "White Sleeping Bag",
+  "block.aurorasdeco.sleeping_bag.yellow": "Yellow Sleeping Bag",
+
   "block.aurorasdeco.soul_brazier": "Soul Brazier",
 
   "block.aurorasdeco.stump.oak": "Oak Stump",
@@ -59,6 +76,8 @@
   "block.aurorasdeco.sturdy_stone": "Sturdy Stone",
 
   "block.aurorasdeco.wind_chime": "Wind Chime",
+
+  "lore.aurorasdeco.not_sleepy.place": "This place doesn't make me sleepy anymore...",
 
   "stat.aurorasdeco.interact_with_sawmill": "Interactions with Sawmill",
 
