@@ -67,6 +67,7 @@ public abstract class BlockItemMixin implements BlockItemAccessor {
             WallLanternBlock lanternBlock = LanternRegistry.fromItem(item);
             if (lanternBlock != null)
                 this.aurorasdeco$setWallBlock(lanternBlock);
+            map.put(lanternBlock, item);
         } else if (this.getBlock() instanceof CandleBlock) {
             Identifier candleId = Registry.BLOCK.getId(this.getBlock());
             if (candleId.getNamespace().equals("minecraft")) {

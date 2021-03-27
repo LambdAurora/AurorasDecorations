@@ -27,8 +27,10 @@ import net.minecraft.block.*;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.color.world.GrassColors;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,8 +66,18 @@ public final class PottedPlantType {
         return TYPES.getOrDefault(id, AurorasDecoRegistry.BIG_FLOWER_POT_BLOCK.getPlantType());
     }
 
+    public static @Nullable BigFlowerPotBlock registerFromItem(Item item) {
+        if (item instanceof BlockItem)
+            return registerFromBlock(((BlockItem) item).getBlock());
+        return null;
+    }
+
     public static @Nullable BigFlowerPotBlock registerFromBlock(Block plant) {
-        String id = Registry.BLOCK.getId(plant).toString();
+        return registerFromBlock(Registry.BLOCK.getId(plant), plant);
+    }
+
+    public static @Nullable BigFlowerPotBlock registerFromBlock(Identifier plantId, Block plant) {
+        String id = plantId.toString();
         if (id.startsWith("minecraft:")) {
             id = id.substring("minecraft:".length());
         } else {
@@ -145,6 +157,13 @@ public final class PottedPlantType {
                 && !(block instanceof AttachedStemBlock)) {
             return true;
         } else return block instanceof CactusBlock;
+    }
+
+    public static boolean isValidPlant(Item item) {
+        if (item instanceof BlockItem) {
+            return isValidPlant(((BlockItem) item).getBlock());
+        }
+        return false;
     }
 
     @Override

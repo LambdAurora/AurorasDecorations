@@ -40,7 +40,6 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.loot.context.LootContext;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -65,7 +64,6 @@ import net.minecraft.world.WorldView;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -90,7 +88,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
     private final LanternBlock lanternBlock;
 
     public WallLanternBlock(LanternBlock lantern) {
-        super(FabricBlockSettings.copyOf(lantern));
+        super(FabricBlockSettings.copyOf(lantern).dropsLike(lantern));
 
         this.lanternBlock = lantern;
 
@@ -100,7 +98,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
                 .with(WATERLOGGED, false)
         );
 
-        Item item = lantern.asItem();
+        Item item = Item.fromBlock(lantern); // Avoid caching which could break stuff at this stage.
         if (item instanceof BlockItem) {
             ((BlockItemAccessor) item).aurorasdeco$setWallBlock(this);
         }
@@ -298,13 +296,6 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
             }
             this.swing(entity, world, pos, swingDirection, swingAxis);
         }
-    }
-
-    /* Loot table */
-
-    @Override
-    public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
-        return this.getLanternState().getDroppedStacks(builder);
     }
 
     /* Block Entity Stuff */

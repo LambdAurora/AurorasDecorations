@@ -54,19 +54,17 @@ public class AurorasDeco implements ModInitializer {
         AurorasDecoRegistry.init(DELAYED_REGISTER_BLOCK);
 
         RegistryEntryAddedCallback.event(Registry.BLOCK).register((rawId, id, object) -> {
-            if (PottedPlantType.isValidPlant(object)) {
-                BigFlowerPotBlock potBlock = PottedPlantType.registerFromBlock(object);
-                if (potBlock != null)
-                    Registry.register(Registry.BLOCK, id("big_flower_pot/" + potBlock.getPlantType().getId()), potBlock);
-            } else {
-                LanternRegistry.tryRegisterWallLantern(object, id);
-            }
+            LanternRegistry.tryRegisterWallLantern(object, id);
         });
         RegistryEntryAddedCallback.event(Registry.ITEM).register((rawId, id, object) -> {
             if (id.toString().equals("pockettools:pocket_cactus")) {
                 Registry.register(Registry.BLOCK, id("big_flower_pot/pocket_cactus"),
                         PottedPlantType.register("pocket_cactus", Blocks.POTTED_CACTUS, object,
                                 type -> new BigPottedCactusBlock(type, BigPottedCactusBlock.POCKET_CACTUS_SHAPE)));
+            } else if (PottedPlantType.isValidPlant(object)) {
+                BigFlowerPotBlock potBlock = PottedPlantType.registerFromItem(object);
+                if (potBlock != null)
+                    Registry.register(Registry.BLOCK, id("big_flower_pot/" + potBlock.getPlantType().getId()), potBlock);
             }
 
             Blackboard.Color.tryRegisterColorFromItem(id, object);
