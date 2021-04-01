@@ -1,0 +1,9 @@
+- Copper sulfate
+  - Corresponding light sources with green flame
+    - Copper Sulfate Campfires will decay nether wart blocks on top of them
+- Wooden benches
+  - Can have an optional rest.
+- Jar
+- Telescope to look at pretty Ecotones sky.
+- Wind Chime
+- Lamp post (like in Dungeons)
