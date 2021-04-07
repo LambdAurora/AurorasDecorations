@@ -45,8 +45,8 @@ public class ShelfScreen extends HandledScreen<ShelfScreenHandler> {
 
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        RenderSystem.color4f(1.f, 1.f, 1.f, 1.f);
-        this.client.getTextureManager().bindTexture(TEXTURE);
+        RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
+        RenderSystem.setShaderTexture(0, TEXTURE);
         int x = (this.width - this.backgroundWidth) / 2;
         int y = (this.height - this.backgroundHeight) / 2;
         this.drawTexture(matrices, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);

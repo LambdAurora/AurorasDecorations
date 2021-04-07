@@ -25,7 +25,8 @@ import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -139,7 +140,7 @@ public class Blackboard {
 
     /* Serialization */
 
-    public void readNbt(CompoundTag nbt) {
+    public void readNbt(NbtCompound nbt) {
         byte[] pixels = nbt.getByteArray("pixels");
         if (pixels.length == 256) {
             System.arraycopy(pixels, 0, this.pixels, 0, 256);
@@ -152,21 +153,21 @@ public class Blackboard {
         }
     }
 
-    public CompoundTag writeNbt(CompoundTag nbt) {
+    public NbtCompound writeNbt(NbtCompound nbt) {
         nbt.putByteArray("pixels", this.pixels);
         nbt.putBoolean("lit", this.isLit());
         nbt.putInt("version", 1);
         return nbt;
     }
 
-    public static Blackboard fromNbt(CompoundTag nbt) {
+    public static Blackboard fromNbt(NbtCompound nbt) {
         Blackboard blackboard = new Blackboard();
         blackboard.readNbt(nbt);
         return blackboard;
     }
 
-    public static boolean shouldConvert(CompoundTag nbt) {
-        return !nbt.contains("version", NbtType.INT);
+    public static boolean shouldConvert(NbtCompound nbt) {
+        return !nbt.contains("version", NbtElement.INT_TYPE);
     }
 
     private static void convert01(Blackboard blackboard) {

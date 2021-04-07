@@ -27,7 +27,7 @@ import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -65,36 +65,36 @@ public class ShelfBlockEntity extends LootableContainerBlockEntity
     /* Serialization */
 
     @Override
-    public CompoundTag toTag(CompoundTag nbt) {
-        super.toTag(nbt);
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
+        if (!this.deserializeLootTable(nbt)) {
+            Inventories.readNbt(nbt, this.inventory);
+        }
+    }
+
+    @Override
+    public NbtCompound writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
         if (!this.serializeLootTable(nbt)) {
-            Inventories.toTag(nbt, this.inventory);
+            Inventories.writeNbt(nbt, this.inventory);
         }
 
         return nbt;
     }
 
     @Override
-    public void fromTag(CompoundTag nbt) {
-        super.fromTag(nbt);
+    public void fromClientTag(NbtCompound nbt) {
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         if (!this.deserializeLootTable(nbt)) {
-            Inventories.fromTag(nbt, this.inventory);
+            Inventories.readNbt(nbt, this.inventory);
         }
     }
 
     @Override
-    public void fromClientTag(CompoundTag nbt) {
-        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        if (!this.deserializeLootTable(nbt)) {
-            Inventories.fromTag(nbt, this.inventory);
-        }
-    }
-
-    @Override
-    public CompoundTag toClientTag(CompoundTag nbt) {
+    public NbtCompound toClientTag(NbtCompound nbt) {
         if (!this.serializeLootTable(nbt)) {
-            Inventories.toTag(nbt, this.inventory);
+            Inventories.writeNbt(nbt, this.inventory);
         }
         return nbt;
     }

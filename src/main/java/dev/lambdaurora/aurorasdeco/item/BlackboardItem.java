@@ -22,15 +22,15 @@ import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
 import dev.lambdaurora.aurorasdeco.client.tooltip.BlackboardTooltipComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.client.item.TooltipData;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.CommandItemSlot;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
 import net.minecraft.screen.slot.Slot;
@@ -58,11 +58,11 @@ public class BlackboardItem extends BlockItem {
     }
 
     @Override
-    public boolean onClicked(ItemStack self, ItemStack otherStack, Slot slot, ClickType clickType, PlayerInventory playerInventory) {
+    public boolean onClicked(ItemStack self, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, CommandItemSlot cursorSlot) {
         if (clickType == ClickType.RIGHT) {
             if (otherStack.isOf(Items.WATER_BUCKET)
                     || (otherStack.isOf(Items.POTION) && PotionUtil.getPotion(otherStack) == Potions.WATER)) {
-                CompoundTag nbt = self.getOrCreateSubTag("BlockEntityTag");
+                NbtCompound nbt = self.getOrCreateSubTag("BlockEntityTag");
                 Blackboard blackboard = Blackboard.fromNbt(nbt);
                 if (blackboard.isEmpty())
                     return false;
@@ -70,18 +70,18 @@ public class BlackboardItem extends BlockItem {
                 blackboard.writeNbt(nbt);
 
                 if (otherStack.isOf(Items.POTION)) {
-                    if (!playerInventory.player.getAbilities().creativeMode) {
+                    if (!player.getAbilities().creativeMode) {
                         ItemStack newStack = new ItemStack(Items.GLASS_BOTTLE);
                         if (otherStack.getCount() != 1) {
                             otherStack.decrement(1);
-                            playerInventory.insertStack(newStack);
+                            player.getInventory().insertStack(newStack);
                         } else {
-                            playerInventory.setCursorStack(newStack);
+                            cursorSlot.set(newStack);
                         }
                     }
-                    playerInventory.player.playSound(SoundEvents.ITEM_BOTTLE_EMPTY, 1.f, 1.f);
+                    player.playSound(SoundEvents.ITEM_BOTTLE_EMPTY, 1.f, 1.f);
                 } else {
-                    playerInventory.player.playSound(SoundEvents.ITEM_BUCKET_EMPTY, 1.f, 1.f);
+                    player.playSound(SoundEvents.ITEM_BUCKET_EMPTY, 1.f, 1.f);
                 }
 
                 return true;
@@ -108,7 +108,7 @@ public class BlackboardItem extends BlockItem {
 
     private ItemStack ensureValidStack(ItemStack stack) {
         if (stack.getSubTag("BlockEntityTag") == null) {
-            CompoundTag nbt = stack.getOrCreateSubTag("BlockEntityTag");
+            NbtCompound nbt = stack.getOrCreateSubTag("BlockEntityTag");
             Blackboard blackboard = new Blackboard();
             blackboard.writeNbt(nbt);
         }
@@ -118,8 +118,8 @@ public class BlackboardItem extends BlockItem {
     @Environment(EnvType.CLIENT)
     @Override
     public Optional<TooltipData> getTooltipData(ItemStack stack) {
-        CompoundTag nbt = stack.getSubTag("BlockEntityTag");
-        if (nbt != null && nbt.contains("pixels", NbtType.BYTE_ARRAY)) {
+        NbtCompound nbt = stack.getSubTag("BlockEntityTag");
+        if (nbt != null && nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
             Blackboard blackboard = Blackboard.fromNbt(nbt);
             return Optional.of(new BlackboardTooltipComponent(
                     Registry.ITEM.getId(this).getPath().replace("waxed_", ""),

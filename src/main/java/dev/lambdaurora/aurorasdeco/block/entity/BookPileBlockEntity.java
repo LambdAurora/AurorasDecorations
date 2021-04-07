@@ -23,7 +23,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 
@@ -75,24 +75,24 @@ public class BookPileBlockEntity extends BlockEntity implements BlockEntityClien
     /* Serialization */
 
     @Override
-    public void fromTag(CompoundTag nbt) {
-        super.fromTag(nbt);
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
         this.fromClientTag(nbt);
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag nbt) {
-        return this.toClientTag(super.toTag(nbt));
+    public NbtCompound writeNbt(NbtCompound nbt) {
+        return this.toClientTag(super.writeNbt(nbt));
     }
 
     @Override
-    public void fromClientTag(CompoundTag nbt) {
-        Inventories.fromTag(nbt, this.books);
+    public void fromClientTag(NbtCompound nbt) {
+        Inventories.writeNbt(nbt, this.books);
     }
 
     @Override
-    public CompoundTag toClientTag(CompoundTag nbt) {
-        Inventories.toTag(nbt, this.books);
+    public NbtCompound toClientTag(NbtCompound nbt) {
+        Inventories.readNbt(nbt, this.books);
         return nbt;
     }
 }

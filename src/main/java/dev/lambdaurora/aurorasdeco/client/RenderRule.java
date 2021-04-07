@@ -65,7 +65,6 @@ public class RenderRule {
     private static final Map<Tag<Item>, RenderRule> TAG_RULES = new Object2ObjectOpenHashMap<>();
     private static final JsonParser PARSER = new JsonParser();
 
-    private final MinecraftClient client = MinecraftClient.getInstance();
     private final List<Model> models;
 
     public RenderRule(List<Model> models) {

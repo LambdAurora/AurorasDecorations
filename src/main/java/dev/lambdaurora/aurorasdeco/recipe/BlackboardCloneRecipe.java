@@ -19,10 +19,10 @@ package dev.lambdaurora.aurorasdeco.recipe;
 
 import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
@@ -85,7 +85,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
                 if (OUTPUT.test(craftStack) && !this.isInput(craftStack)) {
                     output = craftStack;
                 } else if (this.isInput(craftStack)) {
-                    CompoundTag nbt = craftStack.getSubTag("BlockEntityTag");
+                    NbtCompound nbt = craftStack.getSubTag("BlockEntityTag");
                     blackboard = Blackboard.fromNbt(nbt);
                     if (craftStack.hasCustomName())
                         customName = craftStack.getName();
@@ -96,7 +96,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
 
         ItemStack out = output.copy();
         out.setCount(1);
-        CompoundTag nbt = out.getOrCreateSubTag("BlockEntityTag");
+        NbtCompound nbt = out.getOrCreateSubTag("BlockEntityTag");
         blackboard.writeNbt(nbt);
 
         if (customName != null)
@@ -106,9 +106,9 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
     }
 
     private boolean isInput(ItemStack stack) {
-        CompoundTag nbt = stack.getSubTag("BlockEntityTag");
+        NbtCompound nbt = stack.getSubTag("BlockEntityTag");
         if (nbt != null) {
-            if (nbt.contains("pixels", NbtType.BYTE_ARRAY)) {
+            if (nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
                 byte[] pixels = nbt.getByteArray("pixels");
                 for (byte pixel : pixels) {
                     if (pixel != 0) {

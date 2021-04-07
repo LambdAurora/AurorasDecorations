@@ -18,7 +18,7 @@
 package dev.lambdaurora.aurorasdeco.mixin.entity;
 
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
@@ -26,8 +26,8 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(MobEntity.class)
 public interface MobEntityAccessor {
     @Accessor
-    @Nullable CompoundTag getLeashTag();
+    @Nullable NbtCompound getLeashNbt();
 
     @Accessor
-    void setLeashTag(@Nullable CompoundTag nbt);
+    void setLeashNbt(@Nullable NbtCompound nbt);
 }

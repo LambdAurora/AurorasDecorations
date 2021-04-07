@@ -27,7 +27,7 @@ import net.minecraft.entity.decoration.LeashKnotEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.BlockTags;
@@ -56,32 +56,32 @@ public class FakeLeashKnotEntity extends MobEntity {
     /* Serialization */
 
     @Override
-    public void readCustomDataFromTag(CompoundTag tag) {
-        if (tag.contains("Leash", 10)) {
-            ((MobEntityAccessor) this).setLeashTag(tag.getCompound("Leash"));
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        if (nbt.contains("Leash", 10)) {
+            ((MobEntityAccessor) this).setLeashNbt(nbt.getCompound("Leash"));
         }
         this.setAiDisabled(true);
     }
 
     @Override
-    public void writeCustomDataToTag(CompoundTag tag) {
-        CompoundTag leashNbt = ((MobEntityAccessor) this).getLeashTag();
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        NbtCompound leashNbt = ((MobEntityAccessor) this).getLeashNbt();
 
         if (this.getHoldingEntity() != null) {
-            CompoundTag nbt = new CompoundTag();
+            leashNbt = new NbtCompound();
             if (this.getHoldingEntity() instanceof LivingEntity) {
                 UUID uuid = this.getHoldingEntity().getUuid();
-                nbt.putUuid("UUID", uuid);
+                leashNbt.putUuid("UUID", uuid);
             } else if (this.getHoldingEntity() instanceof AbstractDecorationEntity) {
                 BlockPos pos = ((AbstractDecorationEntity) this.getHoldingEntity()).getDecorationBlockPos();
-                nbt.putInt("X", pos.getX());
-                nbt.putInt("Y", pos.getY());
-                nbt.putInt("Z", pos.getZ());
+                leashNbt.putInt("X", pos.getX());
+                leashNbt.putInt("Y", pos.getY());
+                leashNbt.putInt("Z", pos.getZ());
             }
 
-            tag.put("Leash", nbt);
+            nbt.put("Leash", leashNbt);
         } else if (leashNbt != null) {
-            tag.put("Leash", leashNbt.copy());
+            nbt.put("Leash", leashNbt.copy());
         }
     }
 

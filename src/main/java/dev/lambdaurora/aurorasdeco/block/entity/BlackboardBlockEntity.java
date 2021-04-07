@@ -29,7 +29,7 @@ import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -149,17 +149,17 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
     /* Serialization */
 
     @Override
-    public void fromTag(CompoundTag nbt) {
-        super.fromTag(nbt);
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
         this.readBlackBoardNbt(nbt);
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag nbt) {
-        return this.writeBlackBoardNbt(super.toTag(nbt));
+    public NbtCompound writeNbt(NbtCompound nbt) {
+        return this.writeBlackBoardNbt(super.writeNbt(nbt));
     }
 
-    public void readBlackBoardNbt(CompoundTag nbt) {
+    public void readBlackBoardNbt(NbtCompound nbt) {
         this.blackboard.readNbt(nbt);
 
         if (nbt.contains("custom_name", NbtType.STRING)) {
@@ -167,7 +167,7 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
         }
     }
 
-    public CompoundTag writeBlackBoardNbt(CompoundTag nbt) {
+    public NbtCompound writeBlackBoardNbt(NbtCompound nbt) {
         this.blackboard.writeNbt(nbt);
         if (this.customName != null) {
             nbt.putString("custom_name", Text.Serializer.toJson(this.customName));
@@ -176,7 +176,7 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
     }
 
     @Override
-    public void fromClientTag(CompoundTag nbt) {
+    public void fromClientTag(NbtCompound nbt) {
         this.readBlackBoardNbt(nbt);
         if (!this.isLocked()) {
             if (this.texture == null)
@@ -191,7 +191,7 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
     }
 
     @Override
-    public CompoundTag toClientTag(CompoundTag nbt) {
+    public NbtCompound toClientTag(NbtCompound nbt) {
         return this.writeBlackBoardNbt(nbt);
     }
 

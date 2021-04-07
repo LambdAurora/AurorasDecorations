@@ -20,7 +20,7 @@ package dev.lambdaurora.aurorasdeco.mixin.client;
 import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
 import net.minecraft.resource.ReloadableResourceManagerImpl;
 import net.minecraft.resource.ResourcePack;
-import net.minecraft.resource.ResourceReloadMonitor;
+import net.minecraft.resource.ResourceReload;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Unit;
 import org.spongepowered.asm.mixin.Final;
@@ -44,7 +44,7 @@ public abstract class ReloadableResourceManagerImplMixin {
     public abstract void addPack(ResourcePack resourcePack);
 
     @Inject(
-            method = "beginMonitoredReload",
+            method = "reload",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/resource/ReloadableResourceManagerImpl;clear()V",
@@ -52,7 +52,7 @@ public abstract class ReloadableResourceManagerImplMixin {
             )
     )
     private void onBeginMonitoredReload(Executor prepareExecutor, Executor applyExecutor, CompletableFuture<Unit> initialStage,
-                                        List<ResourcePack> packs, CallbackInfoReturnable<ResourceReloadMonitor> cir) {
+                                        List<ResourcePack> packs, CallbackInfoReturnable<ResourceReload> cir) {
         if (this.type == ResourceType.CLIENT_RESOURCES) {
             this.addPack(AurorasDecoClient.RESOURCE_PACK.rebuild(this.type));
         }

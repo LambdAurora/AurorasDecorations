@@ -60,14 +60,14 @@ public class SawmillScreen extends HandledScreen<SawmillScreenHandler> {
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        RenderSystem.color4f(1.f, 1.f, 1.f, 1.f);
-        this.client.getTextureManager().bindTexture(TEXTURE);
-        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        int k = (int) (41.f * this.scrollAmount);
-        this.drawTexture(matrices, this.x + 119, this.y + 15 + k, 176 + (this.shouldScroll() ? 0 : 12), 0,
+        RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
+        RenderSystem.setShaderTexture(0, TEXTURE);
+        this.drawTexture(matrices, this.titleX, this.titleY, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        int scrollAmount = (int) (41.f * this.scrollAmount);
+        this.drawTexture(matrices, this.titleX + 119, this.titleY + 15 + scrollAmount, 176 + (this.shouldScroll() ? 0 : 12), 0,
                 12, 15);
-        int recipesX = this.x + 52;
-        int recipesY = this.y + 14;
+        int recipesX = this.titleX + 52;
+        int recipesY = this.titleY + 14;
         int recipesScrollOffset = this.scrollOffset + 12;
         this.renderRecipeBackground(matrices, mouseX, mouseY, recipesX, recipesY, recipesScrollOffset);
         this.renderRecipeIcons(recipesX, recipesY, recipesScrollOffset);
@@ -77,8 +77,8 @@ public class SawmillScreen extends HandledScreen<SawmillScreenHandler> {
     protected void drawMouseoverTooltip(MatrixStack matrices, int x, int y) {
         super.drawMouseoverTooltip(matrices, x, y);
         if (this.canCraft) {
-            int i = this.x + 52;
-            int j = this.y + 14;
+            int i = this.titleX + 52;
+            int j = this.titleY + 14;
             int k = this.scrollOffset + 12;
             List<WoodcuttingRecipe> list = this.handler.getAvailableRecipes();
 
@@ -126,8 +126,8 @@ public class SawmillScreen extends HandledScreen<SawmillScreenHandler> {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         this.mouseClicked = false;
         if (this.canCraft) {
-            int i = this.x + 52;
-            int j = this.y + 14;
+            int i = this.titleX + 52;
+            int j = this.titleY + 14;
             int k = this.scrollOffset + 12;
 
             for (int slot = this.scrollOffset; slot < k; ++slot) {
@@ -143,8 +143,8 @@ public class SawmillScreen extends HandledScreen<SawmillScreenHandler> {
                 }
             }
 
-            i = this.x + 119;
-            j = this.y + 9;
+            i = this.titleX + 119;
+            j = this.titleY + 9;
             if (mouseX >= (double) i && mouseX < (double) (i + 12) && mouseY >= (double) j && mouseY < (double) (j + 54)) {
                 this.mouseClicked = true;
             }
@@ -156,7 +156,7 @@ public class SawmillScreen extends HandledScreen<SawmillScreenHandler> {
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (this.mouseClicked && this.shouldScroll()) {
-            int y = this.y + 14;
+            int y = this.titleY + 14;
             int j = y + 54;
             this.scrollAmount = ((float) mouseY - (float) y - 7.5f) / ((float) (j - y) - 15.f);
             this.scrollAmount = MathHelper.clamp(this.scrollAmount, 0.f, 1.f);

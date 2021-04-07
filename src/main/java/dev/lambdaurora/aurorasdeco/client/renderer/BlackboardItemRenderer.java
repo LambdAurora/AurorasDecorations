@@ -22,7 +22,6 @@ import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.model.BakedModel;
@@ -30,7 +29,8 @@ import net.minecraft.client.render.model.json.ModelTransformation.Mode;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 
 /**
  * Represents the dynamic item renderer of blackboards.
@@ -67,8 +67,8 @@ public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.Dynam
                     matrices, vertexConsumers, light, overlay, maskModel);
         }
 
-        CompoundTag nbt = stack.getOrCreateSubTag("BlockEntityTag");
-        if (nbt != null && nbt.contains("pixels", NbtType.BYTE_ARRAY)) {
+        NbtCompound nbt = stack.getOrCreateSubTag("BlockEntityTag");
+        if (nbt != null && nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
             float z = .933f;
             if (mode == Mode.HEAD) {
                 matrices.translate(0.5, 0.5, z);

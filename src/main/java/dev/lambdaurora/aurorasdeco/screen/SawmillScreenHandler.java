@@ -247,7 +247,7 @@ public final class SawmillScreenHandler extends ScreenHandler {
         }
 
         @Override
-        public ItemStack onTakeItem(PlayerEntity player, ItemStack stack) {
+        public void onTakeItem(PlayerEntity player, ItemStack stack) {
             stack.onCraft(player.world, player, stack.getCount());
             SawmillScreenHandler.this.output.unlockLastRecipe(player);
             ItemStack inputStack = SawmillScreenHandler.this.inputSlot.takeStack(1);
@@ -264,7 +264,7 @@ public final class SawmillScreenHandler extends ScreenHandler {
                 }
 
             });
-            return super.onTakeItem(player, stack);
+            super.onTakeItem(player, stack);
         }
     }
 }

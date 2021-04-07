@@ -35,7 +35,7 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
 import net.minecraft.sound.SoundCategory;
@@ -127,7 +127,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
         BlockPos pos = ctx.getBlockPos();
         Direction[] directions = ctx.getPlacementDirections();
 
-        CompoundTag nbt = ctx.getStack().getSubTag("BlockEntityTag");
+        NbtCompound nbt = ctx.getStack().getSubTag("BlockEntityTag");
         if (nbt != null && nbt.contains("lit")) {
             state = state.with(LIT, nbt.getBoolean("lit"));
         }
@@ -163,7 +163,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
                 blackboard.setCustomName(stack.getName());
             }
 
-            CompoundTag nbt = stack.getSubTag("BlockEntityTag");
+            NbtCompound nbt = stack.getSubTag("BlockEntityTag");
             if (state.get(WATERLOGGED) && !this.isLocked())
                 return;
 
@@ -310,7 +310,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
         if (blackboard != null) {
             if (!world.isClient() && playerEntity.isCreative()) {
                 ItemStack stack = new ItemStack(this);
-                CompoundTag nbt = blackboard.writeBlackBoardNbt(new CompoundTag());
+                NbtCompound nbt = blackboard.writeBlackBoardNbt(new NbtCompound());
                 nbt.remove("custom_name");
                 stack.putSubTag("BlockEntityTag", nbt);
 
@@ -334,7 +334,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
         ItemStack stack = super.getPickStack(world, pos, state);
         BlackboardBlockEntity blackboard = this.getBlackboardEntity(world, pos);
         if (blackboard != null) {
-            CompoundTag nbt = blackboard.writeBlackBoardNbt(new CompoundTag());
+            NbtCompound nbt = blackboard.writeBlackBoardNbt(new NbtCompound());
             nbt.remove("custom_name");
             stack.putSubTag("BlockEntityTag", nbt);
         }
