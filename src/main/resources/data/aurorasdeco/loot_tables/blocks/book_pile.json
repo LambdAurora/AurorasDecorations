@@ -1,0 +1,14 @@
+{
+  "type": "block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:dynamic",
+          "name": "aurorasdeco:books"
+        }
+      ]
+    }
+  ]
+}
