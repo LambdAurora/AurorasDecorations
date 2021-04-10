@@ -17,6 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.block.big_flower_pot;
 
+import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
@@ -32,6 +33,7 @@ import net.minecraft.loot.context.LootContext;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -45,6 +47,7 @@ import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Represents a big flower pot.
@@ -54,6 +57,8 @@ import java.util.List;
  * @since 1.0.0
  */
 public class BigFlowerPotBlock extends Block {
+    private static final Identifier PLANT = AurorasDeco.id("plant");
+
     public static final VoxelShape BIG_FLOWER_POT_SHAPE = createCuboidShape(
             1.f, 0.f, 1.f,
             15.f, 14.f, 15.f
@@ -175,19 +180,23 @@ public class BigFlowerPotBlock extends Block {
 
     /* Loot table */
 
+    protected void acceptPlantDrops(BlockState state, LootContext.Builder builder, Consumer<ItemStack> consumer) {
+        Item item = this.getPlantType().getItem();
+        if (item != null) {
+            consumer.accept(new ItemStack(item));
+        }
+    }
+
     @Override
     public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
         if (this.isEmpty())
             return super.getDroppedStacks(state, builder);
 
-        Item item = this.getPlantType().getItem();
+        builder.putDrop(PLANT, (context, consumer) -> {
+            this.acceptPlantDrops(state, builder, consumer);
+        });
 
-        List<ItemStack> stacks = AurorasDecoRegistry.BIG_FLOWER_POT_BLOCK.getDroppedStacks(state, builder);
-        if (item != null && !stacks.isEmpty()) {
-            stacks.add(new ItemStack(item));
-        }
-
-        return stacks;
+        return AurorasDecoRegistry.BIG_FLOWER_POT_BLOCK.getDroppedStacks(state, builder);
     }
 
     public static class PlantAir extends Block {
