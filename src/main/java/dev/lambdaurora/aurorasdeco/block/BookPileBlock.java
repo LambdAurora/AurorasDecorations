@@ -17,6 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.block;
 
+import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.entity.BookPileBlockEntity;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.minecraft.block.*;
@@ -35,6 +36,7 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -57,6 +59,8 @@ import java.util.List;
  * @since 1.0.0
  */
 public class BookPileBlock extends BlockWithEntity implements Waterloggable {
+    private static final Identifier BOOKS = AurorasDeco.id("books");
+
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     public static final VoxelShape SHAPE = createCuboidShape(3, 0, 3, 11, 8, 11);
@@ -173,14 +177,16 @@ public class BookPileBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
-        List<ItemStack> stacks = new ArrayList<>();
         BlockEntity blockEntity = builder.get(LootContextParameters.BLOCK_ENTITY);
         if (blockEntity instanceof BookPileBlockEntity) {
-            ((BookPileBlockEntity) blockEntity).getBooks().forEach(stack -> {
-                if (!stack.isEmpty()) stacks.add(stack.copy());
+            BookPileBlockEntity bookPile = (BookPileBlockEntity) blockEntity;
+            builder.putDrop(BOOKS, (context, consumer) -> {
+                for (ItemStack stack : bookPile.getBooks()) {
+                    if (!stack.isEmpty()) consumer.accept(stack.copy());
+                }
             });
         }
-        return stacks;
+        return super.getDroppedStacks(state, builder);
     }
 
     /* Block entity stuff */

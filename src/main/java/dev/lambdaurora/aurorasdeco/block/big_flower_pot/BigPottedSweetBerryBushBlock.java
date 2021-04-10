@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.function.Consumer;
 
 /**
  * Represents a potted sweet berry bush.
@@ -122,10 +123,11 @@ public class BigPottedSweetBerryBushBlock extends BigFlowerPotBlock implements F
     /* Loot table */
 
     @Override
-    public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
-        List<ItemStack> drops = new ArrayList<>(super.getDroppedStacks(state, builder));
-        drops.addAll(this.getPlantState(state).getDroppedStacks(builder));
-        return drops;
+    protected void acceptPlantDrops(BlockState state, LootContext.Builder builder, Consumer<ItemStack> consumer) {
+        List<ItemStack> stacks = this.getPlantState(state).getDroppedStacks(builder);
+        for (ItemStack stack : stacks) {
+            consumer.accept(stack);
+        }
     }
 
     /* Fertilizable stuff */
