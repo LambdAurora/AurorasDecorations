@@ -87,12 +87,12 @@ public class BookPileBlockEntity extends BlockEntity implements BlockEntityClien
 
     @Override
     public void fromClientTag(NbtCompound nbt) {
-        Inventories.writeNbt(nbt, this.books);
+        Inventories.readNbt(nbt, this.books);
     }
 
     @Override
     public NbtCompound toClientTag(NbtCompound nbt) {
-        Inventories.readNbt(nbt, this.books);
+        Inventories.writeNbt(nbt, this.books);
         return nbt;
     }
 }
