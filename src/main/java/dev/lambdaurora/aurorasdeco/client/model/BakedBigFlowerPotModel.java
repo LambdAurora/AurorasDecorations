@@ -90,7 +90,7 @@ public class BakedBigFlowerPotModel extends ForwardingBakedModel {
                         vec.add(offset, .8f, offset);
                         quad.pos(i, vec);
                     }
-                    quad.material(RendererAccess.INSTANCE.getRenderer().materialFinder().disableAo(0, true).find());
+                    quad.material(RendererAccess.INSTANCE.getRenderer().materialFinder().disableAo(0, !model.useAmbientOcclusion()).find());
                     return true;
                 });
                 ((FabricBakedModel) model).emitBlockQuads(blockView, state, pos, randomSupplier, context);
@@ -110,7 +110,11 @@ public class BakedBigFlowerPotModel extends ForwardingBakedModel {
                             vec.add(offset, .8f + ratio, offset);
                             quad.pos(i, vec);
                         }
-                        quad.material(RendererAccess.INSTANCE.getRenderer().materialFinder().disableAo(0, true).find());
+                        quad.material(
+                                RendererAccess.INSTANCE.getRenderer().materialFinder()
+                                        .disableAo(0, !upModel.useAmbientOcclusion())
+                                        .find()
+                        );
                         return true;
                     });
                     ((FabricBakedModel) upModel).emitBlockQuads(blockView, state, pos.up(), randomSupplier, context);
