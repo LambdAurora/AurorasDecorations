@@ -18,7 +18,6 @@
 package dev.lambdaurora.aurorasdeco.entity;
 
 import dev.lambdaurora.aurorasdeco.block.SeatBlock;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -46,7 +45,7 @@ public class SeatEntity extends Entity {
 
     @Override
     public Vec3d updatePassengerForDismount(LivingEntity passenger) {
-        Vec3d vec = super.updatePassengerForDismount(passenger);
+        var vec = super.updatePassengerForDismount(passenger);
 
         if (this.getEntityWorld().getBlockState(this.getBlockPos().up()).isAir()) {
             return new Vec3d(vec.x, this.getBlockY() + 1, vec.z);
@@ -84,7 +83,7 @@ public class SeatEntity extends Entity {
         super.tick();
 
         if (!this.world.isClient()) {
-            BlockState state = this.getEntityWorld().getBlockState(this.getBlockPos());
+            var state = this.getEntityWorld().getBlockState(this.getBlockPos());
             if (!(state.getBlock() instanceof SeatBlock) || !this.hasPassengers())
                 this.discard();
         }

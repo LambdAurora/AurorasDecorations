@@ -29,7 +29,6 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
@@ -62,8 +61,8 @@ public class BlackboardItem extends BlockItem {
         if (clickType == ClickType.RIGHT) {
             if (otherStack.isOf(Items.WATER_BUCKET)
                     || (otherStack.isOf(Items.POTION) && PotionUtil.getPotion(otherStack) == Potions.WATER)) {
-                NbtCompound nbt = self.getOrCreateSubTag("BlockEntityTag");
-                Blackboard blackboard = Blackboard.fromNbt(nbt);
+                var nbt = self.getOrCreateSubTag("BlockEntityTag");
+                var blackboard = Blackboard.fromNbt(nbt);
                 if (blackboard.isEmpty())
                     return false;
                 blackboard.clear();
@@ -71,7 +70,7 @@ public class BlackboardItem extends BlockItem {
 
                 if (otherStack.isOf(Items.POTION)) {
                     if (!player.getAbilities().creativeMode) {
-                        ItemStack newStack = new ItemStack(Items.GLASS_BOTTLE);
+                        var newStack = new ItemStack(Items.GLASS_BOTTLE);
                         if (otherStack.getCount() != 1) {
                             otherStack.decrement(1);
                             player.getInventory().insertStack(newStack);
@@ -108,8 +107,8 @@ public class BlackboardItem extends BlockItem {
 
     private ItemStack ensureValidStack(ItemStack stack) {
         if (stack.getSubTag("BlockEntityTag") == null) {
-            NbtCompound nbt = stack.getOrCreateSubTag("BlockEntityTag");
-            Blackboard blackboard = new Blackboard();
+            var nbt = stack.getOrCreateSubTag("BlockEntityTag");
+            var blackboard = new Blackboard();
             blackboard.writeNbt(nbt);
         }
         return stack;
@@ -118,9 +117,9 @@ public class BlackboardItem extends BlockItem {
     @Environment(EnvType.CLIENT)
     @Override
     public Optional<TooltipData> getTooltipData(ItemStack stack) {
-        NbtCompound nbt = stack.getSubTag("BlockEntityTag");
+        var nbt = stack.getSubTag("BlockEntityTag");
         if (nbt != null && nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
-            Blackboard blackboard = Blackboard.fromNbt(nbt);
+            var blackboard = Blackboard.fromNbt(nbt);
             return Optional.of(new BlackboardTooltipComponent(
                     Registry.ITEM.getId(this).getPath().replace("waxed_", ""),
                     blackboard, this.locked));

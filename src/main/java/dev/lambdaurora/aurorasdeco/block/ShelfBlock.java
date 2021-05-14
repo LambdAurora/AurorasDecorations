@@ -19,7 +19,6 @@ package dev.lambdaurora.aurorasdeco.block;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import dev.lambdaurora.aurorasdeco.block.entity.ShelfBlockEntity;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
@@ -45,7 +44,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.*;
@@ -105,28 +103,28 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        Direction direction = state.get(FACING);
-        BlockPos attachPos = pos.offset(direction.getOpposite());
-        BlockState attachState = world.getBlockState(attachPos);
+        var direction = state.get(FACING);
+        var attachPos = pos.offset(direction.getOpposite());
+        var attachState = world.getBlockState(attachPos);
         return !VoxelShapes.matchesAnywhere(attachState.getSidesShape(world, attachPos).getFace(direction),
                 VALID_ATTACHMENTS.get(state.get(TYPE)), BooleanBiFunction.ONLY_SECOND);
     }
 
     @Override
     public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        World world = ctx.getWorld();
-        BlockPos pos = ctx.getBlockPos();
-        BlockState placedState = world.getBlockState(pos);
+        var world = ctx.getWorld();
+        var pos = ctx.getBlockPos();
+        var placedState = world.getBlockState(pos);
 
         if (placedState.isOf(this)) {
             placedState = placedState.with(TYPE, PartType.DOUBLE);
             if (this.canPlaceAt(placedState, world, pos))
                 return placedState.with(TYPE, PartType.DOUBLE);
         } else {
-            FluidState fluid = world.getFluidState(pos);
-            BlockState state = this.getDefaultState().with(WATERLOGGED, fluid.getFluid() == Fluids.WATER);
+            var fluid = world.getFluidState(pos);
+            var state = this.getDefaultState().with(WATERLOGGED, fluid.getFluid() == Fluids.WATER);
 
-            Direction side = ctx.getSide();
+            var side = ctx.getSide();
             if (side == Direction.UP) {
                 state = state.with(TYPE, PartType.TOP);
             } else if (side == Direction.DOWN) {
@@ -138,12 +136,12 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
                     state = state.with(TYPE, PartType.BOTTOM);
             }
 
-            Direction[] directions = ctx.getPlacementDirections();
+            var directions = ctx.getPlacementDirections();
 
-            for (Direction direction : directions) {
+            for (var direction : directions) {
                 if (direction.getAxis().isHorizontal()) {
-                    Direction direction2 = direction.getOpposite();
-                    state = state.with(FACING, direction2);
+                    var opposite = direction.getOpposite();
+                    state = state.with(FACING, opposite);
                     if (state.canPlaceAt(world, pos)) {
                         return state;
                     }
@@ -155,13 +153,11 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public boolean canReplace(BlockState state, ItemPlacementContext context) {
-        ItemStack stack = context.getStack();
-        PartType type = state.get(TYPE);
+        var stack = context.getStack();
+        var type = state.get(TYPE);
         if (type != PartType.DOUBLE && stack.isOf(this.asItem())) {
-            if (!context.shouldCancelInteraction()
-                    && this.canPlaceAt(state.with(TYPE, PartType.DOUBLE), context.getWorld(), context.getBlockPos())) {
-                return true;
-            }
+            return !context.shouldCancelInteraction()
+                    && this.canPlaceAt(state.with(TYPE, PartType.DOUBLE), context.getWorld(), context.getBlockPos());
         }
         return false;
     }
@@ -169,7 +165,7 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.getBlock() != newState.getBlock()) {
-            ShelfBlockEntity shelf = AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE.get(world, pos);
+            var shelf = AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE.get(world, pos);
             if (shelf != null) {
                 ItemScatterer.spawn(world, pos, shelf);
                 world.updateComparators(pos, this);
@@ -190,7 +186,7 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        ShelfBlockEntity shelf = AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE.get(world, pos);
+        var shelf = AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE.get(world, pos);
         if (shelf != null) {
             if (stack.hasCustomName()) {
                 shelf.setCustomName(stack.getName());
@@ -217,12 +213,12 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
                               BlockHitResult hit) {
         if (!world.isClient()) {
-            ShelfBlockEntity shelf = AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE.get(world, pos);
+            var shelf = AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE.get(world, pos);
 
             if (shelf != null) {
-                ItemStack handStack = player.getStackInHand(hand);
+                var handStack = player.getStackInHand(hand);
                 if (!handStack.isEmpty()) {
-                    Direction facing = state.get(FACING);
+                    var facing = state.get(FACING);
 
                     int y = 0;
                     if (AuroraUtil.posMod(hit.getPos().getY(), 1) <= 0.5)
@@ -239,7 +235,7 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
                     }
 
                     int slot = y * 4 + x;
-                    ItemStack stack = shelf.getStack(slot);
+                    var stack = shelf.getStack(slot);
                     if (stack.isEmpty()
                             || (ItemStack.canCombine(stack, handStack) && stack.getCount() < stack.getMaxCount())) {
                         if (stack.isEmpty()) {
@@ -267,17 +263,17 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public void onBlockBreakStart(BlockState state, World world, BlockPos pos, PlayerEntity player) {
-        ShelfBlockEntity shelf = AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE.get(world, pos);
+        var shelf = AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE.get(world, pos);
 
         if (shelf != null && !shelf.isEmpty()) {
             Direction facing = state.get(FACING);
 
-            Vec3d cameraPosVec = player.getCameraPosVec(1.0F);
-            Vec3d rotationVec = player.getRotationVec(1.0F);
-            Vec3d extendedVec = cameraPosVec.add(rotationVec.x * 4.5F, rotationVec.y * 4.5F, rotationVec.z * 4.5F);
-            RaycastContext rayCtx = new RaycastContext(cameraPosVec,
+            var cameraPosVec = player.getCameraPosVec(1.0F);
+            var rotationVec = player.getRotationVec(1.0F);
+            var extendedVec = cameraPosVec.add(rotationVec.x * 4.5F, rotationVec.y * 4.5F, rotationVec.z * 4.5F);
+            var rayCtx = new RaycastContext(cameraPosVec,
                     extendedVec, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, player);
-            BlockHitResult hit = world.raycast(rayCtx);
+            var hit = world.raycast(rayCtx);
             int y = 0;
             if (AuroraUtil.posMod(hit.getPos().getY(), 1) <= 0.5)
                 y = 1;
@@ -293,14 +289,14 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
             }
 
             int slot = y * 4 + x;
-            ItemStack stack = shelf.getStack(slot);
+            var stack = shelf.getStack(slot);
 
             if (!stack.isEmpty()) {
                 if (player.getStackInHand(Hand.MAIN_HAND).isEmpty()) {
                     player.setStackInHand(Hand.MAIN_HAND, stack.copy());
                     shelf.removeStack(slot);
                 } else {
-                    ItemEntity item = new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                    var item = new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
                             stack.copy());
                     float speed = world.random.nextFloat() * .5f;
                     float angle = world.random.nextFloat() * 6.2831855f;
@@ -355,7 +351,7 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
     }
 
     private static Map<PartType, VoxelShape> createTypeShapes(int xMin, int zMin, int xMax, int zMax) {
-        ImmutableMap.Builder<PartType, VoxelShape> builder = ImmutableMap.builder();
+        var builder = ImmutableMap.<PartType, VoxelShape>builder();
         builder.put(PartType.BOTTOM, createCuboidShape(xMin, 0, zMin, xMax, 8, zMax));
         builder.put(PartType.TOP, createCuboidShape(xMin, 8, zMin, xMax, 16, zMax));
         builder.put(PartType.DOUBLE, createCuboidShape(xMin, 0, zMin, xMax, 16, zMax));
@@ -363,7 +359,7 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
     }
 
     static {
-        ImmutableMap.Builder<Direction, Map<PartType, VoxelShape>> facingBuilder = ImmutableMap.builder();
+        var facingBuilder = ImmutableMap.<Direction, Map<PartType, VoxelShape>>builder();
 
         facingBuilder.put(Direction.NORTH, createTypeShapes(0, 12, 16, 16));
         facingBuilder.put(Direction.EAST, createTypeShapes(0, 0, 4, 16));
@@ -372,7 +368,7 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
 
         SHAPES = new EnumMap<>(facingBuilder.build());
 
-        ImmutableMap.Builder<PartType, VoxelShape> builder = ImmutableMap.builder();
+        var builder = ImmutableMap.<PartType, VoxelShape>builder();
         builder.put(PartType.BOTTOM, createCuboidShape(0, 0, 0, 16, 8, 16));
         builder.put(PartType.TOP, createCuboidShape(0, 8, 0, 16, 16, 16));
         builder.put(PartType.DOUBLE, VoxelShapes.fullCube());

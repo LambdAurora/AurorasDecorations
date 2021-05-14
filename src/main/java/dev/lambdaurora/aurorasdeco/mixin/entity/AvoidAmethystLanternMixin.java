@@ -18,7 +18,6 @@
 package dev.lambdaurora.aurorasdeco.mixin.entity;
 
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.mob.GiantEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.PillagerEntity;
@@ -33,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class AvoidAmethystLanternMixin {
     @Inject(method = "getPathfindingFavor", at = @At("RETURN"), cancellable = true)
     private void onGetPathfindingFavor(BlockPos pos, WorldView world, CallbackInfoReturnable<Float> cir) {
-        BlockState state = world.getBlockState(pos);
+        var state = world.getBlockState(pos);
         if (state.isOf(AurorasDecoRegistry.AMETHYST_LANTERN_BLOCK) || state.isOf(AurorasDecoRegistry.AMETHYST_WALL_LANTERN_BLOCK)) {
             cir.setReturnValue(-30.f);
         }

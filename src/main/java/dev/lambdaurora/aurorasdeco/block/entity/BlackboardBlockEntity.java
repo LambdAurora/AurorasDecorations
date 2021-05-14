@@ -185,7 +185,7 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
         }
 
         if (((BlackboardBlock) this.getCachedState().getBlock()).isLocked() && !this.blackboard.isEmpty()) {
-            ChunkSectionPos pos = ChunkSectionPos.from(this.getPos());
+            var pos = ChunkSectionPos.from(this.getPos());
             ((ClientWorld) world).scheduleBlockRenders(pos.getX(), pos.getY(), pos.getZ());
         }
     }

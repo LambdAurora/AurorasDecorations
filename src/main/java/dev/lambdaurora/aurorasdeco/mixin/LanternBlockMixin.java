@@ -41,7 +41,7 @@ public abstract class LanternBlockMixin {
     @Inject(method = "canPlaceAt", at = @At("RETURN"), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
     public void canPlaceAt(BlockState state, WorldView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir, Direction direction) {
         if (direction == Direction.DOWN) {
-            BlockState downState = world.getBlockState(pos.offset(direction));
+            var downState = world.getBlockState(pos.offset(direction));
             if (downState.isIn(BlockTags.LEAVES)) {
                 cir.setReturnValue(true);
             }

@@ -42,7 +42,7 @@ public abstract class CandleBlockMixin extends AbstractCandleBlock {
             cancellable = true
     )
     private void onGetPlacementState(ItemPlacementContext ctx, CallbackInfoReturnable<BlockState> cir) {
-        BlockState placedState = ctx.getWorld().getBlockState(ctx.getBlockPos());
+        var placedState = ctx.getWorld().getBlockState(ctx.getBlockPos());
 
         if (!placedState.isOf(this) && placedState.getBlock() instanceof CandleBlock
                 && ctx.getStack().getItem() instanceof BlockItem

@@ -20,9 +20,7 @@ package dev.lambdaurora.aurorasdeco.block.entity;
 import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
@@ -31,7 +29,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,10 +39,6 @@ import java.util.Map;
  * @since 1.0.0
  */
 public class LanternBlockEntity extends SwayingBlockEntity {
-    public static final Block DEFAULT_LANTERN = Blocks.LANTERN;
-
-    private Block lantern = DEFAULT_LANTERN;
-
     public int swingTicks;
     private boolean swinging;
     public Direction lastSideHit;
@@ -65,15 +58,6 @@ public class LanternBlockEntity extends SwayingBlockEntity {
     public void setWorld(World world) {
         super.setWorld(world);
         this.updateCollisionBoxes();
-    }
-
-    /**
-     * Returns the lantern of this wall lantern.
-     *
-     * @return the lantern
-     */
-    public Block getLantern() {
-        return this.lantern;
     }
 
     /**
@@ -128,7 +112,7 @@ public class LanternBlockEntity extends SwayingBlockEntity {
      * @param direction the direction to swing to
      */
     public void activate(Direction direction) {
-        BlockPos blockPos = this.getPos();
+        var blockPos = this.getPos();
         this.lastSideHit = direction;
         if (this.swinging) {
             if (this.isColliding())
@@ -162,10 +146,10 @@ public class LanternBlockEntity extends SwayingBlockEntity {
         if (this.getWorld() == null)
             return;
 
-        BlockPos pos = this.getPos();
+        var pos = this.getPos();
 
-        BlockState lanternState = this.getLanternState();
-        Box box = lanternState.getOutlineShape(this.getWorld(), pos, ShapeContext.absent())
+        var lanternState = this.getLanternState();
+        var box = lanternState.getOutlineShape(this.getWorld(), pos, ShapeContext.absent())
                 .offset(0, 2.0 / 16.0, 0).getBoundingBox();
 
         this.lanternCollisionBoxX = box.expand(0.1, 0, 0).offset(pos);
@@ -217,8 +201,8 @@ public class LanternBlockEntity extends SwayingBlockEntity {
         boolean canTick = true;
 
         if (!lantern.collisions.isEmpty()) {
-            List<Entity> toRemove = new ArrayList<>();
-            for (Map.Entry<Entity, Direction.Axis> entry : lantern.collisions.entrySet()) {
+            var toRemove = new ArrayList<Entity>();
+            for (var entry : lantern.collisions.entrySet()) {
                 if (entry.getKey().isRemoved()) {
                     toRemove.add(entry.getKey());
                 } else {

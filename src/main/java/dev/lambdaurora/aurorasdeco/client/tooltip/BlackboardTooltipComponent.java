@@ -27,7 +27,6 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.item.TooltipData;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
@@ -74,13 +73,13 @@ public class BlackboardTooltipComponent implements TooltipComponent, TooltipData
     @Override
     public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices,
                           ItemRenderer itemRenderer, int z, TextureManager textureManager) {
-        VertexConsumerProvider.Immediate vertexConsumers = this.client.getBufferBuilders().getEntityVertexConsumers();
+        var vertexConsumers = this.client.getBufferBuilders().getEntityVertexConsumers();
         matrices.push();
         matrices.translate(x, y, z);
         matrices.scale(128.f, 128.f, 1);
 
         int light = 15728880;
-        Matrix4f model = matrices.peek().getModel();
+        var model = matrices.peek().getModel();
 
         this.quad(this.background, 0.f, 0.f, 1.f, 1.f, model, vertexConsumers, light);
 
@@ -91,7 +90,7 @@ public class BlackboardTooltipComponent implements TooltipComponent, TooltipData
             matrices.translate(0, 0, 1);
             model = matrices.peek().getModel();
 
-            RenderLayer glow = RenderLayer.getText(GLOW_TEXTURE);
+            var glow = RenderLayer.getText(GLOW_TEXTURE);
 
             float speed = 600.f;
             float offset = ((System.currentTimeMillis() % (int) speed) / speed);
@@ -119,7 +118,7 @@ public class BlackboardTooltipComponent implements TooltipComponent, TooltipData
 
     private void quad(RenderLayer renderLayer, float uMin, float vMin, float uMax, float vMax,
                       Matrix4f model, VertexConsumerProvider vertexConsumers, int light) {
-        VertexConsumer vertices = vertexConsumers.getBuffer(renderLayer);
+        var vertices = vertexConsumers.getBuffer(renderLayer);
         vertices.vertex(model, 0.f, 1.f, 0.f).color(255, 255, 255, 255)
                 .texture(uMin, vMax).light(light).next();
         vertices.vertex(model, 1.f, 1.f, 0.f).color(255, 255, 255, 255)

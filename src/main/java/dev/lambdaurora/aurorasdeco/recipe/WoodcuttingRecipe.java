@@ -19,8 +19,6 @@ package dev.lambdaurora.aurorasdeco.recipe;
 
 import com.google.gson.JsonObject;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
@@ -52,8 +50,7 @@ public final class WoodcuttingRecipe extends CuttingRecipe {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
-    public ItemStack getRecipeKindIcon() {
+    public ItemStack createIcon() {
         return new ItemStack(AurorasDecoRegistry.SAWMILL_BLOCK);
     }
 
@@ -63,7 +60,7 @@ public final class WoodcuttingRecipe extends CuttingRecipe {
 
         @Override
         public WoodcuttingRecipe read(Identifier identifier, JsonObject json) {
-            String group = JsonHelper.getString(json, "group", "");
+            var group = JsonHelper.getString(json, "group", "");
             Ingredient ingredient;
             if (JsonHelper.hasArray(json, "ingredient")) {
                 ingredient = Ingredient.fromJson(JsonHelper.getArray(json, "ingredient"));
@@ -71,17 +68,17 @@ public final class WoodcuttingRecipe extends CuttingRecipe {
                 ingredient = Ingredient.fromJson(JsonHelper.getObject(json, "ingredient"));
             }
 
-            String resultId = JsonHelper.getString(json, "result");
+            var resultId = JsonHelper.getString(json, "result");
             int count = JsonHelper.getInt(json, "count");
-            ItemStack itemStack = new ItemStack(Registry.ITEM.get(new Identifier(resultId)), count);
+            var itemStack = new ItemStack(Registry.ITEM.get(new Identifier(resultId)), count);
             return new WoodcuttingRecipe(identifier, group, ingredient, itemStack);
         }
 
         @Override
         public WoodcuttingRecipe read(Identifier identifier, PacketByteBuf buf) {
-            String string = buf.readString(32767);
-            Ingredient ingredient = Ingredient.fromPacket(buf);
-            ItemStack itemStack = buf.readItemStack();
+            var string = buf.readString(32767);
+            var ingredient = Ingredient.fromPacket(buf);
+            var itemStack = buf.readItemStack();
             return new WoodcuttingRecipe(identifier, string, ingredient, itemStack);
         }
 
@@ -94,7 +91,7 @@ public final class WoodcuttingRecipe extends CuttingRecipe {
 
         @Override
         public JsonObject toJson(WoodcuttingRecipe recipe) {
-            JsonObject root = new JsonObject();
+            var root = new JsonObject();
             root.addProperty("type", AurorasDecoRegistry.WOODCUTTING_RECIPE_ID.toString());
             if (!recipe.group.isEmpty())
                 root.addProperty("group", recipe.group);

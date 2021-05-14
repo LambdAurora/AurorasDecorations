@@ -53,12 +53,12 @@ public class PetUsePetBedCriterion extends AbstractCriterion<PetUsePetBedCriteri
     }
 
     public void trigger(PathAwareEntity entity, ServerWorld world, BlockPos pos) {
-        if (entity instanceof TameableEntity) {
-            LivingEntity player = ((TameableEntity) entity).getOwner();
+        if (entity instanceof TameableEntity tameable) {
+            LivingEntity player = tameable.getOwner();
             if (player != null)
                 this.trigger((ServerPlayerEntity) player, world, pos);
-        } else if (entity instanceof FoxEntityAccessor) { // Foxes <3
-            List<UUID> trusted = ((FoxEntityAccessor) entity).aurorasdeco$getTrustedUuids();
+        } else if (entity instanceof FoxEntityAccessor fox) { // Foxes <3
+            List<UUID> trusted = fox.aurorasdeco$getTrustedUuids();
             if (!trusted.isEmpty()) {
                 PlayerEntity player = world.getPlayerByUuid(trusted.get(0));
                 if (player != null)

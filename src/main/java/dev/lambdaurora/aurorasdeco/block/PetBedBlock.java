@@ -80,14 +80,14 @@ public class PetBedBlock extends Block {
 
     @Override
     public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        Direction direction = ctx.getPlayerFacing();
+        var direction = ctx.getPlayerFacing();
         return this.getDefaultState().with(FACING, direction.getOpposite());
     }
 
     static {
-        VoxelShape base = createCuboidShape(0.0, 0.0, 0.0, 16.0, 2.0, 16.0);
+        var base = createCuboidShape(0.0, 0.0, 0.0, 16.0, 2.0, 16.0);
 
-        ImmutableMap.Builder<Direction, VoxelShape> shapes = ImmutableMap.builder();
+        var shapes = ImmutableMap.<Direction, VoxelShape>builder();
 
         shapes.put(Direction.NORTH, VoxelShapes.union(base,
                 createCuboidShape(0.0, 2.0, 1.0, 16.0, 4.0, 16.0)
@@ -111,11 +111,11 @@ public class PetBedBlock extends Block {
 
         shapes = ImmutableMap.builder();
 
-        VoxelShape sidesX = VoxelShapes.union(
+        var sidesX = VoxelShapes.union(
                 createCuboidShape(1.0, 2.0, 0.0, 15.0, 8.0, 1.0),
                 createCuboidShape(1.0, 2.0, 15.0, 15.0, 8.0, 16.0)
         );
-        VoxelShape sidesZ = VoxelShapes.union(
+        var sidesZ = VoxelShapes.union(
                 createCuboidShape(0.0, 2.0, 1.0, 1.0, 8.0, 15.0),
                 createCuboidShape(15.0, 2.0, 1.0, 16.0, 8.0, 15.0)
         );

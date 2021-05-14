@@ -44,7 +44,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -54,7 +53,10 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.poi.PointOfInterestType;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -126,9 +128,9 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
 
     @Nullable
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        Direction direction = ctx.getPlayerFacing();
-        BlockPos pos = ctx.getBlockPos();
-        BlockPos headPos = pos.offset(direction);
+        var direction = ctx.getPlayerFacing();
+        var pos = ctx.getBlockPos();
+        var headPos = pos.offset(direction);
         return ctx.getWorld().getBlockState(headPos).canReplace(ctx) ? this.getDefaultState().with(FACING, direction) : null;
     }
 
@@ -136,7 +138,7 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
         if (!world.isClient()) {
-            BlockPos headPos = pos.offset(state.get(FACING));
+            var headPos = pos.offset(state.get(FACING));
             world.setBlockState(headPos, state.with(PART, BedPart.HEAD), 0b11);
             world.updateNeighbors(pos, Blocks.AIR);
             state.updateNeighbors(world, pos, 0b11);
@@ -171,7 +173,7 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
             }
 
             if (!BedBlock.isOverworld(world)) {
-                Random random = world.getRandom();
+                var random = world.getRandom();
                 for (int i = 0; i < 4; i++) {
                     double x = pos.getX() + random.nextFloat();
                     double y = pos.getY() + random.nextFloat();
@@ -200,8 +202,7 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
     }
 
     private boolean isFree(World world, BlockPos pos) {
-        List<VillagerEntity> villagers
-                = world.getEntitiesByClass(VillagerEntity.class, new Box(pos), LivingEntity::isSleeping);
+        var villagers = world.getEntitiesByClass(VillagerEntity.class, new Box(pos), LivingEntity::isSleeping);
         if (villagers.isEmpty()) {
             return false;
         } else {
@@ -213,10 +214,10 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity playerEntity) {
         if (!world.isClient() && playerEntity.isCreative()) {
-            BedPart part = state.get(PART);
+            var part = state.get(PART);
             if (part == BedPart.FOOT) {
-                BlockPos otherPartPos = pos.offset(getDirectionTowardsOtherPart(part, state.get(FACING)));
-                BlockState otherPartState = world.getBlockState(otherPartPos);
+                var otherPartPos = pos.offset(getDirectionTowardsOtherPart(part, state.get(FACING)));
+                var otherPartState = world.getBlockState(otherPartPos);
                 if (otherPartState.isOf(this) && otherPartState.get(PART) == BedPart.HEAD) {
                     world.setBlockState(otherPartPos, Blocks.AIR.getDefaultState(), 0b100011);
                     world.syncWorldEvent(playerEntity, 2001, otherPartPos, Block.getRawIdFromState(otherPartState));
@@ -232,8 +233,8 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
     }
 
     @Override
-    public void onLandedUpon(World world, BlockPos pos, Entity entity, float distance) {
-        super.onLandedUpon(world, pos, entity, distance * .5f);
+    public void onLandedUpon(World world, BlockState state, BlockPos pos, Entity entity, float distance) {
+        super.onLandedUpon(world, state, pos, entity, distance * .5f);
     }
 
     @Override
@@ -246,7 +247,7 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
     }
 
     private void bounceEntity(Entity entity) {
-        Vec3d velocity = entity.getVelocity();
+        var velocity = entity.getVelocity();
         if (velocity.y < 0) {
             double d = entity instanceof LivingEntity ? 0.85 : 0.65;
             entity.setVelocity(velocity.x, -velocity.y * 0.6600000262260437 * d, velocity.z);
@@ -258,7 +259,7 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
     }
 
     public static SleepingBagBlock register(DyeColor color) {
-        SleepingBagBlock block = Registry.register(Registry.BLOCK,
+        var block = Registry.register(Registry.BLOCK,
                 AurorasDeco.id("sleeping_bag/" + color.getName()),
                 new SleepingBagBlock(color));
 
@@ -268,7 +269,7 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
     }
 
     public static void appendToPointOfInterest(PointOfInterestType poiType) {
-        Set<BlockState> states = ((PointOfInterestTypeAccessor) poiType).getBlockStates();
+        var states = ((PointOfInterestTypeAccessor) poiType).getBlockStates();
         SleepingBagBlock.forEach(sleepingBag -> {
             sleepingBag.getStateManager().getStates().stream()
                     .filter(state -> state.get(SleepingBagBlock.PART) == BedPart.HEAD)

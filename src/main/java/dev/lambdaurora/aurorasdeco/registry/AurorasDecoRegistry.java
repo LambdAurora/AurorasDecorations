@@ -70,7 +70,6 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -354,22 +353,22 @@ public final class AurorasDecoRegistry {
     }
 
     private static SoundEvent registerSound(String path) {
-        Identifier id = id(path);
+        var id = id(path);
         return Registry.register(Registry.SOUND_EVENT, id, new SoundEvent(id));
     }
 
     private static Identifier register(String id, StatFormatter statFormatter) {
-        Identifier identifier = id(id);
+        var identifier = id(id);
         Registry.register(Registry.CUSTOM_STAT, id, identifier);
         CUSTOM.getOrCreateStat(identifier, statFormatter);
         return identifier;
     }
 
     public static void init(Map<Identifier, Block> delayed) {
-        List<BigFlowerPotBlock> plants = new ArrayList<>();
+        var plants = new ArrayList<BigFlowerPotBlock>();
         Registry.BLOCK.forEach(block -> {
             if (PottedPlantType.isValidPlant(block)) {
-                BigFlowerPotBlock potBlock = PottedPlantType.registerFromBlock(block);
+                var potBlock = PottedPlantType.registerFromBlock(block);
                 if (potBlock != null)
                     plants.add(potBlock);
             } else {
@@ -386,12 +385,12 @@ public final class AurorasDecoRegistry {
 
         delayed.forEach((id, block) -> Registry.register(Registry.BLOCK, id, block));
 
-        DyeColor[] colors = DyeColor.values();
-        for (DyeColor color : colors) {
+        var colors = DyeColor.values();
+        for (var color : colors) {
             registerPetBed(color);
         }
-        for (DyeColor color : colors) {
-            SleepingBagBlock block = SleepingBagBlock.register(color);
+        for (var color : colors) {
+            var block = SleepingBagBlock.register(color);
             register("sleeping_bag/" + block.getColor().getName(),
                     new BlockItem(block, new FabricItemSettings().maxCount(1).group(ItemGroup.DECORATIONS)));
         }
@@ -399,7 +398,7 @@ public final class AurorasDecoRegistry {
 
         WoodType.stream().forEach(woodType -> {
             if (woodType.hasLog()) {
-                Block block = registerWithItem("stump/" + woodType.getPathName(),
+                var block = registerWithItem("stump/" + woodType.getPathName(),
                         new StumpBlock(woodType),
                         new FabricItemSettings().group(ItemGroup.DECORATIONS));
 

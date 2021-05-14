@@ -53,7 +53,7 @@ public class LanternRegistry {
      * @return the wall lantern block
      */
     public static WallLanternBlock registerWallLantern(LanternBlock block, Identifier lanternId) {
-        Identifier wallLanternId = getWallLanternId(lanternId);
+        var wallLanternId = getWallLanternId(lanternId);
 
         WallLanternBlock wallLanternBlock;
         if (WALL_LANTERNS.containsKey(wallLanternId))
@@ -86,9 +86,9 @@ public class LanternRegistry {
     }
 
     private static Identifier getWallLanternId(Identifier lanternId) {
-        String namespace = lanternId.getNamespace();
-        String path = lanternId.getPath();
-        String wallLanternPath = "wall_lantern";
+        var namespace = lanternId.getNamespace();
+        var path = lanternId.getPath();
+        var wallLanternPath = "wall_lantern";
 
         if (!namespace.equals("minecraft") && !namespace.equals("aurorasdeco"))
             wallLanternPath += '/' + namespace + '/' + path.replace("_lantern_block", "")
@@ -102,12 +102,8 @@ public class LanternRegistry {
     }
 
     public static @Nullable WallLanternBlock fromItem(Item item) {
-        if (item instanceof BlockItem) {
-            BlockItem blockItem = (BlockItem) item;
-            if (blockItem.getBlock() instanceof LanternBlock) {
-                LanternBlock lanternBlock = (LanternBlock) blockItem.getBlock();
-                return WALL_LANTERN_BLOCK_MAP.get(lanternBlock);
-            }
+        if (item instanceof BlockItem blockItem && blockItem.getBlock() instanceof LanternBlock lanternBlock) {
+            return WALL_LANTERN_BLOCK_MAP.get(lanternBlock);
         }
         return null;
     }

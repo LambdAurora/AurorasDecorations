@@ -121,21 +121,21 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState state = this.getDefaultState();
-        FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
-        WorldView world = ctx.getWorld();
-        BlockPos pos = ctx.getBlockPos();
-        Direction[] directions = ctx.getPlacementDirections();
+        var state = this.getDefaultState();
+        var fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
+        var world = ctx.getWorld();
+        var pos = ctx.getBlockPos();
+        var directions = ctx.getPlacementDirections();
 
-        NbtCompound nbt = ctx.getStack().getSubTag("BlockEntityTag");
+        var nbt = ctx.getStack().getSubTag("BlockEntityTag");
         if (nbt != null && nbt.contains("lit")) {
             state = state.with(LIT, nbt.getBoolean("lit"));
         }
 
-        for (Direction direction : directions) {
+        for (var direction : directions) {
             if (direction.getAxis().isHorizontal()) {
-                Direction direction2 = direction.getOpposite();
-                state = state.with(FACING, direction2);
+                var opposite = direction.getOpposite();
+                state = state.with(FACING, opposite);
                 if (state.canPlaceAt(world, pos)) {
                     return state.with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
                 }
@@ -157,18 +157,18 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        BlackboardBlockEntity blackboard = this.getBlackboardEntity(world, pos);
+        var blackboard = this.getBlackboardEntity(world, pos);
         if (blackboard != null) {
             if (stack.hasCustomName()) {
                 blackboard.setCustomName(stack.getName());
             }
 
-            NbtCompound nbt = stack.getSubTag("BlockEntityTag");
+            var nbt = stack.getSubTag("BlockEntityTag");
             if (state.get(WATERLOGGED) && !this.isLocked())
                 return;
 
             if (nbt != null && Blackboard.shouldConvert(nbt)) {
-                Blackboard blackboardData = new Blackboard();
+                var blackboardData = new Blackboard();
                 blackboardData.readNbt(nbt);
                 blackboard.copy(blackboardData);
             }
@@ -188,7 +188,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
             return Blocks.AIR.getDefaultState();
 
         if (!this.isLocked()) {
-            BlackboardBlockEntity blackboard = this.getBlackboardEntity(world, pos);
+            var blackboard = this.getBlackboardEntity(world, pos);
             if (blackboard != null && !world.isClient()) {
                 if (state.get(WATERLOGGED) && !blackboard.isEmpty()) {
                     blackboard.clear();
@@ -204,14 +204,13 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos,
                               PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack stack = player.getStackInHand(hand);
-        Direction facing = state.get(FACING);
+        var stack = player.getStackInHand(hand);
+        var facing = state.get(FACING);
 
         if (!this.isLocked() && hit.getSide() == facing) {
-            BlackboardBlockEntity blackboard = this.getBlackboardEntity(world, pos);
-            ;
+            var blackboard = this.getBlackboardEntity(world, pos);
             if (blackboard != null) {
-                Blackboard.Color color = Blackboard.getColorFromItem(stack.getItem());
+                var color = Blackboard.getColorFromItem(stack.getItem());
                 boolean isBoneMeal = stack.isOf(Items.BONE_MEAL);
                 boolean isCoal = stack.isIn(ItemTags.COALS);
                 if (stack.isOf(Items.WATER_BUCKET) && this.tryClear(world, blackboard, player)) {
@@ -306,11 +305,11 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity playerEntity) {
-        BlackboardBlockEntity blackboard = this.getBlackboardEntity(world, pos);
+        var blackboard = this.getBlackboardEntity(world, pos);
         if (blackboard != null) {
             if (!world.isClient() && playerEntity.isCreative()) {
-                ItemStack stack = new ItemStack(this);
-                NbtCompound nbt = blackboard.writeBlackBoardNbt(new NbtCompound());
+                var stack = new ItemStack(this);
+                var nbt = blackboard.writeBlackBoardNbt(new NbtCompound());
                 nbt.remove("custom_name");
                 stack.putSubTag("BlockEntityTag", nbt);
 
@@ -318,7 +317,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
                     stack.setCustomName(blackboard.getCustomName());
                 }
 
-                ItemEntity itemEntity = new ItemEntity(world,
+                var itemEntity = new ItemEntity(world,
                         pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, stack);
                 itemEntity.setToDefaultPickupDelay();
                 world.spawnEntity(itemEntity);
@@ -331,10 +330,10 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
     @Environment(EnvType.CLIENT)
     @Override
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-        ItemStack stack = super.getPickStack(world, pos, state);
-        BlackboardBlockEntity blackboard = this.getBlackboardEntity(world, pos);
+        var stack = super.getPickStack(world, pos, state);
+        var blackboard = this.getBlackboardEntity(world, pos);
         if (blackboard != null) {
-            NbtCompound nbt = blackboard.writeBlackBoardNbt(new NbtCompound());
+            var nbt = blackboard.writeBlackBoardNbt(new NbtCompound());
             nbt.remove("custom_name");
             stack.putSubTag("BlockEntityTag", nbt);
         }
@@ -362,9 +361,9 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
     }
 
     public @Nullable BlackboardBlockEntity getBlackboardEntity(BlockView world, BlockPos pos) {
-        BlockEntity entity = world.getBlockEntity(pos);
-        if (entity instanceof BlackboardBlockEntity)
-            return (BlackboardBlockEntity) entity;
+        var entity = world.getBlockEntity(pos);
+        if (entity instanceof BlackboardBlockEntity blackboard)
+            return blackboard;
         return null;
     }
 
@@ -384,7 +383,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
                 world.setBlockState(pos, state.with(Properties.WATERLOGGED, true), 3);
                 world.getFluidTickScheduler().schedule(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
 
-                BlackboardBlockEntity blackboard = this.getBlackboardEntity(world, pos);
+                var blackboard = this.getBlackboardEntity(world, pos);
                 if (blackboard != null && !this.isLocked()) {
                     if (!blackboard.isEmpty()) {
                         blackboard.clear();
@@ -404,7 +403,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
     }
 
     static {
-        ImmutableMap.Builder<Direction, VoxelShape> builder = ImmutableMap.builder();
+        var builder = ImmutableMap.<Direction, VoxelShape>builder();
 
         builder.put(Direction.NORTH, createCuboidShape(0.0, 0.0, 15.0, 16.0, 16.0, 16.0));
         builder.put(Direction.EAST, createCuboidShape(0.0, 0.0, 0.0, 1.0, 16.0, 16.0));

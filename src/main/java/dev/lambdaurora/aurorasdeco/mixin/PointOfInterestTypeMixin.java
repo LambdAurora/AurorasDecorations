@@ -44,11 +44,9 @@ public class PointOfInterestTypeMixin implements PointOfInterestTypeAccessor {
             at = @At("RETURN")
     )
     private void onInit(String id, Set<BlockState> blockStates, int ticketCount, int searchDistance, CallbackInfo ci) {
-        if (id.equals("home")) {
-            if (blockStates instanceof ImmutableSet) {
-                // We need this one to be mutable.
-                this.blockStates = new HashSet<>(blockStates);
-            }
+        if (id.equals("home") && blockStates instanceof ImmutableSet) {
+            // We need this one to be mutable.
+            this.blockStates = new HashSet<>(blockStates);
         }
     }
 

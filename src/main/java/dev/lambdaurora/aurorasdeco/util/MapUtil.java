@@ -21,7 +21,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 import java.util.Map;
@@ -41,31 +40,31 @@ public final class MapUtil {
     }
 
     public static <K, I, O> Map<K, O> map(Map<K, I> map, Function<I, O> mapper) {
-        Object2ObjectMap<K, O> out = new Object2ObjectOpenHashMap<>();
+        var out = new Object2ObjectOpenHashMap<K, O>();
         map.forEach((key, input) -> out.put(key, mapper.apply(input)));
         return out;
     }
 
     public static <K, I, O> Map<K, O> mapWithKey(Map<K, I> map, BiFunction<K, I, O> mapper) {
-        Object2ObjectMap<K, O> out = new Object2ObjectOpenHashMap<>();
+        var out = new Object2ObjectOpenHashMap<K, O>();
         map.forEach((key, input) -> out.put(key, mapper.apply(key, input)));
         return out;
     }
 
     public static <K extends Enum<K>, I, O> Map<K, O> mapWithEnumKey(Map<K, I> map, BiFunction<K, I, O> mapper) {
-        ImmutableMap.Builder<K, O> out = new ImmutableMap.Builder<>();
+        var out = new ImmutableMap.Builder<K, O>();
         map.forEach((key, input) -> out.put(key, mapper.apply(key, input)));
         return Maps.newEnumMap(out.build());
     }
 
     public static <I, O> Int2ObjectMap<O> map(Int2ObjectMap<I> map, Function<I, O> mapper) {
-        Int2ObjectMap<O> out = new Int2ObjectOpenHashMap<>();
+        var out = new Int2ObjectOpenHashMap<O>();
         map.int2ObjectEntrySet().forEach(entry -> out.put(entry.getIntKey(), mapper.apply(entry.getValue())));
         return out;
     }
 
     public static <I, O> Int2ObjectMap<O> mapWithKey(Int2ObjectMap<I> map, FunctionWithIntKey<I, O> mapper) {
-        Int2ObjectMap<O> out = new Int2ObjectOpenHashMap<>();
+        var out = new Int2ObjectOpenHashMap<O>();
         map.int2ObjectEntrySet().forEach(entry ->
                 out.put(entry.getIntKey(),
                         mapper.apply(entry.getIntKey(), entry.getValue()))

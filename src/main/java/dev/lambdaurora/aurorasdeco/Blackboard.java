@@ -161,7 +161,7 @@ public class Blackboard {
     }
 
     public static Blackboard fromNbt(NbtCompound nbt) {
-        Blackboard blackboard = new Blackboard();
+        var blackboard = new Blackboard();
         blackboard.readNbt(nbt);
         return blackboard;
     }
@@ -260,7 +260,7 @@ public class Blackboard {
         }
 
         public static Color fromDye(DyeItem dyeItem) {
-            DyeColor color = dyeItem.getColor();
+            var color = dyeItem.getColor();
 
             if (COLORS.containsKey(color.getId() + 1)) {
                 return COLORS.get(color.getId() + 1);
@@ -273,8 +273,8 @@ public class Blackboard {
         }
 
         public static void tryRegisterColorFromItem(Identifier id, Item item) {
-            if (item instanceof DyeItem) {
-                fromDye((DyeItem) item);
+            if (item instanceof DyeItem dyeItem) {
+                fromDye(dyeItem);
             } else if (id.getNamespace().equals("ecotones") && id.getPath().equals("blueberries")) {
                 new Color(FREE_COLOR_SPACE + 2, BLUEBERRIES_COLOR, item);
             }

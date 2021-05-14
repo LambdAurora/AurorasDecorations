@@ -58,8 +58,8 @@ public class WindChimeBlock extends BlockWithEntity {
 
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        BlockPos upPos = pos.up();
-        BlockState upState = world.getBlockState(upPos);
+        var upPos = pos.up();
+        var upState = world.getBlockState(upPos);
 
         if (upState.isIn(BlockTags.LEAVES))
             return true;
@@ -87,7 +87,7 @@ public class WindChimeBlock extends BlockWithEntity {
         if (!world.isClient())
             return;
 
-        WindChimeBlockEntity windChime = AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE.get(world, pos);
+        var windChime = AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE.get(world, pos);
         if (windChime == null)
             return;
 

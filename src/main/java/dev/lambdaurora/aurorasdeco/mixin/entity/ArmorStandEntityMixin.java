@@ -70,7 +70,7 @@ public abstract class ArmorStandEntityMixin extends LivingEntity {
     )
     private void onInteractAt(PlayerEntity player, Vec3d hitPos, Hand hand, CallbackInfoReturnable<ActionResult> cir,
                               ItemStack stack) {
-        World world = this.getEntityWorld();
+        var world = this.getEntityWorld();
         if (stack.isOf(Items.STICK) && !this.shouldShowArms()) {
             this.setShowArms(true);
             this.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 1.f, 1.f);

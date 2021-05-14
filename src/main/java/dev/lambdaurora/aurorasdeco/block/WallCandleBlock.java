@@ -22,8 +22,6 @@ import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -81,27 +79,27 @@ public class WallCandleBlock extends ExtendedCandleBlock {
 
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        Direction direction = state.get(FACING);
-        BlockPos blockPos = pos.offset(direction.getOpposite());
-        BlockState blockState = world.getBlockState(blockPos);
+        var direction = state.get(FACING);
+        var blockPos = pos.offset(direction.getOpposite());
+        var blockState = world.getBlockState(blockPos);
         return !VoxelShapes.matchesAnywhere(blockState.getSidesShape(world, blockPos).getFace(direction),
                 HOLDER_SHAPE, BooleanBiFunction.ONLY_SECOND);
     }
 
     @Override
     public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState state = super.getPlacementState(ctx);
+        var state = super.getPlacementState(ctx);
         if (state == null)
             return null;
 
-        WorldView world = ctx.getWorld();
-        BlockPos pos = ctx.getBlockPos();
-        Direction[] directions = ctx.getPlacementDirections();
+        var world = ctx.getWorld();
+        var pos = ctx.getBlockPos();
+        var directions = ctx.getPlacementDirections();
 
-        for (Direction direction : directions) {
+        for (var direction : directions) {
             if (direction.getAxis().isHorizontal()) {
-                Direction direction2 = direction.getOpposite();
-                state = state.with(FACING, direction2);
+                var opposite = direction.getOpposite();
+                state = state.with(FACING, opposite);
                 if (state.canPlaceAt(world, pos)) {
                     return state;
                 }
@@ -122,14 +120,13 @@ public class WallCandleBlock extends ExtendedCandleBlock {
 
     /* Client */
 
-    @Environment(EnvType.CLIENT)
     protected Iterable<Vec3d> getParticleOffsets(BlockState state) {
         return CANDLES_TO_PARTICLE_OFFSETS.get(state.get(CANDLES).intValue()).get(state.get(FACING));
     }
 
     static {
         SHAPES = Util.make(() -> {
-            Int2ObjectMap<Map<Direction, VoxelShape>> shapes = new Int2ObjectOpenHashMap<>();
+            var shapes = new Int2ObjectOpenHashMap<Map<Direction, VoxelShape>>();
 
             double highest = 12.0;
             shapes.put(1, new EnumMap<>(ImmutableMap.of(
@@ -165,7 +162,7 @@ public class WallCandleBlock extends ExtendedCandleBlock {
         });
 
         CANDLES_TO_PARTICLE_OFFSETS = Util.make(() -> {
-            Int2ObjectMap<Map<Direction, List<Vec3d>>> offsets = new Int2ObjectOpenHashMap<>();
+            var offsets = new Int2ObjectOpenHashMap<Map<Direction, List<Vec3d>>>();
 
             double highestPoint = 0.875;
             double second = 0.8125;

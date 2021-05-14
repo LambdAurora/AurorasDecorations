@@ -62,8 +62,8 @@ public abstract class ItemFrameEntityMixin extends AbstractDecorationEntity {
     @Inject(method = "interact", at = @At("HEAD"), cancellable = true)
     private void onInteract(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
         if (!this.fixed) {
-            ItemStack stack = player.getStackInHand(hand);
-            ItemStack heldStack = this.getHeldItemStack();
+            var stack = player.getStackInHand(hand);
+            var heldStack = this.getHeldItemStack();
             if (!heldStack.isEmpty() && stack.isOf(Items.SHEARS) && !this.isInvisible()) {
                 if (!this.getEntityWorld().isClient()) {
                     this.setInvisible(true);

@@ -27,7 +27,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingResultInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.Property;
@@ -141,7 +140,7 @@ public final class SawmillScreenHandler extends ScreenHandler {
 
     @Override
     public void onContentChanged(Inventory inventory) {
-        ItemStack stack = this.inputSlot.getStack();
+        var stack = this.inputSlot.getStack();
         if (!stack.isOf(this.inputStack.getItem())) {
             this.inputStack = stack.copy();
             this.updateInput(inventory, stack);
@@ -159,7 +158,7 @@ public final class SawmillScreenHandler extends ScreenHandler {
 
     private void populateResult() {
         if (!this.availableRecipes.isEmpty() && this.isButtonValid(this.selectedRecipe.get())) {
-            WoodcuttingRecipe recipe = this.availableRecipes.get(this.selectedRecipe.get());
+            var recipe = this.availableRecipes.get(this.selectedRecipe.get());
             this.output.setLastRecipe(recipe);
             this.outputSlot.setStack(recipe.craft(this.input));
         } else {
@@ -181,11 +180,11 @@ public final class SawmillScreenHandler extends ScreenHandler {
 
     @Override
     public ItemStack transferSlot(PlayerEntity player, int index) {
-        ItemStack outputStack = ItemStack.EMPTY;
-        Slot slot = this.slots.get(index);
+        var outputStack = ItemStack.EMPTY;
+        var slot = this.slots.get(index);
         if (slot.hasStack()) {
-            ItemStack stack = slot.getStack();
-            Item item = stack.getItem();
+            var stack = slot.getStack();
+            var item = stack.getItem();
             outputStack = stack.copy();
             if (index == 1) {
                 item.onCraft(stack, player.world, player);
@@ -193,7 +192,7 @@ public final class SawmillScreenHandler extends ScreenHandler {
                     return ItemStack.EMPTY;
                 }
 
-                slot.onStackChanged(stack, outputStack);
+                slot.onQuickTransfer(stack, outputStack);
             } else if (index == 0) {
                 if (!this.insertItem(stack, 2, 38, false)) {
                     return ItemStack.EMPTY;
@@ -250,7 +249,7 @@ public final class SawmillScreenHandler extends ScreenHandler {
         public void onTakeItem(PlayerEntity player, ItemStack stack) {
             stack.onCraft(player.world, player, stack.getCount());
             SawmillScreenHandler.this.output.unlockLastRecipe(player);
-            ItemStack inputStack = SawmillScreenHandler.this.inputSlot.takeStack(1);
+            var inputStack = SawmillScreenHandler.this.inputSlot.takeStack(1);
             if (!inputStack.isEmpty()) {
                 SawmillScreenHandler.this.populateResult();
             }

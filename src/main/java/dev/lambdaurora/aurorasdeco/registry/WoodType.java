@@ -77,8 +77,8 @@ public final class WoodType {
     }
 
     public String getPathName() {
-        String path = this.id.getPath();
-        String namespace = this.id.getNamespace();
+        var path = this.id.getPath();
+        var namespace = this.id.getNamespace();
         if (!namespace.equals("minecraft"))
             path = namespace + '/' + path;
         return path;
@@ -155,9 +155,9 @@ public final class WoodType {
     }
 
     public static @Nullable WoodType getFromPlanks(ItemConvertible block) {
-        Identifier id = Registry.ITEM.getId(block.asItem());
+        var id = Registry.ITEM.getId(block.asItem());
 
-        for (WoodType type : WOOD_TYPES) {
+        for (var type : WOOD_TYPES) {
             if (type.getPlanksId().equals(id))
                 return type;
         }
@@ -166,9 +166,9 @@ public final class WoodType {
     }
 
     public static @Nullable WoodType getFromLog(ItemConvertible block) {
-        Identifier id = Registry.ITEM.getId(block.asItem());
+        var id = Registry.ITEM.getId(block.asItem());
 
-        for (WoodType type : WOOD_TYPES) {
+        for (var type : WOOD_TYPES) {
             if (type.getLogId().equals(id))
                 return type;
         }
@@ -213,10 +213,10 @@ public final class WoodType {
     }
 
     public static Builder builder(Block block) {
-        Identifier blockId = Registry.BLOCK.getId(block);
-        Identifier id = new Identifier(blockId.getNamespace(), blockId.getPath().replace("_planks", ""));
-        Material material = ((AbstractBlockAccessor) block).getMaterial();
-        Builder builder = new Builder(id)
+        var blockId = Registry.BLOCK.getId(block);
+        var id = new Identifier(blockId.getNamespace(), blockId.getPath().replace("_planks", ""));
+        var material = ((AbstractBlockAccessor) block).getMaterial();
+        var builder = new Builder(id)
                 .material(material)
                 .mapColor(block.getDefaultMapColor())
                 .logSoundGroup(block.getSoundGroup(block.getDefaultState()));

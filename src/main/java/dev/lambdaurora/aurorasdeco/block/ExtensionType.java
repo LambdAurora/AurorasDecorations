@@ -18,7 +18,6 @@
 package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.block.WallBlock;
@@ -26,7 +25,6 @@ import net.minecraft.tag.BlockTags;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.WorldView;
 
@@ -75,11 +73,11 @@ public enum ExtensionType implements StringIdentifiable {
      * @return the extension value
      */
     public static ExtensionType getExtensionValue(BlockState state, BlockPos pos, WorldView world) {
-        Block block = state.getBlock();
+        var block = state.getBlock();
 
-        VoxelShape shape = state.getSidesShape(world, pos);
+        var shape = state.getSidesShape(world, pos);
         if (shape != VoxelShapes.empty()) {
-            Box box = shape.getBoundingBox();
+            var box = shape.getBoundingBox();
             if (block instanceof FenceBlock || state.isIn(BlockTags.FENCES) || AuroraUtil.isShapeEqual(FENCE_SHAPE, box))
                 return FENCE;
             if (block instanceof WallBlock || state.isIn(BlockTags.WALLS) || AuroraUtil.isShapeEqual(WALL_SHAPE, box))

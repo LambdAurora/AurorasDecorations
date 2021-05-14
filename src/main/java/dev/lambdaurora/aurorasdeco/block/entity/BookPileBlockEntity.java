@@ -52,7 +52,7 @@ public class BookPileBlockEntity extends BlockEntity implements BlockEntityClien
     public void insertBook(ItemStack stack) {
         for (int i = 0; i < this.books.size(); i++) {
             if (this.books.get(i).isEmpty()) {
-                ItemStack copy = stack.copy();
+                var copy = stack.copy();
                 copy.setCount(1);
                 this.books.set(i, copy);
 
@@ -63,8 +63,8 @@ public class BookPileBlockEntity extends BlockEntity implements BlockEntityClien
     }
 
     public ItemStack removeBook(int slot) {
-        ItemStack stack = this.books.get(slot);
-        ItemStack copy = stack.copy();
+        var stack = this.books.get(slot);
+        var copy = stack.copy();
         if (!stack.isEmpty()) {
             stack.setCount(0);
             this.markDirty();

@@ -22,9 +22,7 @@ import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
-import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
-import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachedBlockView;
@@ -34,7 +32,6 @@ import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
 
 import java.util.Random;
@@ -53,10 +50,9 @@ public class BakedBlackboardModel extends ForwardingBakedModel {
     public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
         super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 
-        Object attachment = ((RenderAttachedBlockView) blockView).getBlockEntityRenderAttachment(pos);
-        if (attachment instanceof Blackboard && white != null) {
-            Blackboard blackboard = (Blackboard) attachment;
-            Direction facing = state.get(BlackboardBlock.FACING);
+        var attachment = ((RenderAttachedBlockView) blockView).getBlockEntityRenderAttachment(pos);
+        if (attachment instanceof Blackboard blackboard && white != null) {
+            var facing = state.get(BlackboardBlock.FACING);
 
             boolean lit = blackboard.isLit();
             int light = LightmapTextureManager.pack(15, 15);
@@ -64,11 +60,11 @@ public class BakedBlackboardModel extends ForwardingBakedModel {
                 light = WorldRenderer.getLightmapCoordinates(blockView, pos);
             }
 
-            RenderMaterial material = RendererAccess.INSTANCE.getRenderer().materialFinder()
+            var material = RendererAccess.INSTANCE.getRenderer().materialFinder()
                     .disableDiffuse(0, true)
                     .disableAo(0, true)
                     .find();
-            QuadEmitter emitter = context.getEmitter();
+            var emitter = context.getEmitter();
             for (int y = 0; y < 16; y++) {
                 for (int x = 0; x < 16; x++) {
                     int color = blackboard.getColor(x, y);

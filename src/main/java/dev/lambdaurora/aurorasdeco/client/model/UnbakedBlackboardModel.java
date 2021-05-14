@@ -37,26 +37,21 @@ import java.util.Set;
 import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
-public class UnbakedBlackboardModel implements UnbakedModel {
+public record UnbakedBlackboardModel(UnbakedModel baseModel) implements UnbakedModel {
     private static final SpriteIdentifier WHITE = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE,
             AurorasDeco.id("special/white"));
-    private final UnbakedModel baseModel;
-
-    public UnbakedBlackboardModel(UnbakedModel baseModel) {
-        this.baseModel = baseModel;
-    }
 
     @Override
     public Collection<Identifier> getModelDependencies() {
-        return this.baseModel.getModelDependencies();
+        return this.baseModel().getModelDependencies();
     }
 
     @Override
     public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter,
                                                                Set<Pair<String, String>> unresolvedTextureReferences) {
-        Set<SpriteIdentifier> textures = new HashSet<>();
+        var textures = new HashSet<SpriteIdentifier>();
         textures.add(WHITE);
-        textures.addAll(this.baseModel.getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences));
+        textures.addAll(this.baseModel().getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences));
         return textures;
     }
 
@@ -64,7 +59,7 @@ public class UnbakedBlackboardModel implements UnbakedModel {
     @Override
     public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer,
                            Identifier modelId) {
-        Sprite white = textureGetter.apply(WHITE);
-        return new BakedBlackboardModel(this.baseModel.bake(loader, textureGetter, rotationContainer, modelId), white);
+        var white = textureGetter.apply(WHITE);
+        return new BakedBlackboardModel(this.baseModel().bake(loader, textureGetter, rotationContainer, modelId), white);
     }
 }

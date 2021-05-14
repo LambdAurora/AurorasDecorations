@@ -18,7 +18,6 @@
 package dev.lambdaurora.aurorasdeco.entity.goal;
 
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.ai.goal.MoveToTargetPosGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.AnimalEntity;
@@ -49,12 +48,11 @@ public abstract class SleepInPetBedGoal extends MoveToTargetPosGoal {
 
     @Override
     public boolean canStart() {
-        if (this.mob instanceof AnimalEntity) {
-            if (((AnimalEntity) this.mob).isInLove())
+        if (this.mob instanceof AnimalEntity animal) {
+            if (animal.isInLove())
                 return false;
         }
-        if (this.mob instanceof TameableEntity) {
-            TameableEntity tameable = (TameableEntity) this.mob;
+        if (this.mob instanceof TameableEntity tameable) {
             if (!tameable.isTamed())
                 return false;
             if (tameable.isSitting())
@@ -85,7 +83,7 @@ public abstract class SleepInPetBedGoal extends MoveToTargetPosGoal {
     @Override
     public void tick() {
         boolean reached;
-        BlockPos targetPos = this.getTargetPos().down();
+        var targetPos = this.getTargetPos().down();
         if (!targetPos.isWithinDistance(this.mob.getPos(), this.getDesiredSquaredDistanceToTarget())) {
             reached = false;
             ++this.tryingTime;
@@ -113,7 +111,7 @@ public abstract class SleepInPetBedGoal extends MoveToTargetPosGoal {
             return false;
         }
 
-        BlockState state = world.getBlockState(pos);
+        var state = world.getBlockState(pos);
         return state.isIn(AurorasDecoRegistry.PET_BEDS);
     }
 }

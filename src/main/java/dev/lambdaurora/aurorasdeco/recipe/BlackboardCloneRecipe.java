@@ -21,7 +21,6 @@ import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
@@ -60,7 +59,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
         int count = 0;
 
         for (int slot = 0; slot < inv.size(); ++slot) {
-            ItemStack stack = inv.getStack(slot);
+            var stack = inv.getStack(slot);
 
             if (INPUT.test(stack)) {
                 if (OUTPUT.test(stack) && !this.isInput(stack))
@@ -80,12 +79,12 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
         Text customName = null;
 
         for (int slot = 0; slot < inv.size(); ++slot) {
-            ItemStack craftStack = inv.getStack(slot);
+            var craftStack = inv.getStack(slot);
             if (!craftStack.isEmpty()) {
                 if (OUTPUT.test(craftStack) && !this.isInput(craftStack)) {
                     output = craftStack;
                 } else if (this.isInput(craftStack)) {
-                    NbtCompound nbt = craftStack.getSubTag("BlockEntityTag");
+                    var nbt = craftStack.getSubTag("BlockEntityTag");
                     blackboard = Blackboard.fromNbt(nbt);
                     if (craftStack.hasCustomName())
                         customName = craftStack.getName();
@@ -94,9 +93,9 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
         }
 
 
-        ItemStack out = output.copy();
+        var out = output.copy();
         out.setCount(1);
-        NbtCompound nbt = out.getOrCreateSubTag("BlockEntityTag");
+        var nbt = out.getOrCreateSubTag("BlockEntityTag");
         blackboard.writeNbt(nbt);
 
         if (customName != null)
@@ -106,7 +105,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
     }
 
     private boolean isInput(ItemStack stack) {
-        NbtCompound nbt = stack.getSubTag("BlockEntityTag");
+        var nbt = stack.getSubTag("BlockEntityTag");
         if (nbt != null) {
             if (nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
                 byte[] pixels = nbt.getByteArray("pixels");
@@ -121,7 +120,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
     }
 
     @Override
-    public DefaultedList<ItemStack> getRemainingStacks(CraftingInventory craftingInventory) {
+    public DefaultedList<ItemStack> getRemainder(CraftingInventory craftingInventory) {
         DefaultedList<ItemStack> defaultedList = DefaultedList.ofSize(craftingInventory.size(), ItemStack.EMPTY);
 
         for (int i = 0; i < defaultedList.size(); ++i) {

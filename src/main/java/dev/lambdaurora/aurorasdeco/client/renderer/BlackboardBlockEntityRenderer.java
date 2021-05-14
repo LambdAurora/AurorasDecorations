@@ -22,16 +22,13 @@ import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
 import dev.lambdaurora.aurorasdeco.block.entity.BlackboardBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3f;
 
@@ -50,7 +47,6 @@ public class BlackboardBlockEntityRenderer implements BlockEntityRenderer<Blackb
     private static final Deque<BlackboardTexture> CACHED_RENDER_LAYERS = new ArrayDeque<>();
 
     public BlackboardBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
-
     }
 
     @Override
@@ -59,7 +55,7 @@ public class BlackboardBlockEntityRenderer implements BlockEntityRenderer<Blackb
         if (blackboard.isLocked())
             return;
 
-        BlockState state = blackboard.getCachedState();
+        var state = blackboard.getCachedState();
 
         if (state.get(BlackboardBlock.LIT)) {
             light = 15728880;
@@ -72,7 +68,7 @@ public class BlackboardBlockEntityRenderer implements BlockEntityRenderer<Blackb
 
         matrices.scale(1.f, -1.f, 1.f);
 
-        BlackboardTexture texture = blackboard.getTexture();
+        var texture = blackboard.getTexture();
         if (texture != null) {
             texture.render(matrices.peek().getModel(), vertexConsumers, light);
         }
@@ -99,13 +95,13 @@ public class BlackboardBlockEntityRenderer implements BlockEntityRenderer<Blackb
         private final RenderLayer renderLayer;
 
         public BlackboardTexture() {
-            Identifier id = MinecraftClient.getInstance().getTextureManager()
+            var id = MinecraftClient.getInstance().getTextureManager()
                     .registerDynamicTexture("aurorasdeco/blackboard", this.texture);
             this.renderLayer = RenderLayer.getText(id);
         }
 
         public void render(Matrix4f model, VertexConsumerProvider vertexConsumers, int light) {
-            VertexConsumer vertices = vertexConsumers.getBuffer(this.renderLayer);
+            var vertices = vertexConsumers.getBuffer(this.renderLayer);
             vertices.vertex(model, 0.f, 1.f, 0.f).color(255, 255, 255, 255)
                     .texture(0.f, 1.f).light(light).next();
             vertices.vertex(model, 1.f, 1.f, 0.f).color(255, 255, 255, 255)

@@ -55,8 +55,8 @@ public class WindChimeBlockEntityRenderer implements BlockEntityRenderer<WindChi
     }
 
     public static TexturedModelData getTexturedModelData() {
-        ModelData modelData = new ModelData();
-        ModelPartData root = modelData.getRoot();
+        var modelData = new ModelData();
+        var root = modelData.getRoot();
 
         addChime(root, 1, 10.f, 5.f, 10.f);
         addChime(root, 2, 9.f, 5.f, 7.f);
@@ -69,7 +69,7 @@ public class WindChimeBlockEntityRenderer implements BlockEntityRenderer<WindChi
     }
 
     private static void addChime(ModelPartData root, int number, float size, float x, float z) {
-        ModelPartData chimeBody = root.addChild("chime" + number + "_body", ModelPartBuilder.create()
+        var chimeBody = root.addChild("chime" + number + "_body", ModelPartBuilder.create()
                         .uv(0, 0)
                         .cuboid(-1.f, -(2.f + size), -1.f, 2.f, size, 2.f),
                 ModelTransform.pivot(x, 12.f, z));

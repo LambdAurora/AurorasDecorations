@@ -22,8 +22,6 @@ import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
 
-import java.util.Random;
-
 public class AmethystGlintParticle extends SpriteBillboardParticle {
     protected AmethystGlintParticle(ClientWorld clientWorld, double x, double y, double z,
                                     double velocityX, double velocityY, double velocityZ) {
@@ -49,20 +47,14 @@ public class AmethystGlintParticle extends SpriteBillboardParticle {
         return ParticleTextureSheet.PARTICLE_SHEET_OPAQUE;
     }
 
-    public static class Factory implements ParticleFactory<DefaultParticleType> {
-        private final SpriteProvider spriteProvider;
-
-        public Factory(SpriteProvider spriteProvider) {
-            this.spriteProvider = spriteProvider;
-        }
-
+    public record Factory(SpriteProvider spriteProvider) implements ParticleFactory<DefaultParticleType> {
         @Override
         public Particle createParticle(DefaultParticleType parameters, ClientWorld clientWorld, double x, double y, double z,
                                        double velocityX, double velocityY, double velocityZ) {
-            Random random = clientWorld.random;
-            AmethystGlintParticle particle = new AmethystGlintParticle(clientWorld, x, y, z,
+            var random = clientWorld.random;
+            var particle = new AmethystGlintParticle(clientWorld, x, y, z,
                     0.f, random.nextDouble() * -0.1, 0.f);
-            particle.setSprite(this.spriteProvider);
+            particle.setSprite(this.spriteProvider());
             return particle;
         }
     }

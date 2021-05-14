@@ -67,8 +67,8 @@ public final class PottedPlantType {
     }
 
     public static @Nullable BigFlowerPotBlock registerFromItem(Item item) {
-        if (item instanceof BlockItem)
-            return registerFromBlock(((BlockItem) item).getBlock());
+        if (item instanceof BlockItem blockItem)
+            return registerFromBlock(blockItem.getBlock());
         return null;
     }
 
@@ -77,7 +77,7 @@ public final class PottedPlantType {
     }
 
     public static @Nullable BigFlowerPotBlock registerFromBlock(Identifier plantId, Block plant) {
-        String id = plantId.toString();
+        var id = plantId.toString();
         if (id.startsWith("minecraft:")) {
             id = id.substring("minecraft:".length());
         } else {
@@ -96,19 +96,18 @@ public final class PottedPlantType {
         return register(id, plant, item, BigFlowerPotBlock::new);
     }
 
-    @SuppressWarnings("unchecked")
     public static <T extends BigFlowerPotBlock> T register(String id, Block plant, Item item,
                                                            Function<PottedPlantType, T> flowerPotBlockFactory) {
-        PottedPlantType type = new PottedPlantType(id, plant, item);
+        var type = new PottedPlantType(id, plant, item);
         TYPES.put(id, type);
-        BigFlowerPotBlock potBlock = flowerPotBlockFactory.apply(type);
+        var potBlock = flowerPotBlockFactory.apply(type);
         type.pot = potBlock;
         if (!type.isEmpty())
             CLIENT_HANDLER.accept(potBlock);
         if (item != Items.AIR || type.isEmpty()) {
             ITEM_TO_FLOWER_POT.put(item, potBlock);
         }
-        return (T) potBlock;
+        return potBlock;
     }
 
     public static BigFlowerPotBlock getFlowerPotFromItem(Item item) {

@@ -81,7 +81,7 @@ public class PieBlock extends Block {
      * @return the corresponding pie block
      */
     public static PieBlock fromPieItem(Item item) {
-        PieBlock block = new PieBlock(item.getFoodComponent());
+        var block = new PieBlock(item.getFoodComponent());
 
         Item.BLOCK_ITEMS.put(block, item);
 

@@ -25,7 +25,6 @@ import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -117,12 +116,12 @@ public class BigFlowerPotBlock extends Block {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack handStack = player.getStackInHand(hand);
-        BigFlowerPotBlock toPlace = PottedPlantType.getFlowerPotFromItem(handStack.getItem());
+        var handStack = player.getStackInHand(hand);
+        var toPlace = PottedPlantType.getFlowerPotFromItem(handStack.getItem());
         boolean empty = this.isEmpty();
         boolean toPlaceEmpty = toPlace.isEmpty();
         if (empty != toPlaceEmpty) {
-            BlockPos up = pos.up();
+            var up = pos.up();
             if (empty) {
                 if (!world.getBlockState(up).isAir())
                     return ActionResult.PASS;
@@ -146,18 +145,18 @@ public class BigFlowerPotBlock extends Block {
     }
 
     private void removePlant(World world, BlockPos pos, @Nullable PlayerEntity player, @Nullable Hand hand, boolean removeUp) {
-        ItemStack droppedStack = new ItemStack(this.getPlantType().getItem());
+        var droppedStack = new ItemStack(this.getPlantType().getItem());
 
         if (!droppedStack.isEmpty()) {
             if (player != null) {
-                ItemStack handStack = player.getStackInHand(hand);
+                var handStack = player.getStackInHand(hand);
                 if (handStack.isEmpty()) {
                     player.setStackInHand(hand, droppedStack);
                 } else if (!player.giveItemStack(droppedStack)) {
                     player.dropItem(droppedStack, false);
                 }
             } else {
-                ItemEntity itemEntity = new ItemEntity(world, pos.getX() + .5f, pos.getY() + 1.5f, pos.getZ() + .5f,
+                var itemEntity = new ItemEntity(world, pos.getX() + .5f, pos.getY() + 1.5f, pos.getZ() + .5f,
                         droppedStack);
                 float speed = world.random.nextFloat() * .5f;
                 float angle = world.random.nextFloat() * 6.2831855f;
@@ -169,7 +168,7 @@ public class BigFlowerPotBlock extends Block {
         world.setBlockState(pos, AurorasDecoRegistry.BIG_FLOWER_POT_BLOCK.getDefaultState(), 3);
 
         if (removeUp) {
-            BlockPos up = pos.up();
+            var up = pos.up();
             if (world.getBlockState(up).isOf(AurorasDecoRegistry.PLANT_AIR_BLOCK)) {
                 world.setBlockState(up, Blocks.AIR.getDefaultState());
             }
@@ -181,7 +180,7 @@ public class BigFlowerPotBlock extends Block {
     /* Loot table */
 
     protected void acceptPlantDrops(BlockState state, LootContext.Builder builder, Consumer<ItemStack> consumer) {
-        Item item = this.getPlantType().getItem();
+        var item = this.getPlantType().getItem();
         if (item != null) {
             consumer.accept(new ItemStack(item));
         }
@@ -227,20 +226,17 @@ public class BigFlowerPotBlock extends Block {
         public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
             super.onStateReplaced(state, world, pos, newState, moved);
 
-            BlockPos downPos = pos.down();
-            BlockState downState = world.getBlockState(downPos);
-            if (downState.getBlock() instanceof BigFlowerPotBlock) {
-                BigFlowerPotBlock block = (BigFlowerPotBlock) downState.getBlock();
-                if (!block.isEmpty()) {
-                    block.removePlant(world, downPos, null, null, false);
-                }
+            var downPos = pos.down();
+            var downState = world.getBlockState(downPos);
+            if (downState.getBlock() instanceof BigFlowerPotBlock block && !block.isEmpty()) {
+                block.removePlant(world, downPos, null, null, false);
             }
         }
 
         @Override
         public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-            BlockPos downPos = pos.down();
-            BlockState downState = world.getBlockState(downPos);
+            var downPos = pos.down();
+            var downState = world.getBlockState(downPos);
             if (downState.getBlock() instanceof BigFlowerPotBlock) {
                 downState.onEntityCollision(world, downPos, entity);
             }
@@ -258,10 +254,9 @@ public class BigFlowerPotBlock extends Block {
         @Override
         public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world,
                                                     BlockPos pos, BlockPos posFrom) {
-            BlockState downState = world.getBlockState(pos.down());
-            if (downState.getBlock() instanceof BigFlowerPotBlock) {
-                if (!((BigFlowerPotBlock) downState.getBlock()).isEmpty())
-                    return state;
+            var downState = world.getBlockState(pos.down());
+            if (downState.getBlock() instanceof BigFlowerPotBlock block && !block.isEmpty()) {
+                return state;
             }
 
             return Blocks.AIR.getDefaultState();

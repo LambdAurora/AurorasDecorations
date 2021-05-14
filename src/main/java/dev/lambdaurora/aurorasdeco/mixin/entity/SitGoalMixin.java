@@ -18,7 +18,6 @@
 package dev.lambdaurora.aurorasdeco.mixin.entity;
 
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.ai.goal.SitGoal;
 import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.TameableEntity;
@@ -38,7 +37,7 @@ public class SitGoalMixin {
     @Inject(method = "start", at = @At("RETURN"))
     private void onStart(CallbackInfo ci) {
         if (this.tameable instanceof CatEntity) {
-            BlockState state = this.tameable.getEntityWorld().getBlockState(this.tameable.getBlockPos());
+            var state = this.tameable.getEntityWorld().getBlockState(this.tameable.getBlockPos());
             if (state.isIn(AurorasDecoRegistry.PET_BEDS)) {
                 this.tameable.setInSittingPose(false);
                 ((CatEntity) this.tameable).setSleepingWithOwner(true);

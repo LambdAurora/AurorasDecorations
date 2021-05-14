@@ -17,7 +17,6 @@
 
 package dev.lambdaurora.aurorasdeco;
 
-import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigPottedCactusBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
@@ -62,7 +61,7 @@ public class AurorasDeco implements ModInitializer {
                         PottedPlantType.register("pocket_cactus", Blocks.POTTED_CACTUS, object,
                                 type -> new BigPottedCactusBlock(type, BigPottedCactusBlock.POCKET_CACTUS_SHAPE)));
             } else if (PottedPlantType.isValidPlant(object)) {
-                BigFlowerPotBlock potBlock = PottedPlantType.registerFromItem(object);
+                var potBlock = PottedPlantType.registerFromItem(object);
                 if (potBlock != null)
                     Registry.register(Registry.BLOCK, id("big_flower_pot/" + potBlock.getPlantType().getId()), potBlock);
             }

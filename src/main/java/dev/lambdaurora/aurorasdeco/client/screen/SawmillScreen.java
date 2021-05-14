@@ -18,7 +18,6 @@
 package dev.lambdaurora.aurorasdeco.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
 import dev.lambdaurora.aurorasdeco.screen.SawmillScreenHandler;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.GameRenderer;
@@ -29,8 +28,6 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-
-import java.util.List;
 
 /**
  * Represents the sawmill screen.
@@ -64,12 +61,12 @@ public class SawmillScreen extends HandledScreen<SawmillScreenHandler> {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
         RenderSystem.setShaderTexture(0, TEXTURE);
-        this.drawTexture(matrices, this.field_2776, this.field_2800, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         int scrollAmount = (int) (41.f * this.scrollAmount);
-        this.drawTexture(matrices, this.field_2776 + 119, this.field_2800 + 15 + scrollAmount, 176 + (this.shouldScroll() ? 0 : 12), 0,
+        this.drawTexture(matrices, this.x + 119, this.y + 15 + scrollAmount, 176 + (this.shouldScroll() ? 0 : 12), 0,
                 12, 15);
-        int recipesX = this.field_2776 + 52;
-        int recipesY = this.field_2800 + 14;
+        int recipesX = this.x + 52;
+        int recipesY = this.y + 14;
         int recipesScrollOffset = this.scrollOffset + 12;
         this.renderRecipeBackground(matrices, mouseX, mouseY, recipesX, recipesY, recipesScrollOffset);
         this.renderRecipeIcons(recipesX, recipesY, recipesScrollOffset);
@@ -79,10 +76,10 @@ public class SawmillScreen extends HandledScreen<SawmillScreenHandler> {
     protected void drawMouseoverTooltip(MatrixStack matrices, int x, int y) {
         super.drawMouseoverTooltip(matrices, x, y);
         if (this.canCraft) {
-            int i = this.field_2776 + 52;
-            int j = this.field_2800 + 14;
+            int i = this.x + 52;
+            int j = this.y + 14;
             int k = this.scrollOffset + 12;
-            List<WoodcuttingRecipe> list = this.handler.getAvailableRecipes();
+            var list = this.handler.getAvailableRecipes();
 
             for (int l = this.scrollOffset; l < k && l < this.handler.getAvailableRecipeCount(); ++l) {
                 int m = l - this.scrollOffset;
@@ -113,7 +110,7 @@ public class SawmillScreen extends HandledScreen<SawmillScreenHandler> {
     }
 
     private void renderRecipeIcons(int x, int y, int scrollOffset) {
-        List<WoodcuttingRecipe> list = this.handler.getAvailableRecipes();
+        var list = this.handler.getAvailableRecipes();
 
         for (int i = this.scrollOffset; i < scrollOffset && i < this.handler.getAvailableRecipeCount(); ++i) {
             int offset = i - this.scrollOffset;
@@ -128,8 +125,8 @@ public class SawmillScreen extends HandledScreen<SawmillScreenHandler> {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         this.mouseClicked = false;
         if (this.canCraft) {
-            int i = this.field_2776 + 52;
-            int j = this.field_2800 + 14;
+            int i = this.x + 52;
+            int j = this.y + 14;
             int k = this.scrollOffset + 12;
 
             for (int slot = this.scrollOffset; slot < k; ++slot) {
@@ -145,8 +142,8 @@ public class SawmillScreen extends HandledScreen<SawmillScreenHandler> {
                 }
             }
 
-            i = this.field_2776 + 119;
-            j = this.field_2800 + 9;
+            i = this.x + 119;
+            j = this.y + 9;
             if (mouseX >= (double) i && mouseX < (double) (i + 12) && mouseY >= (double) j && mouseY < (double) (j + 54)) {
                 this.mouseClicked = true;
             }
@@ -158,7 +155,7 @@ public class SawmillScreen extends HandledScreen<SawmillScreenHandler> {
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (this.mouseClicked && this.shouldScroll()) {
-            int y = this.field_2776 + 14;
+            int y = this.y + 14;
             int j = y + 54;
             this.scrollAmount = ((float) mouseY - (float) y - 7.5f) / ((float) (j - y) - 15.f);
             this.scrollAmount = MathHelper.clamp(this.scrollAmount, 0.f, 1.f);

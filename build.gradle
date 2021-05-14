@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.6-SNAPSHOT'
+    id 'fabric-loom' version '0.8-SNAPSHOT'
     id 'java-library'
     id 'maven-publish'
     id 'org.cadixdev.licenser' version '0.5.0'
@@ -10,8 +10,7 @@ version = "${project.mod_version}+${getMCVersionString()}"
 archivesBaseName = project.archives_base_name
 
 // This field defines the Java version your mod target.
-// The Minecraft launcher currently installs Java 8 for users, so your mod probably wants to target Java 8 too.
-def targetJavaVersion = 8
+def targetJavaVersion = 16
 
 def getMCVersionString() {
     if (project.minecraft_version.matches("\\d\\dw\\d\\d[a-z]")) {
@@ -22,10 +21,6 @@ def getMCVersionString() {
 }
 
 repositories {
-    maven {
-        name 'AperLambda'
-        url 'https://aperlambda.github.io/maven'
-    }
     maven {
         name 'Jitpack'
         url 'https://jitpack.io'
@@ -54,9 +49,7 @@ java {
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
 
-    if (JavaVersion.current().isJava9Compatible()) {
-        it.options.release.set(targetJavaVersion)
-    }
+    it.options.release.set(targetJavaVersion)
 }
 
 processResources {

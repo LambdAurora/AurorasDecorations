@@ -21,14 +21,11 @@ import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayers;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
@@ -46,7 +43,7 @@ public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<Lante
     @Override
     public void render(LanternBlockEntity lantern, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
                        int light, int overlay) {
-        BlockPos pos = lantern.getPos();
+        var pos = lantern.getPos();
         boolean fluid = !lantern.getCachedState().getFluidState().isEmpty();
         float ticks = (float) lantern.swingTicks + tickDelta;
 
@@ -75,8 +72,8 @@ public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<Lante
             else pitch = angle;
         }
 
-        BlockState lanternState = lantern.getLanternState();
-        VertexConsumer consumer = vertexConsumers.getBuffer(RenderLayers.getBlockLayer(lanternState));
+        var lanternState = lantern.getLanternState();
+        var consumer = vertexConsumers.getBuffer(RenderLayers.getBlockLayer(lanternState));
         matrices.push();
 
         matrices.translate(8.f / 16.f, 12.f / 16.f, 8.f / 16.f);
@@ -85,22 +82,13 @@ public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<Lante
         if (pitch != 0.f)
             matrices.multiply(Vec3f.POSITIVE_X.getRadialQuaternion(pitch));
 
-        int angle;
-        Direction facing = lantern.getCachedState().get(WallLanternBlock.FACING);
-        switch (facing) {
-            case NORTH:
-                angle = 90;
-                break;
-            case EAST:
-                angle = 180;
-                break;
-            case SOUTH:
-                angle = 270;
-                break;
-            default:
-                angle = 0;
-                break;
-        }
+        var facing = lantern.getCachedState().get(WallLanternBlock.FACING);
+        int angle = switch (facing) {
+            case NORTH -> 90;
+            case EAST -> 180;
+            case SOUTH -> 270;
+            default -> 0;
+        };
 
         int extension = lantern.getCachedState().get(WallLanternBlock.EXTENSION).getOffset();
         matrices.translate((-facing.getOffsetX() * extension) / 16.f,

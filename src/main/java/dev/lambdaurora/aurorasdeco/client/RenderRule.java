@@ -17,9 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.client;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.api.EnvType;
@@ -32,7 +30,6 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
@@ -59,17 +56,11 @@ import java.util.function.Consumer;
  * @since 1.0.0
  */
 @Environment(EnvType.CLIENT)
-public class RenderRule {
+public record RenderRule(List<Model> models) {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Map<Identifier, RenderRule> ITEM_RULES = new Object2ObjectOpenHashMap<>();
     private static final Map<Tag<Item>, RenderRule> TAG_RULES = new Object2ObjectOpenHashMap<>();
     private static final JsonParser PARSER = new JsonParser();
-
-    private final List<Model> models;
-
-    public RenderRule(List<Model> models) {
-        this.models = models;
-    }
 
     public @Nullable Model getModelId(ItemStack stack, BlockState state, long seed) {
         if (this.models.size() == 1) {
@@ -95,19 +86,19 @@ public class RenderRule {
     }
 
     public @Nullable BakedModel getModel(ItemStack stack, BlockState state, long seed) {
-        Model model = this.getModelId(stack, state, seed);
+        var model = this.getModelId(stack, state, seed);
         return model == null ? null : model.getModel();
     }
 
     public static @Nullable RenderRule getRenderRule(ItemStack stack) {
-        Identifier itemId = Registry.ITEM.getId(stack.getItem());
+        var itemId = Registry.ITEM.getId(stack.getItem());
 
-        RenderRule rule = ITEM_RULES.get(itemId);
+        var rule = ITEM_RULES.get(itemId);
         if (rule != null) {
             return rule;
         }
 
-        for (Map.Entry<Tag<Item>, RenderRule> entry : TAG_RULES.entrySet()) {
+        for (var entry : TAG_RULES.entrySet()) {
             if (stack.isIn(entry.getKey())) {
                 return entry.getValue();
             }
@@ -119,7 +110,7 @@ public class RenderRule {
     public static BakedModel getModel(ItemStack stack, BlockState state, World world, long seed) {
         BakedModel model = null;
 
-        RenderRule rule = RenderRule.getRenderRule(stack);
+        var rule = RenderRule.getRenderRule(stack);
         if (rule != null)
             model = rule.getModel(stack, state, seed);
 
@@ -134,15 +125,15 @@ public class RenderRule {
 
         manager.findResources("aurorasdeco_render_rules/", path -> path.endsWith(".json")).forEach(id -> {
             try {
-                Resource resource = manager.getResource(id);
-                JsonElement element = PARSER.parse(new InputStreamReader(resource.getInputStream()));
+                var resource = manager.getResource(id);
+                var element = PARSER.parse(new InputStreamReader(resource.getInputStream()));
                 if (element.isJsonObject()) {
-                    JsonObject root = element.getAsJsonObject();
+                    var root = element.getAsJsonObject();
 
-                    List<Model> models = new ArrayList<>();
-                    JsonArray modelsJson = root.getAsJsonArray("models");
+                    var models = new ArrayList<Model>();
+                    var modelsJson = root.getAsJsonArray("models");
                     modelsJson.forEach(modelElement -> {
-                        Model model = Model.readModelPredicate(id, modelElement);
+                        var model = Model.readModelPredicate(id, modelElement);
                         if (model != null)
                             models.add(model);
                     });
@@ -150,22 +141,22 @@ public class RenderRule {
                     if (models.isEmpty())
                         return;
 
-                    RenderRule renderRule = new RenderRule(models);
+                    var renderRule = new RenderRule(models);
 
-                    JsonObject match = root.getAsJsonObject("match");
+                    var match = root.getAsJsonObject("match");
                     boolean success = false;
                     if (match.has("item")) {
                         ITEM_RULES.put(Identifier.tryParse(match.get("item").getAsString()), renderRule);
                         success = true;
                     } else if (match.has("items")) {
-                        JsonArray array = match.getAsJsonArray("items");
-                        for (JsonElement item : array) {
+                        var array = match.getAsJsonArray("items");
+                        for (var item : array) {
                             ITEM_RULES.put(Identifier.tryParse(item.getAsString()), renderRule);
                         }
                         success = true;
                     } else if (match.has("tag")) {
-                        Identifier tagId = Identifier.tryParse(match.get("tag").getAsString());
-                        Tag<Item> tag = TagRegistry.item(tagId);
+                        var tagId = Identifier.tryParse(match.get("tag").getAsString());
+                        var tag = TagRegistry.item(tagId);
                         TAG_RULES.put(tag, renderRule);
                         success = true;
                     }
@@ -179,28 +170,16 @@ public class RenderRule {
         });
     }
 
-    public static class Model {
-        private final ModelIdentifier modelId;
-        private final @Nullable Block restrictedBlock;
-        private final @Nullable Tag<Block> restrictedBlockTag;
-
-        public Model(ModelIdentifier modelId, @Nullable Block restrictedBlock, @Nullable Tag<Block> restrictedBlockTag) {
-            this.modelId = modelId;
-            this.restrictedBlock = restrictedBlock;
-            this.restrictedBlockTag = restrictedBlockTag;
-        }
-
+    public record Model(ModelIdentifier modelId, @Nullable Block restrictedBlock, @Nullable Tag<Block> restrictedBlockTag) {
         public ModelIdentifier getModelId() {
             return this.modelId;
         }
 
         public boolean test(ItemStack stack, BlockState state) {
             if (this.restrictedBlock != null) {
-                if (!state.isOf(this.restrictedBlock))
-                    return false;
+                return state.isOf(this.restrictedBlock);
             } else if (this.restrictedBlockTag != null) {
-                if (!state.isIn(this.restrictedBlockTag))
-                    return false;
+                return state.isIn(this.restrictedBlockTag);
             }
             return true;
         }
@@ -211,7 +190,7 @@ public class RenderRule {
 
         public static @Nullable Model readModelPredicate(Identifier manifest, JsonElement json) {
             if (json.isJsonPrimitive()) {
-                Identifier modelId = Identifier.tryParse(json.getAsString());
+                var modelId = Identifier.tryParse(json.getAsString());
                 if (modelId == null) {
                     LOGGER.error("Failed to parse model identifier {} in render rule {}.", json.getAsString(), manifest);
                     return null;
@@ -220,14 +199,14 @@ public class RenderRule {
                 return new Model(new ModelIdentifier(modelId, "inventory"), null, null);
             }
 
-            JsonObject object = json.getAsJsonObject();
+            var object = json.getAsJsonObject();
 
             if (!object.has("model")) {
                 LOGGER.error("Failed to parse model entry in render rule {}, missing model field.", manifest);
                 return null;
             }
 
-            Identifier modelId = Identifier.tryParse(object.get("model").getAsString());
+            var modelId = Identifier.tryParse(object.get("model").getAsString());
             if (modelId == null) {
                 LOGGER.error("Failed to parse model identifier {} in render rule {}.", json.getAsString(), manifest);
                 return null;
@@ -236,16 +215,16 @@ public class RenderRule {
             Block restrictedBlock = null;
             Tag<Block> restrictedBlockTag = null;
             if (object.has("restrict_to")) {
-                JsonObject restrict = object.getAsJsonObject("restrict_to");
+                var restrict = object.getAsJsonObject("restrict_to");
                 if (restrict.has("block")) {
-                    Identifier blockId = Identifier.tryParse(restrict.get("block").getAsString());
+                    var blockId = Identifier.tryParse(restrict.get("block").getAsString());
                     if (blockId == null) {
                         LOGGER.error("Failed to parse block identifier in render rule {}.", manifest);
                     } else {
                         restrictedBlock = Registry.BLOCK.get(blockId);
                     }
                 } else if (restrict.has("tag")) {
-                    Identifier blockId = Identifier.tryParse(restrict.get("tag").getAsString());
+                    var blockId = Identifier.tryParse(restrict.get("tag").getAsString());
                     if (blockId == null) {
                         LOGGER.error("Failed to parse tag identifier in render rule {}.", manifest);
                     } else {

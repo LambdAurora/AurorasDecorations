@@ -32,12 +32,10 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.property.IntProperty;
-import net.minecraft.state.property.Property;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.BlockRenderView;
 
-import java.util.Optional;
 import java.util.Random;
 import java.util.function.Supplier;
 
@@ -59,20 +57,18 @@ public class BakedBigFlowerPotModel extends ForwardingBakedModel {
                                RenderContext context) {
         super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 
-        if (!(state.getBlock() instanceof BigFlowerPotBlock))
+        if (!(state.getBlock() instanceof BigFlowerPotBlock potBlock))
             return;
 
-        BigFlowerPotBlock potBlock = (BigFlowerPotBlock) state.getBlock();
-        BlockState plantState = potBlock.getPlantState(state);
+        var plantState = potBlock.getPlantState(state);
         if (!plantState.isAir()) {
             float ratio = .65f;
             float offset = (1.f - ratio) / 2.f;
 
             if (!(potBlock instanceof BigPottedSweetBerryBushBlock))
-                for (Property<?> property : plantState.getProperties()) {
-                    if (property instanceof IntProperty && property.getName().equals("age")) {
-                        IntProperty ageProperty = ((IntProperty) property);
-                        Optional<Integer> max = ageProperty.getValues().stream().max(Integer::compareTo);
+                for (var property : plantState.getProperties()) {
+                    if (property instanceof IntProperty ageProperty && property.getName().equals("age")) {
+                        var max = ageProperty.getValues().stream().max(Integer::compareTo);
                         if (max.isPresent()) {
                             plantState = plantState.with(ageProperty, max.get());
                         }
@@ -80,7 +76,7 @@ public class BakedBigFlowerPotModel extends ForwardingBakedModel {
                     }
                 }
 
-            BakedModel model = client.getBakedModelManager().getBlockModels().getModel(plantState);
+            var model = client.getBakedModelManager().getBlockModels().getModel(plantState);
             if (model instanceof FabricBakedModel) {
                 context.pushTransform(quad -> {
                     Vec3f vec = null;
@@ -98,7 +94,7 @@ public class BakedBigFlowerPotModel extends ForwardingBakedModel {
             }
 
             if (plantState.getBlock() instanceof TallPlantBlock) {
-                final BakedModel upModel = client.getBakedModelManager().getBlockModels().getModel(
+                final var upModel = client.getBakedModelManager().getBlockModels().getModel(
                         plantState.with(TallPlantBlock.HALF, DoubleBlockHalf.UPPER)
                 );
                 if (upModel instanceof FabricBakedModel) {
@@ -126,6 +122,5 @@ public class BakedBigFlowerPotModel extends ForwardingBakedModel {
 
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-
     }
 }

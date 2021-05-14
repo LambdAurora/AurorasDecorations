@@ -23,7 +23,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.AmethystLanternBlock;
-import dev.lambdaurora.aurorasdeco.block.ShelfBlock;
 import dev.lambdaurora.aurorasdeco.block.SleepingBagBlock;
 import dev.lambdaurora.aurorasdeco.block.StumpBlock;
 import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
@@ -48,7 +47,6 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.tag.ItemTags;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
@@ -98,10 +96,9 @@ public class Datagen {
 
     public static void applyRecipes(Map<Identifier, JsonElement> map,
                                     Map<RecipeType<?>, ImmutableMap.Builder<Identifier, Recipe<?>>> builderMap) {
-        int[] recipeCount = new int[]{0};
+        var recipeCount = new int[]{0};
         RECIPES.forEach((key, recipes) -> {
-            ImmutableMap.Builder<Identifier, Recipe<?>> recipeBuilder =
-                    builderMap.computeIfAbsent(key, o -> ImmutableMap.builder());
+            var recipeBuilder = builderMap.computeIfAbsent(key, o -> ImmutableMap.builder());
 
             recipes.forEach(recipe -> {
                 if (!map.containsKey(recipe.getId())) {
@@ -115,10 +112,9 @@ public class Datagen {
     }
 
     public static Recipe<?> registerRecipe(Recipe<?> recipe, String category) {
-        List<Recipe<?>> recipes = RECIPES.computeIfAbsent(recipe.getType(),
-                recipeType -> new ArrayList<>());
+        var recipes = RECIPES.computeIfAbsent(recipe.getType(), recipeType -> new ArrayList<>());
 
-        for (Recipe<?> other : recipes) {
+        for (var other : recipes) {
             if (other.getId().equals(recipe.getId()))
                 return other;
         }
@@ -130,24 +126,24 @@ public class Datagen {
     }
 
     public static JsonObject blockModelBase(Identifier parent) {
-        JsonObject root = new JsonObject();
+        var root = new JsonObject();
         root.addProperty("parent", parent.toString());
         return root;
     }
 
     public static JsonObject blockModelTextures(JsonObject root, Map<String, Identifier> textures) {
-        JsonObject texturesJson = new JsonObject();
+        var texturesJson = new JsonObject();
         textures.forEach((key, id) -> texturesJson.addProperty(key, id.toString()));
         root.add("textures", texturesJson);
         return root;
     }
 
     public static JsonObject inventoryChangedCriteria(String type, Identifier item) {
-        JsonObject root = new JsonObject();
+        var root = new JsonObject();
         root.addProperty("trigger", "minecraft:inventory_changed");
-        JsonObject conditions = new JsonObject();
-        JsonArray items = new JsonArray();
-        JsonObject child = new JsonObject();
+        var conditions = new JsonObject();
+        var items = new JsonArray();
+        var child = new JsonObject();
         child.addProperty(type, item.toString());
         conditions.add("items", items);
         root.add("conditions", conditions);
@@ -155,10 +151,10 @@ public class Datagen {
     }
 
     public static JsonObject inventoryChangedCriteria(Ingredient item) {
-        JsonObject root = new JsonObject();
+        var root = new JsonObject();
         root.addProperty("trigger", "minecraft:inventory_changed");
-        JsonObject conditions = new JsonObject();
-        JsonArray items = new JsonArray();
+        var conditions = new JsonObject();
+        var items = new JsonArray();
         items.add(item.toJson());
         conditions.add("items", items);
         root.add("conditions", conditions);
@@ -166,25 +162,25 @@ public class Datagen {
     }
 
     public static JsonObject recipeUnlockedCriteria(Identifier recipe) {
-        JsonObject root = new JsonObject();
+        var root = new JsonObject();
         root.addProperty("trigger", "minecraft:recipe_unlocked");
-        JsonObject conditions = new JsonObject();
+        var conditions = new JsonObject();
         conditions.addProperty("recipe", recipe.toString());
         root.add("conditions", conditions);
         return root;
     }
 
     public static JsonObject simpleRecipeUnlock(Identifier recipe, List<Ingredient> ingredients, Ingredient output) {
-        JsonObject root = new JsonObject();
+        var root = new JsonObject();
         root.addProperty("parent", "minecraft:recipes/root");
-        JsonObject rewards = new JsonObject();
+        var rewards = new JsonObject();
         rewards.add("recipes", AuroraUtil.jsonArray(new Object[]{recipe}));
         root.add("rewards", rewards);
 
-        JsonObject criteria = new JsonObject();
-        JsonArray requirements = new JsonArray();
+        var criteria = new JsonObject();
+        var requirements = new JsonArray();
         int i = 0;
-        for (Ingredient ingredient : ingredients) {
+        for (var ingredient : ingredients) {
             criteria.add("has_" + i, inventoryChangedCriteria(ingredient));
             requirements.add("has_" + i);
             i++;
@@ -201,16 +197,16 @@ public class Datagen {
     }
 
     public static JsonObject simpleRecipeUnlock(Recipe<?> recipe) {
-        JsonObject root = new JsonObject();
+        var root = new JsonObject();
         root.addProperty("parent", "minecraft:recipes/root");
-        JsonObject rewards = new JsonObject();
+        var rewards = new JsonObject();
         rewards.add("recipes", AuroraUtil.jsonArray(new Object[]{recipe.getId()}));
         root.add("rewards", rewards);
 
-        JsonObject criteria = new JsonObject();
-        JsonArray requirements = new JsonArray();
+        var criteria = new JsonObject();
+        var requirements = new JsonArray();
         int i = 0;
-        for (Ingredient ingredient : recipe.getPreviewInputs()) {
+        for (var ingredient : recipe.getIngredients()) {
             if (ingredient.isEmpty())
                 continue;
             criteria.add("has_" + i, inventoryChangedCriteria(ingredient));
@@ -230,9 +226,9 @@ public class Datagen {
 
     public static void registerSimpleRecipesUnlock() {
         RECIPES_CATEGORIES.forEach((recipe, category) -> {
-            JsonObject json = simpleRecipeUnlock(recipe);
+            var json = simpleRecipeUnlock(recipe);
 
-            Identifier id = new Identifier(recipe.getId().getNamespace(),
+            var id = new Identifier(recipe.getId().getNamespace(),
                     "advancements/recipes/" + category + "/" + recipe.getId().getPath());
 
             AurorasDeco.RESOURCE_PACK.putJson(ResourceType.SERVER_DATA, id, json);
@@ -240,22 +236,22 @@ public class Datagen {
     }
 
     public static JsonObject simpleBlockLootTable(Identifier id, boolean copyName) {
-        JsonObject root = new JsonObject();
+        var root = new JsonObject();
         root.addProperty("type", "minecraft:block");
-        JsonArray pools = new JsonArray();
+        var pools = new JsonArray();
         {
-            JsonObject pool = new JsonObject();
+            var pool = new JsonObject();
             pool.addProperty("rolls", 1.0);
             pool.addProperty("bonus_rolls", 0.0);
 
-            JsonArray entries = new JsonArray();
+            var entries = new JsonArray();
 
-            JsonObject entry = new JsonObject();
+            var entry = new JsonObject();
             entry.addProperty("type", "minecraft:item");
             entry.addProperty("name", id.toString());
 
             if (copyName) {
-                JsonObject function = new JsonObject();
+                var function = new JsonObject();
                 function.addProperty("function", "minecraft:copy_name");
                 function.addProperty("source", "block_entity");
                 entry.add("functions", jsonArray(new JsonObject[]{function}));
@@ -265,7 +261,7 @@ public class Datagen {
 
             pool.add("entries", entries);
 
-            JsonObject survivesExplosion = new JsonObject();
+            var survivesExplosion = new JsonObject();
             survivesExplosion.addProperty("condition", "minecraft:survives_explosion");
             pool.add("conditions", jsonArray(new Object[]{survivesExplosion}));
 
@@ -295,7 +291,7 @@ public class Datagen {
     }
 
     public static JsonObject recipeRoot(String type) {
-        JsonObject json = new JsonObject();
+        var json = new JsonObject();
         json.addProperty("type", type);
         return json;
     }
@@ -313,10 +309,10 @@ public class Datagen {
                 || ((AbstractBlockAccessor) block).getMaterial() == Material.NETHER_WOOD))
             return;
 
-        Identifier blockId = Registry.BLOCK.getId(block);
+        var blockId = Registry.BLOCK.getId(block);
         if (blockId.getPath().endsWith("planks")) {
             char separator = '_';
-            String basePath = PLANKS_TO_BASE_ID.matcher(blockId.getPath()).replaceAll("");
+            var basePath = PLANKS_TO_BASE_ID.matcher(blockId.getPath()).replaceAll("");
             if (PLANKS_SEPARATOR_DETECTOR.matcher(blockId.getPath()).matches()) separator = '/';
             basePath += separator;
 
@@ -331,7 +327,7 @@ public class Datagen {
             tryRegisterWoodcuttingRecipeFor(block, basePath, "fence_gate", 1, "redstone");
         } else if (blockId.getPath().endsWith("log")) {
             char separator = '_';
-            String basePath = LOG_TO_BASE_ID.matcher(blockId.getPath()).replaceAll("");
+            var basePath = LOG_TO_BASE_ID.matcher(blockId.getPath()).replaceAll("");
             if (LOG_SEPARATOR_DETECTOR.matcher(blockId.getPath()).matches()) separator = '/';
             basePath += separator;
 
@@ -343,7 +339,7 @@ public class Datagen {
             }
         } else if (blockId.getPath().endsWith("stem")) {
             char separator = '_';
-            String basePath = STEM_TO_BASE_ID.matcher(blockId.getPath()).replaceAll("");
+            var basePath = STEM_TO_BASE_ID.matcher(blockId.getPath()).replaceAll("");
             if (STEM_SEPARATOR_DETECTOR.matcher(blockId.getPath()).matches()) separator = '/';
             basePath += separator;
 
@@ -356,7 +352,7 @@ public class Datagen {
     }
 
     public static void registerDefaultRecipes() {
-        Ingredient ironIngot = Ingredient.ofItems(Items.IRON_INGOT);
+        var ironIngot = Ingredient.ofItems(Items.IRON_INGOT);
         registerRecipe(new ShapedRecipe(id("brazier"), "", 3, 2,
                         DefaultedList.copyOf(Ingredient.EMPTY, ironIngot, Ingredient.ofItems(Items.CAMPFIRE), ironIngot,
                                 Ingredient.EMPTY, ironIngot, Ingredient.EMPTY),
@@ -378,7 +374,7 @@ public class Datagen {
                 || ((AbstractBlockAccessor) block).getMaterial() == Material.NETHER_WOOD)
                 .forEach(Datagen::registerWoodcuttingRecipesForBlockVariants);
 
-        for (ShelfBlock shelf : AurorasDecoRegistry.SHELF_BLOCKS) {
+        for (var shelf : AurorasDecoRegistry.SHELF_BLOCKS) {
             Datagen.tryRegisterWoodcuttingRecipeFor(Registry.ITEM.get(shelf.woodType.getPlanksId()), AurorasDeco.NAMESPACE,
                     Registry.BLOCK.getId(shelf).getPath(), "", 1, "decorations");
         }
@@ -386,7 +382,7 @@ public class Datagen {
         StumpBlock.streamLogStumps().forEach(block -> {
             if (block.getWoodType().getLog() == null)
                 return;
-            WoodcuttingRecipe recipe = new WoodcuttingRecipe(
+            var recipe = new WoodcuttingRecipe(
                     id("woodcutting/stump/" + block.getWoodType().getPathName()),
                     "log_stump", Ingredient.ofItems(block.getWoodType().getLog()),
                     new ItemStack(block));
@@ -404,10 +400,10 @@ public class Datagen {
                                                        String type, int count, String category) {
         if (planks.asItem() == Items.AIR)
             return;
-        Identifier id = new Identifier(namespace, basePath + type);
-        Item item = Registry.ITEM.get(id);
+        var id = new Identifier(namespace, basePath + type);
+        var item = Registry.ITEM.get(id);
         if (item != Items.AIR) {
-            WoodcuttingRecipe recipe = new WoodcuttingRecipe(
+            var recipe = new WoodcuttingRecipe(
                     new Identifier(namespace, "woodcutting/" + basePath + type),
                     "", Ingredient.ofItems(planks),
                     new ItemStack(item, count));
@@ -417,7 +413,7 @@ public class Datagen {
 
     public static void generateModels() {
         StumpBlock.streamLogStumps().forEach(block -> {
-            BlockStateBuilder builder = blockStateBuilder(block);
+            var builder = blockStateBuilder(block);
 
             Identifier model;
             if (block.getWoodType().getLogType().equals("stem")) {
@@ -426,7 +422,7 @@ public class Datagen {
                         .texture("log_top", block.getWoodType().getLogTopTexture())
                         .texture("mushroom", block.getWoodType().getLeavesTexture())
                         .register(block);
-                for (Direction direction : DIRECTIONS) {
+                for (var direction : DIRECTIONS) {
                     if (direction.getAxis().isHorizontal())
                         builder.addToVariant("", model, (int) direction.asRotation());
                 }
@@ -436,14 +432,14 @@ public class Datagen {
                         .texture("log_top", block.getWoodType().getLogTopTexture())
                         .texture("leaf", id("block/log_stump_leaf"))
                         .register(block);
-                Identifier brownMushroomModel = modelBuilder(StumpBlock.LOG_STUMP_BROWN_MUSHROOM_MODEL)
+                var brownMushroomModel = modelBuilder(StumpBlock.LOG_STUMP_BROWN_MUSHROOM_MODEL)
                         .texture("log_side", block.getWoodType().getLogSideTexture())
                         .texture("log_top", block.getWoodType().getLogTopTexture())
                         .texture("leaf", id("block/log_stump_leaf"))
                         .texture("mushroom", new Identifier("block/brown_mushroom_block"))
                         .register(id("block/stump/"
                                 + block.getWoodType().getPathName() + "_brown_mushroom"));
-                Identifier redMushroomModel = modelBuilder(StumpBlock.LOG_STUMP_RED_MUSHROOM_MODEL)
+                var redMushroomModel = modelBuilder(StumpBlock.LOG_STUMP_RED_MUSHROOM_MODEL)
                         .texture("log_side", block.getWoodType().getLogSideTexture())
                         .texture("log_top", block.getWoodType().getLogTopTexture())
                         .texture("leaf", id("block/log_stump_leaf"))
@@ -451,7 +447,7 @@ public class Datagen {
                         .register(id("block/stump/"
                                 + block.getWoodType().getPathName() + "_red_mushroom"));
 
-                for (Direction direction : DIRECTIONS) {
+                for (var direction : DIRECTIONS) {
                     if (direction.getAxis().isHorizontal()) {
                         int rotation = (int) direction.asRotation();
                         builder.addToVariant("", model, rotation);
@@ -467,26 +463,26 @@ public class Datagen {
         });
 
         SleepingBagBlock.forEach(sleepingBag -> {
-            DyeColor color = sleepingBag.getColor();
-            BlockStateBuilder builder = blockStateBuilder(sleepingBag);
+            var color = sleepingBag.getColor();
+            var builder = blockStateBuilder(sleepingBag);
 
-            Identifier footSideTexture = id("block/sleeping_bag/" + color.getName() + "/foot_side");
-            Identifier footTopTexture = id("block/sleeping_bag/" + color.getName() + "/foot_top");
-            Identifier footModel = modelBuilder(TEMPLATE_SLEEPING_BAG_FOOT_MODEL)
+            var footSideTexture = id("block/sleeping_bag/" + color.getName() + "/foot_side");
+            var footTopTexture = id("block/sleeping_bag/" + color.getName() + "/foot_top");
+            var footModel = modelBuilder(TEMPLATE_SLEEPING_BAG_FOOT_MODEL)
                     .texture("side", footSideTexture)
                     .texture("top", footTopTexture)
                     .register(id("block/sleeping_bag/" + color.getName() + "/foot"));
 
-            Identifier headBottomTexture = id("block/sleeping_bag/" + color.getName() + "/head_bottom");
-            Identifier headSideTexture = id("block/sleeping_bag/" + color.getName() + "/head_side");
-            Identifier headTopTexture = id("block/sleeping_bag/" + color.getName() + "/head_top");
-            Identifier headModel = modelBuilder(TEMPLATE_SLEEPING_BAG_HEAD_MODEL)
+            var headBottomTexture = id("block/sleeping_bag/" + color.getName() + "/head_bottom");
+            var headSideTexture = id("block/sleeping_bag/" + color.getName() + "/head_side");
+            var headTopTexture = id("block/sleeping_bag/" + color.getName() + "/head_top");
+            var headModel = modelBuilder(TEMPLATE_SLEEPING_BAG_HEAD_MODEL)
                     .texture("bottom", headBottomTexture)
                     .texture("side", headSideTexture)
                     .texture("top", headTopTexture)
                     .register(id("block/sleeping_bag/" + color.getName() + "/head"));
 
-            for (Direction direction : DIRECTIONS) {
+            for (var direction : DIRECTIONS) {
                 if (direction.getAxis().isHorizontal()) {
                     builder.addToVariant("part=foot,facing=" + direction.getName(),
                             footModel,
@@ -520,8 +516,8 @@ public class Datagen {
         generateSimpleItemModel(AurorasDecoRegistry.AMETHYST_LANTERN_BLOCK.asItem());
 
         LanternRegistry.forEach((lanternId, wallLantern) -> {
-            BlockStateBuilder builder = blockStateBuilder(wallLantern);
-            for (Direction direction : DIRECTIONS) {
+            var builder = blockStateBuilder(wallLantern);
+            for (var direction : DIRECTIONS) {
                 if (direction.getAxis().isHorizontal()) {
                     int rotation = (int) (direction.getOpposite().asRotation() + 90) % 360;
                     builder.addToVariant("facing=" + direction.getName() + ",extension=none",
@@ -537,7 +533,7 @@ public class Datagen {
     }
 
     private static void generateSimpleItemModel(Item item) {
-        Identifier itemId = Registry.ITEM.getId(item);
+        var itemId = Registry.ITEM.getId(item);
         generateSimpleItemModel(new Identifier(itemId.getNamespace(), "item/" + itemId.getPath()));
     }
 
@@ -566,7 +562,7 @@ public class Datagen {
         private final Map<String, JsonArray> variants = new Object2ObjectOpenHashMap<>();
 
         public BlockStateBuilder(Block block) {
-            Identifier id = Registry.BLOCK.getId(block);
+            var id = Registry.BLOCK.getId(block);
             this.id = new Identifier(id.getNamespace(), "blockstates/" + id.getPath());
 
             this.json.add("variants", variantsJson);
@@ -577,13 +573,13 @@ public class Datagen {
         }
 
         public BlockStateBuilder addToVariant(String variant, Identifier modelId, int y) {
-            JsonObject model = new JsonObject();
+            var model = new JsonObject();
             model.addProperty("model", modelId.toString());
             if (y != 0)
                 model.addProperty("y", y);
 
             this.variants.computeIfAbsent(variant, v -> {
-                JsonArray array = new JsonArray();
+                var array = new JsonArray();
                 this.variantsJson.add(v, array);
                 return array;
             }).add(model);
@@ -623,7 +619,7 @@ public class Datagen {
         }
 
         public Identifier register(Block block) {
-            Identifier id = Registry.BLOCK.getId(block);
+            var id = Registry.BLOCK.getId(block);
             return this.register(new Identifier(id.getNamespace(), "block/" + id.getPath()));
         }
 

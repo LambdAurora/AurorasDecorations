@@ -36,7 +36,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 
-import java.util.Iterator;
 import java.util.Random;
 
 /**
@@ -89,27 +88,27 @@ public final class BurntVineBlock extends VineBlock {
         if (side == Direction.DOWN) {
             return false;
         } else {
-            BlockPos sidePos = pos.offset(side);
+            var sidePos = pos.offset(side);
             if (shouldConnectTo(world, sidePos, side)) {
                 return true;
             } else if (side.getAxis() == Direction.Axis.Y) {
                 return false;
             } else {
-                BooleanProperty facing = FACING_PROPERTIES.get(side);
-                BlockState upState = world.getBlockState(pos.up());
+                var facing = FACING_PROPERTIES.get(side);
+                var upState = world.getBlockState(pos.up());
                 return upState.isOf(Blocks.VINE) && upState.get(facing);
             }
         }
     }
 
     private BlockState getPlacementShape(BlockState state, BlockView world, BlockPos pos) {
-        BlockPos upPos = pos.up();
+        var upPos = pos.up();
         if (state.get(UP)) {
             state = state.with(UP, shouldConnectTo(world, upPos, Direction.DOWN));
         }
 
         BlockState blockState = null;
-        Iterator<Direction> it = Direction.Type.HORIZONTAL.iterator();
+        var it = Direction.Type.HORIZONTAL.iterator();
 
         while (true) {
             Direction facing;
@@ -143,7 +142,7 @@ public final class BurntVineBlock extends VineBlock {
         if (direction == Direction.DOWN) {
             return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
         } else {
-            BlockState placementShape = this.getPlacementShape(state, world, pos);
+            var placementShape = this.getPlacementShape(state, world, pos);
             return !((VineBlockAccessor) (Object) this).aurorasdeco$hasAdjacentBlocks(placementShape) ?
                     Blocks.AIR.getDefaultState() : placementShape;
         }

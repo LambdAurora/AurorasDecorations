@@ -24,11 +24,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3f;
 
@@ -46,7 +43,7 @@ public class ShelfBlockEntityRenderer implements BlockEntityRenderer<ShelfBlockE
     @Override
     public void render(ShelfBlockEntity shelf, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
                        int light, int overlay) {
-        Direction facing = shelf.getCachedState().get(ShelfBlock.FACING);
+        var facing = shelf.getCachedState().get(ShelfBlock.FACING);
 
         matrices.push();
         matrices.translate(0.5, 0.8, 0.5);
@@ -59,7 +56,7 @@ public class ShelfBlockEntityRenderer implements BlockEntityRenderer<ShelfBlockE
 
         matrices.scale(.24f, .24f, .24f);
 
-        ItemRenderer renderer = MinecraftClient.getInstance().getItemRenderer();
+        var renderer = MinecraftClient.getInstance().getItemRenderer();
 
         for (int y = 0; y < 2; y++) {
             if (y != 0) {
@@ -72,11 +69,11 @@ public class ShelfBlockEntityRenderer implements BlockEntityRenderer<ShelfBlockE
                     matrices.translate(-1.f, 0.f, 0.f);
                 }
 
-                ItemStack stack = shelf.getStack(x + y * 4);
+                var stack = shelf.getStack(x + y * 4);
                 if (stack.isEmpty())
                     continue;
 
-                BakedModel model = RenderRule.getModel(stack, shelf.getCachedState(), shelf.getWorld(), 0);
+                var model = RenderRule.getModel(stack, shelf.getCachedState(), shelf.getWorld(), 0);
 
                 matrices.push();
                 if (model.hasDepth()) {

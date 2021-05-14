@@ -27,33 +27,25 @@ import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Set;
 import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
-public class UnbakedBigFlowerPotModel implements UnbakedModel {
-    private final UnbakedModel baseModel;
-
-    public UnbakedBigFlowerPotModel(UnbakedModel baseModel) {
-        this.baseModel = baseModel;
-    }
-
+public record UnbakedBigFlowerPotModel(UnbakedModel baseModel) implements UnbakedModel {
     @Override
     public Collection<Identifier> getModelDependencies() {
-        return this.baseModel.getModelDependencies();
+        return this.baseModel().getModelDependencies();
     }
 
     @Override
     public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
-        return this.baseModel.getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences);
+        return this.baseModel().getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences);
     }
 
-    @Nullable
     @Override
     public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
-        return new BakedBigFlowerPotModel(this.baseModel.bake(loader, textureGetter, rotationContainer, modelId));
+        return new BakedBigFlowerPotModel(this.baseModel().bake(loader, textureGetter, rotationContainer, modelId));
     }
 }

@@ -23,11 +23,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3f;
 
 import java.util.Random;
@@ -44,20 +41,21 @@ public class BookPileEntityRenderer implements BlockEntityRenderer<BookPileBlock
     }
 
     @Override
-    public void render(BookPileBlockEntity bookPile, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    public void render(BookPileBlockEntity bookPile, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
+                       int light, int overlay) {
         long seed = bookPile.getPos().asLong();
 
-        Random random = new Random(seed);
+        var random = new Random(seed);
 
-        ItemRenderer renderer = MinecraftClient.getInstance().getItemRenderer();
+        var renderer = MinecraftClient.getInstance().getItemRenderer();
 
         matrices.push();
         int i = 0;
-        for (ItemStack stack : bookPile.getBooks()) {
+        for (var stack : bookPile.getBooks()) {
             if (stack.isEmpty())
                 continue;
 
-            BakedModel model = RenderRule.getModel(stack, bookPile.getCachedState(), bookPile.getWorld(), seed + i * 20L);
+            var model = RenderRule.getModel(stack, bookPile.getCachedState(), bookPile.getWorld(), seed + i * 20L);
             matrices.push();
 
             // Do the random rotation first on the Y axis.

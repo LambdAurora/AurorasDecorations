@@ -21,17 +21,13 @@ import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
 import dev.lambdaurora.aurorasdeco.block.ChandelierBlock;
 import dev.lambdaurora.aurorasdeco.block.WallCandleBlock;
-import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
 import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
 import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.WorldView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -64,18 +60,18 @@ public abstract class BlockItemMixin implements BlockItemAccessor {
     @Inject(method = "appendBlocks", at = @At("RETURN"))
     private void onAppendBlocks(Map<Block, Item> map, Item item, CallbackInfo ci) {
         if (this.getBlock() instanceof LanternBlock) {
-            WallLanternBlock lanternBlock = LanternRegistry.fromItem(item);
+            var lanternBlock = LanternRegistry.fromItem(item);
             if (lanternBlock != null)
                 this.aurorasdeco$setWallBlock(lanternBlock);
             map.put(lanternBlock, item);
-        } else if (this.getBlock() instanceof CandleBlock) {
-            Identifier candleId = Registry.BLOCK.getId(this.getBlock());
+        } else if (this.getBlock() instanceof CandleBlock candleBlock) {
+            var candleId = Registry.BLOCK.getId(this.getBlock());
             if (candleId.getNamespace().equals("minecraft")) {
                 AurorasDeco.DELAYED_REGISTER_BLOCK.put(AurorasDeco.id("wall_" + candleId.getPath()),
-                        this.aurorasdeco$wallBlock = new WallCandleBlock((CandleBlock) this.getBlock()));
+                        this.aurorasdeco$wallBlock = new WallCandleBlock(candleBlock));
                 AurorasDeco.DELAYED_REGISTER_BLOCK.put(AurorasDeco.id("chandelier/" + candleId.getPath()
                                 .replace("_candle", "")),
-                        this.aurorasdeco$ceilingBlock = new ChandelierBlock((CandleBlock) this.getBlock()));
+                        this.aurorasdeco$ceilingBlock = new ChandelierBlock(candleBlock));
                 map.put(this.aurorasdeco$wallBlock, item);
                 map.put(this.aurorasdeco$ceilingBlock, item);
             }
@@ -84,14 +80,14 @@ public abstract class BlockItemMixin implements BlockItemAccessor {
 
     @Inject(method = "getPlacementState", at = @At("HEAD"), cancellable = true)
     private void onGetPlacementState(ItemPlacementContext context, CallbackInfoReturnable<BlockState> cir) {
-        Direction[] placementDirections = context.getPlacementDirections();
-        WorldView world = context.getWorld();
-        BlockPos pos = context.getBlockPos();
-        BlockState placedState = world.getBlockState(pos);
+        var placementDirections = context.getPlacementDirections();
+        var world = context.getWorld();
+        var pos = context.getBlockPos();
+        var placedState = world.getBlockState(pos);
 
         if (this.aurorasdeco$ceilingBlock != null
                 && (placementDirections[0] == Direction.UP || placedState.isOf(this.aurorasdeco$ceilingBlock))) {
-            BlockState state = this.aurorasdeco$ceilingBlock.getPlacementState(context);
+            var state = this.aurorasdeco$ceilingBlock.getPlacementState(context);
 
             if (state != null && state.canPlaceAt(world, pos)
                     && world.canPlace(state, pos, ShapeContext.absent())) {
@@ -101,11 +97,11 @@ public abstract class BlockItemMixin implements BlockItemAccessor {
         }
 
         if (this.aurorasdeco$wallBlock != null) {
-            BlockState wallState = this.aurorasdeco$wallBlock.getPlacementState(context);
+            var wallState = this.aurorasdeco$wallBlock.getPlacementState(context);
             BlockState resultState = null;
 
-            for (Direction direction : context.getPlacementDirections()) {
-                BlockState state = direction.getAxis().isVertical() ? this.getBlock().getPlacementState(context) : wallState;
+            for (var direction : context.getPlacementDirections()) {
+                var state = direction.getAxis().isVertical() ? this.getBlock().getPlacementState(context) : wallState;
                 if (state != null && state.canPlaceAt(world, pos)) {
                     resultState = state;
                     break;

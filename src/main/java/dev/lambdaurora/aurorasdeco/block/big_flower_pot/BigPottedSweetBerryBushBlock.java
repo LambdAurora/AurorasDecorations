@@ -42,7 +42,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Consumer;
@@ -62,7 +61,7 @@ public class BigPottedSweetBerryBushBlock extends BigFlowerPotBlock implements F
     public BigPottedSweetBerryBushBlock(PottedPlantType type) {
         super(type);
 
-        StateManager.Builder<Block, BlockState> builder = new StateManager.Builder<>(this);
+        var builder = new StateManager.Builder<Block, BlockState>(this);
         this.appendProperties(builder);
         ((BlockAccessor) this.getPlant()).aurorasdeco$appendProperties(builder);
         ((BlockAccessor) this).setStateManager(builder.build(Block::getDefaultState, BlockState::new));
@@ -103,7 +102,7 @@ public class BigPottedSweetBerryBushBlock extends BigFlowerPotBlock implements F
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ActionResult result = this.getPlant().onUse(state, world, pos, player, hand, hit);
+        var result = this.getPlant().onUse(state, world, pos, player, hand, hit);
         if (result.isAccepted())
             return result;
         else if (player.getStackInHand(hand).isOf(Items.BONE_MEAL))
@@ -114,7 +113,7 @@ public class BigPottedSweetBerryBushBlock extends BigFlowerPotBlock implements F
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        Box selfBox = SWEET_BERRY_BUSH_BOX.offset(pos);
+        var selfBox = SWEET_BERRY_BUSH_BOX.offset(pos);
         if (selfBox.intersects(entity.getBoundingBox())) {
             this.getPlant().onEntityCollision(state, world, pos, entity);
         }
@@ -124,8 +123,8 @@ public class BigPottedSweetBerryBushBlock extends BigFlowerPotBlock implements F
 
     @Override
     protected void acceptPlantDrops(BlockState state, LootContext.Builder builder, Consumer<ItemStack> consumer) {
-        List<ItemStack> stacks = this.getPlantState(state).getDroppedStacks(builder);
-        for (ItemStack stack : stacks) {
+        var stacks = this.getPlantState(state).getDroppedStacks(builder);
+        for (var stack : stacks) {
             consumer.accept(stack);
         }
     }
@@ -148,7 +147,7 @@ public class BigPottedSweetBerryBushBlock extends BigFlowerPotBlock implements F
     }
 
     private static BlockState remap(BlockState src, BlockState dst) {
-        for (Property<?> property : src.getProperties()) {
+        for (var property : src.getProperties()) {
             dst = remapProperty(src, property, dst);
         }
         return dst;
@@ -161,14 +160,14 @@ public class BigPottedSweetBerryBushBlock extends BigFlowerPotBlock implements F
     }
 
     private VoxelShape shape(BlockState state, BlockView world, BlockPos pos) {
-        VoxelShape plantShape = this.getPlant().getOutlineShape(state, world, pos, ShapeContext.absent());
+        var plantShape = this.getPlant().getOutlineShape(state, world, pos, ShapeContext.absent());
         float ratio = .65f;
         float offset = (1.f - ratio) / 2.f;
         return VoxelShapes.union(BIG_FLOWER_POT_SHAPE, resize(plantShape, ratio).offset(offset, .8f, offset));
     }
 
     private static VoxelShape resize(VoxelShape shape, double factor) {
-        List<VoxelShape> shapes = new ArrayList<>();
+        var shapes = new ArrayList<VoxelShape>();
         shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
             shapes.add(VoxelShapes.cuboid(minX * factor, minY * factor, minZ * factor,
                     maxX * factor, maxY * factor, maxZ * factor));

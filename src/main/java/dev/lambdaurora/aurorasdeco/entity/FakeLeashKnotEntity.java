@@ -18,7 +18,6 @@
 package dev.lambdaurora.aurorasdeco.entity;
 
 import dev.lambdaurora.aurorasdeco.mixin.entity.MobEntityAccessor;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -33,11 +32,8 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-
-import java.util.UUID;
 
 /**
  * Represents a fake leash knot entity that can be leashed to real leash knot.
@@ -65,15 +61,15 @@ public class FakeLeashKnotEntity extends MobEntity {
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
-        NbtCompound leashNbt = ((MobEntityAccessor) this).getLeashNbt();
+        var leashNbt = ((MobEntityAccessor) this).getLeashNbt();
 
         if (this.getHoldingEntity() != null) {
             leashNbt = new NbtCompound();
             if (this.getHoldingEntity() instanceof LivingEntity) {
-                UUID uuid = this.getHoldingEntity().getUuid();
+                var uuid = this.getHoldingEntity().getUuid();
                 leashNbt.putUuid("UUID", uuid);
             } else if (this.getHoldingEntity() instanceof AbstractDecorationEntity) {
-                BlockPos pos = ((AbstractDecorationEntity) this.getHoldingEntity()).getDecorationBlockPos();
+                var pos = ((AbstractDecorationEntity) this.getHoldingEntity()).getDecorationBlockPos();
                 leashNbt.putInt("X", pos.getX());
                 leashNbt.putInt("Y", pos.getY());
                 leashNbt.putInt("Z", pos.getZ());
@@ -91,7 +87,7 @@ public class FakeLeashKnotEntity extends MobEntity {
     public void tick() {
         super.tick();
 
-        Vec3d pos = getPos();
+        var pos = this.getPos();
         double decimal = pos.y - (int) pos.y;
         double target = 0.375;
         if (decimal != target) {
@@ -102,7 +98,7 @@ public class FakeLeashKnotEntity extends MobEntity {
         if (!this.canStayAttached()) {
             this.breakAndDiscard(true);
         } else {
-            Entity holding = this.getHoldingEntity();
+            var holding = this.getHoldingEntity();
             if (holding == null || !holding.isAlive())
                 this.breakAndDiscard(true);
         }
@@ -128,7 +124,7 @@ public class FakeLeashKnotEntity extends MobEntity {
             this.dropItem(Items.LEAD, 1);
         this.discard();
 
-        Entity holding = this.getHoldingEntity();
+        var holding = this.getHoldingEntity();
         if (holding instanceof LeashKnotEntity)
             holding.discard();
     }

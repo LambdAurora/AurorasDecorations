@@ -18,8 +18,6 @@
 package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.*;
@@ -117,8 +115,8 @@ public class BrazierBlock extends Block implements Waterloggable {
 
     @Override
     public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        World world = ctx.getWorld();
-        BlockPos blockPos = ctx.getBlockPos();
+        var world = ctx.getWorld();
+        var blockPos = ctx.getBlockPos();
         boolean water = world.getFluidState(blockPos).getFluid() == Fluids.WATER;
 
         return this.getDefaultState().with(WATERLOGGED, water).with(LIT, !water);
@@ -128,7 +126,7 @@ public class BrazierBlock extends Block implements Waterloggable {
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        Box box = FLAME_BOX.offset(pos);
+        var box = FLAME_BOX.offset(pos);
         if (box.intersects(entity.getBoundingBox()) && !entity.isFireImmune() && state.get(LIT)
                 && entity instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entity)) {
             entity.damage(DamageSource.IN_FIRE, (float) this.fireDamage);
@@ -181,7 +179,6 @@ public class BrazierBlock extends Block implements Waterloggable {
 
     /* Client */
 
-    @Environment(EnvType.CLIENT)
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         if (state.get(LIT)) {
@@ -213,7 +210,7 @@ public class BrazierBlock extends Block implements Waterloggable {
     }
 
     public static void spawnSmokeParticle(World world, BlockPos pos) {
-        Random random = world.getRandom();
+        var random = world.getRandom();
         world.addImportantParticle(ParticleTypes.SMOKE, true,
                 pos.getX() + 0.5 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
                 pos.getY() + random.nextDouble() + random.nextDouble(),

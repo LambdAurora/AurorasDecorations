@@ -20,7 +20,6 @@ package dev.lambdaurora.aurorasdeco.mixin.item;
 import dev.lambdaurora.aurorasdeco.entity.FakeLeashKnotEntity;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.LeadItem;
 import net.minecraft.sound.SoundCategory;
@@ -59,12 +58,12 @@ public abstract class LeadItemMixin {
             )
     )
     private ActionResult onAttachHeldMobsToBlock(PlayerEntity player, World world, BlockPos pos) {
-        ActionResult result = attachHeldMobsToBlock(player, world, pos);
+        var result = attachHeldMobsToBlock(player, world, pos);
 
         if (result == ActionResult.PASS) {
-            ItemStack stack = this.aurorasdeco$usageCtx.get().getStack();
+            var stack = this.aurorasdeco$usageCtx.get().getStack();
 
-            FakeLeashKnotEntity knot = new FakeLeashKnotEntity(AurorasDecoRegistry.FAKE_LEASH_KNOT_ENTITY_TYPE, world);
+            var knot = new FakeLeashKnotEntity(AurorasDecoRegistry.FAKE_LEASH_KNOT_ENTITY_TYPE, world);
             knot.setPosition(pos.getX() + 0.5, pos.getY() + 0.5 - 1F / 8F, pos.getZ() + 0.5);
             world.spawnEntity(knot);
             knot.attachLeash(player, true);

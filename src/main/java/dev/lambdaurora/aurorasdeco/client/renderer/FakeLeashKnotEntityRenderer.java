@@ -22,15 +22,12 @@ import dev.lambdaurora.aurorasdeco.mixin.client.MobEntityRendererAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayers;
 import net.minecraft.client.render.entity.model.LeashKnotEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
@@ -52,20 +49,20 @@ public class FakeLeashKnotEntityRenderer
 
         this.scale(fakeLeashKnot, matrices, tickDelta);
 
-        MinecraftClient client = MinecraftClient.getInstance();
+        var client = MinecraftClient.getInstance();
         boolean visible = this.isVisible(fakeLeashKnot);
         boolean translucent = !visible && !fakeLeashKnot.isInvisibleTo(client.player);
         boolean outline = client.hasOutline(fakeLeashKnot);
-        RenderLayer renderLayer = this.getRenderLayer(fakeLeashKnot, visible, translucent, outline);
+        var renderLayer = this.getRenderLayer(fakeLeashKnot, visible, translucent, outline);
         if (renderLayer != null) {
-            VertexConsumer vertices = vertexConsumers.getBuffer(renderLayer);
+            var vertices = vertexConsumers.getBuffer(renderLayer);
             int overlay = getOverlay(fakeLeashKnot, this.getAnimationCounter(fakeLeashKnot, tickDelta));
             this.model.render(matrices, vertices, light, overlay, 1.f, 1.f, 1.f, translucent ? .15f : 1.f);
         }
 
         matrices.pop();
 
-        Entity holding = fakeLeashKnot.getHoldingEntity();
+        var holding = fakeLeashKnot.getHoldingEntity();
         if (holding != null) {
             ((MobEntityRendererAccessor<FakeLeashKnotEntity>) this).aurorasdeco$renderLeash(
                     fakeLeashKnot, tickDelta, matrices, vertexConsumers, holding

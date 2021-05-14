@@ -22,7 +22,6 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
@@ -68,25 +67,20 @@ public class ChandelierBlock extends ExtendedCandleBlock {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        switch (state.get(CANDLES)) {
-            case 1:
-                return ONE_CANDLE_SHAPE;
-            case 2:
-                return TWO_CANDLE_SHAPE;
-            case 3:
-            case 4:
-                return THREE_CANDLE_SHAPE;
-            default:
-                return super.getOutlineShape(state, world, pos, context);
-        }
+        return switch (state.get(CANDLES)) {
+            case 1 -> ONE_CANDLE_SHAPE;
+            case 2 -> TWO_CANDLE_SHAPE;
+            case 3, 4 -> THREE_CANDLE_SHAPE;
+            default -> super.getOutlineShape(state, world, pos, context);
+        };
     }
 
     /* Placement */
 
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        BlockPos upPos = pos.up();
-        BlockState upState = world.getBlockState(upPos);
+        var upPos = pos.up();
+        var upState = world.getBlockState(upPos);
 
         if (upState.getBlock() instanceof ChainBlock && upState.get(ChainBlock.AXIS) == Direction.Axis.Y)
             return true;
@@ -106,7 +100,6 @@ public class ChandelierBlock extends ExtendedCandleBlock {
 
     /* Client */
 
-    @Environment(EnvType.CLIENT)
     protected Iterable<Vec3d> getParticleOffsets(BlockState state) {
         return CANDLES_TO_PARTICLE_OFFSETS.get(state.get(CANDLES).intValue());
     }

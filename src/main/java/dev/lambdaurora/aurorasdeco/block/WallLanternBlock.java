@@ -53,7 +53,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -98,7 +97,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
                 .with(WATERLOGGED, false)
         );
 
-        Item item = Item.fromBlock(lantern); // Avoid caching which could break stuff at this stage.
+        var item = Item.fromBlock(lantern); // Avoid caching which could break stuff at this stage.
         if (item instanceof BlockItem) {
             ((BlockItemAccessor) item).aurorasdeco$setWallBlock(this);
         }
@@ -133,8 +132,8 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        Direction facing = state.get(WallLanternBlock.FACING);
-        ExtensionType extension = state.get(WallLanternBlock.EXTENSION);
+        var facing = state.get(WallLanternBlock.FACING);
+        var extension = state.get(WallLanternBlock.EXTENSION);
         return VoxelShapes.union(
                 this.getLanternState().getOutlineShape(world, pos)
                         .offset((-facing.getOffsetX() * extension.getOffset()) / 16.0,
@@ -149,9 +148,9 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        Direction direction = state.get(FACING);
-        BlockPos attachPos = pos.offset(direction.getOpposite());
-        BlockState attachState = world.getBlockState(attachPos);
+        var direction = state.get(FACING);
+        var attachPos = pos.offset(direction.getOpposite());
+        var attachState = world.getBlockState(attachPos);
         return !VoxelShapes.matchesAnywhere(attachState.getSidesShape(world, attachPos).getFace(direction),
                 HOLDER_SHAPE, BooleanBiFunction.ONLY_SECOND)
                 || ExtensionType.getExtensionValue(attachState, attachPos, world) != ExtensionType.NONE;
@@ -159,18 +158,18 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState state = this.getDefaultState();
-        WorldView world = ctx.getWorld();
-        BlockPos pos = ctx.getBlockPos();
-        FluidState fluidState = world.getFluidState(pos);
-        Direction[] directions = ctx.getPlacementDirections();
+        var state = this.getDefaultState();
+        var world = ctx.getWorld();
+        var pos = ctx.getBlockPos();
+        var fluidState = world.getFluidState(pos);
+        var directions = ctx.getPlacementDirections();
 
         state = state.with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
 
-        for (Direction direction : directions) {
+        for (var direction : directions) {
             if (direction.getAxis().isHorizontal()) {
-                Direction direction2 = direction.getOpposite();
-                state = state.with(FACING, direction2);
+                var opposite = direction.getOpposite();
+                state = state.with(FACING, opposite);
                 if (state.canPlaceAt(world, pos)) {
                     BlockPos attachPos = pos.offset(direction);
                     return state.with(EXTENSION,
@@ -214,8 +213,8 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public void onProjectileHit(World world, BlockState state, BlockHitResult hit, ProjectileEntity projectile) {
-        Entity entity = projectile.getOwner();
-        PlayerEntity playerEntity = entity instanceof PlayerEntity ? (PlayerEntity) entity : null;
+        var entity = projectile.getOwner();
+        var playerEntity = entity instanceof PlayerEntity ? (PlayerEntity) entity : null;
         this.swing(world, state, hit, playerEntity, true);
     }
 
@@ -228,8 +227,8 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
     public boolean swing(World world, BlockState state, BlockHitResult hitResult, @Nullable PlayerEntity player,
                          boolean hitResultIndependent) {
-        Direction direction = hitResult.getSide();
-        BlockPos blockPos = hitResult.getBlockPos();
+        var direction = hitResult.getSide();
+        var blockPos = hitResult.getBlockPos();
         boolean canSwing = !hitResultIndependent
                 || this.isPointOnLantern(state, direction, hitResult.getPos().y - (double) blockPos.getY());
         if (canSwing) {
@@ -243,7 +242,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
     private boolean isPointOnLantern(BlockState state, Direction side, double y) {
         if (side.getAxis() != Direction.Axis.Y && y <= 0.8123999834060669D) {
-            Direction direction = state.get(FACING);
+            var direction = state.get(FACING);
             return direction.getAxis() != side.getAxis();
         } else {
             return false;
@@ -252,7 +251,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
     public void swing(@Nullable Entity entity, World world, BlockPos pos, @Nullable Direction direction,
                       @Nullable Direction.Axis lanternCollisionAxis) {
-        LanternBlockEntity blockEntity = AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
+        var blockEntity = AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
         if (!world.isClient() && blockEntity != null) {
             if (direction == null) {
                 direction = world.getBlockState(pos).get(FACING);
@@ -278,16 +277,16 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
         if (entity instanceof ProjectileEntity)
             return;
 
-        LanternBlockEntity blockEntity = AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
+        var blockEntity = AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
         if (blockEntity == null)
             return;
 
-        Direction.Axis swingAxis = state.get(FACING).rotateYClockwise().getAxis();
+        var swingAxis = state.get(FACING).rotateYClockwise().getAxis();
 
-        Box lanternBox = blockEntity.getLanternCollisionBox(swingAxis);
-        Box entityBox = entity.getBoundingBox();
+        var lanternBox = blockEntity.getLanternCollisionBox(swingAxis);
+        var entityBox = entity.getBoundingBox();
         if (lanternBox.intersects(entityBox)) {
-            Direction swingDirection = Direction.NORTH;
+            var swingDirection = Direction.NORTH;
             if (swingAxis == Direction.Axis.X) {
                 if ((pos.getX() + .5f) > entity.getX()) swingDirection = Direction.WEST;
                 else swingDirection = Direction.EAST;
@@ -347,7 +346,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
-        LanternBlockEntity lantern = AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
+        var lantern = AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
         if (lantern != null) {
             if (lantern.isColliding()) {
                 return 15;
@@ -374,8 +373,8 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
         Map<ExtensionType, VoxelShape> northShape;
         {
-            ImmutableMap.Builder<ExtensionType, VoxelShape> builder = ImmutableMap.builder();
-            VoxelShape wallAttachment = createCuboidShape(6.0, attachmentMinY - 3.0, 15.0,
+            var builder = ImmutableMap.<ExtensionType, VoxelShape>builder();
+            var wallAttachment = createCuboidShape(6.0, attachmentMinY - 3.0, 15.0,
                     10.0, attachmentMaxY, 16.0);
             builder.put(ExtensionType.NONE, VoxelShapes.union(LANTERN_HANG_SHAPE,
                     createCuboidShape(7.0, 13.0, 7.0, 9.0, 15.0, 15.0),
@@ -392,8 +391,8 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
         Map<ExtensionType, VoxelShape> southShape;
         {
-            ImmutableMap.Builder<ExtensionType, VoxelShape> builder = ImmutableMap.builder();
-            VoxelShape wallAttachment = createCuboidShape(6.0, attachmentMinY - 3.0, 0.0,
+            var builder = ImmutableMap.<ExtensionType, VoxelShape>builder();
+            var wallAttachment = createCuboidShape(6.0, attachmentMinY - 3.0, 0.0,
                     10.0, attachmentMaxY, 1.0);
             builder.put(ExtensionType.NONE, VoxelShapes.union(LANTERN_HANG_SHAPE,
                     createCuboidShape(7.0, 13.0, 1.0, 9.0, 15.0, 9.0),
@@ -410,8 +409,8 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
         Map<ExtensionType, VoxelShape> westShape;
         {
-            ImmutableMap.Builder<ExtensionType, VoxelShape> builder = ImmutableMap.builder();
-            VoxelShape wallAttachment = createCuboidShape(15.0, attachmentMinY - 3.0, 6.0,
+            var builder = ImmutableMap.<ExtensionType, VoxelShape>builder();
+            var wallAttachment = createCuboidShape(15.0, attachmentMinY - 3.0, 6.0,
                     16.0, attachmentMaxY, 10.0);
             builder.put(ExtensionType.NONE, VoxelShapes.union(LANTERN_HANG_SHAPE,
                     createCuboidShape(7.0, 13.0, 7.0, 15.0, 15.0, 9.0),
@@ -428,8 +427,8 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
         Map<ExtensionType, VoxelShape> eastShape;
         {
-            ImmutableMap.Builder<ExtensionType, VoxelShape> builder = ImmutableMap.builder();
-            VoxelShape wallAttachment = createCuboidShape(0.0, attachmentMinY - 3.0, 6.0,
+            var builder = ImmutableMap.<ExtensionType, VoxelShape>builder();
+            var wallAttachment = createCuboidShape(0.0, attachmentMinY - 3.0, 6.0,
                     1.0, attachmentMaxY, 10.0);
             builder.put(ExtensionType.NONE, VoxelShapes.union(LANTERN_HANG_SHAPE,
                     createCuboidShape(1.0, 13.0, 7.0, 9.0, 15.0, 9.0),

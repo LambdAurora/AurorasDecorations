@@ -101,9 +101,9 @@ public class StumpBlock extends Block implements SeatBlock, Waterloggable {
 
     @Override
     public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        World world = ctx.getWorld();
-        BlockPos pos = ctx.getBlockPos();
-        FluidState fluid = world.getFluidState(pos);
+        var world = ctx.getWorld();
+        var pos = ctx.getBlockPos();
+        var fluid = world.getFluidState(pos);
 
         return this.getDefaultState().with(WATERLOGGED, fluid.getFluid() == Fluids.WATER);
     }

@@ -39,15 +39,15 @@ public final class AuroraUtil {
     }
 
     public static Identifier appendWithNamespace(String prefix, Identifier id) {
-        String path = id.getPath();
+        var path = id.getPath();
         if (!id.getNamespace().equals("minecraft") && !id.getNamespace().equals("aurorasdeco"))
             path = id.getNamespace() + '/' + path;
         return AurorasDeco.id(prefix + '/' + path);
     }
 
     public static JsonArray jsonArray(Object[] elements) {
-        JsonArray array = new JsonArray();
-        for (Object element : elements) {
+        var array = new JsonArray();
+        for (var element : elements) {
             if (element instanceof Number)
                 array.add((Number) element);
             else if (element instanceof Boolean)

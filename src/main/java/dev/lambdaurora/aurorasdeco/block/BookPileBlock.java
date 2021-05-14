@@ -48,7 +48,6 @@ import net.minecraft.world.WorldView;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -92,16 +91,16 @@ public class BookPileBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        FluidState fluid = ctx.getWorld().getFluidState(ctx.getBlockPos());
+        var fluid = ctx.getWorld().getFluidState(ctx.getBlockPos());
         return this.getDefaultState().with(WATERLOGGED, fluid.getFluid() == Fluids.WATER);
     }
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.onPlaced(world, pos, state, placer, stack);
-        BookPileBlockEntity bookPile = AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE.get(world, pos);
+        var bookPile = AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE.get(world, pos);
         if (bookPile != null) {
-            ItemStack book = stack.copy();
+            var book = stack.copy();
             book.setCount(1);
             bookPile.getBooks().set(0, book);
         }
@@ -125,10 +124,10 @@ public class BookPileBlock extends BlockWithEntity implements Waterloggable {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
                               BlockHitResult hit) {
-        ItemStack stack = player.getStackInHand(hand);
+        var stack = player.getStackInHand(hand);
 
         if (stack.isOf(Items.BOOK) || stack.isOf(Items.ENCHANTED_BOOK)) {
-            BookPileBlockEntity bookPile = AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE.get(world, pos);
+            var bookPile = AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE.get(world, pos);
             if (bookPile != null && !bookPile.isFull()) {
                 bookPile.insertBook(stack);
                 if (!player.getAbilities().creativeMode)
@@ -139,7 +138,7 @@ public class BookPileBlock extends BlockWithEntity implements Waterloggable {
                 return ActionResult.success(world.isClient());
             }
         } else if (stack.isEmpty()) {
-            BookPileBlockEntity bookPile = AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE.get(world, pos);
+            var bookPile = AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE.get(world, pos);
             if (bookPile != null) {
                 int i;
                 for (i = 0; i < bookPile.getBooks().size(); i++) {
@@ -166,7 +165,7 @@ public class BookPileBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-        BookPileBlockEntity bookPile = AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE.get(world, pos);
+        var bookPile = AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE.get(world, pos);
         if (bookPile != null) {
             return bookPile.getBooks().get(0).copy();
         }
@@ -177,11 +176,10 @@ public class BookPileBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
-        BlockEntity blockEntity = builder.get(LootContextParameters.BLOCK_ENTITY);
-        if (blockEntity instanceof BookPileBlockEntity) {
-            BookPileBlockEntity bookPile = (BookPileBlockEntity) blockEntity;
+        var blockEntity = builder.get(LootContextParameters.BLOCK_ENTITY);
+        if (blockEntity instanceof BookPileBlockEntity bookPile) {
             builder.putDrop(BOOKS, (context, consumer) -> {
-                for (ItemStack stack : bookPile.getBooks()) {
+                for (var stack : bookPile.getBooks()) {
                     if (!stack.isEmpty()) consumer.accept(stack.copy());
                 }
             });

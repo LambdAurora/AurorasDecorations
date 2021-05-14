@@ -24,12 +24,10 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation.Mode;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 
 /**
@@ -51,7 +49,7 @@ public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.Dynam
     @Override
     public void render(ItemStack stack, Mode mode, MatrixStack matrices,
                        VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        BakedModel model = MinecraftClient.getInstance().getBakedModelManager().getModel(this.modelId);
+        var model = MinecraftClient.getInstance().getBakedModelManager().getModel(this.modelId);
 
         matrices.push();
 
@@ -61,13 +59,12 @@ public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.Dynam
                 leftHanded,
                 matrices, vertexConsumers, light, overlay, model);
         if (mode == Mode.HEAD) {
-            BakedModel maskModel = MinecraftClient.getInstance().getBakedModelManager().getModel(AurorasDecoClient.BLACKBOARD_MASK);
+            var maskModel = MinecraftClient.getInstance().getBakedModelManager().getModel(AurorasDecoClient.BLACKBOARD_MASK);
             MinecraftClient.getInstance().getItemRenderer().renderItem(stack, mode,
-                    leftHanded,
-                    matrices, vertexConsumers, light, overlay, maskModel);
+                    false, matrices, vertexConsumers, light, overlay, maskModel);
         }
 
-        NbtCompound nbt = stack.getOrCreateSubTag("BlockEntityTag");
+        var nbt = stack.getOrCreateSubTag("BlockEntityTag");
         if (nbt != null && nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
             float z = .933f;
             if (mode == Mode.HEAD) {
@@ -93,7 +90,7 @@ public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.Dynam
 
             if (this.texture == null)
                 this.texture = BlackboardBlockEntityRenderer.getOrCreateTexture();
-            Blackboard blackboard = Blackboard.fromNbt(nbt);
+            var blackboard = Blackboard.fromNbt(nbt);
             this.texture.update(blackboard);
             this.texture.render(matrices.peek().getModel(), vertexConsumers, blackboard.isLit() ? 15728880 : light);
         }

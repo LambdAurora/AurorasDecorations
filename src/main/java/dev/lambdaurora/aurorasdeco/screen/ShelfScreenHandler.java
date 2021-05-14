@@ -86,10 +86,10 @@ public class ShelfScreenHandler extends ScreenHandler {
     }
 
     public ItemStack transferSlot(PlayerEntity player, int index) {
-        ItemStack stack = ItemStack.EMPTY;
-        Slot slot = this.slots.get(index);
+        var stack = ItemStack.EMPTY;
+        var slot = this.slots.get(index);
         if (slot.hasStack()) {
-            ItemStack itemStack2 = slot.getStack();
+            var itemStack2 = slot.getStack();
             stack = itemStack2.copy();
             if (index < 8) {
                 if (!this.insertItem(itemStack2, 8, this.slots.size(), true)) {
