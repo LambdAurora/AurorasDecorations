@@ -1,6 +1,6 @@
 # Aurora's Decorations
 
-![Java 8](https://img.shields.io/badge/language-Java%208-9B599A.svg?style=flat-square)
+![Java 16](https://img.shields.io/badge/language-Java%2016-9B599A.svg?style=flat-square)
 [![GitHub license](https://img.shields.io/github/license/LambdAurora/AurorasDecorations?style=flat-square)](https://raw.githubusercontent.com/LambdAurora/AurorasDecorations/1.17/LICENSE)
 ![Environment: Any](https://img.shields.io/badge/environment-any-4caf50?style=flat-square)
 [![Mod loader: Fabric]][fabric]
