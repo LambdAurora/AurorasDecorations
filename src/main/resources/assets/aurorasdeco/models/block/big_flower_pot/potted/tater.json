@@ -3,7 +3,8 @@
     "tater_face": "aurorasdeco:block/tater_face",
     "tater_side": "aurorasdeco:block/tater_side",
     "tater_top": "aurorasdeco:block/tater_side",
-    "tater_behind": "aurorasdeco:block/tater_side"
+    "tater_behind": "aurorasdeco:block/tater_side",
+    "particle": "aurorasdeco:block/tater_face"
   },
   "elements": [
     {

@@ -35,6 +35,8 @@
   ],
   "client": [
     "client.BedBlockClientMixin",
+    "client.BlockDustParticleFactoryMixin",
+    "client.BlockStateParticleEffectAccessor",
     "client.ClientRecipeBookMixin",
     "client.MobEntityRendererAccessor",
     "client.ModelLoaderMixin",
