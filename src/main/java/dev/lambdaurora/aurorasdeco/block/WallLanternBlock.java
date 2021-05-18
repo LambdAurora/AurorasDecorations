@@ -22,8 +22,6 @@ import com.google.common.collect.Maps;
 import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -361,7 +359,6 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
     /* Visual */
 
-    @Environment(EnvType.CLIENT)
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         this.getLanternBlock().randomDisplayTick(state, world, pos, random);

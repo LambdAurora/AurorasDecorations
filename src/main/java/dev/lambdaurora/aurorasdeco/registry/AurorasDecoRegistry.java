@@ -199,7 +199,6 @@ public final class AurorasDecoRegistry {
                     new ShelfBlock(woodType, FabricBlockSettings.of(Material.WOOD, woodType.getMapColor())
                             .nonOpaque()
                             .strength(2.f, 3.f)
-                            .breakByTool(FabricToolTags.AXES)
                             .sounds(BlockSoundGroup.WOOD)),
                     new FabricItemSettings().group(ItemGroup.DECORATIONS))
     ).toArray(ShelfBlock[]::new);
@@ -326,8 +325,7 @@ public final class AurorasDecoRegistry {
     private static PetBedBlock registerPetBed(DyeColor color) {
         return registerWithItem("pet_bed/" + color.getName(),
                 new PetBedBlock(FabricBlockSettings.of(Material.WOOL)
-                        .mapColor(color).breakByTool(FabricToolTags.AXES)
-                        .sounds(BlockSoundGroup.WOOD).strength(.2f)),
+                        .mapColor(color).sounds(BlockSoundGroup.WOOD).strength(.2f)),
                 new FabricItemSettings().group(ItemGroup.DECORATIONS));
     }
 
@@ -405,6 +403,15 @@ public final class AurorasDecoRegistry {
                 if (woodType.isFlammable())
                     FlammableBlockRegistry.getDefaultInstance().add(block, 5, 5);
             }
+        });
+
+        WoodType.stream().forEach(woodType -> {
+            var block = registerWithItem("bench/" + woodType.getPathName(),
+                    new BenchBlock(woodType),
+                    new FabricItemSettings().group(ItemGroup.DECORATIONS));
+
+            if (woodType.isFlammable())
+                FlammableBlockRegistry.getDefaultInstance().add(block, 5, 5);
         });
 
         FlammableBlockRegistry.getDefaultInstance().add(PET_BEDS, 10, 30);

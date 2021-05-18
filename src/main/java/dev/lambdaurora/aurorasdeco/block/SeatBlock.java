@@ -32,7 +32,7 @@ public interface SeatBlock {
     }
 
     default boolean canSit(World world, BlockPos pos, BlockState state) {
-        for (PlayerEntity player : world.getNonSpectatingEntities(PlayerEntity.class, new Box(pos))) {
+        for (var player : world.getNonSpectatingEntities(PlayerEntity.class, new Box(pos))) {
             if (player.hasVehicle()) {
                 if (player.getVehicle() instanceof SeatEntity)
                     return false;

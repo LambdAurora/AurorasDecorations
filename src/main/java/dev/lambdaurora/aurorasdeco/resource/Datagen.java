@@ -23,6 +23,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.AmethystLanternBlock;
+import dev.lambdaurora.aurorasdeco.block.BenchBlock;
 import dev.lambdaurora.aurorasdeco.block.SleepingBagBlock;
 import dev.lambdaurora.aurorasdeco.block.StumpBlock;
 import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
@@ -46,6 +47,7 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.state.property.Property;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
@@ -374,6 +376,15 @@ public class Datagen {
                 || ((AbstractBlockAccessor) block).getMaterial() == Material.NETHER_WOOD)
                 .forEach(Datagen::registerWoodcuttingRecipesForBlockVariants);
 
+        BenchBlock.streamBenches().forEach(block -> {
+            var planks = Registry.ITEM.get(block.getWoodType().getPlanksId());
+            var recipe = new WoodcuttingRecipe(
+                    id("woodcutting/bench/" + block.getWoodType().getPathName()),
+                    "bench", Ingredient.ofItems(planks),
+                    new ItemStack(block));
+            registerRecipe(recipe, "decorations");
+        });
+
         for (var shelf : AurorasDecoRegistry.SHELF_BLOCKS) {
             Datagen.tryRegisterWoodcuttingRecipeFor(Registry.ITEM.get(shelf.woodType.getPlanksId()), AurorasDeco.NAMESPACE,
                     Registry.BLOCK.getId(shelf).getPath(), "", 1, "decorations");
@@ -412,6 +423,37 @@ public class Datagen {
     }
 
     public static void generateModels() {
+        BenchBlock.streamBenches().forEach(block -> {
+            var builder = multipartBlockStateBuilder(block);
+
+            var seatModel = modelBuilder(BenchBlock.BENCH_SEAT_MODEL)
+                    .texture("planks", block.getWoodType().getPlanksTexture())
+                    .register(block);
+
+            var axisX = BenchBlock.AXIS.createValue(Direction.Axis.X);
+            var axisZ = BenchBlock.AXIS.createValue(Direction.Axis.Z);
+            builder.addWhen(new StateModel(seatModel), axisX);
+            builder.addWhen(new StateModel(seatModel, 90), axisZ);
+
+            var legsModel = modelBuilder(BenchBlock.BENCH_LEGS_MODEL)
+                    .texture("log", block.getWoodType().getLogSideTexture())
+                    .register(AurorasDeco.id("block/bench/" + block.getWoodType().getPathName() + "_legs"));
+
+            var withEastLegs = BenchBlock.EAST_LEGS.createValue(true);
+            var withWestLegs = BenchBlock.WEST_LEGS.createValue(true);
+            builder.addWhen(new StateModel(legsModel), axisX, withWestLegs);
+            builder.addWhen(new StateModel(legsModel, 180), axisX, withEastLegs);
+            builder.addWhen(new StateModel(legsModel, 90), axisZ, withWestLegs);
+            builder.addWhen(new StateModel(legsModel, 270), axisZ, withEastLegs);
+
+            modelBuilder(AurorasDeco.id("block/template/bench_full"))
+                    .texture("log", block.getWoodType().getLogSideTexture())
+                    .texture("planks", block.getWoodType().getPlanksTexture())
+                    .register(id("item/bench/" + block.getWoodType().getPathName()));
+
+            builder.register();
+        });
+
         StumpBlock.streamLogStumps().forEach(block -> {
             var builder = blockStateBuilder(block);
 
@@ -551,8 +593,27 @@ public class Datagen {
         return new BlockStateBuilder(block);
     }
 
+    public static MultipartBlockStateBuilder multipartBlockStateBuilder(Block block) {
+        return new MultipartBlockStateBuilder(block);
+    }
+
     public static ModelBuilder modelBuilder(Identifier parent) {
         return new ModelBuilder(parent);
+    }
+
+    public static record StateModel(Identifier id, int y) {
+        public StateModel(Identifier id) {
+            this(id, 0);
+        }
+
+        public JsonObject toJson() {
+            var model = new JsonObject();
+            model.addProperty("model", this.id().toString());
+            if (this.y() != 0)
+                model.addProperty("y", this.y());
+
+            return model;
+        }
     }
 
     public static class BlockStateBuilder {
@@ -573,16 +634,58 @@ public class Datagen {
         }
 
         public BlockStateBuilder addToVariant(String variant, Identifier modelId, int y) {
-            var model = new JsonObject();
-            model.addProperty("model", modelId.toString());
-            if (y != 0)
-                model.addProperty("y", y);
+            return this.addToVariant(variant, new StateModel(modelId, y));
+        }
 
+        public BlockStateBuilder addToVariant(String variant, StateModel model) {
             this.variants.computeIfAbsent(variant, v -> {
                 var array = new JsonArray();
                 this.variantsJson.add(v, array);
                 return array;
-            }).add(model);
+            }).add(model.toJson());
+
+            return this;
+        }
+
+        public JsonObject toJson() {
+            return this.json;
+        }
+
+        public void register() {
+            AurorasDecoClient.RESOURCE_PACK.putJson(ResourceType.CLIENT_RESOURCES, this.id, this.toJson());
+        }
+    }
+
+    public static class MultipartBlockStateBuilder {
+        private final JsonObject json = new JsonObject();
+        private final Identifier id;
+        private final JsonArray multipartJson = new JsonArray();
+
+        public MultipartBlockStateBuilder(Block block) {
+            var id = Registry.BLOCK.getId(block);
+            this.id = new Identifier(id.getNamespace(), "blockstates/" + id.getPath());
+
+            this.json.add("multipart", multipartJson);
+        }
+
+        public MultipartBlockStateBuilder add(StateModel model) {
+            var block = new JsonObject();
+            block.add("apply", model.toJson());
+            this.multipartJson.add(block);
+            return this;
+        }
+
+        public MultipartBlockStateBuilder addWhen(StateModel model, Property.Value<?>... when) {
+            var block = new JsonObject();
+            block.add("apply", model.toJson());
+            var whenBlock = new JsonObject();
+            block.add("when", whenBlock);
+
+            for (var val : when) {
+                whenBlock.addProperty(val.getProperty().getName(), val.toString().split("=")[1]);
+            }
+
+            this.multipartJson.add(block);
 
             return this;
         }

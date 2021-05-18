@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "aurorasdeco:sawmill",
+    "#aurorasdeco:benches",
+    "#aurorasdeco:pet_beds",
+    "#aurorasdeco:shelves",
+    "#aurorasdeco:stumps"
+  ]
+}

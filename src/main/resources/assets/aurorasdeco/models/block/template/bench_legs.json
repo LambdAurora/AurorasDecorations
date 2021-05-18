@@ -1,0 +1,33 @@
+{
+  "credit": "Made by LambdAurora",
+  "parent": "block/block",
+  "textures": {
+    "particle": "#log"
+  },
+  "elements": [
+    {
+      "name": "leg_north",
+      "from": [ 1, 0, 3 ],
+      "to": [ 3, 6, 5 ],
+      "faces": {
+        "north": {"uv": [ 13, 10, 15, 16 ], "texture": "#log"},
+        "east":  {"uv": [ 10, 10, 12, 16 ], "texture": "#log"},
+        "south": {"uv": [ 1, 10, 3, 16 ], "texture": "#log"},
+        "west":  {"uv": [ 4, 10, 6, 16 ], "texture": "#log"},
+        "down":  {"uv": [ 13, 3, 15, 5 ], "texture": "#log", "cullface": "down"}
+      }
+    },
+    {
+      "name": "leg_south",
+      "from": [ 1, 0, 11 ],
+      "to": [ 3, 6, 13 ],
+      "faces": {
+        "north": {"uv": [ 13, 10, 15, 16 ], "texture": "#log"},
+        "east":  {"uv": [ 4, 10, 6, 16 ], "texture": "#log"},
+        "south": {"uv": [ 1, 10, 3, 16 ], "texture": "#log"},
+        "west":  {"uv": [ 10, 10, 12, 16 ], "texture": "#log"},
+        "down":  {"uv": [ 13, 11, 15, 13 ], "texture": "#log", "cullface": "down"}
+      }
+    }
+  ]
+}

@@ -22,8 +22,6 @@ import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.block.entity.BlackboardBlockEntity;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
@@ -327,7 +325,6 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
         super.onBreak(world, pos, state, playerEntity);
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
         var stack = super.getPickStack(world, pos, state);

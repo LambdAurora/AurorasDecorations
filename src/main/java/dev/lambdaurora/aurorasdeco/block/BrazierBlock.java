@@ -82,7 +82,6 @@ public class BrazierBlock extends Block implements Waterloggable {
         super(
                 FabricBlockSettings.of(Material.DECORATION, color)
                         .strength(2.f)
-                        .breakByTool(FabricToolTags.PICKAXES)
                         .nonOpaque()
                         .luminance(state -> state.get(LIT) ? luminance : 0)
                         .sounds(BlockSoundGroup.METAL)

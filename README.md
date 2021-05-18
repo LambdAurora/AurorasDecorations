@@ -22,6 +22,9 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 - Armor stand
   - Right-click with sticks to add arms.
   - Shift-Right-click with shears to hide the base plate.
+- Benches
+  - Come in all wood types!
+  - You can sit on them!
 - Big Flower Pot Block
   - Can hold a plant, can dynamically support some modded plants (or new plants in Minecraft if the mod hasn't been updated).
   - Can hold tall plants.
@@ -101,6 +104,8 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 ![Big flower pot and Wall Lanterns](images/flower_pot_and_wall_lantern.png)
 
 ![Blackboards](images/blackboards.png)
+
+![Benches](images/bench.png)
 
 ![Braziers](images/braziers.png)
 

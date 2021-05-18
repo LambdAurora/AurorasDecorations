@@ -22,6 +22,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import dev.lambdaurora.aurorasdeco.block.BenchBlock;
 import dev.lambdaurora.aurorasdeco.block.ShelfBlock;
 import dev.lambdaurora.aurorasdeco.block.StumpBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
@@ -240,10 +241,15 @@ public class AurorasDecoPack implements ModResourcePack {
             this.registerShelfRecipe(type);
         });
 
+        BenchBlock.streamBenches().forEach(Datagen::dropsSelf);
         StumpBlock.streamLogStumps().forEach(Datagen::dropsSelf);
 
+        this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("benches"), BenchBlock.streamBenches()
+                .map(Registry.BLOCK::getId));
         this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("shelves"), WoodType.stream()
                 .map(type -> AurorasDeco.id("shelf/" + type.getPathName())));
+        this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("stumps"), StumpBlock.streamLogStumps()
+                .map(Registry.BLOCK::getId));
 
         Datagen.registerSimpleRecipesUnlock();
 
