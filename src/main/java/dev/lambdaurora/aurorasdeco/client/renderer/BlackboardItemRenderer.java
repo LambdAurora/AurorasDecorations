@@ -64,7 +64,7 @@ public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.Dynam
                     false, matrices, vertexConsumers, light, overlay, maskModel);
         }
 
-        var nbt = stack.getOrCreateSubTag("BlockEntityTag");
+        var nbt = stack.getSubTag("BlockEntityTag");
         if (nbt != null && nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
             float z = .933f;
             if (mode == Mode.HEAD) {
