@@ -54,7 +54,7 @@ public class SturdyStoneBlock extends Block {
         boolean shouldPower = world.isReceivingRedstonePower(pos) || world.isReceivingRedstonePower(pos.up());
         boolean powered = state.get(POWERED);
         if (shouldPower != powered) {
-            world.setBlockState(pos, state.with(POWERED, shouldPower), 0b100);
+            world.setBlockState(pos, state.with(POWERED, shouldPower), Block.NO_REDRAW);
         }
     }
 

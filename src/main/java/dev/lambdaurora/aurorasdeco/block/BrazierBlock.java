@@ -167,7 +167,7 @@ public class BrazierBlock extends Block implements Waterloggable {
                 extinguish(null, world, pos, state);
             }
 
-            world.setBlockState(pos, state.with(WATERLOGGED, true).with(LIT, false), 3);
+            world.setBlockState(pos, state.with(WATERLOGGED, true).with(LIT, false), Block.NOTIFY_ALL);
             world.getFluidTickScheduler().schedule(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
             return true;
         } else {

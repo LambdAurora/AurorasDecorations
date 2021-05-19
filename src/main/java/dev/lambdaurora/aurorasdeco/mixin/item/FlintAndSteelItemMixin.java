@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.mixin.item;
 
 import dev.lambdaurora.aurorasdeco.block.BrazierBlock;
 import dev.lambdaurora.aurorasdeco.block.BurntVineBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
@@ -54,7 +55,7 @@ public class FlintAndSteelItemMixin {
         if (state.isOf(Blocks.VINE)) { // Burn vine tip interaction.
             world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS,
                     1.f, world.getRandom().nextFloat() * .4f + .8f);
-            world.setBlockState(pos, BurntVineBlock.fromVine(state), 11);
+            world.setBlockState(pos, BurntVineBlock.fromVine(state), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
             world.emitGameEvent(player, GameEvent.BLOCK_PLACE, pos);
             if (player != null) {
                 context.getStack().damage(1, player, p -> p.sendToolBreakStatus(context.getHand()));
@@ -75,7 +76,7 @@ public class FlintAndSteelItemMixin {
         } else if (BrazierBlock.canBeLit(state)) {
             world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS,
                     1.f, world.getRandom().nextFloat() * .4f + .8f);
-            world.setBlockState(pos, state.with(Properties.LIT, true), 11);
+            world.setBlockState(pos, state.with(Properties.LIT, true), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
             world.emitGameEvent(player, GameEvent.BLOCK_PLACE, pos);
             if (player != null) {
                 context.getStack().damage(1, player, p -> p.sendToolBreakStatus(context.getHand()));

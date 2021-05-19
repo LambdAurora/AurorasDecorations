@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.mixin.entity;
 
 import dev.lambdaurora.aurorasdeco.block.SleepingBagBlock;
 import net.minecraft.block.BedBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -50,7 +51,7 @@ public abstract class LivingEntityMixin extends Entity {
     )
     private void onSleep(BlockPos pos, CallbackInfo ci, BlockState state) {
         if (state.getBlock() instanceof SleepingBagBlock) {
-            this.world.setBlockState(pos, state.with(BedBlock.OCCUPIED, true), 0b11);
+            this.world.setBlockState(pos, state.with(BedBlock.OCCUPIED, true), Block.NOTIFY_ALL);
         }
     }
 
@@ -64,7 +65,7 @@ public abstract class LivingEntityMixin extends Entity {
     )
     private void onWakeUp(BlockPos pos, CallbackInfo ci, BlockState state) {
         if (state.getBlock() instanceof SleepingBagBlock) {
-            this.world.setBlockState(pos, state.with(SleepingBagBlock.OCCUPIED, false), 0b11);
+            this.world.setBlockState(pos, state.with(SleepingBagBlock.OCCUPIED, false), Block.NOTIFY_ALL);
             Vec3d wakUpPos = BedBlock.findWakeUpPosition(this.getType(), this.world, pos, this.getYaw()).orElseGet(() -> {
                 BlockPos upPos = pos.up();
                 return new Vec3d(upPos.getX() + 0.5, upPos.getY() + 0.1, upPos.getZ() + 0.5);

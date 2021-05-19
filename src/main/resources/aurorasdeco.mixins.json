@@ -10,6 +10,8 @@
     "CandleBlockMixin",
     "LanternBlockMixin",
     "ModResourcePackCreatorMixin",
+    "PistonBlockEntityMixin",
+    "PistonBlockMixin",
     "PointOfInterestTypeMixin",
     "RecipeManagerMixin",
     "SpawnHelperMixin",

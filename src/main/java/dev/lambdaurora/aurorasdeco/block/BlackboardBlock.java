@@ -377,7 +377,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
             boolean shouldEmitEvent = false;
 
             if (!world.isClient()) {
-                world.setBlockState(pos, state.with(Properties.WATERLOGGED, true), 3);
+                world.setBlockState(pos, state.with(Properties.WATERLOGGED, true), Block.NOTIFY_ALL);
                 world.getFluidTickScheduler().schedule(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
 
                 var blackboard = this.getBlackboardEntity(world, pos);

@@ -139,7 +139,7 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
         super.onPlaced(world, pos, state, placer, itemStack);
         if (!world.isClient()) {
             var headPos = pos.offset(state.get(FACING));
-            world.setBlockState(headPos, state.with(PART, BedPart.HEAD), 0b11);
+            world.setBlockState(headPos, state.with(PART, BedPart.HEAD), Block.NOTIFY_ALL);
             world.updateNeighbors(pos, Blocks.AIR);
             state.updateNeighbors(world, pos, 0b11);
         }
@@ -219,7 +219,7 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
                 var otherPartPos = pos.offset(getDirectionTowardsOtherPart(part, state.get(FACING)));
                 var otherPartState = world.getBlockState(otherPartPos);
                 if (otherPartState.isOf(this) && otherPartState.get(PART) == BedPart.HEAD) {
-                    world.setBlockState(otherPartPos, Blocks.AIR.getDefaultState(), 0b100011);
+                    world.setBlockState(otherPartPos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.SKIP_DROPS);
                     world.syncWorldEvent(playerEntity, 2001, otherPartPos, Block.getRawIdFromState(otherPartState));
                 }
             }

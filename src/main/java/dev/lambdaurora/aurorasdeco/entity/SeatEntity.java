@@ -21,17 +21,31 @@ import dev.lambdaurora.aurorasdeco.block.SeatBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MovementType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+/**
+ * Represents a placeholder entity to make another entity seat on a {@link SeatBlock}.
+ *
+ * @author LambdAurora
+ * @version 1.0.0
+ * @since 1.0.0
+ */
 public class SeatEntity extends Entity {
+    private boolean timeout = false;
+
     public SeatEntity(EntityType<?> type, World world) {
         super(type, world);
 
         this.noClip = true;
+    }
+
+    public void setTimeout(boolean timeout) {
+        this.timeout = timeout;
     }
 
     @Override
@@ -59,6 +73,13 @@ public class SeatEntity extends Entity {
         return true;
     }
 
+    @Override
+    public void move(MovementType movementType, Vec3d movement) {
+        if (movementType == MovementType.PISTON)
+            return;
+        super.move(movementType, movement);
+    }
+
     /* Serialization */
 
     @Override
@@ -84,7 +105,7 @@ public class SeatEntity extends Entity {
 
         if (!this.world.isClient()) {
             var state = this.getEntityWorld().getBlockState(this.getBlockPos());
-            if (!(state.getBlock() instanceof SeatBlock) || !this.hasPassengers())
+            if (!(state.getBlock() instanceof SeatBlock || this.timeout) || !this.hasPassengers())
                 this.discard();
         }
     }

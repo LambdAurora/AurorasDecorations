@@ -126,7 +126,7 @@ public class BigFlowerPotBlock extends Block {
                 if (!world.getBlockState(up).isAir())
                     return ActionResult.PASS;
 
-                world.setBlockState(pos, toPlace.getDefaultState(), 3);
+                world.setBlockState(pos, toPlace.getDefaultState(), Block.NOTIFY_ALL);
                 player.incrementStat(Stats.POT_FLOWER);
                 if (!player.getAbilities().creativeMode) {
                     handStack.decrement(1);
@@ -165,7 +165,7 @@ public class BigFlowerPotBlock extends Block {
             }
         }
 
-        world.setBlockState(pos, AurorasDecoRegistry.BIG_FLOWER_POT_BLOCK.getDefaultState(), 3);
+        world.setBlockState(pos, AurorasDecoRegistry.BIG_FLOWER_POT_BLOCK.getDefaultState(), Block.NOTIFY_ALL);
 
         if (removeUp) {
             var up = pos.up();

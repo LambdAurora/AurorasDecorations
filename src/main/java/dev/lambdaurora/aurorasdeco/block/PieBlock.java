@@ -151,7 +151,7 @@ public class PieBlock extends Block {
             int bites = state.get(BITES);
             world.emitGameEvent(player, GameEvent.EAT, pos);
             if (bites < 3) {
-                world.setBlockState(pos, state.with(BITES, bites + 1), 3);
+                world.setBlockState(pos, state.with(BITES, bites + 1), Block.NOTIFY_ALL);
             } else {
                 world.removeBlock(pos, false);
                 world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, pos);
