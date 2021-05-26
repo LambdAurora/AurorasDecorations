@@ -37,8 +37,8 @@ import net.minecraft.world.WorldAccess;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class FenceLikeWall extends HorizontalConnectingBlock {
-    public FenceLikeWall(Settings settings) {
+public class FenceLikeWallBlock extends HorizontalConnectingBlock {
+    public FenceLikeWallBlock(Settings settings) {
         super(4.f, 2.f, 16.f, 13.f, 24.f, settings);
         System.arraycopy(
                 this.createShapes(4.f, 2.f, 16.f, 9.f, 13.f), 0,
