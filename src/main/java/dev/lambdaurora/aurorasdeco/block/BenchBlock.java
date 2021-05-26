@@ -64,6 +64,7 @@ public class BenchBlock extends Block implements SeatBlock, Waterloggable {
 
     public static final Identifier BENCH_SEAT_MODEL = AurorasDeco.id("block/template/bench_seat");
     public static final Identifier BENCH_LEGS_MODEL = AurorasDeco.id("block/template/bench_legs");
+    public static final Identifier BENCH_BETTERGRASS_DATA = AurorasDeco.id("bettergrass/data/bench");
 
     private static final List<BenchBlock> BENCHES = new ArrayList<>();
 

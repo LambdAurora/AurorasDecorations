@@ -1,0 +1,43 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "aurorasdeco:block/polished_basalt_wall_pole"
+      }
+    },
+    {
+      "apply": {
+        "model": "aurorasdeco:block/polished_basalt_wall_west_extension",
+        "y": 90
+      },
+      "when": {
+        "north": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "aurorasdeco:block/polished_basalt_wall_east_extension"
+      },
+      "when": {
+        "east": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "aurorasdeco:block/polished_basalt_wall_east_extension",
+        "y": 90
+      },
+      "when": {
+        "south": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "aurorasdeco:block/polished_basalt_wall_west_extension"
+      },
+      "when": {
+        "west": "true"
+      }
+    }
+  ]
+}

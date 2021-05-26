@@ -1,0 +1,43 @@
+{
+  "credit": "Made by LambdAurora",
+  "parent": "aurorasdeco:block/polished_basalt_wall_pole",
+  "elements": [
+    {
+      "name": "pole",
+      "from": [ 4, 0, 4 ],
+      "to": [ 12, 16, 12 ],
+      "faces": {
+        "north": {"uv": [ 0, 0, 8, 16 ], "texture": "#wall"},
+        "east":  {"uv": [ 0, 0, 8, 16 ], "texture": "#wall"},
+        "south": {"uv": [ 0, 0, 8, 16 ], "texture": "#wall"},
+        "west":  {"uv": [ 0, 0, 8, 16 ], "texture": "#wall"},
+        "up":    {"uv": [ 8, 0, 16, 8 ], "texture": "#wall", "cullface": "up"},
+        "down":  {"uv": [ 8, 0, 16, 8 ], "texture": "#wall", "cullface": "down"}
+      }
+    },
+    {
+      "name": "east",
+      "from": [ 12, 9, 6 ],
+      "to": [ 16, 13, 10 ],
+      "faces": {
+        "north": {"uv": [ 12, 8, 16, 12 ], "texture": "#wall"},
+        "east":  {"uv": [ 8, 12, 12, 16 ], "texture": "#wall", "cullface": "east"},
+        "south": {"uv": [ 16, 8, 12, 12 ], "texture": "#wall"},
+        "up":    {"uv": [ 12, 8, 16, 12 ], "texture": "#wall"},
+        "down":  {"uv": [ 8, 8, 12, 12 ], "texture": "#wall"}
+      }
+    },
+    {
+      "name": "west",
+      "from": [ 0, 9, 6 ],
+      "to": [ 4, 13, 10 ],
+      "faces": {
+        "north": {"uv": [ 8, 8, 12, 12 ], "texture": "#wall"},
+        "south": {"uv": [ 12, 8, 8, 12 ], "texture": "#wall"},
+        "west":  {"uv": [ 8, 12, 12, 16 ], "texture": "#wall", "cullface": "west"},
+        "up":    {"uv": [ 8, 8, 12, 12 ], "texture": "#wall"},
+        "down":  {"uv": [ 12, 8, 16, 12 ], "texture": "#wall"}
+      }
+    }
+  ]
+}

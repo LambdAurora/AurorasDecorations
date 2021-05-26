@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": [
+    {
+      "item": "minecraft:basalt"
+    },
+    {
+      "item": "minecraft:polished_basalt"
+    }
+  ],
+  "result": "aurorasdeco:polished_basalt_wall",
+  "count": 1
+}

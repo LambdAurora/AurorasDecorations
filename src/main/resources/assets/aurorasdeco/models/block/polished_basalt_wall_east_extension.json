@@ -1,0 +1,18 @@
+{
+  "credit": "Made by LambdAurora",
+  "parent": "aurorasdeco:block/polished_basalt_wall_pole",
+  "elements": [
+    {
+      "name": "east",
+      "from": [ 12, 9, 6 ],
+      "to": [ 16, 13, 10 ],
+      "faces": {
+        "north": {"uv": [ 12, 8, 16, 12 ], "texture": "#wall"},
+        "east":  {"uv": [ 8, 12, 12, 16 ], "texture": "#wall", "cullface": "east"},
+        "south": {"uv": [ 16, 8, 12, 12 ], "texture": "#wall"},
+        "up":    {"uv": [ 12, 8, 16, 12 ], "texture": "#wall"},
+        "down":  {"uv": [ 8, 8, 12, 12 ], "texture": "#wall"}
+      }
+    }
+  ]
+}

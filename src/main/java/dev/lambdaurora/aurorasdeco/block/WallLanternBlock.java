@@ -44,10 +44,7 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Hand;
+import net.minecraft.util.*;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -81,6 +78,8 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
     private static final VoxelShape HOLDER_SHAPE = createCuboidShape(0.0, 8.0, 0.0,
             16.0, 16.0, 16.0);
+
+    public static final Identifier LANTERN_BETTERGRASS_DATA = new Identifier("bettergrass/data/stump");
 
     private final LanternBlock lanternBlock;
 

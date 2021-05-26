@@ -146,9 +146,11 @@ public class AurorasDecoPack implements ModResourcePack {
             this.registerShelfBlockState(type);
             this.registerShelfBlockModel(type);
             this.registerShelfItemModel(type);
+
+            Datagen.registerBetterGrassLayer(AurorasDeco.id("shelf/" + type.getPathName()), Datagen.SHELF_BETTERGRASS_DATA);
         });
 
-        Datagen.generateModels();
+        Datagen.generateClientData();
 
         return this;
     }

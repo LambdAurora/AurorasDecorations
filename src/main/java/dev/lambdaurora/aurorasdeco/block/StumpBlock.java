@@ -55,6 +55,7 @@ public class StumpBlock extends Block implements SeatBlock, Waterloggable {
     public static final Identifier LOG_STUMP_BROWN_MUSHROOM_MODEL = AurorasDeco.id("block/template/log_stump_brown_mushroom");
     public static final Identifier LOG_STUMP_RED_MUSHROOM_MODEL = AurorasDeco.id("block/template/log_stump_red_mushroom");
     public static final Identifier STEM_STUMP_MODEL = AurorasDeco.id("block/template/stem_stump");
+    public static final Identifier STUMP_BETTERGRASS_DATA = AurorasDeco.id("bettergrass/data/stump");
 
     private static final List<StumpBlock> LOG_STUMPS = new ArrayList<>();
 

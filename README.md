@@ -71,6 +71,7 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
   Ever wished to share a pumpkin pie with your friends?
   Or just place it on a table to eat it later?
   Now you can!
+- Polished Basalt Wall
 - Sawmill
   - Craft many wooden blocks with a similar mechanic as the stonecutter.
   - Reduce the cost in wood of certain blocks like trapdoors.
@@ -124,6 +125,8 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 ![Sawmill & Stumps](images/sawmill_and_stumps.png)
 
 ![Shelves](images/shelves.png)
+
+![Polished Basalt Wall](images/polished_basalt_wall.png)
 
 ![Sleeping bags](images/sleeping_bags.png)
 

@@ -84,6 +84,8 @@ public class Datagen {
     private static final Identifier TEMPLATE_SLEEPING_BAG_HEAD_MODEL = id("block/template/sleeping_bag_head");
     private static final Identifier TEMPLATE_SLEEPING_BAG_ITEM_MODEL = id("item/template/sleeping_bag");
 
+    static final Identifier SHELF_BETTERGRASS_DATA = id("bettergrass/data/shelf");
+
     private static final Direction[] DIRECTIONS = Direction.values();
 
     private static final Pattern PLANKS_TO_BASE_ID = Pattern.compile("[_/]planks$");
@@ -138,6 +140,21 @@ public class Datagen {
         textures.forEach((key, id) -> texturesJson.addProperty(key, id.toString()));
         root.add("textures", texturesJson);
         return root;
+    }
+
+    public static void registerBetterGrassLayer(Identifier blockId, Identifier data) {
+        var json = new JsonObject();
+        json.addProperty("type", "layer");
+        json.addProperty("data", data.toString());
+        AurorasDeco.RESOURCE_PACK.putJson(
+                ResourceType.CLIENT_RESOURCES,
+                new Identifier(blockId.getNamespace(), "bettergrass/states/" + blockId.getPath()),
+                json
+        );
+    }
+
+    public static void registerBetterGrassLayer(Block block, Identifier data) {
+        registerBetterGrassLayer(Registry.BLOCK.getId(block), data);
     }
 
     public static JsonObject inventoryChangedCriteria(String type, Identifier item) {
@@ -422,7 +439,7 @@ public class Datagen {
         }
     }
 
-    public static void generateModels() {
+    public static void generateClientData() {
         BenchBlock.streamBenches().forEach(block -> {
             var builder = multipartBlockStateBuilder(block);
 
@@ -452,6 +469,8 @@ public class Datagen {
                     .register(id("item/bench/" + block.getWoodType().getPathName()));
 
             builder.register();
+
+            registerBetterGrassLayer(block, BenchBlock.BENCH_BETTERGRASS_DATA);
         });
 
         StumpBlock.streamLogStumps().forEach(block -> {
@@ -502,6 +521,8 @@ public class Datagen {
             new ModelBuilder(model).register(id("item/stump/" + block.getWoodType().getPathName()));
 
             builder.register();
+
+            registerBetterGrassLayer(block, StumpBlock.STUMP_BETTERGRASS_DATA);
         });
 
         SleepingBagBlock.forEach(sleepingBag -> {

@@ -20,7 +20,7 @@
     {
       "name": "leg_ext_north",
       "from": [ 7, 0, 0 ],
-      "to": [ 9, 1, 2 ],
+      "to": [ 9, 1.001, 2 ],
       "faces": {
         "north": {"uv": [ 13, 6, 15, 7 ], "texture": "#plate"},
         "east":  {"uv": [ 14, 14, 16, 15 ], "texture": "#plate"},
@@ -44,7 +44,7 @@
     {
       "name": "leg_ext_east",
       "from": [ 14, 0, 7 ],
-      "to": [ 16, 1, 9 ],
+      "to": [ 16, 1.001, 9 ],
       "faces": {
         "north": {"uv": [ 9, 15, 11, 16 ], "texture": "#plate"},
         "east":  {"uv": [ 13, 6, 15, 7 ], "texture": "#plate"},
@@ -68,7 +68,7 @@
     {
       "name": "leg_ext_south",
       "from": [ 7, 0, 14 ],
-      "to": [ 9, 1, 16 ],
+      "to": [ 9, 1.001, 16 ],
       "faces": {
         "east":  {"uv": [ 9, 15, 11, 16 ], "texture": "#plate"},
         "south": {"uv": [ 13, 6, 15, 7 ], "texture": "#plate"},
@@ -92,7 +92,7 @@
     {
       "name": "leg_ext_west",
       "from": [ 0, 0, 7 ],
-      "to": [ 2, 1, 9 ],
+      "to": [ 2, 1.001, 9 ],
       "faces": {
         "north": {"uv": [ 14, 14, 16, 15 ], "texture": "#plate"},
         "south": {"uv": [ 9, 15, 11, 16 ], "texture": "#plate"},
@@ -217,11 +217,11 @@
       "rotation": {"angle": -22.5, "axis": "z", "origin": [ 10, 5.5, 6 ]},
       "faces": {
         "north": {"uv": [ 0, 4, 4, 5 ], "texture": "#coal"},
-        "east": {"uv": [ 1, 4, 4, 5 ], "texture": "#coal"},
+        "east":  {"uv": [ 1, 4, 4, 5 ], "texture": "#coal"},
         "south": {"uv": [ 0, 4, 4, 5 ], "texture": "#coal"},
-        "west": {"uv": [ 0, 4, 3, 5 ], "texture": "#coal"},
-        "up": {"uv": [ 0, 0, 4, 3 ], "texture": "#coal"},
-        "down": {"uv": [ 0, 1, 4, 4 ], "texture": "#coal"}
+        "west":  {"uv": [ 0, 4, 3, 5 ], "texture": "#coal"},
+        "up":    {"uv": [ 0, 0, 4, 3 ], "texture": "#coal"},
+        "down":  {"uv": [ 0, 1, 4, 4 ], "texture": "#coal"}
       }
     },
     {

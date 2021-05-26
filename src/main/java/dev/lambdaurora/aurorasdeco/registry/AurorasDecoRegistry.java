@@ -193,6 +193,10 @@ public final class AurorasDecoRegistry {
             new BrazierBlock(MapColor.LIGHT_BLUE, 2, 10, ParticleTypes.SOUL),
             new FabricItemSettings().group(ItemGroup.DECORATIONS));
 
+    public static final FenceLikeWall POLISHED_BASALT_WALL = registerWithItem("polished_basalt_wall",
+            new FenceLikeWall(FabricBlockSettings.copyOf(Blocks.POLISHED_BASALT)),
+            new FabricItemSettings().group(ItemGroup.DECORATIONS));
+
     public static final ShelfBlock[] SHELF_BLOCKS = WoodType.stream().map(woodType ->
             registerWithItem("shelf/" + woodType.getPathName(),
                     new ShelfBlock(woodType, FabricBlockSettings.of(Material.WOOD, woodType.getMapColor())
