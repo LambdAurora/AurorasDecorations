@@ -56,7 +56,7 @@ public abstract class ModelLoaderMixin {
                             this.putModel(id, new UnbakedBigFlowerPotModel(unbakedModel));
                             ci.cancel();
                         }
-                    } else if (modelId.getPath().startsWith("waxed_") && modelId.getPath().endsWith("board")) {
+                    } else if (modelId.getPath().endsWith("board")) {
                         this.putModel(id, new UnbakedBlackboardModel(unbakedModel));
                         ci.cancel();
                     }

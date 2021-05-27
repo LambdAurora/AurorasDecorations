@@ -18,7 +18,6 @@
 package dev.lambdaurora.aurorasdeco.client.particle;
 
 import net.minecraft.client.particle.*;
-import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
 
@@ -39,7 +38,7 @@ public class AmethystGlintParticle extends SpriteBillboardParticle {
 
     @Override
     protected int getBrightness(float tint) {
-        return LightmapTextureManager.pack(15, 15);
+        return 0xf000f0;
     }
 
     @Override

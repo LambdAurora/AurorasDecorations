@@ -19,11 +19,11 @@ package dev.lambdaurora.aurorasdeco.block.entity;
 
 import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
-import dev.lambdaurora.aurorasdeco.client.renderer.BlackboardBlockEntityRenderer;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.BlockState;
@@ -48,7 +48,7 @@ import org.jetbrains.annotations.Nullable;
 public class BlackboardBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Nameable,
         RenderAttachmentBlockEntity {
     @Environment(EnvType.CLIENT)
-    private BlackboardBlockEntityRenderer.BlackboardTexture texture = null;
+    private Mesh mesh = null;
 
     private final Blackboard blackboard = new AssignedBlackboard();
     private @Nullable Text customName;
@@ -134,16 +134,9 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
 
     /* Client */
 
-    @Environment(EnvType.CLIENT)
-    public BlackboardBlockEntityRenderer.BlackboardTexture getTexture() {
-        return this.texture;
-    }
-
     @Override
     public @Nullable Object getRenderAttachmentData() {
-        if (this.isLocked() && !this.blackboard.isEmpty())
-            return this.blackboard;
-        return null;
+        return this.mesh;
     }
 
     /* Serialization */
@@ -178,16 +171,11 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
     @Override
     public void fromClientTag(NbtCompound nbt) {
         this.readBlackBoardNbt(nbt);
-        if (!this.isLocked()) {
-            if (this.texture == null)
-                this.texture = BlackboardBlockEntityRenderer.getOrCreateTexture();
-            this.texture.update(this.blackboard);
-        }
 
-        if (((BlackboardBlock) this.getCachedState().getBlock()).isLocked() && !this.blackboard.isEmpty()) {
-            var pos = ChunkSectionPos.from(this.getPos());
-            ((ClientWorld) world).scheduleBlockRenders(pos.getX(), pos.getY(), pos.getZ());
-        }
+        int light = this.blackboard.isLit() ? 0xf000f0 : 0;
+        this.mesh = this.blackboard.buildMesh(this.getCachedState().get(BlackboardBlock.FACING), light);
+        var pos = ChunkSectionPos.from(this.getPos());
+        ((ClientWorld) this.world).scheduleBlockRenders(pos.getX(), pos.getY(), pos.getZ());
     }
 
     @Override

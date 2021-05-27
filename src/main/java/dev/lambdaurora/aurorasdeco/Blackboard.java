@@ -21,7 +21,13 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
+import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
+import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.util.NbtType;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -29,6 +35,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -43,6 +50,8 @@ import java.util.Arrays;
 public class Blackboard {
     public static final Int2ObjectMap<Color> COLORS = new Int2ObjectOpenHashMap<>();
     private static final Object2ObjectMap<Item, Color> ITEM_TO_COLOR = new Object2ObjectOpenHashMap<>();
+    @Environment(EnvType.CLIENT)
+    private static Sprite WHITE_SPRITE;
 
     private final byte[] pixels = new byte[256];
     private boolean lit;
@@ -136,6 +145,51 @@ public class Blackboard {
 
     public void setLit(boolean lit) {
         this.lit = lit;
+    }
+
+    /* Rendering */
+
+    @Environment(EnvType.CLIENT)
+    public static void setWhiteSprite(Sprite whiteSprite) {
+        WHITE_SPRITE = whiteSprite;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public Mesh buildMesh(Direction facing, int light) {
+        var meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
+        var emitter = meshBuilder.getEmitter();
+
+        var lit = light != 0;
+
+        var material = RendererAccess.INSTANCE.getRenderer().materialFinder()
+                .disableDiffuse(0, lit)
+                .disableAo(0, lit)
+                .find();
+        for (int y = 0; y < 16; y++) {
+            for (int x = 0; x < 16; x++) {
+                int color = this.getColor(x, y);
+                if (color != 0) {
+                    {
+                        int red = color & 255;
+                        int green = (color >> 8) & 255;
+                        int blue = (color >> 16) & 255;
+                        color = 0xff000000 | (red << 16) | (green << 8) | blue;
+                    }
+
+                    int squareY = 15 - y;
+                    emitter.square(facing, x / 16.f, squareY / 16.f,
+                            (x + 1) / 16.f, (squareY + 1) / 16.f, 0.928f)
+                            .spriteBake(0, WHITE_SPRITE, MutableQuadView.BAKE_LOCK_UV)
+                            .spriteColor(0, color, color, color, color)
+                            .material(material);
+                    if (light != 0)
+                        emitter.lightmap(light, light, light, light);
+                    emitter.emit();
+                }
+            }
+        }
+
+        return meshBuilder.build();
     }
 
     /* Serialization */

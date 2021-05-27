@@ -19,7 +19,7 @@ package dev.lambdaurora.aurorasdeco.client.tooltip;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.Blackboard;
-import dev.lambdaurora.aurorasdeco.client.renderer.BlackboardBlockEntityRenderer;
+import dev.lambdaurora.aurorasdeco.client.BlackboardTexture;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -47,17 +47,16 @@ public class BlackboardTooltipComponent implements TooltipComponent, TooltipData
     private static final Identifier GLOW_TEXTURE = AurorasDeco.id("textures/gui/glowing_sprite.png");
 
     private final MinecraftClient client = MinecraftClient.getInstance();
-    private final BlackboardBlockEntityRenderer.BlackboardTexture texture;
+    private final BlackboardTexture texture;
     private final RenderLayer background;
     private final Blackboard blackboard;
     private final boolean locked;
 
     public BlackboardTooltipComponent(String background, Blackboard blackboard, boolean locked) {
-        this.texture = BlackboardBlockEntityRenderer.getOrCreateTexture();
         this.background = RenderLayer.getText(AurorasDeco.id("textures/block/" + background + ".png"));
         this.blackboard = blackboard;
         this.locked = locked;
-        this.texture.update(blackboard);
+        this.texture = BlackboardTexture.fromBlackboard(blackboard);
     }
 
     @Override
@@ -113,7 +112,6 @@ public class BlackboardTooltipComponent implements TooltipComponent, TooltipData
 
         vertexConsumers.draw();
         matrices.pop();
-        this.texture.pop();
     }
 
     private void quad(RenderLayer renderLayer, float uMin, float vMin, float uMax, float vMax,

@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.client.renderer;
 
 import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
+import dev.lambdaurora.aurorasdeco.client.BlackboardTexture;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
@@ -40,7 +41,6 @@ import net.minecraft.nbt.NbtElement;
 @Environment(EnvType.CLIENT)
 public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
     private final ModelIdentifier modelId;
-    private BlackboardBlockEntityRenderer.BlackboardTexture texture = null;
 
     public BlackboardItemRenderer(ModelIdentifier modelId) {
         this.modelId = modelId;
@@ -71,7 +71,7 @@ public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.Dynam
                 matrices.translate(0.5, 0.5, z);
                 matrices.scale(-1, -1, 1);
             } else if (mode == Mode.GUI) {
-                matrices.translate(0.26, -0.08, 0);
+                matrices.translate(0.27, -0.08, 0);
                 matrices.scale(-1, -1, 1);
             } else if (mode == Mode.GROUND) {
                 matrices.translate(0.125, 0.5, 0.23333333);
@@ -88,11 +88,9 @@ public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.Dynam
                 matrices.scale(-1, -1, 1);
             }
 
-            if (this.texture == null)
-                this.texture = BlackboardBlockEntityRenderer.getOrCreateTexture();
             var blackboard = Blackboard.fromNbt(nbt);
-            this.texture.update(blackboard);
-            this.texture.render(matrices.peek().getModel(), vertexConsumers, blackboard.isLit() ? 15728880 : light);
+            BlackboardTexture.fromBlackboard(blackboard)
+                    .render(matrices.peek().getModel(), vertexConsumers, blackboard.isLit() ? 0xf000f0 : light);
         }
 
         matrices.pop();

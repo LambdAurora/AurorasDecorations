@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.client.model;
 
 import com.mojang.datafixers.util.Pair;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import dev.lambdaurora.aurorasdeco.Blackboard;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.model.BakedModel;
@@ -29,7 +30,6 @@ import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -49,17 +49,15 @@ public record UnbakedBlackboardModel(UnbakedModel baseModel) implements UnbakedM
     @Override
     public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter,
                                                                Set<Pair<String, String>> unresolvedTextureReferences) {
-        var textures = new HashSet<SpriteIdentifier>();
+        var textures = new HashSet<>(this.baseModel().getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences));
         textures.add(WHITE);
-        textures.addAll(this.baseModel().getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences));
         return textures;
     }
 
-    @Nullable
     @Override
     public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer,
                            Identifier modelId) {
-        var white = textureGetter.apply(WHITE);
-        return new BakedBlackboardModel(this.baseModel().bake(loader, textureGetter, rotationContainer, modelId), white);
+        Blackboard.setWhiteSprite(textureGetter.apply(WHITE));
+        return new BakedBlackboardModel(this.baseModel().bake(loader, textureGetter, rotationContainer, modelId));
     }
 }

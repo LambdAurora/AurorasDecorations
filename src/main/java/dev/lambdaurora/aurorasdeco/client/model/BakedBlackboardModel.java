@@ -17,20 +17,15 @@
 
 package dev.lambdaurora.aurorasdeco.client.model;
 
-import dev.lambdaurora.aurorasdeco.Blackboard;
-import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
-import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
+import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachedBlockView;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.texture.Sprite;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
 
@@ -39,11 +34,13 @@ import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public class BakedBlackboardModel extends ForwardingBakedModel {
-    private final Sprite white;
-
-    public BakedBlackboardModel(BakedModel baseModel, Sprite white) {
+    public BakedBlackboardModel(BakedModel baseModel) {
         this.wrapped = baseModel;
-        this.white = white;
+    }
+
+    @Override
+    public boolean isVanillaAdapter() {
+        return false;
     }
 
     @Override
@@ -51,42 +48,13 @@ public class BakedBlackboardModel extends ForwardingBakedModel {
         super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 
         var attachment = ((RenderAttachedBlockView) blockView).getBlockEntityRenderAttachment(pos);
-        if (attachment instanceof Blackboard blackboard && white != null) {
-            var facing = state.get(BlackboardBlock.FACING);
-
-            boolean lit = blackboard.isLit();
-            int light = LightmapTextureManager.pack(15, 15);
-            if (!lit) {
-                light = WorldRenderer.getLightmapCoordinates(blockView, pos);
-            }
-
-            var material = RendererAccess.INSTANCE.getRenderer().materialFinder()
-                    .disableDiffuse(0, true)
-                    .disableAo(0, true)
-                    .find();
-            var emitter = context.getEmitter();
-            for (int y = 0; y < 16; y++) {
-                for (int x = 0; x < 16; x++) {
-                    int color = blackboard.getColor(x, y);
-                    if (color != 0) {
-                        {
-                            int red = color & 255;
-                            int green = (color >> 8) & 255;
-                            int blue = (color >> 16) & 255;
-                            color = 0xff000000 | (red << 16) | (green << 8) | blue;
-                        }
-
-                        int squareY = 15 - y;
-                        emitter.square(facing, x / 16.f, squareY / 16.f,
-                                (x + 1) / 16.f, (squareY + 1) / 16.f, 0.925f)
-                                .spriteBake(0, this.white, MutableQuadView.BAKE_LOCK_UV)
-                                .spriteColor(0, color, color, color, color)
-                                .lightmap(light, light, light, light)
-                                .material(material)
-                                .emit();
-                    }
-                }
-            }
+        if (attachment instanceof Mesh mesh) {
+            context.meshConsumer().accept(mesh);
         }
+    }
+
+    @Override
+    public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+        super.emitItemQuads(stack, randomSupplier, context);
     }
 }

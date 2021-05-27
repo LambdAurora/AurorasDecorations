@@ -64,8 +64,6 @@ public class AurorasDecoClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE,
-                BlackboardBlockEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE,
                 BookPileEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE,
