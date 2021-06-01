@@ -24,7 +24,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipData;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.CommandItemSlot;
+import net.minecraft.inventory.StackReference;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -57,7 +57,7 @@ public class BlackboardItem extends BlockItem {
     }
 
     @Override
-    public boolean onClicked(ItemStack self, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, CommandItemSlot cursorSlot) {
+    public boolean onClicked(ItemStack self, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStack) {
         if (clickType == ClickType.RIGHT) {
             if (otherStack.isOf(Items.WATER_BUCKET)
                     || (otherStack.isOf(Items.POTION) && PotionUtil.getPotion(otherStack) == Potions.WATER)) {
@@ -75,7 +75,7 @@ public class BlackboardItem extends BlockItem {
                             otherStack.decrement(1);
                             player.getInventory().insertStack(newStack);
                         } else {
-                            cursorSlot.set(newStack);
+                            cursorStack.set(newStack);
                         }
                     }
                     player.playSound(SoundEvents.ITEM_BOTTLE_EMPTY, 1.f, 1.f);
