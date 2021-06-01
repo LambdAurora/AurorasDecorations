@@ -12,8 +12,9 @@ archivesBaseName = project.archives_base_name
 // This field defines the Java version your mod target.
 def targetJavaVersion = 16
 
-def getMCVersionString() {
-    if (project.minecraft_version.matches("\\d\\dw\\d\\d[a-z]")) {
+String getMCVersionString() {
+    if (project.minecraft_version.matches('^\\d\\dw\\d\\d[a-z]$')
+            || project.minecraft_version.matches('\\d+\\.\\d+-(pre|rc)(\\d+)')) {
         return project.minecraft_version
     }
     int lastDot = project.minecraft_version.lastIndexOf('.')
