@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.block;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
@@ -79,7 +80,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
     private static final VoxelShape HOLDER_SHAPE = createCuboidShape(0.0, 8.0, 0.0,
             16.0, 16.0, 16.0);
 
-    public static final Identifier LANTERN_BETTERGRASS_DATA = new Identifier("bettergrass/data/stump");
+    public static final Identifier LANTERN_BETTERGRASS_DATA = AurorasDeco.id("bettergrass/data/wall_lantern");
 
     private final LanternBlock lanternBlock;
 

@@ -36,7 +36,7 @@ import java.util.function.Function;
  */
 public final class MapUtil {
     private MapUtil() {
-        throw new UnsupportedOperationException("Someone tried to instantiate a singleton. How?");
+        throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");
     }
 
     public static <K, I, O> Map<K, O> map(Map<K, I> map, Function<I, O> mapper) {

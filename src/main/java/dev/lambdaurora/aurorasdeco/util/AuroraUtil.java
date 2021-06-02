@@ -25,7 +25,7 @@ import net.minecraft.util.math.Box;
 
 public final class AuroraUtil {
     private AuroraUtil() {
-        throw new UnsupportedOperationException("Someone tried to instantiate a singleton. How?");
+        throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");
     }
 
     public static double posMod(double n, double d) {

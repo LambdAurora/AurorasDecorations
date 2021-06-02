@@ -25,6 +25,7 @@ import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.BenchBlock;
 import dev.lambdaurora.aurorasdeco.block.ShelfBlock;
 import dev.lambdaurora.aurorasdeco.block.StumpBlock;
+import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
@@ -140,6 +141,8 @@ public class AurorasDecoPack implements ModResourcePack {
                     var id = Registry.BLOCK.getId(type.getPot());
                     this.putJson("assets/" + id.getNamespace() + "/blockstates/" + id.getPath() + ".json",
                             baseBigFlowerPotJson);
+
+                    Datagen.registerBetterGrassLayer(id, BigFlowerPotBlock.POT_BETTERGRASS_DATA);
                 });
 
         WoodType.stream().forEach(type -> {

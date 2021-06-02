@@ -69,6 +69,8 @@ public class BigFlowerPotBlock extends Block {
 
     public static final VoxelShape BIG_FLOWER_POT_POTTED_FULL_CUBE_SHAPE = VoxelShapes.union(BIG_FLOWER_POT_SHAPE, PLANT_FULL_CUBE);
 
+    public static final Identifier POT_BETTERGRASS_DATA = AurorasDeco.id("bettergrass/data/big_flower_pot");
+
     protected final PottedPlantType type;
 
     public BigFlowerPotBlock(PottedPlantType type) {

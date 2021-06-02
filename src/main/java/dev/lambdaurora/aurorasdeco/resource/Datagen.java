@@ -22,10 +22,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.block.AmethystLanternBlock;
-import dev.lambdaurora.aurorasdeco.block.BenchBlock;
-import dev.lambdaurora.aurorasdeco.block.SleepingBagBlock;
-import dev.lambdaurora.aurorasdeco.block.StumpBlock;
+import dev.lambdaurora.aurorasdeco.block.*;
 import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
 import dev.lambdaurora.aurorasdeco.mixin.AbstractBlockAccessor;
 import dev.lambdaurora.aurorasdeco.recipe.RecipeSerializerExtended;
@@ -146,7 +143,7 @@ public class Datagen {
         var json = new JsonObject();
         json.addProperty("type", "layer");
         json.addProperty("data", data.toString());
-        AurorasDeco.RESOURCE_PACK.putJson(
+        AurorasDecoClient.RESOURCE_PACK.putJson(
                 ResourceType.CLIENT_RESOURCES,
                 new Identifier(blockId.getNamespace(), "bettergrass/states/" + blockId.getPath()),
                 json
@@ -592,6 +589,8 @@ public class Datagen {
                 }
             }
             builder.register();
+
+            registerBetterGrassLayer(wallLantern, WallLanternBlock.LANTERN_BETTERGRASS_DATA);
         });
     }
 

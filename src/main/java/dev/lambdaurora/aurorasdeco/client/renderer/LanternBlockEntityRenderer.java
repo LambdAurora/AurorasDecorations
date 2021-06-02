@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.client.renderer;
 
 import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
+import dev.lambdaurora.aurorasdeco.hook.LBGHooks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -99,8 +100,10 @@ public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<Lante
 
         matrices.translate(-8.f / 16.f, -10.f / 16.f, -8.f / 16.f);
 
+        LBGHooks.pushDisableBetterLayer();
         this.client.getBlockRenderManager().renderBlock(lanternState, pos, lantern.getWorld(), matrices, consumer,
                 false, this.random);
+        LBGHooks.popDisableBetterLayer();
         matrices.pop();
     }
 }
