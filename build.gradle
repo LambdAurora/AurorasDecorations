@@ -1,5 +1,5 @@
 plugins {
-    id 'org.quiltmc.loom' version '0.8.+'
+    id 'fabric-loom' version '0.8-SNAPSHOT'
     id 'java-library'
     id 'maven-publish'
     id 'org.cadixdev.licenser' version '0.6.0'
@@ -23,8 +23,8 @@ String getMCVersionString() {
 
 repositories {
     maven {
-        name = 'Fabric'
-        url = 'https://maven.fabricmc.net/'
+        name 'Jitpack'
+        url 'https://jitpack.io'
     }
 }
 
@@ -35,12 +35,9 @@ dependencies {
     //to change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.minecraft_version}+build.${project.yarn_mappings}:v2"
-    implementation "net.fabricmc:intermediary:${project.minecraft_version}:v2"
-    modImplementation "org.quiltmc:quilt-loader:${project.loader_version}"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}") {
-        exclude group: 'net.fabricmc'
-    }
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}")
 }
 
 java {
