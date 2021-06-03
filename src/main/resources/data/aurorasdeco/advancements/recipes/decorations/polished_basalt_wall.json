@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:polished_basalt"
+            "items": [
+              "minecraft:polished_basalt"
+            ]
           }
         ]
       }
@@ -21,7 +23,9 @@
       "conditions": {
         "items": [
           {
-            "item": "aurorasdeco:polished_basalt_wall"
+            "items": [
+              "aurorasdeco:polished_basalt_wall"
+            ]
           }
         ]
       }

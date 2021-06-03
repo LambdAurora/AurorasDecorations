@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:brick"
+            "items": [
+              "minecraft:brick"
+            ]
           }
         ]
       }
@@ -21,7 +23,9 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:dirt"
+            "items": [
+              "minecraft:dirt"
+            ]
           }
         ]
       }
@@ -31,7 +35,9 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:flower_pot"
+            "items": [
+              "minecraft:flower_pot"
+            ]
           }
         ]
       }
@@ -41,7 +47,9 @@
       "conditions": {
         "items": [
           {
-            "item": "aurorasdeco:big_flower_pot"
+            "items": [
+              "aurorasdeco:big_flower_pot"
+            ]
           }
         ]
       }

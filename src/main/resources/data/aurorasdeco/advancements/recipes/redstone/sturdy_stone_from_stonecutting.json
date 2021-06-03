@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:stone"
+            "items": [
+              "minecraft:stone"
+            ]
           }
         ]
       }
@@ -31,7 +33,9 @@
       "conditions": {
         "items": [
           {
-            "item": "aurorasdeco:sturdy_stone"
+            "items": [
+              "aurorasdeco:sturdy_stone"
+            ]
           }
         ]
       }

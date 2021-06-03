@@ -45,7 +45,7 @@ public final class AuroraUtil {
         return AurorasDeco.id(prefix + '/' + path);
     }
 
-    public static JsonArray jsonArray(Object[] elements) {
+    public static JsonArray jsonArray(Object... elements) {
         var array = new JsonArray();
         for (var element : elements) {
             if (element instanceof Number)

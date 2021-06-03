@@ -166,7 +166,7 @@ public class AurorasDecoPack implements ModResourcePack {
         var root = new JsonObject();
         root.addProperty("type", "minecraft:crafting_shaped");
         root.addProperty("group", "aurorasdeco:shelf");
-        root.add("pattern", AuroraUtil.jsonArray(new Object[]{"###", "S S"}));
+        root.add("pattern", AuroraUtil.jsonArray("###", "S S"));
         var key = new JsonObject();
         var slab = new JsonObject();
         slab.addProperty("item", type.getSlabId().toString());
@@ -193,7 +193,7 @@ public class AurorasDecoPack implements ModResourcePack {
         var root = new JsonObject();
         root.addProperty("parent", "minecraft:recipes/root");
         var rewards = new JsonObject();
-        rewards.add("recipes", AuroraUtil.jsonArray(new Object[]{shelfId}));
+        rewards.add("recipes", AuroraUtil.jsonArray(shelfId));
         root.add("rewards", rewards);
 
         var criteria = new JsonObject();
@@ -204,9 +204,9 @@ public class AurorasDecoPack implements ModResourcePack {
         criteria.add("has_recipe", Datagen.recipeUnlockedCriteria(shelfId));
 
         root.add("criteria", criteria);
-        root.add("requirements", AuroraUtil.jsonArray(new Object[]{
-                AuroraUtil.jsonArray(new Object[]{"has_slab", "has_stick", "has_self", "has_recipe"})
-        }));
+        root.add("requirements", AuroraUtil.jsonArray(
+                AuroraUtil.jsonArray("has_slab", "has_stick", "has_self", "has_recipe")
+        ));
 
         this.putJson(path, root);
     }

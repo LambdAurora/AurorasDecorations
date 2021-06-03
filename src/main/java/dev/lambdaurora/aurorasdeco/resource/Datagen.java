@@ -159,8 +159,18 @@ public class Datagen {
         root.addProperty("trigger", "minecraft:inventory_changed");
         var conditions = new JsonObject();
         var items = new JsonArray();
-        var child = new JsonObject();
-        child.addProperty(type, item.toString());
+        items.add(switch (type) {
+            case "item", "block" -> {
+                var itemJson = new JsonObject();
+                itemJson.add(type + 's', jsonArray(item));
+                yield itemJson;
+            }
+            default -> {
+                var obj = new JsonObject();
+                obj.addProperty(type, item.toString());
+                yield obj;
+            }
+        });
         conditions.add("items", items);
         root.add("conditions", conditions);
         return root;
@@ -171,7 +181,14 @@ public class Datagen {
         root.addProperty("trigger", "minecraft:inventory_changed");
         var conditions = new JsonObject();
         var items = new JsonArray();
-        items.add(item.toJson());
+        var ingredientJson = item.toJson();
+        if (ingredientJson instanceof JsonObject ingredientJsonObject) {
+            if (ingredientJsonObject.has("item")) {
+                var child = new JsonObject();
+                child.add("items", jsonArray(ingredientJsonObject.get("item").getAsString()));
+                items.add(child);
+            } else items.add(ingredientJson);
+        }
         conditions.add("items", items);
         root.add("conditions", conditions);
         return root;
@@ -190,7 +207,7 @@ public class Datagen {
         var root = new JsonObject();
         root.addProperty("parent", "minecraft:recipes/root");
         var rewards = new JsonObject();
-        rewards.add("recipes", AuroraUtil.jsonArray(new Object[]{recipe}));
+        rewards.add("recipes", jsonArray(recipe));
         root.add("rewards", rewards);
 
         var criteria = new JsonObject();
@@ -216,7 +233,7 @@ public class Datagen {
         var root = new JsonObject();
         root.addProperty("parent", "minecraft:recipes/root");
         var rewards = new JsonObject();
-        rewards.add("recipes", AuroraUtil.jsonArray(new Object[]{recipe.getId()}));
+        rewards.add("recipes", jsonArray(recipe.getId()));
         root.add("rewards", rewards);
 
         var criteria = new JsonObject();
@@ -236,7 +253,7 @@ public class Datagen {
 
         requirements.add("has_self");
         requirements.add("has_the_recipe");
-        root.add("requirements", jsonArray(new Object[]{requirements}));
+        root.add("requirements", jsonArray(requirements));
         return root;
     }
 
@@ -270,7 +287,7 @@ public class Datagen {
                 var function = new JsonObject();
                 function.addProperty("function", "minecraft:copy_name");
                 function.addProperty("source", "block_entity");
-                entry.add("functions", jsonArray(new JsonObject[]{function}));
+                entry.add("functions", jsonArray(function));
             }
 
             entries.add(entry);
@@ -279,7 +296,7 @@ public class Datagen {
 
             var survivesExplosion = new JsonObject();
             survivesExplosion.addProperty("condition", "minecraft:survives_explosion");
-            pool.add("conditions", jsonArray(new Object[]{survivesExplosion}));
+            pool.add("conditions", jsonArray(survivesExplosion));
 
             pools.add(pool);
         }
