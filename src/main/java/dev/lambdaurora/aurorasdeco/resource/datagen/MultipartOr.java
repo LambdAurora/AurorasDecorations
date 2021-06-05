@@ -15,25 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.entity.goal;
+package dev.lambdaurora.aurorasdeco.resource.datagen;
 
-import net.minecraft.entity.passive.CatEntity;
+import net.minecraft.state.property.Property;
 
-public class CatSleepInPetBedGoal extends SleepInPetBedGoal {
-    private final CatEntity cat;
-
-    public CatSleepInPetBedGoal(CatEntity cat, double speed) {
-        super(cat, speed);
-
-        this.cat = cat;
-    }
-
-    @Override
-    public void setInSleepingPosition(boolean value) {
-        this.cat.setInSleepingPose(value);
-
-        if (!value) {
-            this.cat.setInSittingPose(this.cat.isSitting());
-        }
-    }
+public record MultipartOr(Property.Value<?>... when) {
 }

@@ -25,6 +25,7 @@ import dev.lambdaurora.aurorasdeco.client.renderer.*;
 import dev.lambdaurora.aurorasdeco.client.screen.SawmillScreen;
 import dev.lambdaurora.aurorasdeco.client.screen.ShelfScreen;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -39,8 +40,6 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
-import net.minecraft.client.color.block.BlockColorProvider;
-import net.minecraft.client.color.item.ItemColorProvider;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.color.world.FoliageColors;
 import net.minecraft.client.render.RenderLayer;
@@ -96,11 +95,14 @@ public class AurorasDecoClient implements ClientModInitializer {
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
             StumpBlock.streamLogStumps()
                     .forEach(block -> {
-                        BlockColorProvider blockColorProvider = block.getWoodType().getLeavesColorProvider();
+                        var leavesComponent = block.getWoodType().getComponent(WoodType.ComponentType.LEAVES);
+                        if (leavesComponent == null) return;
+
+                        var blockColorProvider = leavesComponent.getBlockColorProvider();
                         if (blockColorProvider != null) {
                             ColorProviderRegistry.BLOCK.register(blockColorProvider, block);
                         }
-                        ItemColorProvider itemColorProvider = block.getWoodType().getLeavesItemColorProvider();
+                        var itemColorProvider = leavesComponent.getItemColorProvider();
                         if (itemColorProvider != null) {
                             ColorProviderRegistry.ITEM.register(itemColorProvider, block);
                         }

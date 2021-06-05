@@ -17,15 +17,46 @@
 
 package dev.lambdaurora.aurorasdeco.util;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import dev.lambdaurora.aurorasdeco.mixin.BlockEntityTypeAccessor;
+import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 
 public final class AuroraUtil {
     private AuroraUtil() {
         throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");
+    }
+
+    public static <T> boolean contains(Collection<T> list, List<T> required) {
+        int i = 0;
+        var it = list.iterator();
+        while (it.hasNext() && i < required.size()) {
+            if (required.contains(it.next()))
+                i++;
+        }
+        return i == required.size();
+    }
+
+    /**
+     * Returns whether the given id is equal to the given {@code namespace}:{@code path} id without allocation.
+     *
+     * @param id the identifier to compare
+     * @param namespace the namespace to compare to the identifier
+     * @param path the path to compare to the identifier
+     * @return {@code true} if both identifiers are equal, otherwise {@code false}
+     */
+    public static boolean idEqual(Identifier id, String namespace, String path) {
+        return id.getNamespace().equals(namespace) && id.getPath().equals(path);
     }
 
     public static double posMod(double n, double d) {
@@ -61,5 +92,15 @@ public final class AuroraUtil {
 
         }
         return array;
+    }
+
+    public static <T extends BlockEntity> void appendBlockToBlockEntityType(BlockEntityType<T> blockEntityType, Block block) {
+        var blockSet = ((BlockEntityTypeAccessor) blockEntityType).getBlocks();
+        if (blockSet instanceof ImmutableSet) {
+            blockSet = new HashSet<>(blockSet);
+            ((BlockEntityTypeAccessor) blockEntityType).setBlocks(blockSet);
+        }
+
+        blockSet.add(block);
     }
 }

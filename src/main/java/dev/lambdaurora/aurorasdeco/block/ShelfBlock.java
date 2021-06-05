@@ -22,6 +22,7 @@ import com.google.common.collect.ImmutableMap;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
@@ -50,9 +51,11 @@ import net.minecraft.world.*;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Represents the shelf block.
@@ -69,10 +72,12 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
     private static final Map<Direction, Map<PartType, VoxelShape>> SHAPES;
     private static final Map<PartType, VoxelShape> VALID_ATTACHMENTS;
 
-    public final WoodType woodType;
+    private static final List<ShelfBlock> SHELVES = new ArrayList<>();
 
-    public ShelfBlock(WoodType woodType, Settings settings) {
-        super(settings);
+    private final WoodType woodType;
+
+    public ShelfBlock(WoodType woodType) {
+        super(settings(woodType));
 
         this.woodType = woodType;
 
@@ -80,11 +85,21 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
                 .with(TYPE, PartType.BOTTOM)
                 .with(FACING, Direction.NORTH)
                 .with(WATERLOGGED, false));
+
+        SHELVES.add(this);
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(TYPE, FACING, WATERLOGGED);
+    }
+
+    public static Stream<ShelfBlock> streamShelves() {
+        return SHELVES.stream();
+    }
+
+    public WoodType getWoodType() {
+        return this.woodType;
     }
 
     @Override
@@ -348,6 +363,13 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
     @Override
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
         return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));
+    }
+
+    private static FabricBlockSettings settings(WoodType woodType) {
+        var planks = woodType.getComponent(WoodType.ComponentType.PLANKS);
+        if (planks == null) throw new IllegalStateException("ShelfBlock attempted to be created while the wood type is invalid.");
+        return FabricBlockSettings.copyOf(planks.block())
+                .nonOpaque();
     }
 
     private static Map<PartType, VoxelShape> createTypeShapes(int xMin, int zMin, int xMax, int zMax) {

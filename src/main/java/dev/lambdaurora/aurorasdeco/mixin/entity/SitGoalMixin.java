@@ -40,7 +40,7 @@ public class SitGoalMixin {
             var state = this.tameable.getEntityWorld().getBlockState(this.tameable.getBlockPos());
             if (state.isIn(AurorasDecoRegistry.PET_BEDS)) {
                 this.tameable.setInSittingPose(false);
-                ((CatEntity) this.tameable).setSleepingWithOwner(true);
+                ((CatEntity) this.tameable).setInSleepingPose(true);
             }
         }
     }
@@ -48,7 +48,7 @@ public class SitGoalMixin {
     @Inject(method = "stop", at = @At("RETURN"))
     private void onStop(CallbackInfo ci) {
         if (this.tameable instanceof CatEntity) {
-            ((CatEntity) this.tameable).setSleepingWithOwner(false);
+            ((CatEntity) this.tameable).setInSleepingPose(false);
         }
     }
 }

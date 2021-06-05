@@ -29,7 +29,8 @@ import dev.lambdaurora.aurorasdeco.recipe.RecipeSerializerExtended;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
-import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
+import dev.lambdaurora.aurorasdeco.registry.WoodType;
+import dev.lambdaurora.aurorasdeco.resource.datagen.*;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
@@ -44,7 +45,6 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.resource.ResourceType;
-import net.minecraft.state.property.Property;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
@@ -80,6 +80,8 @@ public class Datagen {
     private static final Identifier TEMPLATE_SLEEPING_BAG_FOOT_MODEL = id("block/template/sleeping_bag_foot");
     private static final Identifier TEMPLATE_SLEEPING_BAG_HEAD_MODEL = id("block/template/sleeping_bag_head");
     private static final Identifier TEMPLATE_SLEEPING_BAG_ITEM_MODEL = id("item/template/sleeping_bag");
+
+    private static final Identifier LOG_STUMP_LEAF_TEXTURE = id("block/log_stump_leaf");
 
     static final Identifier SHELF_BETTERGRASS_DATA = id("bettergrass/data/shelf");
 
@@ -268,42 +270,78 @@ public class Datagen {
         });
     }
 
+    private static JsonObject generateBlockLootTableSimplePool(Identifier id, boolean copyName) {
+        var pool = new JsonObject();
+        pool.addProperty("rolls", 1.0);
+        pool.addProperty("bonus_rolls", 0.0);
+
+        var entries = new JsonArray();
+
+        var entry = new JsonObject();
+        entry.addProperty("type", "minecraft:item");
+        entry.addProperty("name", id.toString());
+
+        var function = new JsonObject();
+        function.addProperty("function", "minecraft:copy_name");
+        function.addProperty("source", "block_entity");
+        entry.add("functions", jsonArray(function));
+
+        entries.add(entry);
+
+        pool.add("entries", entries);
+
+        var survivesExplosion = new JsonObject();
+        survivesExplosion.addProperty("condition", "minecraft:survives_explosion");
+        pool.add("conditions", jsonArray(survivesExplosion));
+
+        return pool;
+    }
+
     public static JsonObject simpleBlockLootTable(Identifier id, boolean copyName) {
         var root = new JsonObject();
         root.addProperty("type", "minecraft:block");
         var pools = new JsonArray();
+        pools.add(generateBlockLootTableSimplePool(id, copyName));
+
+        root.add("pools", pools);
+
+        return root;
+    }
+
+    private static JsonObject shelfBlockLootTable(Identifier id) {
+        var root = new JsonObject();
+        root.addProperty("type", "minecraft:block");
+        var pools = new JsonArray();
+        pools.add(generateBlockLootTableSimplePool(id, true));
+
         {
-            var pool = new JsonObject();
-            pool.addProperty("rolls", 1.0);
-            pool.addProperty("bonus_rolls", 0.0);
-
-            var entries = new JsonArray();
-
-            var entry = new JsonObject();
-            entry.addProperty("type", "minecraft:item");
-            entry.addProperty("name", id.toString());
-
-            if (copyName) {
-                var function = new JsonObject();
-                function.addProperty("function", "minecraft:copy_name");
-                function.addProperty("source", "block_entity");
-                entry.add("functions", jsonArray(function));
-            }
-
-            entries.add(entry);
-
-            pool.add("entries", entries);
-
-            var survivesExplosion = new JsonObject();
-            survivesExplosion.addProperty("condition", "minecraft:survives_explosion");
-            pool.add("conditions", jsonArray(survivesExplosion));
-
+            var pool = generateBlockLootTableSimplePool(id, true);
             pools.add(pool);
+
+            var conditions = pool.getAsJsonArray("conditions");
+            var condition = new JsonObject();
+            conditions.add(condition);
+            condition.addProperty("condition", "minecraft:block_state_property");
+            condition.addProperty("block", id.toString());
+            {
+                var properties = new JsonObject();
+                properties.addProperty("type", "double");
+                condition.add("properties", properties);
+            }
         }
 
         root.add("pools", pools);
 
         return root;
+    }
+
+    public static void registerShelfBlockLootTable(Block block) {
+        var id = Registry.BLOCK.getId(block);
+        AurorasDeco.RESOURCE_PACK.putJson(
+                ResourceType.SERVER_DATA,
+                new Identifier(id.getNamespace(), "loot_tables/blocks/" + id.getPath()),
+                shelfBlockLootTable(id)
+        );
     }
 
     public static void dropsSelf(Block block) {
@@ -408,7 +446,7 @@ public class Datagen {
                 .forEach(Datagen::registerWoodcuttingRecipesForBlockVariants);
 
         BenchBlock.streamBenches().forEach(block -> {
-            var planks = Registry.ITEM.get(block.getWoodType().getPlanksId());
+            var planks = block.getWoodType().getComponent(WoodType.ComponentType.PLANKS).item();
             var recipe = new WoodcuttingRecipe(
                     id("woodcutting/bench/" + block.getWoodType().getPathName()),
                     "bench", Ingredient.ofItems(planks),
@@ -416,10 +454,26 @@ public class Datagen {
             registerRecipe(recipe, "decorations");
         });
 
-        for (var shelf : AurorasDecoRegistry.SHELF_BLOCKS) {
-            Datagen.tryRegisterWoodcuttingRecipeFor(Registry.ITEM.get(shelf.woodType.getPlanksId()), AurorasDeco.NAMESPACE,
-                    Registry.BLOCK.getId(shelf).getPath(), "", 1, "decorations");
-        }
+        ShelfBlock.streamShelves().forEach(block -> {
+            var planks = block.getWoodType().getComponent(WoodType.ComponentType.PLANKS).item();
+            var recipe = new WoodcuttingRecipe(
+                    id("woodcutting/shelf/" + block.getWoodType().getPathName()),
+                    "shelf", Ingredient.ofItems(planks),
+                    new ItemStack(block));
+            registerRecipe(recipe, "decorations");
+
+            var slabComponent = block.getWoodType().getComponent(WoodType.ComponentType.SLAB);
+            if (slabComponent != null) {
+                var slab = Ingredient.ofItems(slabComponent.item());
+                var stick = Ingredient.ofItems(Items.STICK);
+                var crafting = new ShapedRecipe(
+                        id("shelf/" + block.getWoodType().getPathName()),
+                        "shelf", 3, 2,
+                        DefaultedList.copyOf(Ingredient.EMPTY, slab, slab, slab, stick, Ingredient.EMPTY, stick),
+                        new ItemStack(block));
+                registerRecipe(crafting, "decorations");
+            }
+        });
 
         StumpBlock.streamLogStumps().forEach(block -> {
             if (block.getWoodType().getLog() == null)
@@ -453,91 +507,10 @@ public class Datagen {
         }
     }
 
-    public static void generateClientData() {
-        BenchBlock.streamBenches().forEach(block -> {
-            var builder = multipartBlockStateBuilder(block);
-
-            var seatModel = modelBuilder(BenchBlock.BENCH_SEAT_MODEL)
-                    .texture("planks", block.getWoodType().getPlanksTexture())
-                    .register(block);
-
-            var axisX = BenchBlock.AXIS.createValue(Direction.Axis.X);
-            var axisZ = BenchBlock.AXIS.createValue(Direction.Axis.Z);
-            builder.addWhen(new StateModel(seatModel), axisX);
-            builder.addWhen(new StateModel(seatModel, 90), axisZ);
-
-            var legsModel = modelBuilder(BenchBlock.BENCH_LEGS_MODEL)
-                    .texture("log", block.getWoodType().getLogSideTexture())
-                    .register(AurorasDeco.id("block/bench/" + block.getWoodType().getPathName() + "_legs"));
-
-            var withEastLegs = BenchBlock.EAST_LEGS.createValue(true);
-            var withWestLegs = BenchBlock.WEST_LEGS.createValue(true);
-            builder.addWhen(new StateModel(legsModel), axisX, withWestLegs);
-            builder.addWhen(new StateModel(legsModel, 180), axisX, withEastLegs);
-            builder.addWhen(new StateModel(legsModel, 90), axisZ, withWestLegs);
-            builder.addWhen(new StateModel(legsModel, 270), axisZ, withEastLegs);
-
-            modelBuilder(AurorasDeco.id("block/template/bench_full"))
-                    .texture("log", block.getWoodType().getLogSideTexture())
-                    .texture("planks", block.getWoodType().getPlanksTexture())
-                    .register(id("item/bench/" + block.getWoodType().getPathName()));
-
-            builder.register();
-
-            registerBetterGrassLayer(block, BenchBlock.BENCH_BETTERGRASS_DATA);
-        });
-
-        StumpBlock.streamLogStumps().forEach(block -> {
-            var builder = blockStateBuilder(block);
-
-            Identifier model;
-            if (block.getWoodType().getLogType().equals("stem")) {
-                model = modelBuilder(StumpBlock.STEM_STUMP_MODEL)
-                        .texture("log_side", block.getWoodType().getLogSideTexture())
-                        .texture("log_top", block.getWoodType().getLogTopTexture())
-                        .texture("mushroom", block.getWoodType().getLeavesTexture())
-                        .register(block);
-                for (var direction : DIRECTIONS) {
-                    if (direction.getAxis().isHorizontal())
-                        builder.addToVariant("", model, (int) direction.asRotation());
-                }
-            } else {
-                model = new ModelBuilder(StumpBlock.LOG_STUMP_MODEL)
-                        .texture("log_side", block.getWoodType().getLogSideTexture())
-                        .texture("log_top", block.getWoodType().getLogTopTexture())
-                        .texture("leaf", id("block/log_stump_leaf"))
-                        .register(block);
-                var brownMushroomModel = modelBuilder(StumpBlock.LOG_STUMP_BROWN_MUSHROOM_MODEL)
-                        .texture("log_side", block.getWoodType().getLogSideTexture())
-                        .texture("log_top", block.getWoodType().getLogTopTexture())
-                        .texture("leaf", id("block/log_stump_leaf"))
-                        .texture("mushroom", new Identifier("block/brown_mushroom_block"))
-                        .register(id("block/stump/"
-                                + block.getWoodType().getPathName() + "_brown_mushroom"));
-                var redMushroomModel = modelBuilder(StumpBlock.LOG_STUMP_RED_MUSHROOM_MODEL)
-                        .texture("log_side", block.getWoodType().getLogSideTexture())
-                        .texture("log_top", block.getWoodType().getLogTopTexture())
-                        .texture("leaf", id("block/log_stump_leaf"))
-                        .texture("mushroom", new Identifier("block/red_mushroom_block"))
-                        .register(id("block/stump/"
-                                + block.getWoodType().getPathName() + "_red_mushroom"));
-
-                for (var direction : DIRECTIONS) {
-                    if (direction.getAxis().isHorizontal()) {
-                        int rotation = (int) direction.asRotation();
-                        builder.addToVariant("", model, rotation);
-                        builder.addToVariant("", brownMushroomModel, rotation);
-                        builder.addToVariant("", redMushroomModel, rotation);
-                    }
-                }
-            }
-
-            new ModelBuilder(model).register(id("item/stump/" + block.getWoodType().getPathName()));
-
-            builder.register();
-
-            registerBetterGrassLayer(block, StumpBlock.STUMP_BETTERGRASS_DATA);
-        });
+    public static void generateClientData(LangBuilder langBuilder) {
+        generateBenchesClientData(langBuilder);
+        generateShelvesClientData(langBuilder);
+        generateStumpsClientData(langBuilder);
 
         SleepingBagBlock.forEach(sleepingBag -> {
             var color = sleepingBag.getColor();
@@ -611,6 +584,162 @@ public class Datagen {
         });
     }
 
+    private static void generateBenchesClientData(LangBuilder langBuilder) {
+        BenchBlock.streamBenches().forEach(block -> {
+            var builder = multipartBlockStateBuilder(block);
+
+            var pathName = "block/bench/" + block.getWoodType().getPathName();
+            var planksTexture = block.getWoodType().getComponent(WoodType.ComponentType.PLANKS).texture();
+            var logSideTexture = block.getWoodType().getLogSideTexture();
+            var seatModel = modelBuilder(BenchBlock.BENCH_SEAT_MODEL)
+                    .texture("planks", planksTexture)
+                    .register(block);
+            var restPlankModel = modelBuilder(BenchBlock.BENCH_REST_PLANK_MODEL)
+                    .texture("planks", planksTexture)
+                    .register(AurorasDeco.id(pathName + "_rest_plank"));
+            var restLeftModel = modelBuilder(BenchBlock.BENCH_REST_LEFT_MODEL)
+                    .texture("log", logSideTexture)
+                    .register(AurorasDeco.id(pathName + "_rest_left"));
+            var restRightModel = modelBuilder(BenchBlock.BENCH_REST_RIGHT_MODEL)
+                    .texture("log", logSideTexture)
+                    .register(AurorasDeco.id(pathName + "_rest_right"));
+            var legsModel = modelBuilder(BenchBlock.BENCH_LEGS_MODEL)
+                    .texture("log", logSideTexture)
+                    .register(AurorasDeco.id(pathName + "_legs"));
+
+            var withLeftLegs = BenchBlock.LEFT_LEGS.createValue(true);
+            var withRightLegs = BenchBlock.RIGHT_LEGS.createValue(true);
+            var withRest = BenchBlock.REST.createValue(true);
+            for (var facing : DIRECTIONS) {
+                if (facing.getAxis().isVertical()) continue;
+
+                var facingValue = BenchBlock.FACING.createValue(facing);
+
+                var rotation = ((facing.getHorizontal() + 2) & 3) * 90;
+                builder.addWhen(new StateModel(seatModel, rotation), facingValue);
+                builder.addWhen(new StateModel(legsModel, rotation), facingValue, withRightLegs);
+                builder.addWhen(new StateModel(legsModel, (rotation + 180) % 360), facingValue, withLeftLegs);
+                builder.addWhen(new StateModel(restLeftModel, rotation), facingValue, withLeftLegs, withRest);
+                builder.addWhen(new StateModel(restRightModel, rotation), facingValue, withRightLegs, withRest);
+                builder.addWhen(new StateModel(restPlankModel, rotation), facingValue, withRest);
+            }
+
+            modelBuilder(AurorasDeco.id("block/template/bench_full"))
+                    .texture("log", logSideTexture)
+                    .texture("planks", planksTexture)
+                    .register(id("item/bench/" + block.getWoodType().getPathName()));
+
+            builder.register();
+
+            registerBetterGrassLayer(block, BenchBlock.BENCH_BETTERGRASS_DATA);
+
+            langBuilder.addEntry("block.aurorasdeco.bench." + block.getWoodType().getLangPath(),
+                    "block.aurorasdeco.bench", "aurorasdeco.wood_type." + block.getWoodType().getLangPath());
+        });
+    }
+
+    private static void generateShelvesClientData(LangBuilder langBuilder) {
+        ShelfBlock.streamShelves().forEach(block -> {
+            var woodPathName = block.getWoodType().getPathName();
+            var builder = blockStateBuilder(block);
+
+            var planksTexture = block.getWoodType().getComponent(WoodType.ComponentType.PLANKS).texture();
+            var logTexture = block.getWoodType().getLogSideTexture();
+            var models = new Object2ObjectOpenHashMap<ShelfBlock.PartType, Identifier>();
+            for (var partType : ShelfBlock.PartType.getValues()) {
+                var model = modelBuilder(id("block/template/shelf_" + partType.asString()))
+                        .texture("planks", planksTexture)
+                        .texture("log", logTexture)
+                        .register(id("block/shelf/" + woodPathName + '/' + partType.asString()));
+                models.put(partType, model);
+
+                for (var direction : DIRECTIONS) {
+                    if (direction.getAxis().isVertical())
+                        continue;
+
+                    builder.addToVariant("type=" + partType.asString() + ",facing=" + direction.asString(),
+                            new StateModel(model, switch (direction) {
+                                default -> 0;
+                                case EAST -> 90;
+                                case SOUTH -> 180;
+                                case WEST -> 270;
+                            }));
+                }
+            }
+
+            modelBuilder(models.get(ShelfBlock.PartType.BOTTOM)).register(id("item/shelf/" + woodPathName));
+            builder.register();
+
+            Datagen.registerBetterGrassLayer(AurorasDeco.id("shelf/" + woodPathName), Datagen.SHELF_BETTERGRASS_DATA);
+
+            langBuilder.addEntry("block.aurorasdeco.shelf." + block.getWoodType().getLangPath(),
+                    "block.aurorasdeco.shelf", "aurorasdeco.wood_type." + block.getWoodType().getLangPath());
+        });
+    }
+
+    private static void generateStumpsClientData(LangBuilder langBuilder) {
+        StumpBlock.streamLogStumps().forEach(block -> {
+            var builder = blockStateBuilder(block);
+
+            Identifier model;
+            var logSideTexture = block.getWoodType().getLogSideTexture();
+            var logTopTexture = block.getWoodType().getLogTopTexture();
+            if (block.getWoodType().getLogType().equals("stem")) {
+                Identifier leavesTexture;
+                var component = block.getWoodType().getComponent(WoodType.ComponentType.LEAVES);
+                if (component == null) leavesTexture = new Identifier("block/red_mushroom_block");
+                else leavesTexture = component.texture();
+                model = modelBuilder(StumpBlock.STEM_STUMP_MODEL)
+                        .texture("log_side", logSideTexture)
+                        .texture("log_top", logTopTexture)
+                        .texture("mushroom", leavesTexture)
+                        .register(block);
+                for (var direction : DIRECTIONS) {
+                    if (direction.getAxis().isHorizontal())
+                        builder.addToVariant("", model, (int) direction.asRotation());
+                }
+            } else {
+                model = new ModelBuilder(StumpBlock.LOG_STUMP_MODEL)
+                        .texture("log_side", logSideTexture)
+                        .texture("log_top", logTopTexture)
+                        .texture("leaf", LOG_STUMP_LEAF_TEXTURE)
+                        .register(block);
+                var brownMushroomModel = modelBuilder(StumpBlock.LOG_STUMP_BROWN_MUSHROOM_MODEL)
+                        .texture("log_side", logSideTexture)
+                        .texture("log_top", logTopTexture)
+                        .texture("leaf", LOG_STUMP_LEAF_TEXTURE)
+                        .texture("mushroom", new Identifier("block/brown_mushroom_block"))
+                        .register(id("block/stump/"
+                                + block.getWoodType().getPathName() + "_brown_mushroom"));
+                var redMushroomModel = modelBuilder(StumpBlock.LOG_STUMP_RED_MUSHROOM_MODEL)
+                        .texture("log_side", logSideTexture)
+                        .texture("log_top", logTopTexture)
+                        .texture("leaf", LOG_STUMP_LEAF_TEXTURE)
+                        .texture("mushroom", new Identifier("block/red_mushroom_block"))
+                        .register(id("block/stump/"
+                                + block.getWoodType().getPathName() + "_red_mushroom"));
+
+                for (var direction : DIRECTIONS) {
+                    if (direction.getAxis().isHorizontal()) {
+                        int rotation = (int) direction.asRotation();
+                        builder.addToVariant("", model, rotation);
+                        builder.addToVariant("", brownMushroomModel, rotation);
+                        builder.addToVariant("", redMushroomModel, rotation);
+                    }
+                }
+            }
+
+            modelBuilder(model).register(id("item/stump/" + block.getWoodType().getPathName()));
+
+            builder.register();
+
+            registerBetterGrassLayer(block, StumpBlock.STUMP_BETTERGRASS_DATA);
+
+            langBuilder.addEntry("block.aurorasdeco.stump." + block.getWoodType().getLangPath(),
+                    "block.aurorasdeco.stump", "aurorasdeco.wood_type." + block.getWoodType().getLangPath());
+        });
+    }
+
     private static void generateSimpleItemModel(Item item) {
         var itemId = Registry.ITEM.getId(item);
         generateSimpleItemModel(new Identifier(itemId.getNamespace(), "item/" + itemId.getPath()));
@@ -636,138 +765,5 @@ public class Datagen {
 
     public static ModelBuilder modelBuilder(Identifier parent) {
         return new ModelBuilder(parent);
-    }
-
-    public static record StateModel(Identifier id, int y) {
-        public StateModel(Identifier id) {
-            this(id, 0);
-        }
-
-        public JsonObject toJson() {
-            var model = new JsonObject();
-            model.addProperty("model", this.id().toString());
-            if (this.y() != 0)
-                model.addProperty("y", this.y());
-
-            return model;
-        }
-    }
-
-    public static class BlockStateBuilder {
-        private final JsonObject json = new JsonObject();
-        private final Identifier id;
-        private final JsonObject variantsJson = new JsonObject();
-        private final Map<String, JsonArray> variants = new Object2ObjectOpenHashMap<>();
-
-        public BlockStateBuilder(Block block) {
-            var id = Registry.BLOCK.getId(block);
-            this.id = new Identifier(id.getNamespace(), "blockstates/" + id.getPath());
-
-            this.json.add("variants", variantsJson);
-        }
-
-        public BlockStateBuilder addToVariant(String variant, Identifier modelId) {
-            return this.addToVariant(variant, modelId, 0);
-        }
-
-        public BlockStateBuilder addToVariant(String variant, Identifier modelId, int y) {
-            return this.addToVariant(variant, new StateModel(modelId, y));
-        }
-
-        public BlockStateBuilder addToVariant(String variant, StateModel model) {
-            this.variants.computeIfAbsent(variant, v -> {
-                var array = new JsonArray();
-                this.variantsJson.add(v, array);
-                return array;
-            }).add(model.toJson());
-
-            return this;
-        }
-
-        public JsonObject toJson() {
-            return this.json;
-        }
-
-        public void register() {
-            AurorasDecoClient.RESOURCE_PACK.putJson(ResourceType.CLIENT_RESOURCES, this.id, this.toJson());
-        }
-    }
-
-    public static class MultipartBlockStateBuilder {
-        private final JsonObject json = new JsonObject();
-        private final Identifier id;
-        private final JsonArray multipartJson = new JsonArray();
-
-        public MultipartBlockStateBuilder(Block block) {
-            var id = Registry.BLOCK.getId(block);
-            this.id = new Identifier(id.getNamespace(), "blockstates/" + id.getPath());
-
-            this.json.add("multipart", multipartJson);
-        }
-
-        public MultipartBlockStateBuilder add(StateModel model) {
-            var block = new JsonObject();
-            block.add("apply", model.toJson());
-            this.multipartJson.add(block);
-            return this;
-        }
-
-        public MultipartBlockStateBuilder addWhen(StateModel model, Property.Value<?>... when) {
-            var block = new JsonObject();
-            block.add("apply", model.toJson());
-            var whenBlock = new JsonObject();
-            block.add("when", whenBlock);
-
-            for (var val : when) {
-                whenBlock.addProperty(val.getProperty().getName(), val.toString().split("=")[1]);
-            }
-
-            this.multipartJson.add(block);
-
-            return this;
-        }
-
-        public JsonObject toJson() {
-            return this.json;
-        }
-
-        public void register() {
-            AurorasDecoClient.RESOURCE_PACK.putJson(ResourceType.CLIENT_RESOURCES, this.id, this.toJson());
-        }
-    }
-
-    public static class ModelBuilder {
-        private final JsonObject json = new JsonObject();
-        private JsonObject textures;
-
-        public ModelBuilder(Identifier parent) {
-            this.json.addProperty("parent", parent.toString());
-        }
-
-        public ModelBuilder texture(String name, Identifier id) {
-            if (this.textures == null) {
-                this.json.add("textures", this.textures = new JsonObject());
-            }
-
-            this.textures.addProperty(name, id.toString());
-
-            return this;
-        }
-
-        public JsonObject toJson() {
-            return this.json;
-        }
-
-        public Identifier register(Block block) {
-            var id = Registry.BLOCK.getId(block);
-            return this.register(new Identifier(id.getNamespace(), "block/" + id.getPath()));
-        }
-
-        public Identifier register(Identifier id) {
-            AurorasDecoClient.RESOURCE_PACK.putJson(ResourceType.CLIENT_RESOURCES,
-                    new Identifier(id.getNamespace(), "models/" + id.getPath()),
-                    this.toJson());
-            return id;
-        }
     }
 }

@@ -15,25 +15,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.entity.goal;
+package dev.lambdaurora.aurorasdeco.resource.datagen;
 
-import net.minecraft.entity.passive.CatEntity;
+import com.google.gson.JsonObject;
+import net.minecraft.util.Identifier;
 
-public class CatSleepInPetBedGoal extends SleepInPetBedGoal {
-    private final CatEntity cat;
-
-    public CatSleepInPetBedGoal(CatEntity cat, double speed) {
-        super(cat, speed);
-
-        this.cat = cat;
+/**
+ * Represents a block state model entry.
+ *
+ * @author LambdAurora
+ * @version 1.0.0
+ * @since 1.0.0
+ */
+public record StateModel(Identifier id, int y) {
+    public StateModel(Identifier id) {
+        this(id, 0);
     }
 
-    @Override
-    public void setInSleepingPosition(boolean value) {
-        this.cat.setInSleepingPose(value);
+    public JsonObject toJson() {
+        var model = new JsonObject();
+        model.addProperty("model", this.id().toString());
+        if (this.y() != 0)
+            model.addProperty("y", this.y());
 
-        if (!value) {
-            this.cat.setInSittingPose(this.cat.isSitting());
-        }
+        return model;
     }
 }

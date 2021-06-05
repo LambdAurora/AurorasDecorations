@@ -15,25 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.entity.goal;
+package dev.lambdaurora.aurorasdeco.mixin;
 
-import net.minecraft.entity.passive.CatEntity;
+import com.google.common.collect.BiMap;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.SimpleRegistry;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-public class CatSleepInPetBedGoal extends SleepInPetBedGoal {
-    private final CatEntity cat;
-
-    public CatSleepInPetBedGoal(CatEntity cat, double speed) {
-        super(cat, speed);
-
-        this.cat = cat;
-    }
-
-    @Override
-    public void setInSleepingPosition(boolean value) {
-        this.cat.setInSleepingPose(value);
-
-        if (!value) {
-            this.cat.setInSittingPose(this.cat.isSitting());
-        }
-    }
+@Mixin(SimpleRegistry.class)
+public interface SimpleRegistryAccessor<T> {
+    @Accessor
+    BiMap<Identifier, T> getIdToEntry();
 }

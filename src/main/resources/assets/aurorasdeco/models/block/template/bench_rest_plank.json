@@ -1,0 +1,23 @@
+{
+  "credit": "Made by LambdAurora",
+  "parent": "block/block",
+  "textures": {
+    "particle": "#planks"
+  },
+  "elements": [
+    {
+      "name": "plank",
+      "from": [ 0, 12, 13 ],
+      "to": [ 16, 16, 14 ],
+      "rotation": {"angle": 22.5, "axis": "x", "origin": [ 8, 10, 13 ]},
+      "faces": {
+        "north": {"uv": [ 0, 0, 16, 4 ], "texture": "#planks"},
+        "east":  {"uv": [ 0, 0, 1, 4 ], "texture": "#planks"},
+        "south": {"uv": [ 16, 0, 0, 4 ], "texture": "#planks"},
+        "west":  {"uv": [ 0, 0, 1, 4 ], "texture": "#planks"},
+        "up":    {"uv": [ 0, 0, 16, 1 ], "texture": "#planks"},
+        "down":  {"uv": [ 16, 3, 0, 4 ], "texture": "#planks"}
+      }
+    }
+  ]
+}

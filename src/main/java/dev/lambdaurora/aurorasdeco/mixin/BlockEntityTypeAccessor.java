@@ -15,25 +15,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.entity.goal;
+package dev.lambdaurora.aurorasdeco.mixin;
 
-import net.minecraft.entity.passive.CatEntity;
+import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntityType;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-public class CatSleepInPetBedGoal extends SleepInPetBedGoal {
-    private final CatEntity cat;
+import java.util.Set;
 
-    public CatSleepInPetBedGoal(CatEntity cat, double speed) {
-        super(cat, speed);
+@Mixin(BlockEntityType.class)
+public interface BlockEntityTypeAccessor {
+    @Accessor
+    Set<Block> getBlocks();
 
-        this.cat = cat;
-    }
-
-    @Override
-    public void setInSleepingPosition(boolean value) {
-        this.cat.setInSleepingPose(value);
-
-        if (!value) {
-            this.cat.setInSittingPose(this.cat.isSitting());
-        }
-    }
+    @Mutable
+    @Accessor
+    void setBlocks(Set<Block> blocks);
 }

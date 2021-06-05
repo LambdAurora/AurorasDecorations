@@ -139,9 +139,10 @@ public class StumpBlock extends Block implements SeatBlock, Waterloggable {
     }
 
     private static FabricBlockSettings settings(WoodType woodType) {
-        return FabricBlockSettings.of(woodType.material, woodType.getMapColor())
-                .nonOpaque()
-                .strength(2.f, 3.f)
-                .sounds(woodType.logSoundGroup);
+        var log = woodType.getComponent(WoodType.ComponentType.LOG);
+        if (log == null) throw new IllegalStateException("StumpBlock attempted to be created while the wood type is invalid.");
+        return FabricBlockSettings.copyOf(log.block())
+                .mapColor(log.mapColor())
+                .nonOpaque();
     }
 }

@@ -27,10 +27,12 @@ import dev.lambdaurora.aurorasdeco.block.entity.*;
 import dev.lambdaurora.aurorasdeco.entity.FakeLeashKnotEntity;
 import dev.lambdaurora.aurorasdeco.entity.SeatEntity;
 import dev.lambdaurora.aurorasdeco.item.BlackboardItem;
+import dev.lambdaurora.aurorasdeco.mixin.SimpleRegistryAccessor;
 import dev.lambdaurora.aurorasdeco.recipe.BlackboardCloneRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
 import dev.lambdaurora.aurorasdeco.screen.SawmillScreenHandler;
 import dev.lambdaurora.aurorasdeco.screen.ShelfScreenHandler;
+import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.advancement.CriterionRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -197,14 +199,14 @@ public final class AurorasDecoRegistry {
             new FenceLikeWallBlock(FabricBlockSettings.copyOf(Blocks.POLISHED_BASALT)),
             new FabricItemSettings().group(ItemGroup.DECORATIONS));
 
-    public static final ShelfBlock[] SHELF_BLOCKS = WoodType.stream().map(woodType ->
+    /*public static final ShelfBlock[] SHELF_BLOCKS = OldWoodType.stream().map(woodType ->
             registerWithItem("shelf/" + woodType.getPathName(),
                     new ShelfBlock(woodType, FabricBlockSettings.of(Material.WOOD, woodType.getMapColor())
                             .nonOpaque()
                             .strength(2.f, 3.f)
                             .sounds(BlockSoundGroup.WOOD)),
                     new FabricItemSettings().group(ItemGroup.DECORATIONS))
-    ).toArray(ShelfBlock[]::new);
+    ).toArray(ShelfBlock[]::new);*/
 
     /* Block Entities */
 
@@ -223,7 +225,7 @@ public final class AurorasDecoRegistry {
     public static final BlockEntityType<ShelfBlockEntity> SHELF_BLOCK_ENTITY_TYPE = Registry.register(
             Registry.BLOCK_ENTITY_TYPE,
             id("shelf"),
-            FabricBlockEntityTypeBuilder.create(ShelfBlockEntity::new, SHELF_BLOCKS).build()
+            FabricBlockEntityTypeBuilder.create(ShelfBlockEntity::new).build()
     );
     public static final BlockEntityType<WindChimeBlockEntity> WIND_CHIME_BLOCK_ENTITY_TYPE = Registry.register(
             Registry.BLOCK_ENTITY_TYPE,
@@ -365,18 +367,23 @@ public final class AurorasDecoRegistry {
         return identifier;
     }
 
+    @SuppressWarnings("unchecked")
     public static void init(Map<Identifier, Block> delayed) {
         var plants = new ArrayList<BigFlowerPotBlock>();
-        Registry.BLOCK.forEach(block -> {
-            if (PottedPlantType.isValidPlant(block)) {
-                var potBlock = PottedPlantType.registerFromBlock(block);
-                if (potBlock != null)
-                    plants.add(potBlock);
-            } else {
-                LanternRegistry.tryRegisterWallLantern(block, Registry.BLOCK.getId(block));
-            }
-        });
-        Registry.ITEM.forEach(item -> Blackboard.Color.tryRegisterColorFromItem(Registry.ITEM.getId(item), item));
+
+        ((SimpleRegistryAccessor<Block>) Registry.BLOCK).getIdToEntry()
+                .forEach((id, block) -> {
+                    if (PottedPlantType.isValidPlant(block)) {
+                        var potBlock = PottedPlantType.registerFromBlock(block);
+                        if (potBlock != null)
+                            plants.add(potBlock);
+                    } else {
+                        WoodType.onBlockRegister(id, block);
+                        LanternRegistry.tryRegisterWallLantern(block, id);
+                    }
+                });
+        ((SimpleRegistryAccessor<Item>) Registry.ITEM).getIdToEntry()
+                .forEach(Blackboard.Color::tryRegisterColorFromItem);
 
         plants.forEach(pot -> register("big_flower_pot/" + pot.getPlantType().getId(), pot));
 
@@ -397,28 +404,39 @@ public final class AurorasDecoRegistry {
         }
         SleepingBagBlock.appendToPointOfInterest(PointOfInterestType.HOME);
 
-        WoodType.stream().forEach(woodType -> {
-            if (woodType.hasLog()) {
-                var block = registerWithItem("stump/" + woodType.getPathName(),
-                        new StumpBlock(woodType),
-                        new FabricItemSettings().group(ItemGroup.DECORATIONS));
+        WoodType.registerWoodTypeModificationCallback(woodType -> {
+            var block = registerWithItem("stump/" + woodType.getPathName(),
+                    new StumpBlock(woodType),
+                    new FabricItemSettings().group(ItemGroup.DECORATIONS));
 
-                if (woodType.isFlammable())
-                    FlammableBlockRegistry.getDefaultInstance().add(block, 5, 5);
-            }
-        });
+            var entry = woodType.getComponent(WoodType.ComponentType.LOG).getFlammableEntry();
+            if (entry != null && entry.getBurnChance() != 0 && entry.getSpreadChance() != 0)
+                FlammableBlockRegistry.getDefaultInstance().add(block, entry.getBurnChance(), entry.getSpreadChance());
+        }, WoodType.ComponentType.LOG);
 
-        WoodType.stream().forEach(woodType -> {
+        WoodType.registerWoodTypeModificationCallback(woodType -> {
+            var block = registerWithItem("shelf/" + woodType.getPathName(),
+                    new ShelfBlock(woodType),
+                    new FabricItemSettings().group(ItemGroup.DECORATIONS));
+
+            AuroraUtil.appendBlockToBlockEntityType(SHELF_BLOCK_ENTITY_TYPE, block);
+
+            var entry = woodType.getComponent(WoodType.ComponentType.PLANKS).getFlammableEntry();
+            if (entry != null && entry.getBurnChance() != 0 && entry.getSpreadChance() != 0)
+                FlammableBlockRegistry.getDefaultInstance().add(block, entry.getBurnChance(), entry.getSpreadChance());
+        }, WoodType.ComponentType.PLANKS);
+
+        WoodType.registerWoodTypeModificationCallback(woodType -> {
             var block = registerWithItem("bench/" + woodType.getPathName(),
                     new BenchBlock(woodType),
                     new FabricItemSettings().group(ItemGroup.DECORATIONS));
 
-            if (woodType.isFlammable())
-                FlammableBlockRegistry.getDefaultInstance().add(block, 5, 5);
-        });
+            var entry = woodType.getComponent(WoodType.ComponentType.PLANKS).getFlammableEntry();
+            if (entry != null && entry.getBurnChance() != 0 && entry.getSpreadChance() != 0)
+                FlammableBlockRegistry.getDefaultInstance().add(block, entry.getBurnChance(), entry.getSpreadChance());
+        }, WoodType.ComponentType.PLANKS);
 
         FlammableBlockRegistry.getDefaultInstance().add(PET_BEDS, 10, 30);
-        FlammableBlockRegistry.getDefaultInstance().add(SHELVES, 5, 20);
 
         ((ItemExtensions) Items.BOOK).makePlaceable(BOOK_PILE_BLOCK);
         ((ItemExtensions) Items.ENCHANTED_BOOK).makePlaceable(BOOK_PILE_BLOCK);

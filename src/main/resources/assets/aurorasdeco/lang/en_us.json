@@ -11,17 +11,7 @@
   "block.aurorasdeco.chalkboard": "Chalkboard",
   "block.aurorasdeco.waxed_chalkboard": "Waxed Chalkboard",
 
-  "block.aurorasdeco.bench.oak": "Oak Bench",
-  "block.aurorasdeco.bench.spruce": "Spruce Bench",
-  "block.aurorasdeco.bench.birch": "Birch Bench",
-  "block.aurorasdeco.bench.jungle": "Jungle Bench",
-  "block.aurorasdeco.bench.acacia": "Acacia Bench",
-  "block.aurorasdeco.bench.dark_oak": "Dark Oak Bench",
-  "block.aurorasdeco.bench.crimson": "Crimson Bench",
-  "block.aurorasdeco.bench.warped": "Warped Bench",
-  "block.aurorasdeco.bench.blockus.bamboo": "Bamboo Bench",
-  "block.aurorasdeco.bench.blockus.charred": "Charred Bench",
-  "block.aurorasdeco.bench.blockus.white_oak": "White Oak Bench",
+  "block.aurorasdeco.bench": "%s Bench",
 
   "block.aurorasdeco.nether_brick_fence_gate": "Nether Brick Fence Gate",
 
@@ -46,17 +36,7 @@
 
   "block.aurorasdeco.sawmill": "Sawmill",
 
-  "block.aurorasdeco.shelf.oak": "Oak Shelf",
-  "block.aurorasdeco.shelf.spruce": "Spruce Shelf",
-  "block.aurorasdeco.shelf.birch": "Birch Shelf",
-  "block.aurorasdeco.shelf.jungle": "Jungle Shelf",
-  "block.aurorasdeco.shelf.acacia": "Acacia Shelf",
-  "block.aurorasdeco.shelf.dark_oak": "Dark Oak Shelf",
-  "block.aurorasdeco.shelf.crimson": "Crimson Shelf",
-  "block.aurorasdeco.shelf.warped": "Warped Shelf",
-  "block.aurorasdeco.shelf.blockus.bamboo": "Bamboo Shelf",
-  "block.aurorasdeco.shelf.blockus.charred": "Charred Shelf",
-  "block.aurorasdeco.shelf.blockus.white_oak": "White Oak Shelf",
+  "block.aurorasdeco.shelf": "%s Shelf",
 
   "block.aurorasdeco.sleeping_bag.black": "Black Sleeping Bag",
   "block.aurorasdeco.sleeping_bag.blue": "Blue Sleeping Bag",
@@ -77,15 +57,7 @@
 
   "block.aurorasdeco.soul_brazier": "Soul Brazier",
 
-  "block.aurorasdeco.stump.oak": "Oak Stump",
-  "block.aurorasdeco.stump.spruce": "Spruce Stump",
-  "block.aurorasdeco.stump.birch": "Birch Stump",
-  "block.aurorasdeco.stump.jungle": "Jungle Stump",
-  "block.aurorasdeco.stump.acacia": "Acacia Stump",
-  "block.aurorasdeco.stump.dark_oak": "Dark Oak Stump",
-  "block.aurorasdeco.stump.crimson": "Crimson Stump",
-  "block.aurorasdeco.stump.warped": "Warped Stump",
-  "block.aurorasdeco.stump.blockus.white_oak": "White Oak Stump",
+  "block.aurorasdeco.stump": "%s Stump",
 
   "block.aurorasdeco.sturdy_stone": "Sturdy Stone",
 
@@ -99,5 +71,30 @@
   "subtitles.aurorasdeco.block.lantern.swing": "Lantern swings",
   "subtitles.aurorasdeco.block.shelf.add_item": "Shelf fills",
   "subtitles.aurorasdeco.block.shelf.swing": "Shelf empties",
-  "subtitles.aurorasdeco.entity.armor_stand.hide_base_plate": "Hide armor stand base plate"
+  "subtitles.aurorasdeco.entity.armor_stand.hide_base_plate": "Hide armor stand base plate",
+
+  "aurorasdeco.wood_type.oak": "Oak",
+  "aurorasdeco.wood_type.spruce": "Spruce",
+  "aurorasdeco.wood_type.birch": "Birch",
+  "aurorasdeco.wood_type.jungle": "Jungle",
+  "aurorasdeco.wood_type.acacia": "Acacia",
+  "aurorasdeco.wood_type.dark_oak": "Dark Oak",
+  "aurorasdeco.wood_type.azalea": "Azalea",
+  "aurorasdeco.wood_type.mushroom": "Mushroom",
+  "aurorasdeco.wood_type.crimson": "Crimson",
+  "aurorasdeco.wood_type.warped": "Warped",
+  "aurorasdeco.wood_type.blockus.bamboo": "Bamboo",
+  "aurorasdeco.wood_type.blockus.charred": "Charred",
+  "aurorasdeco.wood_type.blockus.legacy": "Legacy",
+  "aurorasdeco.wood_type.blockus.white_oak": "White Oak",
+  "aurorasdeco.wood_type.terrestria.redwood": "Redwood",
+  "aurorasdeco.wood_type.terrestria.hemlock": "Hemlock",
+  "aurorasdeco.wood_type.terrestria.rubber": "Rubber",
+  "aurorasdeco.wood_type.terrestria.cypress": "Cypress",
+  "aurorasdeco.wood_type.terrestria.willow": "Willow",
+  "aurorasdeco.wood_type.terrestria.japanese_maple": "Japanese Maple",
+  "aurorasdeco.wood_type.terrestria.rainbow_eucalyptus": "Rainbow Eucalyptus",
+  "aurorasdeco.wood_type.terrestria.sakura": "Sakura",
+  "aurorasdeco.wood_type.terrestria.yucca_palm": "Yucca Palm",
+  "aurorasdeco.wood_type.traverse.fir": "Fir"
 }

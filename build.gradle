@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.8-SNAPSHOT'
+    id 'fabric-loom' version '0.8.+'
     id 'java-library'
     id 'maven-publish'
     id 'org.cadixdev.licenser' version '0.6.0'
@@ -19,13 +19,6 @@ String getMCVersionString() {
     }
     int lastDot = project.minecraft_version.lastIndexOf('.')
     return project.minecraft_version.substring(0, lastDot)
-}
-
-repositories {
-    maven {
-        name 'Jitpack'
-        url 'https://jitpack.io'
-    }
 }
 
 minecraft {

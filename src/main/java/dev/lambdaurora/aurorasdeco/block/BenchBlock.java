@@ -28,11 +28,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -57,13 +57,17 @@ import java.util.stream.Stream;
  * @since 1.0.0
  */
 public class BenchBlock extends Block implements SeatBlock, Waterloggable {
-    public static final EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
-    public static final BooleanProperty EAST_LEGS = BooleanProperty.of("east_legs");
-    public static final BooleanProperty WEST_LEGS = BooleanProperty.of("west_legs");
+    public static final EnumProperty<Direction> FACING = Properties.FACING;
+    public static final BooleanProperty LEFT_LEGS = BooleanProperty.of("left_legs");
+    public static final BooleanProperty RIGHT_LEGS = BooleanProperty.of("right_legs");
+    public static final BooleanProperty REST = BooleanProperty.of("rest");
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     public static final Identifier BENCH_SEAT_MODEL = AurorasDeco.id("block/template/bench_seat");
     public static final Identifier BENCH_LEGS_MODEL = AurorasDeco.id("block/template/bench_legs");
+    public static final Identifier BENCH_REST_PLANK_MODEL = AurorasDeco.id("block/template/bench_rest_plank");
+    public static final Identifier BENCH_REST_LEFT_MODEL = AurorasDeco.id("block/template/bench_rest_left");
+    public static final Identifier BENCH_REST_RIGHT_MODEL = AurorasDeco.id("block/template/bench_rest_right");
     public static final Identifier BENCH_BETTERGRASS_DATA = AurorasDeco.id("bettergrass/data/bench");
 
     private static final List<BenchBlock> BENCHES = new ArrayList<>();
@@ -78,9 +82,10 @@ public class BenchBlock extends Block implements SeatBlock, Waterloggable {
         this.woodType = woodType;
 
         this.setDefaultState(this.getDefaultState()
-                .with(AXIS, Direction.Axis.X)
-                .with(EAST_LEGS, true)
-                .with(WEST_LEGS, true)
+                .with(FACING, Direction.NORTH)
+                .with(LEFT_LEGS, true)
+                .with(RIGHT_LEGS, true)
+                .with(REST, false)
                 .with(WATERLOGGED, false)
         );
 
@@ -89,7 +94,7 @@ public class BenchBlock extends Block implements SeatBlock, Waterloggable {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(AXIS, EAST_LEGS, WEST_LEGS, WATERLOGGED);
+        builder.add(FACING, LEFT_LEGS, RIGHT_LEGS, REST, WATERLOGGED);
     }
 
     public static Stream<BenchBlock> streamBenches() {
@@ -105,22 +110,46 @@ public class BenchBlock extends Block implements SeatBlock, Waterloggable {
         return 0.3f;
     }
 
+    private <T extends Comparable<T>, P extends Property<T>> P getPropertyTowards(Direction facing, Direction towards,
+                                                                                  P left, P right) {
+        return switch (facing) {
+            default -> towards == Direction.WEST ? right : left;
+            case EAST -> towards == Direction.NORTH ? right : left;
+            case SOUTH -> towards == Direction.EAST ? right : left;
+            case WEST -> towards == Direction.SOUTH ? right : left;
+        };
+    }
+
+    private BooleanProperty getLegsTowards(Direction facing, Direction towards) {
+        return this.getPropertyTowards(facing, towards, LEFT_LEGS, RIGHT_LEGS);
+    }
+
+    /**
+     * {@return whether the bench state has a rest or not}
+     *
+     * @param state the bench block state
+     */
+    private static boolean hasRest(BlockState state) {
+        return state.getBlock() instanceof BenchBlock && state.get(REST);
+    }
+
     /**
      * Returns whether this bench can connect to the given block state.
      *
      * @param other the other block to try to connect to
-     * @param benchAxis this bench axis
-     * @return {@code true} if this bench can connect to the given block, else {@code false}
+     * @param benchFacing this bench facing direction
+     * @return {@code true} if this bench can connect to the given block, otherwise {@code false}
      */
-    public boolean canConnect(BlockState other, Direction.Axis benchAxis) {
-        return other.getBlock() == this && benchAxis == other.get(AXIS);
+    public boolean canConnect(BlockState other, Direction benchFacing, boolean hasRest) {
+        return other.getBlock() == this && benchFacing == other.get(FACING)
+                && (hasRest == hasRest(other));
     }
 
     /* Shapes */
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return state.get(AXIS) == Direction.Axis.Z ? Z_SHAPE : X_SHAPE;
+        return state.get(FACING).getAxis() == Direction.Axis.X ? Z_SHAPE : X_SHAPE;
     }
 
     /* Placement */
@@ -131,15 +160,15 @@ public class BenchBlock extends Block implements SeatBlock, Waterloggable {
         var pos = ctx.getBlockPos();
         var fluid = world.getFluidState(pos);
 
-        var benchAxis = ctx.getPlayerFacing().rotateYClockwise().getAxis();
+        var facing = ctx.getPlayerFacing().getOpposite();
 
-        var relativeEast = benchAxis == Direction.Axis.Z ? pos.south() : pos.east();
-        var relativeWest = benchAxis == Direction.Axis.Z ? pos.north() : pos.west();
+        var relativeRight = pos.offset(facing.rotateYCounterclockwise());
+        var relativeLeft = pos.offset(facing.rotateYClockwise());
 
         return this.getDefaultState()
-                .with(AXIS, benchAxis)
-                .with(EAST_LEGS, !this.canConnect(world.getBlockState(relativeEast), benchAxis))
-                .with(WEST_LEGS, !this.canConnect(world.getBlockState(relativeWest), benchAxis))
+                .with(FACING, facing)
+                .with(LEFT_LEGS, !this.canConnect(world.getBlockState(relativeLeft), facing, false))
+                .with(RIGHT_LEGS, !this.canConnect(world.getBlockState(relativeRight), facing, false))
                 .with(WATERLOGGED, fluid.getFluid() == Fluids.WATER);
     }
 
@@ -153,13 +182,11 @@ public class BenchBlock extends Block implements SeatBlock, Waterloggable {
         }
 
         var newSelf = super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
-        var benchAxis = state.get(AXIS);
+        var benchFacing = state.get(FACING);
 
-        if (direction.getAxis() == benchAxis) {
-            newSelf = newSelf.with(switch (direction) {
-                case EAST, SOUTH -> EAST_LEGS;
-                default -> WEST_LEGS;
-            }, !this.canConnect(newState, benchAxis));
+        if (direction.getAxis().isHorizontal() && direction.getAxis() != benchFacing.getAxis()) {
+            newSelf = newSelf.with(this.getLegsTowards(benchFacing, direction),
+                    !this.canConnect(newState, benchFacing, hasRest(newSelf)));
         }
 
         return newSelf;
@@ -170,7 +197,7 @@ public class BenchBlock extends Block implements SeatBlock, Waterloggable {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
                               BlockHitResult hit) {
-        ItemStack stack = player.getStackInHand(hand);
+        var stack = player.getStackInHand(hand);
         if (this.sit(world, pos, state, player, stack))
             return ActionResult.success(world.isClient());
         return super.onUse(state, world, pos, player, hand, hit);
@@ -184,9 +211,9 @@ public class BenchBlock extends Block implements SeatBlock, Waterloggable {
     }
 
     private static FabricBlockSettings settings(WoodType woodType) {
-        return FabricBlockSettings.of(woodType.material, woodType.getMapColor())
-                .nonOpaque()
-                .strength(2.f, 3.f)
-                .sounds(woodType.logSoundGroup);
+        var planks = woodType.getComponent(WoodType.ComponentType.PLANKS);
+        if (planks == null) throw new IllegalStateException("BenchBlock attempted to be created while the wood type is invalid.");
+        return FabricBlockSettings.copyOf(planks.block())
+                .nonOpaque();
     }
 }

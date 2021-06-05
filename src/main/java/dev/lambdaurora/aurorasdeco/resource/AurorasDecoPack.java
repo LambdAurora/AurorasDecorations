@@ -28,8 +28,7 @@ import dev.lambdaurora.aurorasdeco.block.StumpBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import dev.lambdaurora.aurorasdeco.registry.WoodType;
-import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
+import dev.lambdaurora.aurorasdeco.resource.datagen.LangBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.resource.ModResourcePack;
 import net.fabricmc.fabric.impl.resource.loader.ModResourcePackUtil;
@@ -39,7 +38,6 @@ import net.minecraft.resource.AbstractFileResourcePack;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.resource.metadata.ResourceMetadataReader;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -75,56 +73,10 @@ public class AurorasDecoPack implements ModResourcePack {
         return type == ResourceType.CLIENT_RESOURCES ? this.rebuildClient() : this.rebuildData();
     }
 
-    private void registerShelfBlockState(WoodType type) {
-        var blockStatePath = "assets/aurorasdeco/blockstates/shelf/" + type.getPathName() + ".json";
-
-        var root = new JsonObject();
-        var variants = new JsonObject();
-
-        var directions = Direction.values();
-        for (var part : ShelfBlock.PartType.getValues()) {
-            for (var direction : directions) {
-                if (!direction.getAxis().isHorizontal())
-                    continue;
-                var variant = new JsonObject();
-                variant.addProperty("model",
-                        "aurorasdeco:block/shelf/" + type.getPathName() + "/" + part.asString());
-                switch (direction) {
-                    case EAST -> variant.addProperty("y", 90);
-                    case SOUTH -> variant.addProperty("y", 180);
-                    case WEST -> variant.addProperty("y", 270);
-                }
-
-                variants.add("type=" + part.asString() + ",facing=" + direction.asString(), variant);
-            }
-        }
-
-        root.add("variants", variants);
-
-        this.putJson(blockStatePath, root);
-    }
-
-    private void registerShelfBlockModel(WoodType type) {
-        ShelfBlock.PartType.getValues().forEach(part -> {
-            var path = "assets/aurorasdeco/models/block/shelf/" + type.getPathName() + '/' + part.asString() + ".json";
-            var root = new JsonObject();
-            root.addProperty("parent", "aurorasdeco:block/template/shelf_" + part.asString());
-            var textures = new JsonObject();
-            textures.addProperty("planks", type.getPlanksTexture().toString());
-            textures.addProperty("log", type.getLogSideTexture().toString());
-            root.add("textures", textures);
-            this.putJson(path, root);
-        });
-    }
-
-    private void registerShelfItemModel(WoodType type) {
-        var path = "assets/aurorasdeco/models/item/shelf/" + type.getPathName() + ".json";
-        var root = new JsonObject();
-        root.addProperty("parent", "aurorasdeco:block/shelf/" + type.getPathName() + "/bottom");
-        this.putJson(path, root);
-    }
-
     public AurorasDecoPack rebuildClient() {
+        var langBuilder = new LangBuilder();
+        langBuilder.load();
+
         this.namespaces.add("aurorasdeco");
         var baseBigFlowerPotJson = new JsonObject();
 
@@ -145,70 +97,11 @@ public class AurorasDecoPack implements ModResourcePack {
                     Datagen.registerBetterGrassLayer(id, BigFlowerPotBlock.POT_BETTERGRASS_DATA);
                 });
 
-        WoodType.stream().forEach(type -> {
-            this.registerShelfBlockState(type);
-            this.registerShelfBlockModel(type);
-            this.registerShelfItemModel(type);
+        Datagen.generateClientData(langBuilder);
 
-            Datagen.registerBetterGrassLayer(AurorasDeco.id("shelf/" + type.getPathName()), Datagen.SHELF_BETTERGRASS_DATA);
-        });
-
-        Datagen.generateClientData();
+        langBuilder.write(this);
 
         return this;
-    }
-
-    private void registerShelfRecipe(WoodType type) {
-        var shelfPath = "shelf/" + type.getPathName();
-
-        var path = "data/aurorasdeco/recipes/" + shelfPath + ".json";
-
-        var root = new JsonObject();
-        root.addProperty("type", "minecraft:crafting_shaped");
-        root.addProperty("group", "aurorasdeco:shelf");
-        root.add("pattern", AuroraUtil.jsonArray("###", "S S"));
-        var key = new JsonObject();
-        var slab = new JsonObject();
-        slab.addProperty("item", type.getSlabId().toString());
-        key.add("#", slab);
-        var stick = new JsonObject();
-        stick.addProperty("item", "minecraft:stick");
-        key.add("S", stick);
-        root.add("key", key);
-        var result = new JsonObject();
-        result.addProperty("item", "aurorasdeco:" + shelfPath);
-        result.addProperty("count", 2);
-        root.add("result", result);
-
-        this.putJson(path, root);
-
-        this.registerShelfRecipeAdvancement(type, shelfPath);
-    }
-
-    private void registerShelfRecipeAdvancement(WoodType type, String shelfPath) {
-        var path = "data/aurorasdeco/advancements/recipes/decorations/" + shelfPath + ".json";
-
-        var shelfId = AurorasDeco.id(shelfPath);
-
-        var root = new JsonObject();
-        root.addProperty("parent", "minecraft:recipes/root");
-        var rewards = new JsonObject();
-        rewards.add("recipes", AuroraUtil.jsonArray(shelfId));
-        root.add("rewards", rewards);
-
-        var criteria = new JsonObject();
-        criteria.add("has_slab", Datagen.inventoryChangedCriteria("item", type.getSlabId()));
-        criteria.add("has_stick",
-                Datagen.inventoryChangedCriteria("item", new Identifier("minecraft", "stick")));
-        criteria.add("has_self", Datagen.inventoryChangedCriteria("tag", AurorasDeco.id("shelves")));
-        criteria.add("has_recipe", Datagen.recipeUnlockedCriteria(shelfId));
-
-        root.add("criteria", criteria);
-        root.add("requirements", AuroraUtil.jsonArray(
-                AuroraUtil.jsonArray("has_slab", "has_stick", "has_self", "has_recipe")
-        ));
-
-        this.putJson(path, root);
     }
 
     private void registerTag(String[] types, Identifier id, Stream<Identifier> entries) {
@@ -239,20 +132,14 @@ public class AurorasDecoPack implements ModResourcePack {
         Datagen.dropsSelf(AurorasDecoRegistry.BRAZIER_BLOCK);
         Datagen.dropsSelf(AurorasDecoRegistry.SOUL_BRAZIER_BLOCK);
 
-        WoodType.stream().forEach(type -> {
-            var shelfId = AurorasDeco.id("shelf/" + type.getPathName());
-            Datagen.registerSimpleBlockLootTable(shelfId, shelfId, true);
-
-            this.registerShelfRecipe(type);
-        });
-
         BenchBlock.streamBenches().forEach(Datagen::dropsSelf);
+        ShelfBlock.streamShelves().forEach(Datagen::registerShelfBlockLootTable);
         StumpBlock.streamLogStumps().forEach(Datagen::dropsSelf);
 
         this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("benches"), BenchBlock.streamBenches()
                 .map(Registry.BLOCK::getId));
-        this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("shelves"), WoodType.stream()
-                .map(type -> AurorasDeco.id("shelf/" + type.getPathName())));
+        this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("shelves"), ShelfBlock.streamShelves()
+                .map(Registry.BLOCK::getId));
         this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("stumps"), StumpBlock.streamLogStumps()
                 .map(Registry.BLOCK::getId));
 
@@ -286,8 +173,8 @@ public class AurorasDecoPack implements ModResourcePack {
     }
 
     public void putJson(String resource, JsonObject json) {
-        StringWriter stringWriter = new StringWriter();
-        JsonWriter jsonWriter = new JsonWriter(stringWriter);
+        var stringWriter = new StringWriter();
+        var jsonWriter = new JsonWriter(stringWriter);
         jsonWriter.setLenient(true);
         jsonWriter.setIndent("  ");
         try {
@@ -329,7 +216,7 @@ public class AurorasDecoPack implements ModResourcePack {
     public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix, int maxDepth,
                                                 Predicate<String> pathFilter) {
         if (type != this.type) return Collections.emptyList();
-        String start = type.getDirectory() + "/" + namespace + "/" + prefix;
+        var start = type.getDirectory() + "/" + namespace + "/" + prefix;
         return this.resources.keySet().stream()
                 .filter(s -> s.startsWith(start) && pathFilter.test(s))
                 .map(AurorasDecoPack::fromPath)
@@ -338,7 +225,7 @@ public class AurorasDecoPack implements ModResourcePack {
 
     @Override
     public boolean contains(ResourceType type, Identifier id) {
-        String path = type.getDirectory() + "/" + id.getNamespace() + "/" + id.getPath();
+        var path = type.getDirectory() + "/" + id.getNamespace() + "/" + id.getPath();
         return this.resources.containsKey(path);
     }
 
