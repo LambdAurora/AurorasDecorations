@@ -199,15 +199,6 @@ public final class AurorasDecoRegistry {
             new FenceLikeWallBlock(FabricBlockSettings.copyOf(Blocks.POLISHED_BASALT)),
             new FabricItemSettings().group(ItemGroup.DECORATIONS));
 
-    /*public static final ShelfBlock[] SHELF_BLOCKS = OldWoodType.stream().map(woodType ->
-            registerWithItem("shelf/" + woodType.getPathName(),
-                    new ShelfBlock(woodType, FabricBlockSettings.of(Material.WOOD, woodType.getMapColor())
-                            .nonOpaque()
-                            .strength(2.f, 3.f)
-                            .sounds(BlockSoundGroup.WOOD)),
-                    new FabricItemSettings().group(ItemGroup.DECORATIONS))
-    ).toArray(ShelfBlock[]::new);*/
-
     /* Block Entities */
 
     public static final BlockEntityType<BlackboardBlockEntity> BLACKBOARD_BLOCK_ENTITY_TYPE = Registry.register(
