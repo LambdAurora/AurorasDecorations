@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.registry;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.Blackboard;
+import dev.lambdaurora.aurorasdeco.accessor.BlockEntityTypeAccessor;
 import dev.lambdaurora.aurorasdeco.accessor.ItemExtensions;
 import dev.lambdaurora.aurorasdeco.advancement.PetUsePetBedCriterion;
 import dev.lambdaurora.aurorasdeco.block.*;
@@ -32,7 +33,6 @@ import dev.lambdaurora.aurorasdeco.recipe.BlackboardCloneRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
 import dev.lambdaurora.aurorasdeco.screen.SawmillScreenHandler;
 import dev.lambdaurora.aurorasdeco.screen.ShelfScreenHandler;
-import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.advancement.CriterionRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -410,7 +410,8 @@ public final class AurorasDecoRegistry {
                     new ShelfBlock(woodType),
                     new FabricItemSettings().group(ItemGroup.DECORATIONS));
 
-            AuroraUtil.appendBlockToBlockEntityType(SHELF_BLOCK_ENTITY_TYPE, block);
+            ((BlockEntityTypeAccessor) AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE)
+                    .aurorasdeco$addSupportedBlock(block);
 
             var entry = woodType.getComponent(WoodType.ComponentType.PLANKS).getFlammableEntry();
             if (entry != null && entry.getBurnChance() != 0 && entry.getSpreadChance() != 0)

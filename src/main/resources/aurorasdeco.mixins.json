@@ -6,7 +6,6 @@
     "AbstractBlockAccessor",
     "BedBlockMixin",
     "BlockAccessor",
-    "BlockEntityTypeAccessor",
     "BlockEntityTypeMixin",
     "CandleBlockMixin",
     "LanternBlockMixin",

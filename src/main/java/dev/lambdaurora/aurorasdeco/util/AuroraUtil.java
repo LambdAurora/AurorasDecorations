@@ -17,19 +17,13 @@
 
 package dev.lambdaurora.aurorasdeco.util;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.mixin.BlockEntityTypeAccessor;
-import net.minecraft.block.Block;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 public final class AuroraUtil {
@@ -92,15 +86,5 @@ public final class AuroraUtil {
 
         }
         return array;
-    }
-
-    public static <T extends BlockEntity> void appendBlockToBlockEntityType(BlockEntityType<T> blockEntityType, Block block) {
-        var blockSet = ((BlockEntityTypeAccessor) blockEntityType).getBlocks();
-        if (blockSet instanceof ImmutableSet) {
-            blockSet = new HashSet<>(blockSet);
-            ((BlockEntityTypeAccessor) blockEntityType).setBlocks(blockSet);
-        }
-
-        blockSet.add(block);
     }
 }
