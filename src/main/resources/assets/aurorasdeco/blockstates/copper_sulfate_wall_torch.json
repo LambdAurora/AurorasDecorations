@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "aurorasdeco:block/copper_sulfate_wall_torch"
+    },
+    "facing=north": {
+      "model": "aurorasdeco:block/copper_sulfate_wall_torch",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "aurorasdeco:block/copper_sulfate_wall_torch",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "aurorasdeco:block/copper_sulfate_wall_torch",
+      "y": 180
+    }
+  }
+}

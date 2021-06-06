@@ -1,0 +1,14 @@
+{
+  "variants": {
+    "hanging=false": [
+      {
+        "model": "aurorasdeco:block/copper_sulfate_lantern"
+      }
+    ],
+    "hanging=true": [
+      {
+        "model": "aurorasdeco:block/hanging_copper_sulfate_lantern"
+      }
+    ]
+  }
+}

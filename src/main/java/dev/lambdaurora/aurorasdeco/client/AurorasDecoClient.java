@@ -42,6 +42,8 @@ import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.color.world.FoliageColors;
+import net.minecraft.client.particle.FlameParticle;
+import net.minecraft.client.particle.LavaEmberParticle;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.resource.ResourceType;
@@ -82,12 +84,19 @@ public class AurorasDecoClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(),
                 AurorasDecoRegistry.AMETHYST_LANTERN_BLOCK,
                 AurorasDecoRegistry.BRAZIER_BLOCK,
+                AurorasDecoRegistry.COPPER_SULFATE_BRAZIER_BLOCK,
+                AurorasDecoRegistry.COPPER_SULFATE_CAMPFIRE_BLOCK,
+                AurorasDecoRegistry.COPPER_SULFATE_LANTERN_BLOCK,
+                AurorasDecoRegistry.COPPER_SULFATE_TORCH_BLOCK,
+                AurorasDecoRegistry.COPPER_SULFATE_WALL_TORCH_BLOCK,
                 AurorasDecoRegistry.SAWMILL_BLOCK,
                 AurorasDecoRegistry.SOUL_BRAZIER_BLOCK,
                 AurorasDecoRegistry.WIND_CHIME_BLOCK
         );
 
         ParticleFactoryRegistry.getInstance().register(AurorasDecoRegistry.AMETHYST_GLINT, AmethystGlintParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(AurorasDecoRegistry.COPPER_SULFATE_FLAME, FlameParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(AurorasDecoRegistry.COPPER_SULFATE_LAVA, LavaEmberParticle.Factory::new);
 
         StumpBlock.streamLogStumps()
                 .forEach(block -> BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout()));

@@ -1,0 +1,14 @@
+{
+  "variants": {
+    "hanging=false": [
+      {
+        "model": "aurorasdeco:block/amethyst_lantern"
+      }
+    ],
+    "hanging=true": [
+      {
+        "model": "aurorasdeco:block/hanging_amethyst_lantern"
+      }
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:leaves",
+    "minecraft:brown_mushroom_block",
+    "minecraft:red_mushroom_block",
+    "minecraft:mushroom_stem",
+    "minecraft:nether_wart_block",
+    "minecraft:warped_wart_block",
+    "minecraft:warped_roots",
+    "minecraft:weeping_vines",
+    "minecraft:weeping_vines_plant"
+  ]
+}

@@ -50,10 +50,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Recipe;
@@ -86,8 +83,29 @@ import static net.minecraft.stat.Stats.CUSTOM;
  * @since 1.0.0
  */
 public final class AurorasDecoRegistry {
+    /* Particles */
+
+    public static final DefaultParticleType AMETHYST_GLINT = registerParticle("amethyst_glint");
+    public static final DefaultParticleType COPPER_SULFATE_FLAME = registerParticle("copper_sulfate_flame");
+    public static final DefaultParticleType COPPER_SULFATE_LAVA = registerParticle("copper_sulfate_lava");
+
+    /* Blocks & Items */
+
     public static final LanternBlock AMETHYST_LANTERN_BLOCK = registerWithItem("amethyst_lantern",
             new AmethystLanternBlock(), new FabricItemSettings().group(ItemGroup.DECORATIONS));
+
+    public static final LanternBlock COPPER_SULFATE_LANTERN_BLOCK = registerWithItem("copper_sulfate_lantern",
+            new LanternBlock(FabricBlockSettings.copyOf(Blocks.LANTERN)), new FabricItemSettings().group(ItemGroup.DECORATIONS));
+    public static final CopperSulfateCampfireBlock COPPER_SULFATE_CAMPFIRE_BLOCK = registerWithItem("copper_sulfate_campfire",
+            new CopperSulfateCampfireBlock(FabricBlockSettings.copyOf(Blocks.CAMPFIRE).ticksRandomly()),
+            new FabricItemSettings().group(ItemGroup.DECORATIONS));
+    public static final AuroraTorchBlock COPPER_SULFATE_TORCH_BLOCK = register("copper_sulfate_torch",
+            new AuroraTorchBlock(FabricBlockSettings.copyOf(Blocks.TORCH), COPPER_SULFATE_FLAME));
+    public static final AuroraWallTorchBlock COPPER_SULFATE_WALL_TORCH_BLOCK = register("copper_sulfate_wall_torch",
+            new AuroraWallTorchBlock(FabricBlockSettings.copyOf(COPPER_SULFATE_TORCH_BLOCK).dropsLike(COPPER_SULFATE_TORCH_BLOCK), COPPER_SULFATE_FLAME));
+    public static final WallStandingBlockItem COPPER_SULFATE_TORCH_ITEM = register("copper_sulfate_torch",
+            new WallStandingBlockItem(COPPER_SULFATE_TORCH_BLOCK, COPPER_SULFATE_WALL_TORCH_BLOCK,
+                    new FabricItemSettings().group(ItemGroup.DECORATIONS)));
 
     public static final BigFlowerPotBlock BIG_FLOWER_POT_BLOCK = registerWithItem(
             "big_flower_pot",
@@ -194,6 +212,9 @@ public final class AurorasDecoRegistry {
     public static final BrazierBlock SOUL_BRAZIER_BLOCK = registerWithItem("soul_brazier",
             new BrazierBlock(MapColor.LIGHT_BLUE, 2, 10, ParticleTypes.SOUL),
             new FabricItemSettings().group(ItemGroup.DECORATIONS));
+    public static final BrazierBlock COPPER_SULFATE_BRAZIER_BLOCK = registerWithItem("copper_sulfate_brazier",
+            new BrazierBlock(MapColor.EMERALD_GREEN, 2, 14, COPPER_SULFATE_FLAME),
+            new FabricItemSettings().group(ItemGroup.DECORATIONS));
 
     public static final FenceLikeWallBlock POLISHED_BASALT_WALL = registerWithItem("polished_basalt_wall",
             new FenceLikeWallBlock(FabricBlockSettings.copyOf(Blocks.POLISHED_BASALT)),
@@ -280,13 +301,10 @@ public final class AurorasDecoRegistry {
     /* Tags */
 
     public static final Tag<Block> BRAZIERS = TagRegistry.block(AurorasDeco.id("braziers"));
+    public static final Tag<Block> COPPER_SULFATE_DECOMPOSABLE = TagRegistry.block(AurorasDeco.id("copper_sulfate_decomposable"));
     public static final Tag<Block> PET_BEDS = TagRegistry.block(AurorasDeco.id("pet_beds"));
     public static final Tag<Block> SHELVES = TagRegistry.block(AurorasDeco.id("shelves"));
     public static final Tag<Block> STUMPS = TagRegistry.block(AurorasDeco.id("stumps"));
-
-    /* Particles */
-
-    public static final DefaultParticleType AMETHYST_GLINT = registerParticle("amethyst_glint");
 
     /* POI */
 
@@ -360,6 +378,8 @@ public final class AurorasDecoRegistry {
 
     @SuppressWarnings("unchecked")
     public static void init(Map<Identifier, Block> delayed) {
+        ((BlockEntityTypeAccessor) BlockEntityType.CAMPFIRE).aurorasdeco$addSupportedBlock(COPPER_SULFATE_CAMPFIRE_BLOCK);
+
         var plants = new ArrayList<BigFlowerPotBlock>();
 
         ((SimpleRegistryAccessor<Block>) Registry.BLOCK).getIdToEntry()

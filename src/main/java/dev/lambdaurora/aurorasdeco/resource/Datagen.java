@@ -452,6 +452,18 @@ public class Datagen {
                     "bench", Ingredient.ofItems(planks),
                     new ItemStack(block));
             registerRecipe(recipe, "decorations");
+
+            var slabComponent = block.getWoodType().getComponent(WoodType.ComponentType.SLAB);
+            if (slabComponent != null) {
+                var slab = Ingredient.ofItems(slabComponent.item());
+                var stick = Ingredient.ofItems(Items.STICK);
+                var crafting = new ShapedRecipe(
+                        id("bench/" + block.getWoodType().getPathName()),
+                        "bench", 3, 2,
+                        DefaultedList.copyOf(slab, slab, slab, stick, Ingredient.EMPTY, stick, Ingredient.EMPTY),
+                        new ItemStack(block, 2));
+                registerRecipe(crafting, "decorations");
+            }
         });
 
         ShelfBlock.streamShelves().forEach(block -> {
@@ -465,12 +477,11 @@ public class Datagen {
             var slabComponent = block.getWoodType().getComponent(WoodType.ComponentType.SLAB);
             if (slabComponent != null) {
                 var slab = Ingredient.ofItems(slabComponent.item());
-                var stick = Ingredient.ofItems(Items.STICK);
                 var crafting = new ShapedRecipe(
                         id("shelf/" + block.getWoodType().getPathName()),
-                        "shelf", 3, 2,
-                        DefaultedList.copyOf(Ingredient.EMPTY, slab, slab, slab, stick, Ingredient.EMPTY, stick),
-                        new ItemStack(block));
+                        "shelf", 2, 1,
+                        DefaultedList.copyOf(slab, slab),
+                        new ItemStack(block, 2));
                 registerRecipe(crafting, "decorations");
             }
         });
@@ -562,8 +573,6 @@ public class Datagen {
                         .texture("lantern", AmethystLanternBlock.BLOCK_TEXTURE)
                         .register(AmethystLanternBlock.HANGING_MODEL))
                 .register();
-
-        generateSimpleItemModel(AurorasDecoRegistry.AMETHYST_LANTERN_BLOCK.asItem());
 
         LanternRegistry.forEach((lanternId, wallLantern) -> {
             var builder = blockStateBuilder(wallLantern);

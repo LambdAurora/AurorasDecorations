@@ -1,0 +1,8 @@
+{
+  "credit": "Made by LambdAurora",
+  "parent": "aurorasdeco:block/brazier/brazier_lit",
+  "textures": {
+    "coal": "aurorasdeco:block/brazier/copper_sulfate_coal_lit",
+    "fire": "aurorasdeco:block/copper_sulfate_campfire_fire"
+  }
+}

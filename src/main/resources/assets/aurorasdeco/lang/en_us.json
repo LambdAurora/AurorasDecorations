@@ -13,6 +13,11 @@
 
   "block.aurorasdeco.bench": "%s Bench",
 
+  "block.aurorasdeco.copper_sulfate_brazier": "Copper Sulfate Brazier",
+  "block.aurorasdeco.copper_sulfate_campfire": "Copper Sulfate Campfire",
+  "block.aurorasdeco.copper_sulfate_lantern": "Copper Sulfate Lantern",
+  "block.aurorasdeco.copper_sulfate_torch": "Copper Sulfate Torch",
+
   "block.aurorasdeco.nether_brick_fence_gate": "Nether Brick Fence Gate",
 
   "block.aurorasdeco.pet_bed.black": "Black Pet Bed",
