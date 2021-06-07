@@ -67,6 +67,11 @@ public final class WoodType {
         this.toTrigger.addAll(CALLBACKS);
     }
 
+    /**
+     * Gets the identifier of the wood type.
+     *
+     * @return the identifier of the wood type
+     */
     public Identifier getId() {
         return this.id;
     }
@@ -174,6 +179,25 @@ public final class WoodType {
             woodType.addComponent(componentType, new Component(block));
             break;
         }
+    }
+
+    /**
+     * Returns the wood type of the specified identifier.
+     *
+     * @param id the identifier of the wood type
+     * @return the wood type if it exists, otherwise {@code null}
+     */
+    public static @Nullable WoodType fromId(Identifier id) {
+        for (var type : TYPES) {
+            if (type.getId().equals(id))
+                return type;
+        }
+
+        return null;
+    }
+
+    public static void forEach(Consumer<WoodType> consumer) {
+        TYPES.forEach(consumer);
     }
 
     private static String getPathName(Identifier id) {

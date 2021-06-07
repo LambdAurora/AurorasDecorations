@@ -31,11 +31,14 @@ public class MultipartBlockStateBuilder {
     private final Identifier id;
     private final JsonArray multipartJson = new JsonArray();
 
-    public MultipartBlockStateBuilder(Block block) {
-        var id = Registry.BLOCK.getId(block);
+    public MultipartBlockStateBuilder(Identifier id) {
         this.id = new Identifier(id.getNamespace(), "blockstates/" + id.getPath());
 
         this.json.add("multipart", multipartJson);
+    }
+
+    public MultipartBlockStateBuilder(Block block) {
+        this(Registry.BLOCK.getId(block));
     }
 
     public MultipartBlockStateBuilder add(StateModel model) {

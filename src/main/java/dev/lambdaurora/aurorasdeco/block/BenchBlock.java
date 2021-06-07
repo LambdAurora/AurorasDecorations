@@ -18,16 +18,20 @@
 package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import dev.lambdaurora.aurorasdeco.block.entity.BenchBlockEntity;
+import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.block.Waterloggable;
+import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -43,6 +47,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -56,15 +61,15 @@ import java.util.stream.Stream;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class BenchBlock extends Block implements SeatBlock, Waterloggable {
+public class BenchBlock extends Block implements BlockEntityProvider, SeatBlock, Waterloggable {
     public static final EnumProperty<Direction> FACING = Properties.FACING;
     public static final BooleanProperty LEFT_LEGS = BooleanProperty.of("left_legs");
     public static final BooleanProperty RIGHT_LEGS = BooleanProperty.of("right_legs");
-    public static final BooleanProperty REST = BooleanProperty.of("rest");
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     public static final Identifier BENCH_SEAT_MODEL = AurorasDeco.id("block/template/bench_seat");
     public static final Identifier BENCH_LEGS_MODEL = AurorasDeco.id("block/template/bench_legs");
+    public static final Identifier BENCH_FULL_MODEL = AurorasDeco.id("block/template/bench_full");
     public static final Identifier BENCH_REST_PLANK_MODEL = AurorasDeco.id("block/template/bench_rest_plank");
     public static final Identifier BENCH_REST_LEFT_MODEL = AurorasDeco.id("block/template/bench_rest_left");
     public static final Identifier BENCH_REST_RIGHT_MODEL = AurorasDeco.id("block/template/bench_rest_right");
@@ -85,7 +90,6 @@ public class BenchBlock extends Block implements SeatBlock, Waterloggable {
                 .with(FACING, Direction.NORTH)
                 .with(LEFT_LEGS, true)
                 .with(RIGHT_LEGS, true)
-                .with(REST, false)
                 .with(WATERLOGGED, false)
         );
 
@@ -94,7 +98,7 @@ public class BenchBlock extends Block implements SeatBlock, Waterloggable {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, LEFT_LEGS, RIGHT_LEGS, REST, WATERLOGGED);
+        builder.add(FACING, LEFT_LEGS, RIGHT_LEGS, WATERLOGGED);
     }
 
     public static Stream<BenchBlock> streamBenches() {
@@ -125,24 +129,44 @@ public class BenchBlock extends Block implements SeatBlock, Waterloggable {
     }
 
     /**
-     * {@return whether the bench state has a rest or not}
+     * Returns the rest of the bench block at the given coordinates.
      *
-     * @param state the bench block state
+     * @param world the world the bench is in
+     * @param pos the position of the bench
+     * @return the {@link SeatRestItem} if the bench block has a rest, otherwise {@code null}
      */
-    private static boolean hasRest(BlockState state) {
-        return state.getBlock() instanceof BenchBlock && state.get(REST);
+    private @Nullable SeatRestItem getRest(BlockView world, BlockPos pos) {
+        var bench = this.getBlockEntity(world, pos);
+        if (bench != null) return bench.getRest();
+        return null;
     }
 
     /**
-     * Returns whether this bench can connect to the given block state.
+     * Returns whether this bench can connect to the given adjacent block.
      *
-     * @param other the other block to try to connect to
+     * @param world the world the benches are in
+     * @param otherPos the other block position
      * @param benchFacing this bench facing direction
+     * @param rest the rest used on self
      * @return {@code true} if this bench can connect to the given block, otherwise {@code false}
      */
-    public boolean canConnect(BlockState other, Direction benchFacing, boolean hasRest) {
+    public boolean canConnect(BlockView world, BlockPos otherPos, Direction benchFacing, @Nullable SeatRestItem rest) {
+        return this.canConnect(world, world.getBlockState(otherPos), otherPos, benchFacing, rest);
+    }
+
+    /**
+     * Returns whether this bench can connect to the given adjacent block.
+     *
+     * @param world the world the benches are in
+     * @param other the other block to try to connect to
+     * @param otherPos the other block position
+     * @param benchFacing this bench facing direction
+     * @param rest the rest used on self
+     * @return {@code true} if this bench can connect to the given block, otherwise {@code false}
+     */
+    public boolean canConnect(BlockView world, BlockState other, BlockPos otherPos, Direction benchFacing, @Nullable SeatRestItem rest) {
         return other.getBlock() == this && benchFacing == other.get(FACING)
-                && (hasRest == hasRest(other));
+                && (rest == ((BenchBlock) other.getBlock()).getRest(world, otherPos));
     }
 
     /* Shapes */
@@ -167,8 +191,8 @@ public class BenchBlock extends Block implements SeatBlock, Waterloggable {
 
         return this.getDefaultState()
                 .with(FACING, facing)
-                .with(LEFT_LEGS, !this.canConnect(world.getBlockState(relativeLeft), facing, false))
-                .with(RIGHT_LEGS, !this.canConnect(world.getBlockState(relativeRight), facing, false))
+                .with(LEFT_LEGS, !this.canConnect(world, relativeLeft, facing, null))
+                .with(RIGHT_LEGS, !this.canConnect(world, relativeRight, facing, null))
                 .with(WATERLOGGED, fluid.getFluid() == Fluids.WATER);
     }
 
@@ -186,7 +210,7 @@ public class BenchBlock extends Block implements SeatBlock, Waterloggable {
 
         if (direction.getAxis().isHorizontal() && direction.getAxis() != benchFacing.getAxis()) {
             newSelf = newSelf.with(this.getLegsTowards(benchFacing, direction),
-                    !this.canConnect(newState, benchFacing, hasRest(newSelf)));
+                    !this.canConnect(world, newState, posFrom, benchFacing, this.getRest(world, pos)));
         }
 
         return newSelf;
@@ -197,10 +221,45 @@ public class BenchBlock extends Block implements SeatBlock, Waterloggable {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
                               BlockHitResult hit) {
-        var stack = player.getStackInHand(hand);
-        if (this.sit(world, pos, state, player, stack))
+        var handStack = player.getStackInHand(hand);
+        if (handStack.getItem() instanceof SeatRestItem seatRestItem) {
+            var bench = this.getBlockEntity(world, pos);
+            if (bench != null && !bench.hasRest()) {
+                bench.setRest(seatRestItem);
+                if (!player.getAbilities().creativeMode) {
+                    handStack.decrement(1);
+                }
+                world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                return ActionResult.success(world.isClient());
+            }
+        } else if (this.sit(world, pos, state, player, handStack))
             return ActionResult.success(world.isClient());
         return super.onUse(state, world, pos, player, hand, hit);
+    }
+
+    /* Block Entity stuff */
+
+    @Override
+    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return AurorasDecoRegistry.BENCH_BLOCK_ENTITY_TYPE.instantiate(pos, state);
+    }
+
+    public @Nullable BenchBlockEntity getBlockEntity(BlockView world, BlockPos pos) {
+        return AurorasDecoRegistry.BENCH_BLOCK_ENTITY_TYPE.get(world, pos);
+    }
+
+    /* Loot table */
+
+    @Override
+    public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
+        var blockEntity = builder.get(LootContextParameters.BLOCK_ENTITY);
+        if (blockEntity instanceof BenchBlockEntity bench) {
+            if (bench.hasRest()) {
+                builder.putDrop(SEAT_REST, (context, consumer) -> consumer.accept(new ItemStack(bench.getRest())));
+            }
+        }
+
+        return super.getDroppedStacks(state, builder);
     }
 
     /* Fluid */

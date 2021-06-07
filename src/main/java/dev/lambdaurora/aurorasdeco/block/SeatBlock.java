@@ -17,16 +17,20 @@
 
 package dev.lambdaurora.aurorasdeco.block;
 
+import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.entity.SeatEntity;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 
 public interface SeatBlock {
+    Identifier SEAT_REST = AurorasDeco.id("seat_rest");
+
     default boolean canBeUsed(BlockState state) {
         return true;
     }

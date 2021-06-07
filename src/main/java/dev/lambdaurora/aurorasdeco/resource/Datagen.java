@@ -24,6 +24,7 @@ import com.google.gson.JsonObject;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.*;
 import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
+import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
 import dev.lambdaurora.aurorasdeco.mixin.AbstractBlockAccessor;
 import dev.lambdaurora.aurorasdeco.recipe.RecipeSerializerExtended;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
@@ -68,7 +69,7 @@ import static dev.lambdaurora.aurorasdeco.util.AuroraUtil.jsonArray;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class Datagen {
+public final class Datagen {
     public static final Logger LOGGER = LogManager.getLogger("aurorasdeco:datagen");
 
     private static final Identifier WALL_LANTERN_ATTACHMENT = id("block/wall_lantern_attachment");
@@ -80,6 +81,7 @@ public class Datagen {
     private static final Identifier TEMPLATE_SLEEPING_BAG_FOOT_MODEL = id("block/template/sleeping_bag_foot");
     private static final Identifier TEMPLATE_SLEEPING_BAG_HEAD_MODEL = id("block/template/sleeping_bag_head");
     private static final Identifier TEMPLATE_SLEEPING_BAG_ITEM_MODEL = id("item/template/sleeping_bag");
+    private static final Identifier TEMPLATE_SEAT_REST_ITEM_MODEL = id("item/template/seat_rest");
 
     private static final Identifier LOG_STUMP_LEAF_TEXTURE = id("block/log_stump_leaf");
 
@@ -96,6 +98,10 @@ public class Datagen {
 
     private static final Map<RecipeType<?>, List<Recipe<?>>> RECIPES = new Object2ObjectOpenHashMap<>();
     private static final Map<Recipe<?>, String> RECIPES_CATEGORIES = new Object2ObjectOpenHashMap<>();
+
+    private Datagen() {
+        throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");
+    }
 
     public static void applyRecipes(Map<Identifier, JsonElement> map,
                                     Map<RecipeType<?>, ImmutableMap.Builder<Identifier, Recipe<?>>> builderMap) {
@@ -308,6 +314,38 @@ public class Datagen {
         return root;
     }
 
+    private static JsonObject benchBlockLootTable(Identifier id) {
+        var root = new JsonObject();
+        root.addProperty("type", "minecraft:block");
+        var pools = new JsonArray();
+        pools.add(generateBlockLootTableSimplePool(id, true));
+
+        {
+            var restPool = new JsonObject();
+            pools.add(restPool);
+            restPool.addProperty("rolls", 1.0);
+            var entries = new JsonArray();
+            restPool.add("entries", entries);
+            var entry = new JsonObject();
+            entries.add(entry);
+            entry.addProperty("type", "minecraft:dynamic");
+            entry.addProperty("name", "aurorasdeco:seat_rest");
+        }
+
+        root.add("pools", pools);
+
+        return root;
+    }
+
+    public static void registerBenchBlockLootTable(Block block) {
+        var id = Registry.BLOCK.getId(block);
+        AurorasDeco.RESOURCE_PACK.putJson(
+                ResourceType.SERVER_DATA,
+                new Identifier(id.getNamespace(), "loot_tables/blocks/" + id.getPath()),
+                benchBlockLootTable(id)
+        );
+    }
+
     private static JsonObject shelfBlockLootTable(Identifier id) {
         var root = new JsonObject();
         root.addProperty("type", "minecraft:block");
@@ -444,6 +482,15 @@ public class Datagen {
         Registry.BLOCK.stream().filter(block -> ((AbstractBlockAccessor) block).getMaterial() == Material.WOOD
                 || ((AbstractBlockAccessor) block).getMaterial() == Material.NETHER_WOOD)
                 .forEach(Datagen::registerWoodcuttingRecipesForBlockVariants);
+
+        SeatRestItem.streamSeatRests().forEach(item -> {
+            var planks = item.getWoodType().getComponent(WoodType.ComponentType.PLANKS).item();
+            var recipe = new WoodcuttingRecipe(
+                    id("woodcutting/seat_rest/" + item.getWoodType().getPathName()),
+                    "seat_rests", Ingredient.ofItems(planks),
+                    new ItemStack(item));
+            registerRecipe(recipe, "misc");
+        });
 
         BenchBlock.streamBenches().forEach(block -> {
             var planks = block.getWoodType().getComponent(WoodType.ComponentType.PLANKS).item();
@@ -596,8 +643,10 @@ public class Datagen {
     private static void generateBenchesClientData(LangBuilder langBuilder) {
         BenchBlock.streamBenches().forEach(block -> {
             var builder = multipartBlockStateBuilder(block);
+            var restBuilder = new MultipartBlockStateBuilder(AurorasDeco.id(Registry.BLOCK.getId(block).getPath() + "_rest"));
 
-            var pathName = "block/bench/" + block.getWoodType().getPathName();
+            var pathName = block.getWoodType().getPathName();
+            var blockPathName = "block/bench/" + pathName;
             var planksTexture = block.getWoodType().getComponent(WoodType.ComponentType.PLANKS).texture();
             var logSideTexture = block.getWoodType().getLogSideTexture();
             var seatModel = modelBuilder(BenchBlock.BENCH_SEAT_MODEL)
@@ -605,20 +654,19 @@ public class Datagen {
                     .register(block);
             var restPlankModel = modelBuilder(BenchBlock.BENCH_REST_PLANK_MODEL)
                     .texture("planks", planksTexture)
-                    .register(AurorasDeco.id(pathName + "_rest_plank"));
+                    .register(AurorasDeco.id(blockPathName + "_rest_plank"));
             var restLeftModel = modelBuilder(BenchBlock.BENCH_REST_LEFT_MODEL)
                     .texture("log", logSideTexture)
-                    .register(AurorasDeco.id(pathName + "_rest_left"));
+                    .register(AurorasDeco.id(blockPathName + "_rest_left"));
             var restRightModel = modelBuilder(BenchBlock.BENCH_REST_RIGHT_MODEL)
                     .texture("log", logSideTexture)
-                    .register(AurorasDeco.id(pathName + "_rest_right"));
+                    .register(AurorasDeco.id(blockPathName + "_rest_right"));
             var legsModel = modelBuilder(BenchBlock.BENCH_LEGS_MODEL)
                     .texture("log", logSideTexture)
-                    .register(AurorasDeco.id(pathName + "_legs"));
+                    .register(AurorasDeco.id(blockPathName + "_legs"));
 
             var withLeftLegs = BenchBlock.LEFT_LEGS.createValue(true);
             var withRightLegs = BenchBlock.RIGHT_LEGS.createValue(true);
-            var withRest = BenchBlock.REST.createValue(true);
             for (var facing : DIRECTIONS) {
                 if (facing.getAxis().isVertical()) continue;
 
@@ -628,20 +676,27 @@ public class Datagen {
                 builder.addWhen(new StateModel(seatModel, rotation), facingValue);
                 builder.addWhen(new StateModel(legsModel, rotation), facingValue, withRightLegs);
                 builder.addWhen(new StateModel(legsModel, (rotation + 180) % 360), facingValue, withLeftLegs);
-                builder.addWhen(new StateModel(restLeftModel, rotation), facingValue, withLeftLegs, withRest);
-                builder.addWhen(new StateModel(restRightModel, rotation), facingValue, withRightLegs, withRest);
-                builder.addWhen(new StateModel(restPlankModel, rotation), facingValue, withRest);
+                restBuilder.addWhen(new StateModel(restLeftModel, rotation), facingValue, withLeftLegs);
+                restBuilder.addWhen(new StateModel(restRightModel, rotation), facingValue, withRightLegs);
+                restBuilder.addWhen(new StateModel(restPlankModel, rotation), facingValue);
             }
 
-            modelBuilder(AurorasDeco.id("block/template/bench_full"))
+            modelBuilder(BenchBlock.BENCH_FULL_MODEL)
                     .texture("log", logSideTexture)
                     .texture("planks", planksTexture)
-                    .register(id("item/bench/" + block.getWoodType().getPathName()));
+                    .register(id("item/bench/" + pathName));
+            modelBuilder(TEMPLATE_SEAT_REST_ITEM_MODEL)
+                    .texture("log", logSideTexture)
+                    .texture("planks", planksTexture)
+                    .register(id("item/seat_rest/" + pathName));
 
             builder.register();
+            restBuilder.register();
 
             registerBetterGrassLayer(block, BenchBlock.BENCH_BETTERGRASS_DATA);
 
+            langBuilder.addEntry("item.aurorasdeco.seat_rest." + block.getWoodType().getLangPath(),
+                    "item.aurorasdeco.seat_rest", "aurorasdeco.wood_type." + block.getWoodType().getLangPath());
             langBuilder.addEntry("block.aurorasdeco.bench." + block.getWoodType().getLangPath(),
                     "block.aurorasdeco.bench", "aurorasdeco.wood_type." + block.getWoodType().getLangPath());
         });

@@ -1,0 +1,57 @@
+{
+  "credit": "Made by LambdAurora",
+  "parent": "block/block",
+  "textures": {
+    "particle": "#planks"
+  },
+  "gui_light": "front",
+  "elements": [
+    {
+      "name": "plank",
+      "from": [ 0, 8, 8 ],
+      "to": [ 16, 12, 9 ],
+      "rotation": {"angle": 22.5, "axis": "x", "origin": [ 8, 10, 8 ]},
+      "faces": {
+        "north": {"uv": [ 0, 0, 16, 4 ], "texture": "#planks"},
+        "east":  {"uv": [ 0, 0, 1, 4 ], "texture": "#planks"},
+        "south": {"uv": [ 16, 0, 0, 4 ], "texture": "#planks"},
+        "west":  {"uv": [ 0, 0, 1, 4 ], "texture": "#planks"},
+        "up":    {"uv": [ 0, 0, 16, 1 ], "texture": "#planks"},
+        "down":  {"uv": [ 16, 3, 0, 4 ], "texture": "#planks"}
+      }
+    },
+    {
+      "from": [ 1, 2, 9 ],
+      "to": [ 3, 10, 10 ],
+      "rotation": {"angle": 22.5, "axis": "x", "origin": [ 8, 10, 8 ]},
+      "faces": {
+        "north": {"uv": [ 0, 0, 2, 8 ], "texture": "#log"},
+        "east":  {"uv": [ 0, 0, 1, 8 ], "texture": "#log"},
+        "south": {"uv": [ 0, 0, 2, 8 ], "texture": "#log"},
+        "west":  {"uv": [ 0, 0, 1, 8 ], "texture": "#log"},
+        "up":    {"uv": [ 0, 0, 2, 1 ], "texture": "#log"},
+        "down":  {"uv": [ 0, 0, 2, 1 ], "texture": "#log"}
+      }
+    },
+    {
+      "from": [ 13, 2, 9 ],
+      "to": [ 15, 10, 10 ],
+      "rotation": {"angle": 22.5, "axis": "x", "origin": [ 8, 10, 8 ]},
+      "faces": {
+        "north": {"uv": [ 0, 0, 2, 8 ], "texture": "#log"},
+        "east":  {"uv": [ 0, 0, 1, 8 ], "texture": "#log"},
+        "south": {"uv": [ 0, 0, 2, 8 ], "texture": "#log"},
+        "west":  {"uv": [ 0, 0, 1, 8 ], "texture": "#log"},
+        "up":    {"uv": [ 0, 0, 2, 1 ], "texture": "#log"},
+        "down":  {"uv": [ 0, 0, 2, 1 ], "texture": "#log"}
+      }
+    }
+  ],
+  "display": {
+    "gui": {
+      "rotation": [ 30, -138, 0 ],
+      "translation": [ 0, 0.5, 0 ],
+      "scale":[ 0.8, 0.8, 0.8 ]
+    }
+  }
+}

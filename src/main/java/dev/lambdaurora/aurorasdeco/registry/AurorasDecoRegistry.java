@@ -28,6 +28,7 @@ import dev.lambdaurora.aurorasdeco.block.entity.*;
 import dev.lambdaurora.aurorasdeco.entity.FakeLeashKnotEntity;
 import dev.lambdaurora.aurorasdeco.entity.SeatEntity;
 import dev.lambdaurora.aurorasdeco.item.BlackboardItem;
+import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
 import dev.lambdaurora.aurorasdeco.mixin.SimpleRegistryAccessor;
 import dev.lambdaurora.aurorasdeco.recipe.BlackboardCloneRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
@@ -222,6 +223,11 @@ public final class AurorasDecoRegistry {
 
     /* Block Entities */
 
+    public static final BlockEntityType<BenchBlockEntity> BENCH_BLOCK_ENTITY_TYPE = Registry.register(
+            Registry.BLOCK_ENTITY_TYPE,
+            id("bench"),
+            FabricBlockEntityTypeBuilder.create(BenchBlockEntity::new).build()
+    );
     public static final BlockEntityType<BlackboardBlockEntity> BLACKBOARD_BLOCK_ENTITY_TYPE = Registry.register(
             Registry.BLOCK_ENTITY_TYPE,
             id("blackboard"),
@@ -439,9 +445,17 @@ public final class AurorasDecoRegistry {
         }, WoodType.ComponentType.PLANKS);
 
         WoodType.registerWoodTypeModificationCallback(woodType -> {
+            register("seat_rest/" + woodType.getPathName(),
+                    new SeatRestItem(woodType, new FabricItemSettings().group(ItemGroup.MISC)));
+        }, WoodType.ComponentType.PLANKS);
+
+        WoodType.registerWoodTypeModificationCallback(woodType -> {
             var block = registerWithItem("bench/" + woodType.getPathName(),
                     new BenchBlock(woodType),
                     new FabricItemSettings().group(ItemGroup.DECORATIONS));
+
+            ((BlockEntityTypeAccessor) AurorasDecoRegistry.BENCH_BLOCK_ENTITY_TYPE)
+                    .aurorasdeco$addSupportedBlock(block);
 
             var entry = woodType.getComponent(WoodType.ComponentType.PLANKS).getFlammableEntry();
             if (entry != null && entry.getBurnChance() != 0 && entry.getSpreadChance() != 0)

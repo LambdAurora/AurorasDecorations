@@ -25,6 +25,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 
 /**
@@ -48,6 +49,15 @@ public final class MapUtil {
     public static <K, I, O> Map<K, O> mapWithKey(Map<K, I> map, BiFunction<K, I, O> mapper) {
         var out = new Object2ObjectOpenHashMap<K, O>();
         map.forEach((key, input) -> out.put(key, mapper.apply(key, input)));
+        return out;
+    }
+
+    public static <K, I> Map<K, I> filterWithKey(Map<K, I> map, BiPredicate<K, I> filter) {
+        var out = new Object2ObjectOpenHashMap<K, I>();
+        map.forEach((key, input) -> {
+            if (filter.test(key, input))
+                out.put(key, input);
+        });
         return out;
     }
 

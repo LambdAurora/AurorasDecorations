@@ -77,7 +77,7 @@ public class BakedBigFlowerPotModel extends ForwardingBakedModel {
                 }
 
             var model = client.getBakedModelManager().getBlockModels().getModel(plantState);
-            if (model instanceof FabricBakedModel) {
+            if (model instanceof FabricBakedModel fabricBakedModel) {
                 context.pushTransform(quad -> {
                     Vec3f vec = null;
                     for (int i = 0; i < 4; i++) {
@@ -86,10 +86,11 @@ public class BakedBigFlowerPotModel extends ForwardingBakedModel {
                         vec.add(offset, .8f, offset);
                         quad.pos(i, vec);
                     }
-                    quad.material(RendererAccess.INSTANCE.getRenderer().materialFinder().disableAo(0, !model.useAmbientOcclusion()).find());
+                    quad.material(RendererAccess.INSTANCE.getRenderer().materialFinder()
+                            .disableAo(0, !model.useAmbientOcclusion()).find());
                     return true;
                 });
-                ((FabricBakedModel) model).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                fabricBakedModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
                 context.popTransform();
             }
 

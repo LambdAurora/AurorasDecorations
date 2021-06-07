@@ -33,7 +33,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
-public record UnbakedBigFlowerPotModel(UnbakedModel baseModel) implements UnbakedModel {
+public record UnbakedBigFlowerPotModel(UnbakedModel baseModel) implements AuroraUnbakedModel {
     @Override
     public Collection<Identifier> getModelDependencies() {
         return this.baseModel().getModelDependencies();

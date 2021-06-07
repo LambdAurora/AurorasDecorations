@@ -18,8 +18,6 @@
 package dev.lambdaurora.aurorasdeco.client.model;
 
 import com.mojang.datafixers.util.Pair;
-import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.Blackboard;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.model.BakedModel;
@@ -28,19 +26,14 @@ import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
-public record UnbakedBlackboardModel(UnbakedModel baseModel) implements AuroraUnbakedModel {
-    private static final SpriteIdentifier WHITE = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE,
-            AurorasDeco.id("special/white"));
-
+public record UnbakedBenchModel(UnbakedModel baseModel, RestModelManager restModelManager) implements AuroraUnbakedModel {
     @Override
     public Collection<Identifier> getModelDependencies() {
         return this.baseModel().getModelDependencies();
@@ -49,15 +42,12 @@ public record UnbakedBlackboardModel(UnbakedModel baseModel) implements AuroraUn
     @Override
     public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter,
                                                                Set<Pair<String, String>> unresolvedTextureReferences) {
-        var textures = new HashSet<>(this.baseModel().getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences));
-        textures.add(WHITE);
-        return textures;
+        return this.baseModel().getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences);
     }
 
     @Override
     public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer,
                            Identifier modelId) {
-        Blackboard.setWhiteSprite(textureGetter.apply(WHITE));
-        return new BakedBlackboardModel(this.baseModel().bake(loader, textureGetter, rotationContainer, modelId));
+        return new BakedBenchModel(this.baseModel().bake(loader, textureGetter, rotationContainer, modelId), this.restModelManager());
     }
 }
