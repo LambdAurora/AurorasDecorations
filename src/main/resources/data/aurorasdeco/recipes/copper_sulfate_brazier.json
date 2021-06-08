@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ICI",
+    " I "
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "C": {
+      "item": "aurorasdeco:copper_sulfate_campfire"
+    }
+  },
+  "result": {
+    "item": "aurorasdeco:copper_sulfate_brazier"
+  }
+}

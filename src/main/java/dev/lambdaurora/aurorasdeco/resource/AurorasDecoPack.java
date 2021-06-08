@@ -129,9 +129,6 @@ public class AurorasDecoPack implements ModResourcePack {
             this.hasRegisteredOneTimeResources = true;
         }
 
-        Datagen.dropsSelf(AurorasDecoRegistry.BRAZIER_BLOCK);
-        Datagen.dropsSelf(AurorasDecoRegistry.SOUL_BRAZIER_BLOCK);
-
         BenchBlock.streamBenches().forEach(Datagen::registerBenchBlockLootTable);
         ShelfBlock.streamShelves().forEach(Datagen::registerShelfBlockLootTable);
         StumpBlock.streamLogStumps().forEach(Datagen::dropsSelf);

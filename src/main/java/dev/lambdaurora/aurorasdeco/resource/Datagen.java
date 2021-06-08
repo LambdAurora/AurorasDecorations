@@ -461,17 +461,6 @@ public final class Datagen {
     }
 
     public static void registerDefaultRecipes() {
-        var ironIngot = Ingredient.ofItems(Items.IRON_INGOT);
-        registerRecipe(new ShapedRecipe(id("brazier"), "", 3, 2,
-                        DefaultedList.copyOf(Ingredient.EMPTY, ironIngot, Ingredient.ofItems(Items.CAMPFIRE), ironIngot,
-                                Ingredient.EMPTY, ironIngot, Ingredient.EMPTY),
-                        new ItemStack(AurorasDecoRegistry.BRAZIER_BLOCK)),
-                "decorations");
-        registerRecipe(new ShapedRecipe(id("soul_brazier"), "", 3, 2,
-                        DefaultedList.copyOf(Ingredient.EMPTY, ironIngot, Ingredient.ofItems(Items.SOUL_CAMPFIRE), ironIngot,
-                                Ingredient.EMPTY, ironIngot, Ingredient.EMPTY),
-                        new ItemStack(AurorasDecoRegistry.SOUL_BRAZIER_BLOCK)),
-                "decorations");
     }
 
     public static void registerDefaultWoodcuttingRecipes() {
@@ -507,7 +496,7 @@ public final class Datagen {
                 var crafting = new ShapedRecipe(
                         id("bench/" + block.getWoodType().getPathName()),
                         "bench", 3, 2,
-                        DefaultedList.copyOf(slab, slab, slab, stick, Ingredient.EMPTY, stick, Ingredient.EMPTY),
+                        DefaultedList.copyOf(Ingredient.EMPTY, slab, slab, slab, stick, Ingredient.EMPTY, stick, Ingredient.EMPTY),
                         new ItemStack(block, 2));
                 registerRecipe(crafting, "decorations");
             }
@@ -527,7 +516,7 @@ public final class Datagen {
                 var crafting = new ShapedRecipe(
                         id("shelf/" + block.getWoodType().getPathName()),
                         "shelf", 2, 1,
-                        DefaultedList.copyOf(slab, slab),
+                        DefaultedList.copyOf(Ingredient.EMPTY, slab, slab),
                         new ItemStack(block, 2));
                 registerRecipe(crafting, "decorations");
             }
@@ -611,15 +600,6 @@ public final class Datagen {
                     .texture("head_top", headTopTexture)
                     .register(id("item/" + Registry.ITEM.getId(sleepingBag.asItem()).getPath()));
         });
-
-        blockStateBuilder(AurorasDecoRegistry.AMETHYST_LANTERN_BLOCK)
-                .addToVariant("hanging=false", modelBuilder(TEMPLATE_LANTERN_MODEL)
-                        .texture("lantern", AmethystLanternBlock.BLOCK_TEXTURE)
-                        .register(AurorasDecoRegistry.AMETHYST_LANTERN_BLOCK))
-                .addToVariant("hanging=true", modelBuilder(TEMPLATE_HANGING_LANTERN_MODEL)
-                        .texture("lantern", AmethystLanternBlock.BLOCK_TEXTURE)
-                        .register(AmethystLanternBlock.HANGING_MODEL))
-                .register();
 
         LanternRegistry.forEach((lanternId, wallLantern) -> {
             var builder = blockStateBuilder(wallLantern);

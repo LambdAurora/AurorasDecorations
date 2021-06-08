@@ -1,10 +1,10 @@
 # Aurora's Decorations
-
-![Java 16](https://img.shields.io/badge/language-Java%2016-9B599A.svg?style=flat-square)
+<!-- modrinth_exclude.start -->
+![Java 16](https://img.shields.io/badge/language-Java%2016-9B599A.svg?style=flat-square) <!-- modrinth_exclude.end -->
 [![GitHub license](https://img.shields.io/github/license/LambdAurora/AurorasDecorations?style=flat-square)](https://raw.githubusercontent.com/LambdAurora/AurorasDecorations/1.17/LICENSE)
 ![Environment: Any](https://img.shields.io/badge/environment-any-4caf50?style=flat-square)
-[![Mod loader: Fabric]][fabric]
-![Version](https://img.shields.io/github/v/tag/LambdAurora/AurorasDecorations?label=version&style=flat-square)
+[![Mod loader: Fabric]][fabric] <!-- modrinth_exclude.start -->
+![Version](https://img.shields.io/github/v/tag/LambdAurora/AurorasDecorations?label=version&style=flat-square) <!-- modrinth_exclude.end -->
 
 Decorations-focused Fabric mod.
 
@@ -25,6 +25,7 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 - Benches
   - Come in all wood types!
   - You can sit on them!
+  - Customize them with a seat rest.
 - Big Flower Pot Block
   - Can hold a plant, can dynamically support some modded plants (or new plants in Minecraft if the mod hasn't been updated).
   - Can hold tall plants.
