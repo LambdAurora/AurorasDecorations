@@ -1,0 +1,6 @@
+{
+  "parent": "aurorasdeco:block/template/wall_two_candle",
+  "textures": {
+    "candle": "minecraft:block/white_candle_lit"
+  }
+}

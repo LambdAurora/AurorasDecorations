@@ -1,16 +1,28 @@
 {
   "variants": {
-    "candles=1": {
+    "candles=1,lit=false": {
       "model": "aurorasdeco:block/chandelier/one/lime"
     },
-    "candles=2": {
+    "candles=1,lit=true": {
+      "model": "aurorasdeco:block/chandelier/one/lime_lit"
+    },
+    "candles=2,lit=false": {
       "model": "aurorasdeco:block/chandelier/two/lime"
     },
-    "candles=3": {
+    "candles=2,lit=true": {
+      "model": "aurorasdeco:block/chandelier/two/lime_lit"
+    },
+    "candles=3,lit=false": {
       "model": "aurorasdeco:block/chandelier/three/lime"
     },
-    "candles=4": {
+    "candles=3,lit=true": {
+      "model": "aurorasdeco:block/chandelier/three/lime_lit"
+    },
+    "candles=4,lit=false": {
       "model": "aurorasdeco:block/chandelier/four/lime"
+    },
+    "candles=4,lit=true": {
+      "model": "aurorasdeco:block/chandelier/four/lime_lit"
     }
   }
 }

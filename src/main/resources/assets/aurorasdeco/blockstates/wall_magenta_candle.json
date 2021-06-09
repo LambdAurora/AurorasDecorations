@@ -1,64 +1,188 @@
 {
   "variants": {
-    "candles=1,facing=north": {
-      "model": "aurorasdeco:block/wall_candle/one/magenta",
-      "y": 180
-    },
-    "candles=1,facing=east": {
-      "model": "aurorasdeco:block/wall_candle/one/magenta",
-      "y": 270
-    },
-    "candles=1,facing=south": {
-      "model": "aurorasdeco:block/wall_candle/one/magenta"
-    },
-    "candles=1,facing=west": {
-      "model": "aurorasdeco:block/wall_candle/one/magenta",
-      "y": 90
-    },
-    "candles=2,facing=north": {
-      "model": "aurorasdeco:block/wall_candle/two/magenta",
-      "y": 180
-    },
-    "candles=2,facing=east": {
-      "model": "aurorasdeco:block/wall_candle/two/magenta",
-      "y": 270
-    },
-    "candles=2,facing=south": {
-      "model": "aurorasdeco:block/wall_candle/two/magenta"
-    },
-    "candles=2,facing=west": {
-      "model": "aurorasdeco:block/wall_candle/two/magenta",
-      "y": 90
-    },
-    "candles=3,facing=north": {
-      "model": "aurorasdeco:block/wall_candle/three/magenta",
-      "y": 180
-    },
-    "candles=3,facing=east": {
-      "model": "aurorasdeco:block/wall_candle/three/magenta",
-      "y": 270
-    },
-    "candles=3,facing=south": {
-      "model": "aurorasdeco:block/wall_candle/three/magenta"
-    },
-    "candles=3,facing=west": {
-      "model": "aurorasdeco:block/wall_candle/three/magenta",
-      "y": 90
-    },
-    "candles=4,facing=north": {
-      "model": "aurorasdeco:block/wall_candle/four/magenta",
-      "y": 180
-    },
-    "candles=4,facing=east": {
-      "model": "aurorasdeco:block/wall_candle/four/magenta",
-      "y": 270
-    },
-    "candles=4,facing=south": {
-      "model": "aurorasdeco:block/wall_candle/four/magenta"
-    },
-    "candles=4,facing=west": {
-      "model": "aurorasdeco:block/wall_candle/four/magenta",
-      "y": 90
-    }
+    "candles=1,facing=north,lit=false": [
+      {
+        "model": "aurorasdeco:block/wall_candle/one/magenta",
+        "y": 180
+      }
+    ],
+    "candles=1,facing=north,lit=true": [
+      {
+        "model": "aurorasdeco:block/wall_candle/one/magenta_lit",
+        "y": 180
+      }
+    ],
+    "candles=1,facing=south,lit=false": [
+      {
+        "model": "aurorasdeco:block/wall_candle/one/magenta"
+      }
+    ],
+    "candles=1,facing=south,lit=true": [
+      {
+        "model": "aurorasdeco:block/wall_candle/one/magenta_lit"
+      }
+    ],
+    "candles=1,facing=west,lit=false": [
+      {
+        "model": "aurorasdeco:block/wall_candle/one/magenta",
+        "y": 90
+      }
+    ],
+    "candles=1,facing=west,lit=true": [
+      {
+        "model": "aurorasdeco:block/wall_candle/one/magenta_lit",
+        "y": 90
+      }
+    ],
+    "candles=1,facing=east,lit=false": [
+      {
+        "model": "aurorasdeco:block/wall_candle/one/magenta",
+        "y": 270
+      }
+    ],
+    "candles=1,facing=east,lit=true": [
+      {
+        "model": "aurorasdeco:block/wall_candle/one/magenta_lit",
+        "y": 270
+      }
+    ],
+    "candles=2,facing=north,lit=false": [
+      {
+        "model": "aurorasdeco:block/wall_candle/two/magenta",
+        "y": 180
+      }
+    ],
+    "candles=2,facing=north,lit=true": [
+      {
+        "model": "aurorasdeco:block/wall_candle/two/magenta_lit",
+        "y": 180
+      }
+    ],
+    "candles=2,facing=south,lit=false": [
+      {
+        "model": "aurorasdeco:block/wall_candle/two/magenta"
+      }
+    ],
+    "candles=2,facing=south,lit=true": [
+      {
+        "model": "aurorasdeco:block/wall_candle/two/magenta_lit"
+      }
+    ],
+    "candles=2,facing=west,lit=false": [
+      {
+        "model": "aurorasdeco:block/wall_candle/two/magenta",
+        "y": 90
+      }
+    ],
+    "candles=2,facing=west,lit=true": [
+      {
+        "model": "aurorasdeco:block/wall_candle/two/magenta_lit",
+        "y": 90
+      }
+    ],
+    "candles=2,facing=east,lit=false": [
+      {
+        "model": "aurorasdeco:block/wall_candle/two/magenta",
+        "y": 270
+      }
+    ],
+    "candles=2,facing=east,lit=true": [
+      {
+        "model": "aurorasdeco:block/wall_candle/two/magenta_lit",
+        "y": 270
+      }
+    ],
+    "candles=3,facing=north,lit=false": [
+      {
+        "model": "aurorasdeco:block/wall_candle/three/magenta",
+        "y": 180
+      }
+    ],
+    "candles=3,facing=north,lit=true": [
+      {
+        "model": "aurorasdeco:block/wall_candle/three/magenta_lit",
+        "y": 180
+      }
+    ],
+    "candles=3,facing=south,lit=false": [
+      {
+        "model": "aurorasdeco:block/wall_candle/three/magenta"
+      }
+    ],
+    "candles=3,facing=south,lit=true": [
+      {
+        "model": "aurorasdeco:block/wall_candle/three/magenta_lit"
+      }
+    ],
+    "candles=3,facing=west,lit=false": [
+      {
+        "model": "aurorasdeco:block/wall_candle/three/magenta",
+        "y": 90
+      }
+    ],
+    "candles=3,facing=west,lit=true": [
+      {
+        "model": "aurorasdeco:block/wall_candle/three/magenta_lit",
+        "y": 90
+      }
+    ],
+    "candles=3,facing=east,lit=false": [
+      {
+        "model": "aurorasdeco:block/wall_candle/three/magenta",
+        "y": 270
+      }
+    ],
+    "candles=3,facing=east,lit=true": [
+      {
+        "model": "aurorasdeco:block/wall_candle/three/magenta_lit",
+        "y": 270
+      }
+    ],
+    "candles=4,facing=north,lit=false": [
+      {
+        "model": "aurorasdeco:block/wall_candle/four/magenta",
+        "y": 180
+      }
+    ],
+    "candles=4,facing=north,lit=true": [
+      {
+        "model": "aurorasdeco:block/wall_candle/four/magenta_lit",
+        "y": 180
+      }
+    ],
+    "candles=4,facing=south,lit=false": [
+      {
+        "model": "aurorasdeco:block/wall_candle/four/magenta"
+      }
+    ],
+    "candles=4,facing=south,lit=true": [
+      {
+        "model": "aurorasdeco:block/wall_candle/four/magenta_lit"
+      }
+    ],
+    "candles=4,facing=west,lit=false": [
+      {
+        "model": "aurorasdeco:block/wall_candle/four/magenta",
+        "y": 90
+      }
+    ],
+    "candles=4,facing=west,lit=true": [
+      {
+        "model": "aurorasdeco:block/wall_candle/four/magenta_lit",
+        "y": 90
+      }
+    ],
+    "candles=4,facing=east,lit=false": [
+      {
+        "model": "aurorasdeco:block/wall_candle/four/magenta",
+        "y": 270
+      }
+    ],
+    "candles=4,facing=east,lit=true": [
+      {
+        "model": "aurorasdeco:block/wall_candle/four/magenta_lit",
+        "y": 270
+      }
+    ]
   }
 }
