@@ -36,10 +36,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.stream.Stream;
 
-public class LanternRegistry {
+public final class LanternRegistry {
     private static final Map<Identifier, WallLanternBlock> WALL_LANTERNS = new Object2ObjectOpenHashMap<>();
     private static final Map<LanternBlock, WallLanternBlock> WALL_LANTERN_BLOCK_MAP = new Object2ObjectOpenHashMap<>();
+
+    public static Stream<Identifier> streamIds() {
+        return WALL_LANTERNS.keySet().stream();
+    }
 
     public static void forEach(BiConsumer<Identifier, WallLanternBlock> consumer) {
         WALL_LANTERNS.forEach(consumer);

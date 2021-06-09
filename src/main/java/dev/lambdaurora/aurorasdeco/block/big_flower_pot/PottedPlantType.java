@@ -50,7 +50,6 @@ import java.util.stream.Stream;
 public final class PottedPlantType {
     private static final Map<String, PottedPlantType> TYPES = new Object2ObjectOpenHashMap<>();
     private static final Map<Item, BigFlowerPotBlock> ITEM_TO_FLOWER_POT = new Object2ObjectOpenHashMap<>();
-    private static final Consumer<BigFlowerPotBlock> CLIENT_HANDLER;
     private final String id;
     private final Block plant;
     private final Item item;
@@ -102,8 +101,6 @@ public final class PottedPlantType {
         TYPES.put(id, type);
         var potBlock = flowerPotBlockFactory.apply(type);
         type.pot = potBlock;
-        if (!type.isEmpty())
-            CLIENT_HANDLER.accept(potBlock);
         if (item != Items.AIR || type.isEmpty()) {
             ITEM_TO_FLOWER_POT.put(item, potBlock);
         }
@@ -176,21 +173,5 @@ public final class PottedPlantType {
     @Override
     public int hashCode() {
         return Objects.hash(this.getId(), this.getPlant(), this.getItem());
-    }
-
-    static {
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            CLIENT_HANDLER = block -> {
-                BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutoutMipped());
-
-                ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) ->
-                                world != null && pos != null ? BiomeColors.getGrassColor(world, pos)
-                                        : GrassColors.getColor(0.5D, 1.0D),
-                        block);
-            };
-        } else {
-            CLIENT_HANDLER = block -> {
-            };
-        }
     }
 }

@@ -5,6 +5,7 @@
     "#aurorasdeco:benches",
     "#aurorasdeco:pet_beds",
     "#aurorasdeco:shelves",
-    "#aurorasdeco:stumps"
+    "#aurorasdeco:stumps",
+    "aurorasdeco:copper_sulfate_campfire"
   ]
 }

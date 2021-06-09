@@ -23,6 +23,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.*;
+import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
+import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
 import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
 import dev.lambdaurora.aurorasdeco.mixin.AbstractBlockAccessor;
@@ -83,6 +85,8 @@ public final class Datagen {
     private static final Identifier TEMPLATE_SLEEPING_BAG_ITEM_MODEL = id("item/template/sleeping_bag");
     private static final Identifier TEMPLATE_SEAT_REST_ITEM_MODEL = id("item/template/seat_rest");
 
+    private static final Identifier BIG_FLOWER_POT_MODEL = id("block/big_flower_pot/big_flower_pot");
+    private static final Identifier BIG_FLOWER_POT_WITH_MYCELIUM_MODEL = id("block/big_flower_pot/mycelium");
     private static final Identifier LOG_STUMP_LEAF_TEXTURE = id("block/log_stump_leaf");
 
     static final Identifier SHELF_BETTERGRASS_DATA = id("bettergrass/data/shelf");
@@ -558,6 +562,17 @@ public final class Datagen {
         generateBenchesClientData(resourceManager, langBuilder);
         generateShelvesClientData(resourceManager, langBuilder);
         generateStumpsClientData(resourceManager, langBuilder);
+
+        PottedPlantType.stream().filter(type -> !type.isEmpty() && type.getPot().hasDynamicModel())
+                .forEach(type -> {
+                    var id = Registry.BLOCK.getId(type.getPot());
+                    var builder = blockStateBuilder(type.getPot());
+                    if (id.getPath().endsWith("mushroom")) builder.addToVariant("", BIG_FLOWER_POT_WITH_MYCELIUM_MODEL);
+                    else builder.addToVariant("", BIG_FLOWER_POT_MODEL);
+                    builder.register();
+
+                    Datagen.registerBetterGrassLayer(id, BigFlowerPotBlock.POT_BETTERGRASS_DATA);
+                });
 
         SleepingBagBlock.forEach(sleepingBag -> {
             var color = sleepingBag.getColor();

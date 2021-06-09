@@ -19,32 +19,48 @@ package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.block.behavior.CopperSulfateBehavior;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.CampfireBlock;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.minecraft.block.*;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.pathing.NavigationType;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.particle.ParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.tag.BlockTags;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
+import net.minecraft.world.event.GameEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
 /**
- * Represents a copper sulfate campfire block.
+ * Represents a copper sulfate brazier brazier.
  *
  * @author LambdAurora
  * @version 1.0.0
  * @since 1.0.0
  */
-public class CopperSulfateCampfireBlock extends CampfireBlock {
-    public CopperSulfateCampfireBlock(Settings settings) {
-        super(true, 2, settings);
+public class CopperSulfateBrazierBlock extends BrazierBlock {
+    public CopperSulfateBrazierBlock(FabricBlockSettings settings, int fireDamage, ParticleEffect particle) {
+        super(settings.ticksRandomly(), fireDamage, particle);
     }
 
     /* Random Ticks */
@@ -56,27 +72,6 @@ public class CopperSulfateCampfireBlock extends CampfireBlock {
 
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        CopperSulfateBehavior.attemptToDecompose(state, world, pos, random, 15);
-    }
-
-    /* Visual */
-
-    @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        if (state.get(LIT)) {
-            if (random.nextInt(10) == 0) {
-                world.playSound(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5,
-                        SoundEvents.BLOCK_CAMPFIRE_CRACKLE, SoundCategory.BLOCKS,
-                        .5f + random.nextFloat(), random.nextFloat() * .7f + .6f, false);
-            }
-
-            if (random.nextInt(5) == 0) {
-                for (int i = 0; i < random.nextInt(1) + 1; ++i) {
-                    world.addParticle(AurorasDecoRegistry.COPPER_SULFATE_LAVA,
-                            pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5,
-                            random.nextFloat() / 2.f, 5.0E-5d, random.nextFloat() / 2.f);
-                }
-            }
-        }
+        CopperSulfateBehavior.attemptToDecompose(state, world, pos, random, 20);
     }
 }

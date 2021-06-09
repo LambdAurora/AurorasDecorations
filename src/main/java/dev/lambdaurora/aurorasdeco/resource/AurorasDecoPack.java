@@ -25,9 +25,7 @@ import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.BenchBlock;
 import dev.lambdaurora.aurorasdeco.block.ShelfBlock;
 import dev.lambdaurora.aurorasdeco.block.StumpBlock;
-import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
-import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
-import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
 import dev.lambdaurora.aurorasdeco.resource.datagen.LangBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.resource.ModResourcePack;
@@ -79,24 +77,6 @@ public class AurorasDecoPack implements ModResourcePack {
         langBuilder.load();
 
         this.namespaces.add("aurorasdeco");
-        var baseBigFlowerPotJson = new JsonObject();
-
-        {
-            var variant = new JsonObject();
-            variant.addProperty("model", AurorasDeco.NAMESPACE + ":block/big_flower_pot/big_flower_pot");
-            var variants = new JsonObject();
-            variants.add("", variant);
-            baseBigFlowerPotJson.add("variants", variants);
-        }
-
-        PottedPlantType.stream().filter(type -> !type.isEmpty() && type.getPot().hasDynamicModel())
-                .forEach(type -> {
-                    var id = Registry.BLOCK.getId(type.getPot());
-                    this.putJson("assets/" + id.getNamespace() + "/blockstates/" + id.getPath() + ".json",
-                            baseBigFlowerPotJson);
-
-                    Datagen.registerBetterGrassLayer(id, BigFlowerPotBlock.POT_BETTERGRASS_DATA);
-                });
 
         Datagen.generateClientData(resourceManager, langBuilder);
 
@@ -140,6 +120,7 @@ public class AurorasDecoPack implements ModResourcePack {
                 .map(Registry.BLOCK::getId));
         this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("stumps"), StumpBlock.streamLogStumps()
                 .map(Registry.BLOCK::getId));
+        this.registerTag(new String[]{"blocks"}, AurorasDeco.id("wall_lanterns"), LanternRegistry.streamIds());
 
         Datagen.registerSimpleRecipesUnlock();
 

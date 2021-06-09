@@ -2,6 +2,9 @@
   "replace": false,
   "values": [
     "#aurorasdeco:braziers",
+    "#aurorasdeco:wall_lanterns",
+    "aurorasdeco:amethyst_lantern",
+    "aurorasdeco:copper_sulfate_lantern",
     "aurorasdeco:polished_basalt_wall"
   ]
 }

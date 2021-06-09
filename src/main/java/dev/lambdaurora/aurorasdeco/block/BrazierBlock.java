@@ -78,13 +78,16 @@ public class BrazierBlock extends Block implements Waterloggable {
     private final int fireDamage;
 
     public BrazierBlock(MapColor color, int fireDamage, int luminance, ParticleEffect particle) {
-        super(
-                FabricBlockSettings.of(Material.DECORATION, color)
+        this(FabricBlockSettings.of(Material.DECORATION, color)
                         .strength(2.f)
                         .nonOpaque()
                         .luminance(state -> state.get(LIT) ? luminance : 0)
-                        .sounds(BlockSoundGroup.METAL)
-        );
+                        .sounds(BlockSoundGroup.METAL),
+                fireDamage, particle);
+    }
+
+    public BrazierBlock(FabricBlockSettings settings, int fireDamage, ParticleEffect particle) {
+        super(settings);
 
         this.fireDamage = fireDamage;
         this.particle = particle;

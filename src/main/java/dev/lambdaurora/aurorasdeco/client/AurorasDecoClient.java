@@ -20,6 +20,7 @@ package dev.lambdaurora.aurorasdeco.client;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
 import dev.lambdaurora.aurorasdeco.block.StumpBlock;
+import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.client.particle.AmethystGlintParticle;
 import dev.lambdaurora.aurorasdeco.client.renderer.*;
 import dev.lambdaurora.aurorasdeco.client.screen.SawmillScreen;
@@ -40,8 +41,10 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
+import net.minecraft.block.TallPlantBlock;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.color.world.FoliageColors;
+import net.minecraft.client.color.world.GrassColors;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.particle.LavaEmberParticle;
 import net.minecraft.client.render.RenderLayer;
@@ -102,6 +105,23 @@ public class AurorasDecoClient implements ClientModInitializer {
                 .forEach(block -> BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout()));
 
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
+            PottedPlantType.stream()
+                    .forEach(plantType -> {
+                        if (plantType.isEmpty()) return;
+
+                        BlockRenderLayerMap.INSTANCE.putBlock(plantType.getPot(), RenderLayer.getCutoutMipped());
+
+                        if (plantType.getPlant() instanceof TallPlantBlock) {
+                            ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) ->
+                                            world != null && pos != null ? BiomeColors.getGrassColor(world, pos)
+                                                    : GrassColors.getColor(0.5D, 1.0D),
+                                    plantType.getPot());
+                        } else {
+                            var originalColorProvider = ColorProviderRegistry.BLOCK.get(plantType.getPlant());
+                            if (originalColorProvider != null)
+                                ColorProviderRegistry.BLOCK.register(originalColorProvider, plantType.getPot());
+                        }
+                    });
             StumpBlock.streamLogStumps()
                     .forEach(block -> {
                         var leavesComponent = block.getWoodType().getComponent(WoodType.ComponentType.LEAVES);
