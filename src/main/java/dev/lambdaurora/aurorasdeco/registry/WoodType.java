@@ -32,6 +32,7 @@ import net.minecraft.client.color.block.BlockColorProvider;
 import net.minecraft.client.color.item.ItemColorProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.resource.ResourceManager;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -57,12 +58,14 @@ public final class WoodType {
     private final List<ModificationCallbackEntry> toTrigger = new ArrayList<>();
     private final Identifier id;
     private final String pathName;
+    private final String absoluteLangPath;
     private final String langPath;
 
     public WoodType(Identifier id) {
         this.id = id;
         this.pathName = getPathName(this.id);
-        this.langPath = this.pathName.replaceAll("/", ".");
+        this.absoluteLangPath = this.pathName.replaceAll("/", ".");
+        this.langPath = getLangPath(this.id);
 
         this.toTrigger.addAll(CALLBACKS);
     }
@@ -78,6 +81,10 @@ public final class WoodType {
 
     public String getPathName() {
         return this.pathName;
+    }
+
+    public String getAbsoluteLangPath() {
+        return this.absoluteLangPath;
     }
 
     public String getLangPath() {
@@ -104,19 +111,19 @@ public final class WoodType {
     /**
      * {@return the log side texture if a log component is associated, otherwise the planks texture}
      */
-    public Identifier getLogSideTexture() {
+    public Identifier getLogSideTexture(ResourceManager resourceManager) {
         var log = this.getComponent(ComponentType.LOG);
         if (log == null) return this.getComponent(ComponentType.PLANKS).texture();
-        return log.texture();
+        return ComponentType.LOG.getTexture(resourceManager, log);
     }
 
     /**
      * {@return the log top texture if a log component is associated, otherwise the planks texture}
      */
-    public Identifier getLogTopTexture() {
+    public Identifier getLogTopTexture(ResourceManager resourceManager) {
         var log = this.getComponent(ComponentType.LOG);
         if (log == null) return this.getComponent(ComponentType.PLANKS).texture();
-        return log.topTexture();
+        return ComponentType.LOG.getTopTexture(resourceManager, log);
     }
 
     /**
@@ -165,6 +172,7 @@ public final class WoodType {
     }
 
     public static void onBlockRegister(Identifier id, Block block) {
+        if (id.getNamespace().equals("mossywood")) return; // Mossywood is too much of a pain to support.
         for (var componentType : ComponentType.types()) {
             var woodName = componentType.filter(id, block);
             if (woodName == null) continue;
@@ -206,6 +214,14 @@ public final class WoodType {
         if (!namespace.equals("minecraft"))
             path = namespace + '/' + path;
         return path;
+    }
+
+    private static String getLangPath(Identifier id) {
+        return switch (id.getPath()) {
+            case "bamboo" -> "bamboo"; // Common
+            case "redwood" -> "redwood";
+            default -> getPathName(id).replaceAll("/", ".");
+        };
     }
 
     public record Component(Block block) {
@@ -273,7 +289,7 @@ public final class WoodType {
         PLANKS((id, block) -> {
             if (!id.getPath().endsWith("_planks")) return null;
             return id.getPath().substring(0, id.getPath().length() - "_planks".length());
-        }),
+        }, BASIC_TEXTURE_PROVIDER, BASIC_TEXTURE_PROVIDER),
         LOG((id, block) -> {
             var material = ((AbstractBlockAccessor) block).getMaterial();
             if (material != Material.WOOD && material != Material.NETHER_WOOD) return null;
@@ -284,13 +300,37 @@ public final class WoodType {
             else return null;
 
             return id.getPath().substring(0, id.getPath().length() - logType.length());
+        }, (resourceManager, component) -> {
+            var componentId = component.id();
+            var texture = component.texture();
+            if (resourceManager.containsResource(AuroraUtil.toAbsoluteTexturesId(texture)))
+                return texture;
+            else {
+                // For mods that don't use standard texture paths like Promenade
+                var sideId = new Identifier(componentId.getNamespace(), "block/" + componentId.getPath() + "/side");
+                if (resourceManager.containsResource(AuroraUtil.toAbsoluteTexturesId(sideId)))
+                    return sideId;
+            }
+            return texture;
+        }, (resourceManager, component) -> {
+            var componentId = component.id();
+            var texture = component.topTexture();
+            if (resourceManager.containsResource(AuroraUtil.toAbsoluteTexturesId(texture)))
+                return texture;
+            else {
+                // For mods that don't use standard texture paths like Promenade
+                var topId = new Identifier(componentId.getNamespace(), "block/" + componentId.getPath() + "/top");
+                if (resourceManager.containsResource(AuroraUtil.toAbsoluteTexturesId(topId)))
+                    return topId;
+            }
+            return texture;
         }),
         SLAB((id, block) -> {
             if (!id.getPath().endsWith("_slab")) return null;
             var material = ((AbstractBlockAccessor) block).getMaterial();
             if (material != Material.WOOD && material != Material.NETHER_WOOD) return null;
             return id.getPath().substring(0, id.getPath().length() - "_slab".length());
-        }),
+        }, BASIC_TEXTURE_PROVIDER, BASIC_TEXTURE_PROVIDER),
         LEAVES((id, block) -> {
             String leavesType;
             if (AuroraUtil.idEqual(id, "minecraft", "nether_wart_block"))
@@ -302,17 +342,29 @@ public final class WoodType {
             if (id.getPath().startsWith("flowering")) return null;
 
             return id.getPath().substring(0, id.getPath().length() - leavesType.length());
-        });
+        }, BASIC_TEXTURE_PROVIDER, BASIC_TEXTURE_PROVIDER);
 
         private static final List<ComponentType> COMPONENT_TYPES = List.of(values());
         private final Filter filter;
+        private final TextureProvider textureProvider;
+        private final TextureProvider topTextureProvider;
 
-        ComponentType(Filter filter) {
+        ComponentType(Filter filter, TextureProvider textureProvider, TextureProvider topTextureProvider) {
             this.filter = filter;
+            this.textureProvider = textureProvider;
+            this.topTextureProvider = topTextureProvider;
         }
 
         public @Nullable String filter(Identifier id, Block block) {
             return this.filter.filter(id, block);
+        }
+
+        public Identifier getTexture(ResourceManager resourceManager, Component component) {
+            return this.textureProvider.searchTexture(resourceManager, component);
+        }
+
+        public Identifier getTopTexture(ResourceManager resourceManager, Component component) {
+            return this.topTextureProvider.searchTexture(resourceManager, component);
         }
 
         public static List<ComponentType> types() {
@@ -322,6 +374,12 @@ public final class WoodType {
 
     public interface Filter {
         @Nullable String filter(Identifier id, Block block);
+    }
+
+    public static final TextureProvider BASIC_TEXTURE_PROVIDER = (resourceManager, component) -> component.texture();
+
+    public interface TextureProvider {
+        Identifier searchTexture(ResourceManager resourceManager, Component component);
     }
 
     private record ModificationCallbackEntry(Consumer<WoodType> callback, List<ComponentType> requiredComponents) {

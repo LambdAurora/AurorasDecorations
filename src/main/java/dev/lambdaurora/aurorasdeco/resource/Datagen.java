@@ -44,6 +44,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.ShapedRecipe;
+import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.util.Identifier;
@@ -553,10 +554,10 @@ public final class Datagen {
         }
     }
 
-    public static void generateClientData(LangBuilder langBuilder) {
-        generateBenchesClientData(langBuilder);
-        generateShelvesClientData(langBuilder);
-        generateStumpsClientData(langBuilder);
+    public static void generateClientData(ResourceManager resourceManager, LangBuilder langBuilder) {
+        generateBenchesClientData(resourceManager, langBuilder);
+        generateShelvesClientData(resourceManager, langBuilder);
+        generateStumpsClientData(resourceManager, langBuilder);
 
         SleepingBagBlock.forEach(sleepingBag -> {
             var color = sleepingBag.getColor();
@@ -619,7 +620,7 @@ public final class Datagen {
         });
     }
 
-    private static void generateBenchesClientData(LangBuilder langBuilder) {
+    private static void generateBenchesClientData(ResourceManager resourceManager, LangBuilder langBuilder) {
         BenchBlock.streamBenches().forEach(block -> {
             var builder = multipartBlockStateBuilder(block);
             var restBuilder = new MultipartBlockStateBuilder(AurorasDeco.id(Registry.BLOCK.getId(block).getPath() + "_rest"));
@@ -627,7 +628,7 @@ public final class Datagen {
             var pathName = block.getWoodType().getPathName();
             var blockPathName = "block/bench/" + pathName;
             var planksTexture = block.getWoodType().getComponent(WoodType.ComponentType.PLANKS).texture();
-            var logSideTexture = block.getWoodType().getLogSideTexture();
+            var logSideTexture = block.getWoodType().getLogSideTexture(resourceManager);
             var seatModel = modelBuilder(BenchBlock.BENCH_SEAT_MODEL)
                     .texture("planks", planksTexture)
                     .register(block);
@@ -674,20 +675,20 @@ public final class Datagen {
 
             registerBetterGrassLayer(block, BenchBlock.BENCH_BETTERGRASS_DATA);
 
-            langBuilder.addEntry("item.aurorasdeco.seat_rest." + block.getWoodType().getLangPath(),
+            langBuilder.addEntry("item.aurorasdeco.seat_rest." + block.getWoodType().getAbsoluteLangPath(),
                     "item.aurorasdeco.seat_rest", "aurorasdeco.wood_type." + block.getWoodType().getLangPath());
-            langBuilder.addEntry("block.aurorasdeco.bench." + block.getWoodType().getLangPath(),
+            langBuilder.addEntry("block.aurorasdeco.bench." + block.getWoodType().getAbsoluteLangPath(),
                     "block.aurorasdeco.bench", "aurorasdeco.wood_type." + block.getWoodType().getLangPath());
         });
     }
 
-    private static void generateShelvesClientData(LangBuilder langBuilder) {
+    private static void generateShelvesClientData(ResourceManager resourceManager, LangBuilder langBuilder) {
         ShelfBlock.streamShelves().forEach(block -> {
             var woodPathName = block.getWoodType().getPathName();
             var builder = blockStateBuilder(block);
 
             var planksTexture = block.getWoodType().getComponent(WoodType.ComponentType.PLANKS).texture();
-            var logTexture = block.getWoodType().getLogSideTexture();
+            var logTexture = block.getWoodType().getLogSideTexture(resourceManager);
             var models = new Object2ObjectOpenHashMap<ShelfBlock.PartType, Identifier>();
             for (var partType : ShelfBlock.PartType.getValues()) {
                 var model = modelBuilder(id("block/template/shelf_" + partType.asString()))
@@ -715,18 +716,18 @@ public final class Datagen {
 
             Datagen.registerBetterGrassLayer(AurorasDeco.id("shelf/" + woodPathName), Datagen.SHELF_BETTERGRASS_DATA);
 
-            langBuilder.addEntry("block.aurorasdeco.shelf." + block.getWoodType().getLangPath(),
+            langBuilder.addEntry("block.aurorasdeco.shelf." + block.getWoodType().getAbsoluteLangPath(),
                     "block.aurorasdeco.shelf", "aurorasdeco.wood_type." + block.getWoodType().getLangPath());
         });
     }
 
-    private static void generateStumpsClientData(LangBuilder langBuilder) {
+    private static void generateStumpsClientData(ResourceManager resourceManager, LangBuilder langBuilder) {
         StumpBlock.streamLogStumps().forEach(block -> {
             var builder = blockStateBuilder(block);
 
             Identifier model;
-            var logSideTexture = block.getWoodType().getLogSideTexture();
-            var logTopTexture = block.getWoodType().getLogTopTexture();
+            var logSideTexture = block.getWoodType().getLogSideTexture(resourceManager);
+            var logTopTexture = block.getWoodType().getLogTopTexture(resourceManager);
             if (block.getWoodType().getLogType().equals("stem")) {
                 Identifier leavesTexture;
                 var component = block.getWoodType().getComponent(WoodType.ComponentType.LEAVES);
@@ -778,7 +779,7 @@ public final class Datagen {
 
             registerBetterGrassLayer(block, StumpBlock.STUMP_BETTERGRASS_DATA);
 
-            langBuilder.addEntry("block.aurorasdeco.stump." + block.getWoodType().getLangPath(),
+            langBuilder.addEntry("block.aurorasdeco.stump." + block.getWoodType().getAbsoluteLangPath(),
                     "block.aurorasdeco.stump", "aurorasdeco.wood_type." + block.getWoodType().getLangPath());
         });
     }

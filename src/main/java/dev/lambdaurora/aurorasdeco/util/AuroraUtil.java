@@ -31,6 +31,14 @@ public final class AuroraUtil {
         throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");
     }
 
+    public static Identifier toResourcePackId(Identifier id, String prefix, String extension) {
+        return new Identifier(id.getNamespace(), prefix + id.getPath() + '.' + extension);
+    }
+
+    public static Identifier toAbsoluteTexturesId(Identifier id) {
+        return toResourcePackId(id, "textures/", "png");
+    }
+
     public static <T> boolean contains(Collection<T> list, List<T> required) {
         int i = 0;
         var it = list.iterator();

@@ -30,7 +30,7 @@ public class AurorasDecoPackCreator implements ResourcePackProvider {
     public void register(Consumer<ResourcePackProfile> consumer, ResourcePackProfile.Factory factory) {
         consumer.accept(ResourcePackProfile.of("aurorasdeco:pack/runtime",
                 true,
-                () -> AurorasDeco.RESOURCE_PACK.rebuild(ResourceType.SERVER_DATA),
+                () -> AurorasDeco.RESOURCE_PACK.rebuild(ResourceType.SERVER_DATA, null),
                 factory, ResourcePackProfile.InsertionPosition.TOP, ResourcePackSource.onlyName()));
     }
 }

@@ -35,6 +35,7 @@ import net.fabricmc.fabric.impl.resource.loader.ModResourcePackUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.resource.AbstractFileResourcePack;
+import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.resource.metadata.ResourceMetadataReader;
 import net.minecraft.util.Identifier;
@@ -69,11 +70,11 @@ public class AurorasDecoPack implements ModResourcePack {
         this.type = type;
     }
 
-    public AurorasDecoPack rebuild(ResourceType type) {
-        return type == ResourceType.CLIENT_RESOURCES ? this.rebuildClient() : this.rebuildData();
+    public AurorasDecoPack rebuild(ResourceType type, @Nullable ResourceManager resourceManager) {
+        return type == ResourceType.CLIENT_RESOURCES ? this.rebuildClient(resourceManager) : this.rebuildData();
     }
 
-    public AurorasDecoPack rebuildClient() {
+    public AurorasDecoPack rebuildClient(ResourceManager resourceManager) {
         var langBuilder = new LangBuilder();
         langBuilder.load();
 
@@ -97,7 +98,7 @@ public class AurorasDecoPack implements ModResourcePack {
                     Datagen.registerBetterGrassLayer(id, BigFlowerPotBlock.POT_BETTERGRASS_DATA);
                 });
 
-        Datagen.generateClientData(langBuilder);
+        Datagen.generateClientData(resourceManager, langBuilder);
 
         langBuilder.write(this);
 
