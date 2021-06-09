@@ -1,0 +1,14 @@
+{
+  "defaultMap": {
+    "spriteMap": [
+      {
+        "sprite": "aurorasdeco:block/copper_sulfate_campfire_fire",
+        "material": "canvas:emissive_no_diffuse"
+      },
+      {
+        "sprite": "aurorasdeco:block/brazier/copper_sulfate_coal_lit",
+        "material": "canvas:warm_glow"
+      }
+    ]
+  }
+}

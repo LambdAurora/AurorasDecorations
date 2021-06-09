@@ -1,0 +1,14 @@
+{
+  "defaultMap": {
+    "spriteMap": [
+      {
+        "sprite": "minecraft:block/campfire_fire",
+        "material": "canvas:emissive_no_diffuse"
+      },
+      {
+        "sprite": "aurorasdeco:block/brazier/coal_lit",
+        "material": "canvas:warm_glow"
+      }
+    ]
+  }
+}
