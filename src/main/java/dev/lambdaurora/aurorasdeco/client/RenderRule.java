@@ -123,7 +123,7 @@ public record RenderRule(List<Model> models) {
         ITEM_RULES.clear();
         TAG_RULES.clear();
 
-        manager.findResources("aurorasdeco_render_rules/", path -> path.endsWith(".json")).forEach(id -> {
+        manager.findResources("aurorasdeco_render_rules", path -> path.endsWith(".json")).forEach(id -> {
             try {
                 var resource = manager.getResource(id);
                 var element = PARSER.parse(new InputStreamReader(resource.getInputStream()));
