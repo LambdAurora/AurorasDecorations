@@ -61,7 +61,8 @@ public abstract class LivingEntityMixin extends Entity {
                     value = "INVOKE",
                     target = "Lnet/minecraft/block/BlockState;getBlock()Lnet/minecraft/block/Block;"
             ),
-            locals = LocalCapture.CAPTURE_FAILHARD
+            locals = LocalCapture.CAPTURE_FAILHARD,
+            remap = false
     )
     private void onWakeUp(BlockPos pos, CallbackInfo ci, BlockState state) {
         if (state.getBlock() instanceof SleepingBagBlock) {
@@ -81,7 +82,8 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(
             method = "method_18405",
             at = @At("HEAD"),
-            cancellable = true
+            cancellable = true,
+            remap = false
     )
     private void onIsSleepingInBed(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         if (this.world.getBlockState(pos).getBlock() instanceof SleepingBagBlock)

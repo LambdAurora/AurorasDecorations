@@ -500,7 +500,7 @@ public final class Datagen {
                 var crafting = new ShapedRecipe(
                         id("bench/" + block.getWoodType().getPathName()),
                         "bench", 3, 2,
-                        DefaultedList.copyOf(Ingredient.EMPTY, slab, slab, slab, stick, Ingredient.EMPTY, stick, Ingredient.EMPTY),
+                        DefaultedList.copyOf(Ingredient.EMPTY, slab, slab, slab, stick, Ingredient.EMPTY, stick),
                         new ItemStack(block, 2));
                 registerRecipe(crafting, "decorations");
             }
