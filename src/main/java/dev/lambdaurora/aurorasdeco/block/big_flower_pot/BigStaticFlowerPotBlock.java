@@ -24,10 +24,10 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
-public class BigStaticFlowerPot extends BigFlowerPotBlock {
+public class BigStaticFlowerPotBlock extends BigFlowerPotBlock {
     private final VoxelShape shape;
 
-    public BigStaticFlowerPot(PottedPlantType type, VoxelShape shape) {
+    public BigStaticFlowerPotBlock(PottedPlantType type, VoxelShape shape) {
         super(type);
 
         this.shape = VoxelShapes.union(shape, BIG_FLOWER_POT_SHAPE);

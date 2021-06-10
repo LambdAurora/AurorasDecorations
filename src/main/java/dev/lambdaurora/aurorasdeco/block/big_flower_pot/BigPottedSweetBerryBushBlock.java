@@ -18,6 +18,7 @@
 package dev.lambdaurora.aurorasdeco.block.big_flower_pot;
 
 import dev.lambdaurora.aurorasdeco.mixin.BlockAccessor;
+import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -30,7 +31,6 @@ import net.minecraft.item.Items;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -41,7 +41,6 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Consumer;
@@ -66,12 +65,12 @@ public class BigPottedSweetBerryBushBlock extends BigFlowerPotBlock implements F
         ((BlockAccessor) this.getPlant()).aurorasdeco$appendProperties(builder);
         ((BlockAccessor) this).setStateManager(builder.build(Block::getDefaultState, BlockState::new));
 
-        this.setDefaultState(remap(type.getPlant().getDefaultState(), this.stateManager.getDefaultState()));
+        this.setDefaultState(AuroraUtil.remapBlockState(type.getPlant().getDefaultState(), this.stateManager.getDefaultState()));
     }
 
     @Override
     public BlockState getPlantState(BlockState potState) {
-        return remap(potState, super.getPlantState(potState));
+        return AuroraUtil.remapBlockState(potState, super.getPlantState(potState));
     }
 
     /* Shapes */
@@ -146,36 +145,11 @@ public class BigPottedSweetBerryBushBlock extends BigFlowerPotBlock implements F
         ((Fertilizable) this.getPlant()).grow(world, random, pos, state);
     }
 
-    private static BlockState remap(BlockState src, BlockState dst) {
-        for (var property : src.getProperties()) {
-            dst = remapProperty(src, property, dst);
-        }
-        return dst;
-    }
-
-    private static <T extends Comparable<T>> BlockState remapProperty(BlockState src, Property<T> property, BlockState dst) {
-        if (dst.contains(property))
-            dst = dst.with(property, src.get(property));
-        return dst;
-    }
-
     private VoxelShape shape(BlockState state, BlockView world, BlockPos pos) {
         var plantShape = this.getPlant().getOutlineShape(state, world, pos, ShapeContext.absent());
         float ratio = .65f;
         float offset = (1.f - ratio) / 2.f;
-        return VoxelShapes.union(BIG_FLOWER_POT_SHAPE, resize(plantShape, ratio).offset(offset, .8f, offset));
-    }
-
-    private static VoxelShape resize(VoxelShape shape, double factor) {
-        var shapes = new ArrayList<VoxelShape>();
-        shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
-            shapes.add(VoxelShapes.cuboid(minX * factor, minY * factor, minZ * factor,
-                    maxX * factor, maxY * factor, maxZ * factor));
-        });
-
-        if (shapes.size() == 1)
-            return shapes.get(0);
-        return shapes.stream().collect(VoxelShapes::empty, VoxelShapes::union, VoxelShapes::union).simplify();
+        return VoxelShapes.union(BIG_FLOWER_POT_SHAPE, AuroraUtil.resizeVoxelShape(plantShape, ratio).offset(offset, .8f, offset));
     }
 
     static {

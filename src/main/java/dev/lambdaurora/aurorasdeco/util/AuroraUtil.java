@@ -20,9 +20,14 @@ package dev.lambdaurora.aurorasdeco.util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import net.minecraft.block.BlockState;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -77,6 +82,37 @@ public final class AuroraUtil {
             path = id.getNamespace() + '/' + path;
         return AurorasDeco.id(prefix + '/' + path);
     }
+
+    /* State Utils */
+
+    public static BlockState remapBlockState(BlockState src, BlockState dst) {
+        for (var property : src.getProperties()) {
+            dst = remapProperty(src, property, dst);
+        }
+        return dst;
+    }
+
+    private static <T extends Comparable<T>> BlockState remapProperty(BlockState src, Property<T> property, BlockState dst) {
+        if (dst.contains(property))
+            dst = dst.with(property, src.get(property));
+        return dst;
+    }
+
+    /* Shape Utils */
+
+    public static VoxelShape resizeVoxelShape(VoxelShape shape, double factor) {
+        var shapes = new ArrayList<VoxelShape>();
+        shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
+            shapes.add(VoxelShapes.cuboid(minX * factor, minY * factor, minZ * factor,
+                    maxX * factor, maxY * factor, maxZ * factor));
+        });
+
+        if (shapes.size() == 1)
+            return shapes.get(0);
+        return shapes.stream().collect(VoxelShapes::empty, VoxelShapes::union, VoxelShapes::union).simplify();
+    }
+
+    /* Json Utils */
 
     public static JsonArray jsonArray(Object... elements) {
         var array = new JsonArray();

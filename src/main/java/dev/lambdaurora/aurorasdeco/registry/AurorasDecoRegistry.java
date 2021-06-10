@@ -126,9 +126,9 @@ public final class AurorasDecoRegistry {
     public static final BigPottedCactusBlock BIG_POTTED_CACTUS_BLOCK = registerBigPotted("cactus",
             Blocks.CACTUS, Items.CACTUS,
             type -> new BigPottedCactusBlock(type, BigPottedCactusBlock.CACTUS_SHAPE));
-    public static final BigStaticFlowerPot BIG_POTTED_BAMBOO_BLOCK = registerBigPotted("bamboo",
+    public static final BigStaticFlowerPotBlock BIG_POTTED_BAMBOO_BLOCK = registerBigPotted("bamboo",
             Blocks.AIR, Items.BAMBOO,
-            type -> new BigStaticFlowerPot(type, Block.createCuboidShape(
+            type -> new BigStaticFlowerPotBlock(type, Block.createCuboidShape(
                     7.f, 14.f, 7.f,
                     9.f, 29.f, 9.f
             )));
@@ -142,9 +142,9 @@ public final class AurorasDecoRegistry {
             registerBigPotted("sweet_berry_bush",
                     Blocks.SWEET_BERRY_BUSH, Items.SWEET_BERRIES,
                     BigPottedSweetBerryBushBlock::new);
-    public static final BigStaticFlowerPot BIG_POTTED_TATER_BLOCK = registerBigPotted("tater",
+    public static final BigStaticFlowerPotBlock BIG_POTTED_TATER_BLOCK = registerBigPotted("tater",
             Blocks.AIR, Items.POTATO,
-            type -> new BigStaticFlowerPot(type, Block.createCuboidShape(
+            type -> new BigStaticFlowerPotBlock(type, Block.createCuboidShape(
                     4.f, 14.f, 4.f,
                     12.f, 21.f, 12.f
             )));

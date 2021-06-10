@@ -19,14 +19,7 @@ package dev.lambdaurora.aurorasdeco.block.big_flower_pot;
 
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
-import net.minecraft.client.color.world.BiomeColors;
-import net.minecraft.client.color.world.GrassColors;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -36,7 +29,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -92,6 +84,8 @@ public final class PottedPlantType {
     public static BigFlowerPotBlock register(String id, Block plant, Item item) {
         if (id.equals("ecotones/blueberry_bush") || plant instanceof SweetBerryBushBlock) // Love ecotones <3
             return register(id, plant, item, BigPottedSweetBerryBushBlock::new);
+        //else if (plant instanceof SeaPickleBlock)
+        //    return register(id, plant, item, BigPottedSeaPickleBlock::new);
         return register(id, plant, item, BigFlowerPotBlock::new);
     }
 

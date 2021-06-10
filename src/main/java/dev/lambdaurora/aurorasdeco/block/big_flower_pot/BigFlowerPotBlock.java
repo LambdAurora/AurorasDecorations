@@ -55,7 +55,7 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class BigFlowerPotBlock extends Block {
+public class BigFlowerPotBlock extends Block/* implements FluidFillable*/ {
     private static final Identifier PLANT = AurorasDeco.id("plant");
 
     public static final VoxelShape BIG_FLOWER_POT_SHAPE = createCuboidShape(
@@ -73,10 +73,14 @@ public class BigFlowerPotBlock extends Block {
 
     protected final PottedPlantType type;
 
-    public BigFlowerPotBlock(PottedPlantType type) {
-        super(FabricBlockSettings.of(Material.DECORATION).strength(.1f).nonOpaque());
+    public BigFlowerPotBlock(PottedPlantType type, Settings settings) {
+        super(settings);
 
         this.type = type;
+    }
+
+    public BigFlowerPotBlock(PottedPlantType type) {
+        this(type, FabricBlockSettings.of(Material.DECORATION).strength(.1f).nonOpaque());
     }
 
     public PottedPlantType getPlantType() {
@@ -89,6 +93,12 @@ public class BigFlowerPotBlock extends Block {
 
     public BlockState getPlantState(BlockState potState) {
         return this.getPlant().getDefaultState();
+    }
+
+    public @Nullable ItemStack getEquivalentPlantStack(BlockState state) {
+        var item = this.getPlantType().getItem();
+        if (item == null) return null;
+        return new ItemStack(item);
     }
 
     public boolean isEmpty() {
@@ -137,7 +147,7 @@ public class BigFlowerPotBlock extends Block {
                 world.setBlockState(up, AurorasDecoRegistry.PLANT_AIR_BLOCK.getDefaultState());
                 world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
             } else {
-                this.removePlant(world, pos, player, hand, true);
+                this.removePlant(world, pos, state, player, hand, true);
             }
 
             return ActionResult.success(world.isClient());
@@ -146,10 +156,10 @@ public class BigFlowerPotBlock extends Block {
         }
     }
 
-    private void removePlant(World world, BlockPos pos, @Nullable PlayerEntity player, @Nullable Hand hand, boolean removeUp) {
-        var droppedStack = new ItemStack(this.getPlantType().getItem());
+    private void removePlant(World world, BlockPos pos, BlockState state, @Nullable PlayerEntity player, @Nullable Hand hand, boolean removeUp) {
+        var droppedStack = this.getEquivalentPlantStack(state);
 
-        if (!droppedStack.isEmpty()) {
+        if (droppedStack != null && !droppedStack.isEmpty()) {
             if (player != null) {
                 var handStack = player.getStackInHand(hand);
                 if (handStack.isEmpty()) {
@@ -182,9 +192,9 @@ public class BigFlowerPotBlock extends Block {
     /* Loot table */
 
     protected void acceptPlantDrops(BlockState state, LootContext.Builder builder, Consumer<ItemStack> consumer) {
-        var item = this.getPlantType().getItem();
+        var item = this.getEquivalentPlantStack(state);
         if (item != null) {
-            consumer.accept(new ItemStack(item));
+            consumer.accept(item);
         }
     }
 
@@ -199,6 +209,26 @@ public class BigFlowerPotBlock extends Block {
 
         return AurorasDecoRegistry.BIG_FLOWER_POT_BLOCK.getDroppedStacks(state, builder);
     }
+
+    /* Fluid */
+
+    /*@Override
+    public boolean canFillWithFluid(BlockView world, BlockPos pos, BlockState state, Fluid fluid) {
+        return state.contains(Properties.WATERLOGGED) && !state.get(Properties.WATERLOGGED) && fluid == Fluids.WATER;
+    }
+
+    @Override
+    public boolean tryFillWithFluid(WorldAccess world, BlockPos pos, BlockState state, FluidState fluidState) {
+        if (state.contains(Properties.WATERLOGGED) && !state.get(Properties.WATERLOGGED) && fluidState.getFluid() == Fluids.WATER) {
+            if (!world.isClient()) {
+                world.setBlockState(pos, state.with(Properties.WATERLOGGED, Boolean.TRUE), Block.NOTIFY_ALL);
+                world.getFluidTickScheduler().schedule(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
+            }
+
+            return true;
+        } else
+            return false;
+    }*/
 
     public static class PlantAir extends Block {
         public PlantAir(Settings settings) {
@@ -231,7 +261,7 @@ public class BigFlowerPotBlock extends Block {
             var downPos = pos.down();
             var downState = world.getBlockState(downPos);
             if (downState.getBlock() instanceof BigFlowerPotBlock block && !block.isEmpty()) {
-                block.removePlant(world, downPos, null, null, false);
+                block.removePlant(world, downPos, downState, null, null, false);
             }
         }
 
