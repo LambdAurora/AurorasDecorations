@@ -1,8 +1,8 @@
 pluginManagement {
     repositories {
         maven {
-            name = 'Quilt'
-            url = 'https://maven.quiltmc.org/repository/release'
+            name 'Quilt'
+            url 'https://maven.quiltmc.org/repository/release'
         }
         gradlePluginPortal()
     }
