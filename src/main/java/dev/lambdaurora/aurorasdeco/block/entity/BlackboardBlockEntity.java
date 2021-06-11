@@ -174,8 +174,11 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
 
         int light = this.blackboard.isLit() ? 0xf000f0 : 0;
         this.mesh = this.blackboard.buildMesh(this.getCachedState().get(BlackboardBlock.FACING), light);
-        var pos = ChunkSectionPos.from(this.getPos());
-        ((ClientWorld) this.world).scheduleBlockRenders(pos.getX(), pos.getY(), pos.getZ());
+        ((ClientWorld) this.world).scheduleBlockRenders(
+                ChunkSectionPos.getSectionCoord(this.getPos().getX()),
+                ChunkSectionPos.getSectionCoord(this.getPos().getY()),
+                ChunkSectionPos.getSectionCoord(this.getPos().getZ())
+        );
     }
 
     @Override

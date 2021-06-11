@@ -67,8 +67,11 @@ public class BenchBlockEntity extends BlockEntity implements BlockEntityClientSe
 
         this.update();
         if (this.world instanceof ClientWorld clientWorld) {
-            var pos = ChunkSectionPos.from(this.getPos());
-            clientWorld.scheduleBlockRenders(pos.getX(), pos.getY(), pos.getZ());
+            clientWorld.scheduleBlockRenders(
+                    ChunkSectionPos.getSectionCoord(this.getPos().getX()),
+                    ChunkSectionPos.getSectionCoord(this.getPos().getY()),
+                    ChunkSectionPos.getSectionCoord(this.getPos().getZ())
+            );
         }
         this.markDirty();
     }
@@ -148,8 +151,11 @@ public class BenchBlockEntity extends BlockEntity implements BlockEntityClientSe
     public void fromClientTag(NbtCompound nbt) {
         this.readBenchNbt(nbt);
 
-        var pos = ChunkSectionPos.from(this.getPos());
-        ((ClientWorld) this.world).scheduleBlockRenders(pos.getX(), pos.getY(), pos.getZ());
+        ((ClientWorld) this.world).scheduleBlockRenders(
+                ChunkSectionPos.getSectionCoord(this.getPos().getX()),
+                ChunkSectionPos.getSectionCoord(this.getPos().getY()),
+                ChunkSectionPos.getSectionCoord(this.getPos().getZ())
+        );
     }
 
     @Override
