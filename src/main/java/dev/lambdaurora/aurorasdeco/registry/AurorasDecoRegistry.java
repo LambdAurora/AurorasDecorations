@@ -20,6 +20,7 @@ package dev.lambdaurora.aurorasdeco.registry;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.accessor.BlockEntityTypeAccessor;
+import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
 import dev.lambdaurora.aurorasdeco.accessor.ItemExtensions;
 import dev.lambdaurora.aurorasdeco.advancement.PetUsePetBedCriterion;
 import dev.lambdaurora.aurorasdeco.block.*;
@@ -34,6 +35,7 @@ import dev.lambdaurora.aurorasdeco.recipe.BlackboardCloneRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
 import dev.lambdaurora.aurorasdeco.screen.SawmillScreenHandler;
 import dev.lambdaurora.aurorasdeco.screen.ShelfScreenHandler;
+import dev.lambdaurora.aurorasdeco.util.RegistrationHelper;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.advancement.CriterionRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -68,8 +70,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
 
-import java.util.ArrayList;
-import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -217,6 +217,9 @@ public final class AurorasDecoRegistry {
             new CopperSulfateBrazierBlock(FabricBlockSettings.copyOf(BRAZIER_BLOCK).mapColor(MapColor.EMERALD_GREEN).luminance(14),
                     2, COPPER_SULFATE_FLAME),
             new FabricItemSettings().group(ItemGroup.DECORATIONS));
+
+    public static final HangingFlowerPotBlock HANGING_FLOWER_POT_BLOCK = register("hanging_flower_pot",
+            new HangingFlowerPotBlock((FlowerPotBlock) Blocks.FLOWER_POT));
 
     public static final FenceLikeWallBlock POLISHED_BASALT_WALL = registerWithItem("polished_basalt_wall",
             new FenceLikeWallBlock(FabricBlockSettings.copyOf(Blocks.POLISHED_BASALT)),
@@ -384,32 +387,35 @@ public final class AurorasDecoRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    public static void init(Map<Identifier, Block> delayed) {
+    public static void init() {
         ((BlockEntityTypeAccessor) BlockEntityType.CAMPFIRE).aurorasdeco$addSupportedBlock(COPPER_SULFATE_CAMPFIRE_BLOCK);
+        ((BlockItemAccessor) Items.FLOWER_POT).aurorasdeco$setCeilingBlock(HANGING_FLOWER_POT_BLOCK);
+        Item.BLOCK_ITEMS.put(HANGING_FLOWER_POT_BLOCK, Items.FLOWER_POT);
 
-        var plants = new ArrayList<BigFlowerPotBlock>();
+        RegistrationHelper.BLOCK.addRegistrationCallback((helper, id, block) -> {
+            if (PottedPlantType.isValidPlant(block)) {
+                var potBlock = PottedPlantType.registerFromBlock(block);
+                if (potBlock != null)
+                    helper.register("big_flower_pot/" + potBlock.getPlantType().getId(), potBlock);
+            } else if (block instanceof FlowerPotBlock flowerPotBlock) {
+                if (block == Blocks.FLOWER_POT) return;
 
-        ((SimpleRegistryAccessor<Block>) Registry.BLOCK).getIdToEntry()
-                .forEach((id, block) -> {
-                    if (PottedPlantType.isValidPlant(block)) {
-                        var potBlock = PottedPlantType.registerFromBlock(block);
-                        if (potBlock != null)
-                            plants.add(potBlock);
-                    } else {
-                        WoodType.onBlockRegister(id, block);
-                        LanternRegistry.tryRegisterWallLantern(block, id);
-                    }
-                });
+                RegistrationHelper.BLOCK.register(RegistrationHelper.getIdPath("hanging_flower_pot", id, "^potted_"),
+                        new HangingFlowerPotBlock(flowerPotBlock));
+            } else {
+                WoodType.onBlockRegister(id, block);
+                LanternRegistry.tryRegisterWallLantern(block, id);
+            }
+        });
+
+        RegistrationHelper.BLOCK.init();
+
         ((SimpleRegistryAccessor<Item>) Registry.ITEM).getIdToEntry()
                 .forEach(Blackboard.Color::tryRegisterColorFromItem);
-
-        plants.forEach(pot -> register("big_flower_pot/" + pot.getPlantType().getId(), pot));
 
         Registry.ITEM.getOrEmpty(new Identifier("pockettools", "pocket_cactus"))
                 .ifPresent(pocketCactus -> registerBigPotted("pocket_cactus", Blocks.POTTED_CACTUS, pocketCactus,
                         type -> new BigPottedCactusBlock(type, BigPottedCactusBlock.POCKET_CACTUS_SHAPE)));
-
-        delayed.forEach((id, block) -> Registry.register(Registry.BLOCK, id, block));
 
         var colors = DyeColor.values();
         for (var color : colors) {

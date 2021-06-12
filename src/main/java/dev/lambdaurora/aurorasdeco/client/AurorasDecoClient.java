@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.client;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
+import dev.lambdaurora.aurorasdeco.block.HangingFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.StumpBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.client.particle.AmethystGlintParticle;
@@ -122,6 +123,12 @@ public class AurorasDecoClient implements ClientModInitializer {
                                 ColorProviderRegistry.BLOCK.register(originalColorProvider, plantType.getPot());
                         }
                     });
+            HangingFlowerPotBlock.stream().forEach(block -> {
+                BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout());
+                var colorProvider = ColorProviderRegistry.BLOCK.get(block.getFlowerPot());
+                if (colorProvider != null)
+                    ColorProviderRegistry.BLOCK.register(colorProvider, block);
+            });
             StumpBlock.streamLogStumps()
                     .forEach(block -> {
                         var leavesComponent = block.getWoodType().getComponent(WoodType.ComponentType.LEAVES);

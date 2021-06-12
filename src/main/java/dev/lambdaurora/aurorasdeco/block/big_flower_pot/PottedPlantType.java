@@ -160,7 +160,7 @@ public final class PottedPlantType {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || this.getClass() != o.getClass()) return false;
-        PottedPlantType that = (PottedPlantType) o;
+        var that = (PottedPlantType) o;
         return this.getId().equals(that.getId()) && this.getPlant().equals(that.getPlant()) && Objects.equals(this.getItem(), that.getItem());
     }
 

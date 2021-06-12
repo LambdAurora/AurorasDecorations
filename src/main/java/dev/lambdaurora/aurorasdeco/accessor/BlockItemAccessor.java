@@ -23,4 +23,7 @@ import org.jetbrains.annotations.ApiStatus;
 public interface BlockItemAccessor {
     @ApiStatus.Internal
     void aurorasdeco$setWallBlock(Block block);
+
+    @ApiStatus.Internal
+    void aurorasdeco$setCeilingBlock(Block block);
 }

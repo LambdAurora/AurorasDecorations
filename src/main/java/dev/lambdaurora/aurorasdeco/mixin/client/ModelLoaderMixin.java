@@ -85,9 +85,12 @@ public abstract class ModelLoaderMixin {
                     } else if (modelId.getPath().startsWith("big_flower_pot/")) {
                         var potBlock = PottedPlantType.fromId(modelId.getPath().substring("big_flower_pot/".length())).getPot();
                         if (potBlock.hasDynamicModel()) {
-                            this.putModel(id, new UnbakedBigFlowerPotModel(unbakedModel));
+                            this.putModel(id, new UnbakedForwardingModel(unbakedModel, BakedBigFlowerPotModel::new));
                             ci.cancel();
                         }
+                    } else if (modelId.getPath().startsWith("hanging_flower_pot")) {
+                        this.putModel(id, new UnbakedForwardingModel(unbakedModel, BakedHangingFlowerPotModel::new));
+                        ci.cancel();
                     } else if (modelId.getPath().endsWith("board")) {
                         this.putModel(id, new UnbakedBlackboardModel(unbakedModel));
                         ci.cancel();

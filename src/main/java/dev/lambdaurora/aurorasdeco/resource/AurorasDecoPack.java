@@ -23,6 +23,7 @@ import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.BenchBlock;
+import dev.lambdaurora.aurorasdeco.block.HangingFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.ShelfBlock;
 import dev.lambdaurora.aurorasdeco.block.StumpBlock;
 import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
@@ -113,6 +114,9 @@ public class AurorasDecoPack implements ModResourcePack {
         BenchBlock.streamBenches().forEach(Datagen::registerBenchBlockLootTable);
         ShelfBlock.streamShelves().forEach(Datagen::registerShelfBlockLootTable);
         StumpBlock.streamLogStumps().forEach(Datagen::dropsSelf);
+
+        this.registerTag(new String[]{"blocks"}, new Identifier("flower_pots"), HangingFlowerPotBlock.stream()
+                .map(Registry.BLOCK::getId));
 
         this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("benches"), BenchBlock.streamBenches()
                 .map(Registry.BLOCK::getId));

@@ -62,7 +62,7 @@ import java.util.stream.Stream;
  * @since 1.0.0
  */
 public class BenchBlock extends Block implements BlockEntityProvider, SeatBlock, Waterloggable {
-    public static final EnumProperty<Direction> FACING = Properties.FACING;
+    public static final EnumProperty<Direction> FACING = Properties.HORIZONTAL_FACING;
     public static final BooleanProperty LEFT_LEGS = BooleanProperty.of("left_legs");
     public static final BooleanProperty RIGHT_LEGS = BooleanProperty.of("right_legs");
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;

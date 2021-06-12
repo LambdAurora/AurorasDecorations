@@ -30,6 +30,7 @@ import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
 import dev.lambdaurora.aurorasdeco.mixin.AbstractBlockAccessor;
 import dev.lambdaurora.aurorasdeco.recipe.RecipeSerializerExtended;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import dev.lambdaurora.aurorasdeco.resource.datagen.*;
@@ -573,6 +574,15 @@ public final class Datagen {
 
                     Datagen.registerBetterGrassLayer(id, BigFlowerPotBlock.POT_BETTERGRASS_DATA);
                 });
+        HangingFlowerPotBlock.stream().forEach(block -> {
+            if (block == AurorasDecoRegistry.HANGING_FLOWER_POT_BLOCK) return;
+
+            var id = Registry.BLOCK.getId(block);
+            blockStateBuilder(block)
+                    .addToVariant("", HangingFlowerPotBlock.HANGING_FLOWER_POT_ATTACHMENT_MODEL)
+                    .register();
+            Datagen.registerBetterGrassLayer(id, HangingFlowerPotBlock.BETTER_GRASS_DATA);
+        });
 
         SleepingBagBlock.forEach(sleepingBag -> {
             var color = sleepingBag.getColor();
