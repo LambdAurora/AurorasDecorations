@@ -84,6 +84,8 @@ public final class PottedPlantType {
     public static BigFlowerPotBlock register(String id, Block plant, Item item) {
         if (id.equals("ecotones/blueberry_bush") || plant instanceof SweetBerryBushBlock) // Love ecotones <3
             return register(id, plant, item, BigPottedSweetBerryBushBlock::new);
+        else if (plant instanceof NetherWartBlock)
+            return register(id, plant, item, BigPottedNetherWartBlock::new);
         //else if (plant instanceof SeaPickleBlock)
         //    return register(id, plant, item, BigPottedSeaPickleBlock::new);
         return register(id, plant, item, BigFlowerPotBlock::new);

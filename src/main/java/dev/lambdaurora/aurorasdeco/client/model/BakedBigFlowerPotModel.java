@@ -18,7 +18,7 @@
 package dev.lambdaurora.aurorasdeco.client.model;
 
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
-import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigPottedSweetBerryBushBlock;
+import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigPottedProxyBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
@@ -65,7 +65,7 @@ public class BakedBigFlowerPotModel extends ForwardingBakedModel {
             float ratio = .65f;
             float offset = (1.f - ratio) / 2.f;
 
-            if (!(potBlock instanceof BigPottedSweetBerryBushBlock))
+            if (!(potBlock instanceof BigPottedProxyBlock))
                 for (var property : plantState.getProperties()) {
                     if (property instanceof IntProperty ageProperty && property.getName().equals("age")) {
                         var max = ageProperty.getValues().stream().max(Integer::compareTo);

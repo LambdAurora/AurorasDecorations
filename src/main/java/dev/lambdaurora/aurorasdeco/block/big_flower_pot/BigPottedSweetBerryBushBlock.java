@@ -17,33 +17,23 @@
 
 package dev.lambdaurora.aurorasdeco.block.big_flower_pot;
 
-import dev.lambdaurora.aurorasdeco.mixin.BlockAccessor;
-import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Fertilizable;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.loot.context.LootContext;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-import java.util.Map;
 import java.util.Random;
-import java.util.function.Consumer;
 
 /**
  * Represents a potted sweet berry bush.
@@ -52,49 +42,18 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class BigPottedSweetBerryBushBlock extends BigFlowerPotBlock implements Fertilizable {
+public class BigPottedSweetBerryBushBlock extends BigPottedProxyBlock implements Fertilizable {
     private static final Box SWEET_BERRY_BUSH_BOX;
-
-    private final Map<BlockState, VoxelShape> shapeCache = new Object2ObjectOpenHashMap<>();
 
     public BigPottedSweetBerryBushBlock(PottedPlantType type) {
         super(type);
-
-        var builder = new StateManager.Builder<Block, BlockState>(this);
-        this.appendProperties(builder);
-        ((BlockAccessor) this.getPlant()).aurorasdeco$appendProperties(builder);
-        ((BlockAccessor) this).setStateManager(builder.build(Block::getDefaultState, BlockState::new));
-
-        this.setDefaultState(AuroraUtil.remapBlockState(type.getPlant().getDefaultState(), this.stateManager.getDefaultState()));
-    }
-
-    @Override
-    public BlockState getPlantState(BlockState potState) {
-        return AuroraUtil.remapBlockState(potState, super.getPlantState(potState));
     }
 
     /* Shapes */
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return this.shapeCache.computeIfAbsent(state, s -> shape(s, world, pos));
-    }
-
-    @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return BIG_FLOWER_POT_SHAPE;
-    }
-
-    /* Ticking */
-
-    @Override
-    public boolean hasRandomTicks(BlockState state) {
-        return this.getPlant().hasRandomTicks(state);
-    }
-
-    @Override
-    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        this.getPlant().randomTick(state, world, pos, random);
     }
 
     /* Interaction */
@@ -118,16 +77,6 @@ public class BigPottedSweetBerryBushBlock extends BigFlowerPotBlock implements F
         }
     }
 
-    /* Loot table */
-
-    @Override
-    protected void acceptPlantDrops(BlockState state, LootContext.Builder builder, Consumer<ItemStack> consumer) {
-        var stacks = this.getPlantState(state).getDroppedStacks(builder);
-        for (var stack : stacks) {
-            consumer.accept(stack);
-        }
-    }
-
     /* Fertilizable stuff */
 
     @Override
@@ -143,13 +92,6 @@ public class BigPottedSweetBerryBushBlock extends BigFlowerPotBlock implements F
     @Override
     public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
         ((Fertilizable) this.getPlant()).grow(world, random, pos, state);
-    }
-
-    private VoxelShape shape(BlockState state, BlockView world, BlockPos pos) {
-        var plantShape = this.getPlant().getOutlineShape(state, world, pos, ShapeContext.absent());
-        float ratio = .65f;
-        float offset = (1.f - ratio) / 2.f;
-        return VoxelShapes.union(BIG_FLOWER_POT_SHAPE, AuroraUtil.resizeVoxelShape(plantShape, ratio).offset(offset, .8f, offset));
     }
 
     static {

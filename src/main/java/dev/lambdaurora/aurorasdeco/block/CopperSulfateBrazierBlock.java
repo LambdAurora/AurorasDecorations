@@ -38,7 +38,7 @@ public class CopperSulfateBrazierBlock extends BrazierBlock {
         super(settings.ticksRandomly(), fireDamage, particle);
     }
 
-    /* Random Ticks */
+    /* Ticking */
 
     @Override
     public boolean hasRandomTicks(BlockState state) {

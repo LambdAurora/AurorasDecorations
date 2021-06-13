@@ -41,7 +41,7 @@ public class CopperSulfateCampfireBlock extends CampfireBlock {
         super(true, 2, settings);
     }
 
-    /* Random Ticks */
+    /* Ticking */
 
     @Override
     public boolean hasRandomTicks(BlockState state) {
