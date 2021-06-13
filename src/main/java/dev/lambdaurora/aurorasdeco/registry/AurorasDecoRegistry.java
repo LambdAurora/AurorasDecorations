@@ -32,6 +32,7 @@ import dev.lambdaurora.aurorasdeco.item.BlackboardItem;
 import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
 import dev.lambdaurora.aurorasdeco.mixin.SimpleRegistryAccessor;
 import dev.lambdaurora.aurorasdeco.recipe.BlackboardCloneRecipe;
+import dev.lambdaurora.aurorasdeco.recipe.ExplodingRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
 import dev.lambdaurora.aurorasdeco.screen.SawmillScreenHandler;
 import dev.lambdaurora.aurorasdeco.screen.ShelfScreenHandler;
@@ -156,6 +157,10 @@ public final class AurorasDecoRegistry {
                     false),
             new FabricItemSettings().group(ItemGroup.DECORATIONS).equipmentSlot(stack -> EquipmentSlot.HEAD),
             BlackboardItem::new);
+    public static final BlackboardBlock WAXED_BLACKBOARD_BLOCK = registerWithItem("waxed_blackboard",
+            new BlackboardBlock(FabricBlockSettings.copyOf(BLACKBOARD_BLOCK), true),
+            new FabricItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
+            BlackboardItem::new);
 
     public static final BookPileBlock BOOK_PILE_BLOCK = register("book_pile",
             new BookPileBlock(FabricBlockSettings.of(Material.DECORATION).strength(.2f)
@@ -167,6 +172,12 @@ public final class AurorasDecoRegistry {
             new BlackboardBlock(FabricBlockSettings.copyOf(BLACKBOARD_BLOCK), false),
             new FabricItemSettings().group(ItemGroup.DECORATIONS).equipmentSlot(stack -> EquipmentSlot.HEAD),
             BlackboardItem::new);
+    public static final BlackboardBlock WAXED_CHALKBOARD_BLOCK = registerWithItem("waxed_chalkboard",
+            new BlackboardBlock(FabricBlockSettings.copyOf(BLACKBOARD_BLOCK), true),
+            new FabricItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
+            BlackboardItem::new);
+
+    public static final Item COPPER_SULFATE_ITEM = register("copper_sulfate", new Item(new FabricItemSettings().group(ItemGroup.MISC)));
 
     public static final FenceGateBlock NETHER_BRICK_FENCE_GATE = registerWithItem("nether_brick_fence_gate",
             new FenceGateBlock(FabricBlockSettings.copyOf(Blocks.NETHER_BRICK_FENCE)),
@@ -192,15 +203,6 @@ public final class AurorasDecoRegistry {
     );
 
     public static final WallLanternBlock AMETHYST_WALL_LANTERN_BLOCK = LanternRegistry.registerWallLantern(AMETHYST_LANTERN_BLOCK);
-
-    public static final BlackboardBlock WAXED_BLACKBOARD_BLOCK = registerWithItem("waxed_blackboard",
-            new BlackboardBlock(FabricBlockSettings.copyOf(BLACKBOARD_BLOCK), true),
-            new FabricItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
-            BlackboardItem::new);
-    public static final BlackboardBlock WAXED_CHALKBOARD_BLOCK = registerWithItem("waxed_chalkboard",
-            new BlackboardBlock(FabricBlockSettings.copyOf(BLACKBOARD_BLOCK), true),
-            new FabricItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
-            BlackboardItem::new);
 
     public static final WindChimeBlock WIND_CHIME_BLOCK = registerWithItem("wind_chime",
             new WindChimeBlock(FabricBlockSettings.of(Material.DECORATION).nonOpaque()
@@ -302,6 +304,11 @@ public final class AurorasDecoRegistry {
     public static final SpecialRecipeSerializer<BlackboardCloneRecipe> BLACKBOARD_CLONE_RECIPE_SERIALIZER
             = register("crafting_special_blackboard_clone",
             new SpecialRecipeSerializer<>(BlackboardCloneRecipe::new));
+
+    public static final Identifier EXPLODING_RECIPE_ID = id("exploding");
+    public static final RecipeType<ExplodingRecipe> EXPLODING_RECIPE_TYPE = registerRecipeType("exploding");
+    public static final RecipeSerializer<ExplodingRecipe> EXPLODING_RECIPE_SERIALIZER
+            = register("exploding", ExplodingRecipe.SERIALIZER);
 
     public static final Identifier WOODCUTTING_RECIPE_ID = id("woodcutting");
     public static final RecipeType<WoodcuttingRecipe> WOODCUTTING_RECIPE_TYPE = registerRecipeType("woodcutting");

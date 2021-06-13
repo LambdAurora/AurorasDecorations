@@ -21,12 +21,16 @@ import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
 import dev.lambdaurora.aurorasdeco.block.ChandelierBlock;
 import dev.lambdaurora.aurorasdeco.block.WallCandleBlock;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
 import dev.lambdaurora.aurorasdeco.util.RegistrationHelper;
 import net.minecraft.block.*;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemUsage;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,6 +42,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Adds wall lantern to the lantern block item and more.
@@ -127,5 +132,18 @@ public abstract class BlockItemMixin extends Item implements BlockItemAccessor {
             if (resultState != null && world.canPlace(resultState, pos, ShapeContext.absent()))
                 cir.setReturnValue(resultState);
         }
+    }
+
+    @Inject(method = "onItemEntityDestroyed", at = @At("HEAD"), cancellable = true)
+    private void onItemEntityExploded(ItemEntity entity, CallbackInfo ci) {
+        var server = entity.getServer();
+        if (server == null) return;
+        var inv = new SimpleInventory(entity.getStack());
+        server.getRecipeManager()
+                .getFirstMatch(AurorasDecoRegistry.EXPLODING_RECIPE_TYPE, inv, entity.getEntityWorld())
+                .ifPresent(explodingRecipe -> {
+                    ItemUsage.spawnItemContents(entity, Stream.of(explodingRecipe.craft(inv)));
+                    ci.cancel();
+                });
     }
 }

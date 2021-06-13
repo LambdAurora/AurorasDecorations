@@ -43,10 +43,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.ShapedRecipe;
+import net.minecraft.recipe.*;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.tag.ItemTags;
@@ -466,6 +463,15 @@ public final class Datagen {
     }
 
     public static void registerDefaultRecipes() {
+        {
+            var sulfurItem = Registry.ITEM.get(new Identifier("sulfurpotassiummod", "sulfur"));
+            if (sulfurItem != Items.AIR) {
+                registerRecipe(new ShapelessRecipe(id("copper_sulfate_from_sulfurpotassiummod"), "",
+                                new ItemStack(AurorasDecoRegistry.COPPER_SULFATE_ITEM),
+                                DefaultedList.copyOf(Ingredient.EMPTY, Ingredient.ofItems(sulfurItem), Ingredient.ofItems(Items.RAW_COPPER))),
+                        "misc");
+            }
+        }
     }
 
     public static void registerDefaultWoodcuttingRecipes() {

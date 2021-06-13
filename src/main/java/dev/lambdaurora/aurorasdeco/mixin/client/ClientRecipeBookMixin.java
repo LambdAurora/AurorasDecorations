@@ -30,9 +30,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class ClientRecipeBookMixin {
     @Inject(method = "getGroupForRecipe", at = @At("HEAD"), cancellable = true)
     private static void onGetGroupForRecipe(Recipe<?> recipe, CallbackInfoReturnable<RecipeBookGroup> cir) {
+        // Mojang, why is it an enum? :(
         if (recipe.getType() == AurorasDecoRegistry.WOODCUTTING_RECIPE_TYPE) {
-            // Mojang, why is it an enum? :(
             cir.setReturnValue(RecipeBookGroup.STONECUTTER);
+        } else if (recipe.getType() == AurorasDecoRegistry.EXPLODING_RECIPE_TYPE) {
+            cir.setReturnValue(RecipeBookGroup.UNKNOWN);
         }
     }
 }

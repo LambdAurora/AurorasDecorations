@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    "ITI",
+    "III"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_nugget"
+    },
+    "T": {
+      "item": "aurorasdeco:copper_sulfate_torch"
+    }
+  },
+  "result": {
+    "item": "aurorasdeco:copper_sulfate_lantern"
+  }
+}

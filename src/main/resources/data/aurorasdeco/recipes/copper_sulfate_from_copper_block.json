@@ -1,0 +1,8 @@
+{
+  "type": "aurorasdeco:exploding",
+  "ingredient": {
+    "item": "minecraft:copper_block"
+  },
+  "result": "aurorasdeco:copper_sulfate",
+  "count": 9
+}

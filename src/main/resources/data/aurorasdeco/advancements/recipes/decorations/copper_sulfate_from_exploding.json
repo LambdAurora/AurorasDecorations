@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "aurorasdeco:copper_sulfate_from_copper_block",
+      "aurorasdeco:copper_sulfate_from_exposed_copper",
+      "aurorasdeco:copper_sulfate_from_weathered_copper",
+      "aurorasdeco:copper_sulfate_from_oxidized_copper"
+    ]
+  },
+  "criteria": {
+    "has_copper": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:copper_block",
+              "minecraft:exposed_copper",
+              "minecraft:weathered_copper",
+              "minecraft:oxidized_copper"
+            ]
+          }
+        ]
+      }
+    },
+    "has_self": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "aurorasdeco:copper_sulfate"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe_copper_block": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "aurorasdeco:copper_sulfate_from_copper_block"
+      }
+    },
+    "has_the_recipe_exposed_copper": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "aurorasdeco:copper_sulfate_from_exposed_copper"
+      }
+    },
+    "has_the_recipe_weathered_copper": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "aurorasdeco:copper_sulfate_from_weathered_copper"
+      }
+    },
+    "has_the_recipe_oxidized_copper": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "aurorasdeco:copper_sulfate_from_oxidized_copper"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_copper",
+      "has_self",
+      "has_the_recipe_copper_block",
+      "has_the_recipe_exposed_copper",
+      "has_the_recipe_weathered_copper",
+      "has_the_recipe_oxidized_copper"
+    ]
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "type": "aurorasdeco:exploding",
+  "ingredient": {
+    "item": "minecraft:weathered_copper"
+  },
+  "result": "aurorasdeco:copper_sulfate",
+  "count": 18
+}

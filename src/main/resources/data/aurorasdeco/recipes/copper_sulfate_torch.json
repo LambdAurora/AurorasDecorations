@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "C",
+    "S",
+    "B"
+  ],
+  "key": {
+    "C": [
+      {
+        "item": "minecraft:coal"
+      },
+      {
+        "item": "minecraft:charcoal"
+      }
+    ],
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "B": {
+      "item": "aurorasdeco:copper_sulfate"
+    }
+  },
+  "result": {
+    "item": "aurorasdeco:copper_sulfate_torch",
+    "count": 4
+  }
+}
