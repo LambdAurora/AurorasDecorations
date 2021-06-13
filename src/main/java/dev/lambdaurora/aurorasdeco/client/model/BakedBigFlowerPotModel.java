@@ -95,9 +95,8 @@ public class BakedBigFlowerPotModel extends ForwardingBakedModel {
             }
 
             if (plantState.getBlock() instanceof TallPlantBlock) {
-                final var upModel = client.getBakedModelManager().getBlockModels().getModel(
-                        plantState.with(TallPlantBlock.HALF, DoubleBlockHalf.UPPER)
-                );
+                var upPlantState = plantState.with(TallPlantBlock.HALF, DoubleBlockHalf.UPPER);
+                final var upModel = client.getBakedModelManager().getBlockModels().getModel(upPlantState);
                 if (upModel instanceof FabricBakedModel) {
                     context.pushTransform(quad -> {
                         Vec3f vec = null;
