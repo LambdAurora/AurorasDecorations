@@ -22,7 +22,10 @@ import com.google.common.collect.Maps;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
+import dev.lambdaurora.aurorasdeco.mixin.BlockAccessor;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
+import dev.lambdaurora.aurorasdeco.util.CustomStateBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -75,7 +78,9 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public static final VoxelShape LANTERN_HANG_SHAPE = Block.createCuboidShape(7.0, 11.0, 7.0,
             9.0, 13.0, 9.0);
+    private static final double LANTERN_HANG_SHAPE_MIN_Y = LANTERN_HANG_SHAPE.getMin(Direction.Axis.Y);
     public static final Map<Direction, Map<ExtensionType, VoxelShape>> ATTACHMENT_SHAPES;
+    private static final ThreadLocal<LanternBlock> ASSOCIATED_LANTERN_INIT = new ThreadLocal<>();
 
     private static final VoxelShape HOLDER_SHAPE = createCuboidShape(0.0, 8.0, 0.0,
             16.0, 16.0, 16.0);
@@ -85,14 +90,13 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
     private final LanternBlock lanternBlock;
 
     public WallLanternBlock(LanternBlock lantern) {
-        super(FabricBlockSettings.copyOf(lantern).dropsLike(lantern));
+        super(settings(lantern));
 
         this.lanternBlock = lantern;
 
-        this.setDefaultState(this.stateManager.getDefaultState()
+        this.setDefaultState(AuroraUtil.remapBlockState(lantern.getDefaultState(), this.stateManager.getDefaultState())
                 .with(FACING, Direction.NORTH)
                 .with(EXTENSION, ExtensionType.NONE)
-                .with(WATERLOGGED, false)
         );
 
         var item = Item.fromBlock(lantern); // Avoid caching which could break stuff at this stage.
@@ -105,15 +109,21 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
         return this.lanternBlock;
     }
 
-    public BlockState getLanternState() {
-        return this.getLanternBlock().getDefaultState();
+    public BlockState getLanternState(BlockState state) {
+        return AuroraUtil.remapBlockState(state, this.getLanternBlock().getDefaultState());
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        var lantern = ASSOCIATED_LANTERN_INIT.get();
+        ASSOCIATED_LANTERN_INIT.remove();
+
+        var customBuilder = new CustomStateBuilder<>(builder);
+        customBuilder.exclude("hanging");
+        ((BlockAccessor) lantern).aurorasdeco$appendProperties(customBuilder);
+
         builder.add(FACING);
         builder.add(EXTENSION);
-        builder.add(WATERLOGGED);
     }
 
     @Override
@@ -132,13 +142,21 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         var facing = state.get(WallLanternBlock.FACING);
         var extension = state.get(WallLanternBlock.EXTENSION);
+        var lanternShape = this.getLanternState(state).getOutlineShape(world, pos);
+        var lanternShapeMaxY = lanternShape.getMax(Direction.Axis.Y);
+        var lanternShapeMinY = lanternShape.getMin(Direction.Axis.Y);
+
+        double yOffset = 2.0 / 16.0;
+        if (lanternShapeMaxY < LANTERN_HANG_SHAPE_MIN_Y) {
+            var size = lanternShapeMaxY - lanternShapeMinY;
+            yOffset = LANTERN_HANG_SHAPE_MIN_Y - size;
+        }
         return VoxelShapes.union(
-                this.getLanternState().getOutlineShape(world, pos)
-                        .offset((-facing.getOffsetX() * extension.getOffset()) / 16.0,
-                                2.0 / 16.0,
-                                (-facing.getOffsetZ() * extension.getOffset()) / 16.0),
-                WallLanternBlock.ATTACHMENT_SHAPES.get(facing)
-                        .get(extension)
+                lanternShape.offset(
+                        (-facing.getOffsetX() * extension.getOffset()) / 16.0,
+                        yOffset,
+                        (-facing.getOffsetZ() * extension.getOffset()) / 16.0
+                ), WallLanternBlock.ATTACHMENT_SHAPES.get(facing).get(extension)
         );
     }
 
@@ -206,7 +224,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-        return this.getLanternBlock().getPickStack(world, pos, this.getLanternState());
+        return this.getLanternBlock().getPickStack(world, pos, this.getLanternState(state));
     }
 
     @Override
@@ -362,6 +380,11 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         this.getLanternBlock().randomDisplayTick(state, world, pos, random);
+    }
+
+    private static Settings settings(LanternBlock lanternBlock) {
+        ASSOCIATED_LANTERN_INIT.set(lanternBlock);
+        return FabricBlockSettings.copyOf(lanternBlock).dropsLike(lanternBlock);
     }
 
     static {

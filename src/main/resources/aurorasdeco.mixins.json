@@ -17,6 +17,7 @@
     "RecipeManagerMixin",
     "SimpleRegistryAccessor",
     "SpawnHelperMixin",
+    "StateManagerBuilderAccessor",
     "VineBlockAccessor",
     "entity.ArmorStandEntityMixin",
     "entity.AvoidAmethystLanternMixin",

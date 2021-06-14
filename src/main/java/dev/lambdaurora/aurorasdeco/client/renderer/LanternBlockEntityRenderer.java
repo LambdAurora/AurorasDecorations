@@ -98,7 +98,11 @@ public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<Lante
 
         matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(angle));
 
-        matrices.translate(-8.f / 16.f, -10.f / 16.f, -8.f / 16.f);
+        var lanternShape = lanternState.getOutlineShape(lantern.getWorld(), pos);
+        var lanternShapeMaxY = lanternShape.getMax(Direction.Axis.Y);
+        var lanternShapeMinY = lanternShape.getMin(Direction.Axis.Y);
+        var size = lanternShapeMaxY - lanternShapeMinY;
+        matrices.translate(-8.f / 16.f, -1.f / 16.f - size, -8.f / 16.f);
 
         LBGHooks.pushDisableBetterLayer();
         this.client.getBlockRenderManager().renderBlock(lanternState, pos, lantern.getWorld(), matrices, consumer,
