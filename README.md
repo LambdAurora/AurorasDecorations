@@ -52,6 +52,13 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 - Candles
   - Can now be put on walls.
   - Can now be put on ceilings as chandeliers.
+- Copper Sulfate
+  - Made by exploding copper blocks.
+  - Copper Sulfate Torch with a green tint.
+  - Copper Sulfate Lantern.
+  - Copper Sulfate Campfire and Brazier.
+    - Decay leaves, mushroom blocks and nether wart blocks.
+    - Mushroom blocks and nether wart blocks are decayed like if Silk Touch was used.
 - Item Frames can be made invisible when using shears on them while they hold an item.
   After the item is removed, the item frame will be visible again.
 - Lanterns
@@ -114,6 +121,8 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 ![Burning Vine Tips](images/burnt_vine.png)
 
 ![Chandeliers](images/chandeliers.png)
+
+![Copper Sulfate](images/copper_sulfate.png)
 
 ![Nether Brick Fence Gate](images/nether_brick_fence_gate.png)
 
