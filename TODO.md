@@ -1,6 +1,3 @@
-- Copper sulfate
-  - Corresponding light sources with green flame
-    - Copper Sulfate Campfires will decay nether wart blocks on top of them
 - Jar
 - Telescope to look at pretty Ecotones sky.
 - Wind Chime
