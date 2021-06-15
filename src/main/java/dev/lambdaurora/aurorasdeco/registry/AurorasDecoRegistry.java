@@ -114,9 +114,9 @@ public final class AurorasDecoRegistry {
             PottedPlantType.register("none", Blocks.AIR, Items.AIR),
             new FabricItemSettings().group(ItemGroup.DECORATIONS)
     );
-    public static final BigFlowerPotBlock.PlantAir PLANT_AIR_BLOCK = register(
+    public static final BigFlowerPotBlock.PlantAirBlock PLANT_AIR_BLOCK = register(
             "plant_air",
-            new BigFlowerPotBlock.PlantAir(
+            new BigFlowerPotBlock.PlantAirBlock(
                     FabricBlockSettings.of(Material.AIR)
                             .nonOpaque()
                             .strength(-1.f, 3600000.f)

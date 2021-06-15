@@ -230,8 +230,8 @@ public class BigFlowerPotBlock extends Block/* implements FluidFillable*/ {
             return false;
     }*/
 
-    public static class PlantAir extends Block {
-        public PlantAir(Settings settings) {
+    public static class PlantAirBlock extends Block {
+        public PlantAirBlock(Settings settings) {
             super(settings);
         }
 
