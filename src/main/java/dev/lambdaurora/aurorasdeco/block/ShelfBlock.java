@@ -368,6 +368,7 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
         var planks = woodType.getComponent(WoodType.ComponentType.PLANKS);
         if (planks == null) throw new IllegalStateException("ShelfBlock attempted to be created while the wood type is invalid.");
         return FabricBlockSettings.copyOf(planks.block())
+                .collidable(true)
                 .nonOpaque();
     }
 

@@ -281,6 +281,7 @@ public class BenchBlock extends Block implements BlockEntityProvider, SeatBlock,
         var planks = woodType.getComponent(WoodType.ComponentType.PLANKS);
         if (planks == null) throw new IllegalStateException("BenchBlock attempted to be created while the wood type is invalid.");
         return FabricBlockSettings.copyOf(planks.block())
+                .collidable(true)
                 .nonOpaque();
     }
 }
