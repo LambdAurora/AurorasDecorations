@@ -321,6 +321,7 @@ public final class AurorasDecoRegistry {
     public static final Tag<Block> COPPER_SULFATE_DECOMPOSABLE = TagRegistry.block(AurorasDeco.id("copper_sulfate_decomposable"));
     public static final Tag<Block> PET_BEDS = TagRegistry.block(AurorasDeco.id("pet_beds"));
     public static final Tag<Block> SHELVES = TagRegistry.block(AurorasDeco.id("shelves"));
+    public static final Tag<Block> SMALL_LOG_PILES = TagRegistry.block(AurorasDeco.id("small_log_piles"));
     public static final Tag<Block> STUMPS = TagRegistry.block(AurorasDeco.id("stumps"));
 
     /* POI */
@@ -438,6 +439,16 @@ public final class AurorasDecoRegistry {
         WoodType.registerWoodTypeModificationCallback(woodType -> {
             var block = registerWithItem("stump/" + woodType.getPathName(),
                     new StumpBlock(woodType),
+                    new FabricItemSettings().group(ItemGroup.DECORATIONS));
+
+            var entry = woodType.getComponent(WoodType.ComponentType.LOG).getFlammableEntry();
+            if (entry != null && entry.getBurnChance() != 0 && entry.getSpreadChance() != 0)
+                FlammableBlockRegistry.getDefaultInstance().add(block, entry.getBurnChance(), entry.getSpreadChance());
+        }, WoodType.ComponentType.LOG);
+
+        WoodType.registerWoodTypeModificationCallback(woodType -> {
+            var block = registerWithItem("small_log_pile/" + woodType.getPathName(),
+                    new SmallLogPileBlock(woodType),
                     new FabricItemSettings().group(ItemGroup.DECORATIONS));
 
             var entry = woodType.getComponent(WoodType.ComponentType.LOG).getFlammableEntry();

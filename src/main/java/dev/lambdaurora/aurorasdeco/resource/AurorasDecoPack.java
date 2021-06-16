@@ -22,10 +22,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.block.BenchBlock;
-import dev.lambdaurora.aurorasdeco.block.HangingFlowerPotBlock;
-import dev.lambdaurora.aurorasdeco.block.ShelfBlock;
-import dev.lambdaurora.aurorasdeco.block.StumpBlock;
+import dev.lambdaurora.aurorasdeco.block.*;
 import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
 import dev.lambdaurora.aurorasdeco.resource.datagen.LangBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -112,7 +109,8 @@ public class AurorasDecoPack implements ModResourcePack {
         }
 
         BenchBlock.streamBenches().forEach(Datagen::registerBenchBlockLootTable);
-        ShelfBlock.streamShelves().forEach(Datagen::registerShelfBlockLootTable);
+        ShelfBlock.streamShelves().forEach(Datagen::registerDoubleBlockLootTable);
+        SmallLogPileBlock.stream().forEach(Datagen::registerDoubleBlockLootTable);
         StumpBlock.streamLogStumps().forEach(Datagen::dropsSelf);
 
         this.registerTag(new String[]{"blocks"}, new Identifier("flower_pots"), HangingFlowerPotBlock.stream()
@@ -121,6 +119,8 @@ public class AurorasDecoPack implements ModResourcePack {
         this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("benches"), BenchBlock.streamBenches()
                 .map(Registry.BLOCK::getId));
         this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("shelves"), ShelfBlock.streamShelves()
+                .map(Registry.BLOCK::getId));
+        this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("small_log_piles"), SmallLogPileBlock.stream()
                 .map(Registry.BLOCK::getId));
         this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("stumps"), StumpBlock.streamLogStumps()
                 .map(Registry.BLOCK::getId));

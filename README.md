@@ -96,6 +96,10 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
   - Players and villagers can sleep in them.
   - Craft with 3 wools.
   - Do not set spawn point.
+- Small Log Piles
+  - Looks similar to campfire logs, but the ash part is replaced with more logs.
+  - Come in all wood types.
+  - Can be stacked.
 - Stumps
   - Cozy seat.
   - Made using logs in a sawmill.
@@ -139,6 +143,8 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 ![Polished Basalt Wall](images/polished_basalt_wall.png)
 
 ![Sleeping bags](images/sleeping_bags.png)
+
+![Small Log Types](images/small_log_piles.png)
 
 ![Sturdy Stone](images/sturdy_stone.png)
 

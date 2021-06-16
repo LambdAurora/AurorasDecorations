@@ -17,7 +17,6 @@
 
 package dev.lambdaurora.aurorasdeco.block;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
@@ -65,7 +64,7 @@ import java.util.stream.Stream;
  * @since 1.0.0
  */
 public class ShelfBlock extends BlockWithEntity implements Waterloggable {
-    public static final EnumProperty<PartType> TYPE = EnumProperty.of("type", PartType.class);
+    public static final EnumProperty<PartType> TYPE = AurorasDecoProperties.PART_TYPE;
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
@@ -134,7 +133,7 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
         if (placedState.isOf(this)) {
             placedState = placedState.with(TYPE, PartType.DOUBLE);
             if (this.canPlaceAt(placedState, world, pos))
-                return placedState.with(TYPE, PartType.DOUBLE);
+                return placedState;
         } else {
             var fluid = world.getFluidState(pos);
             var state = this.getDefaultState().with(WATERLOGGED, fluid.getFluid() == Fluids.WATER);
@@ -396,28 +395,5 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
         builder.put(PartType.DOUBLE, VoxelShapes.fullCube());
 
         VALID_ATTACHMENTS = new EnumMap<>(builder.build());
-    }
-
-    public enum PartType implements StringIdentifiable {
-        BOTTOM("bottom"),
-        TOP("top"),
-        DOUBLE("double");
-
-        private static final List<PartType> VALUES = ImmutableList.copyOf(values());
-
-        private final String name;
-
-        PartType(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String asString() {
-            return this.name;
-        }
-
-        public static List<PartType> getValues() {
-            return VALUES;
-        }
     }
 }

@@ -17,7 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.screen;
 
-import dev.lambdaurora.aurorasdeco.block.ShelfBlock;
+import dev.lambdaurora.aurorasdeco.block.PartType;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -37,13 +37,13 @@ import net.minecraft.screen.slot.Slot;
  */
 public class ShelfScreenHandler extends ScreenHandler {
     private final Inventory inventory;
-    private final ShelfBlock.PartType partType;
+    private final PartType partType;
 
     public ShelfScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
-        this(syncId, playerInventory, new SimpleInventory(8), buf.readEnumConstant(ShelfBlock.PartType.class));
+        this(syncId, playerInventory, new SimpleInventory(8), buf.readEnumConstant(PartType.class));
     }
 
-    public ShelfScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, ShelfBlock.PartType partType) {
+    public ShelfScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PartType partType) {
         super(AurorasDecoRegistry.SHELF_SCREEN_HANDLER_TYPE, syncId);
         checkSize(inventory, 8);
         this.inventory = inventory;
@@ -52,11 +52,11 @@ public class ShelfScreenHandler extends ScreenHandler {
         int y;
         int x;
 
-        int max = this.partType == ShelfBlock.PartType.TOP ? 1 : 2;
-        for (y = this.partType == ShelfBlock.PartType.BOTTOM ? 1 : 0; y < max; ++y) {
+        int max = this.partType == PartType.TOP ? 1 : 2;
+        for (y = this.partType == PartType.BOTTOM ? 1 : 0; y < max; ++y) {
             int rowY = 17 + y * 18;
 
-            if (this.partType != ShelfBlock.PartType.DOUBLE)
+            if (this.partType != PartType.DOUBLE)
                 rowY = 26;
 
             for (x = 0; x < 4; ++x) {
@@ -76,7 +76,7 @@ public class ShelfScreenHandler extends ScreenHandler {
         }
     }
 
-    public ShelfBlock.PartType getPartType() {
+    public PartType getPartType() {
         return this.partType;
     }
 

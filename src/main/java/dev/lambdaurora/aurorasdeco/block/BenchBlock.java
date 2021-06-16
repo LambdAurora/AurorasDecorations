@@ -37,9 +37,7 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
+import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -194,6 +192,16 @@ public class BenchBlock extends Block implements BlockEntityProvider, SeatBlock,
                 .with(LEFT_LEGS, !this.canConnect(world, relativeLeft, facing, null))
                 .with(RIGHT_LEGS, !this.canConnect(world, relativeRight, facing, null))
                 .with(WATERLOGGED, fluid.getFluid() == Fluids.WATER);
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, BlockRotation rotation) {
+        return state.with(FACING, rotation.rotate(state.get(FACING)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, BlockMirror mirror) {
+        return state.rotate(mirror.getRotation(state.get(FACING)));
     }
 
     /* Updates */

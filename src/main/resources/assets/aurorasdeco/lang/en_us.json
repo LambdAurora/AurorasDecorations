@@ -60,6 +60,10 @@
   "block.aurorasdeco.sleeping_bag.white": "White Sleeping Bag",
   "block.aurorasdeco.sleeping_bag.yellow": "Yellow Sleeping Bag",
 
+  "block.aurorasdeco.small_log_pile": "Small %s Log Pile",
+  "block.aurorasdeco.small_stem_pile": "Small %s Stem Pile",
+  "block.aurorasdeco.small_log_pile.oak": "Small Log Pile",
+
   "block.aurorasdeco.soul_brazier": "Soul Brazier",
 
   "block.aurorasdeco.stump": "%s Stump",

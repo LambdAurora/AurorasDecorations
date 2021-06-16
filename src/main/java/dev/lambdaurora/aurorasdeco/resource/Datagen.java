@@ -34,6 +34,7 @@ import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import dev.lambdaurora.aurorasdeco.resource.datagen.*;
+import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
@@ -348,7 +349,7 @@ public final class Datagen {
         );
     }
 
-    private static JsonObject shelfBlockLootTable(Identifier id) {
+    private static JsonObject doubleBlockLootTable(Identifier id) {
         var root = new JsonObject();
         root.addProperty("type", "minecraft:block");
         var pools = new JsonArray();
@@ -375,12 +376,12 @@ public final class Datagen {
         return root;
     }
 
-    public static void registerShelfBlockLootTable(Block block) {
+    public static void registerDoubleBlockLootTable(Block block) {
         var id = Registry.BLOCK.getId(block);
         AurorasDeco.RESOURCE_PACK.putJson(
                 ResourceType.SERVER_DATA,
                 new Identifier(id.getNamespace(), "loot_tables/blocks/" + id.getPath()),
-                shelfBlockLootTable(id)
+                doubleBlockLootTable(id)
         );
     }
 
@@ -533,6 +534,16 @@ public final class Datagen {
             }
         });
 
+        SmallLogPileBlock.stream().forEach(block -> {
+            if (block.getWoodType().getLog() == null)
+                return;
+            var recipe = new WoodcuttingRecipe(
+                    id("woodcutting/small_log_pile/" + block.getWoodType().getPathName()),
+                    "small_log_pile", Ingredient.ofItems(block.getWoodType().getLog()),
+                    new ItemStack(block));
+            registerRecipe(recipe, "decorations");
+        });
+
         StumpBlock.streamLogStumps().forEach(block -> {
             if (block.getWoodType().getLog() == null)
                 return;
@@ -568,6 +579,7 @@ public final class Datagen {
     public static void generateClientData(ResourceManager resourceManager, LangBuilder langBuilder) {
         generateBenchesClientData(resourceManager, langBuilder);
         generateShelvesClientData(resourceManager, langBuilder);
+        generateSmallLogPilesClientData(resourceManager, langBuilder);
         generateStumpsClientData(resourceManager, langBuilder);
 
         PottedPlantType.stream().filter(type -> !type.isEmpty() && type.getPot().hasDynamicModel())
@@ -720,13 +732,14 @@ public final class Datagen {
 
             var planksTexture = block.getWoodType().getComponent(WoodType.ComponentType.PLANKS).texture();
             var logTexture = block.getWoodType().getLogSideTexture(resourceManager);
-            var models = new Object2ObjectOpenHashMap<ShelfBlock.PartType, Identifier>();
-            for (var partType : ShelfBlock.PartType.getValues()) {
+            Identifier bottomModel = null;
+            for (var partType : PartType.getValues()) {
                 var model = modelBuilder(id("block/template/shelf_" + partType.asString()))
                         .texture("planks", planksTexture)
                         .texture("log", logTexture)
                         .register(id("block/shelf/" + woodPathName + '/' + partType.asString()));
-                models.put(partType, model);
+                if (partType == PartType.BOTTOM)
+                    bottomModel = model;
 
                 for (var direction : DIRECTIONS) {
                     if (direction.getAxis().isVertical())
@@ -742,13 +755,62 @@ public final class Datagen {
                 }
             }
 
-            modelBuilder(models.get(ShelfBlock.PartType.BOTTOM)).register(id("item/shelf/" + woodPathName));
+            modelBuilder(bottomModel).register(id("item/shelf/" + woodPathName));
             builder.register();
 
             Datagen.registerBetterGrassLayer(AurorasDeco.id("shelf/" + woodPathName), Datagen.SHELF_BETTERGRASS_DATA);
 
             langBuilder.addEntry("block.aurorasdeco.shelf." + block.getWoodType().getAbsoluteLangPath(),
                     "block.aurorasdeco.shelf", "aurorasdeco.wood_type." + block.getWoodType().getLangPath());
+        });
+    }
+
+    private static void generateSmallLogPilesClientData(ResourceManager resourceManager, LangBuilder langBuilder) {
+        SmallLogPileBlock.stream().forEach(block -> {
+            if (AuroraUtil.idEqual(block.getWoodType().getId(), "minecraft", "oak"))
+                return;
+            var woodPathName = block.getWoodType().getPathName();
+
+            var builder = new MultipartBlockStateBuilder(block);
+
+            var partTypes = PartType.getValues();
+            var models = new Identifier[partTypes.size()];
+            for (int i = 0; i < partTypes.size(); i++) {
+                var partType = partTypes.get(i);
+                models[i] = modelBuilder(switch (partType) {
+                    case BOTTOM -> SmallLogPileBlock.BOTTOM_MODEL;
+                    case TOP -> SmallLogPileBlock.TOP_MODEL;
+                    case DOUBLE -> SmallLogPileBlock.DOUBLE_MODEL;
+                })
+                        .texture("log", block.getWoodType().getLogSideTexture(resourceManager))
+                        .texture("log_top", block.getWoodType().getLogTopTexture(resourceManager))
+                        .register(id("block/small_log_pile/" + woodPathName + '/' + partType.asString()));
+            }
+
+            for (var direction : DIRECTIONS) {
+                if (direction.getAxis().isVertical())
+                    continue;
+
+                var facingValue = SmallLogPileBlock.FACING.createValue(direction);
+
+                builder.addWhenOr(new StateModel(models[0], (int) direction.asRotation()),
+                        new MultipartOr(facingValue, AurorasDecoProperties.PART_TYPE_BOTTOM),
+                        new MultipartOr(facingValue, AurorasDecoProperties.PART_TYPE_DOUBLE));
+                builder.addWhenOr(new StateModel(models[1], (int) direction.asRotation()),
+                        new MultipartOr(facingValue, AurorasDecoProperties.PART_TYPE_TOP),
+                        new MultipartOr(facingValue, AurorasDecoProperties.PART_TYPE_DOUBLE));
+                builder.addWhen(new StateModel(models[2], (int) direction.asRotation()), facingValue, AurorasDecoProperties.PART_TYPE_DOUBLE);
+            }
+
+            modelBuilder(models[0]).register(id("item/small_log_pile/" + block.getWoodType().getPathName()));
+
+            builder.register();
+
+            registerBetterGrassLayer(block, SmallLogPileBlock.BETTERGRASS_DATA);
+
+            langBuilder.addEntry("block.aurorasdeco.small_log_pile." + block.getWoodType().getAbsoluteLangPath(),
+                    "block.aurorasdeco.small_" + block.getWoodType().getLogType() + "_pile",
+                    "aurorasdeco.wood_type." + block.getWoodType().getLangPath());
         });
     }
 

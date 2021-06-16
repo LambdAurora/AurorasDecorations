@@ -1,0 +1,185 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "aurorasdeco:block/small_log_pile/oak/bottom",
+        "y": 180
+      },
+      "when": {
+        "OR": [
+          {
+            "facing": "north",
+            "type": "bottom"
+          },
+          {
+            "facing": "north",
+            "type": "double"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "aurorasdeco:block/small_log_pile/oak/top",
+        "y": 180
+      },
+      "when": {
+        "OR": [
+          {
+            "facing": "north",
+            "type": "top"
+          },
+          {
+            "facing": "north",
+            "type": "double"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "aurorasdeco:block/small_log_pile/oak/double",
+        "y": 180
+      },
+      "when": {
+        "facing": "north",
+        "type": "double"
+      }
+    },
+    {
+      "apply": {
+        "model": "aurorasdeco:block/small_log_pile/oak/bottom"
+      },
+      "when": {
+        "OR": [
+          {
+            "facing": "south",
+            "type": "bottom"
+          },
+          {
+            "facing": "south",
+            "type": "double"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "aurorasdeco:block/small_log_pile/oak/top"
+      },
+      "when": {
+        "OR": [
+          {
+            "facing": "south",
+            "type": "top"
+          },
+          {
+            "facing": "south",
+            "type": "double"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "aurorasdeco:block/small_log_pile/oak/double"
+      },
+      "when": {
+        "facing": "south",
+        "type": "double"
+      }
+    },
+    {
+      "apply": {
+        "model": "aurorasdeco:block/small_log_pile/oak/bottom",
+        "y": 90
+      },
+      "when": {
+        "OR": [
+          {
+            "facing": "west",
+            "type": "bottom"
+          },
+          {
+            "facing": "west",
+            "type": "double"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "aurorasdeco:block/small_log_pile/oak/top",
+        "y": 90
+      },
+      "when": {
+        "OR": [
+          {
+            "facing": "west",
+            "type": "top"
+          },
+          {
+            "facing": "west",
+            "type": "double"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "aurorasdeco:block/small_log_pile/oak/double",
+        "y": 90
+      },
+      "when": {
+        "facing": "west",
+        "type": "double"
+      }
+    },
+    {
+      "apply": {
+        "model": "aurorasdeco:block/small_log_pile/oak/bottom",
+        "y": 270
+      },
+      "when": {
+        "OR": [
+          {
+            "facing": "east",
+            "type": "bottom"
+          },
+          {
+            "facing": "east",
+            "type": "double"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "aurorasdeco:block/small_log_pile/oak/top",
+        "y": 270
+      },
+      "when": {
+        "OR": [
+          {
+            "facing": "east",
+            "type": "top"
+          },
+          {
+            "facing": "east",
+            "type": "double"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "aurorasdeco:block/small_log_pile/oak/double",
+        "y": 270
+      },
+      "when": {
+        "facing": "east",
+        "type": "double"
+      }
+    }
+  ]
+}
