@@ -66,7 +66,8 @@ public class BenchBlockEntity extends BlockEntity implements BlockEntityClientSe
         this.rest = rest;
 
         this.update();
-        if (this.world instanceof ClientWorld clientWorld) {
+        if (this.world != null && this.world.isClient()
+                && this.world instanceof ClientWorld clientWorld) {
             clientWorld.scheduleBlockRenders(
                     ChunkSectionPos.getSectionCoord(this.getPos().getX()),
                     ChunkSectionPos.getSectionCoord(this.getPos().getY()),
