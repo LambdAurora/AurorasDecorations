@@ -480,6 +480,19 @@ public final class Datagen {
                 Ingredient.fromTag(ItemTags.PLANKS),
                 new ItemStack(Items.STICK, 2)), "misc");
 
+        WoodType.forEach(type -> {
+            var log = type.getLog();
+            var planks = type.getComponent(WoodType.ComponentType.PLANKS);
+
+            if (log == null || planks == null) return;
+
+            var planksId = planks.getItemId();
+            registerRecipe(new WoodcuttingRecipe(AuroraUtil.appendWithNamespace("woodcutting", planksId),
+                            "planks",
+                            Ingredient.ofItems(log), new ItemStack(planks.item(), 4)),
+                    "building_blocks");
+        });
+
         Registry.BLOCK.stream().filter(block -> ((AbstractBlockAccessor) block).getMaterial() == Material.WOOD
                 || ((AbstractBlockAccessor) block).getMaterial() == Material.NETHER_WOOD)
                 .forEach(Datagen::registerWoodcuttingRecipesForBlockVariants);
@@ -540,7 +553,7 @@ public final class Datagen {
             var recipe = new WoodcuttingRecipe(
                     id("woodcutting/small_log_pile/" + block.getWoodType().getPathName()),
                     "small_log_pile", Ingredient.ofItems(block.getWoodType().getLog()),
-                    new ItemStack(block));
+                    new ItemStack(block, 2));
             registerRecipe(recipe, "decorations");
         });
 

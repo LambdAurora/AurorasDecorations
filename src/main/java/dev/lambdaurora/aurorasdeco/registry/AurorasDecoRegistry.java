@@ -317,17 +317,18 @@ public final class AurorasDecoRegistry {
 
     /* Tags */
 
-    public static final Tag<Block> BRAZIERS = TagRegistry.block(AurorasDeco.id("braziers"));
-    public static final Tag<Block> COPPER_SULFATE_DECOMPOSABLE = TagRegistry.block(AurorasDeco.id("copper_sulfate_decomposable"));
-    public static final Tag<Block> PET_BEDS = TagRegistry.block(AurorasDeco.id("pet_beds"));
-    public static final Tag<Block> SHELVES = TagRegistry.block(AurorasDeco.id("shelves"));
-    public static final Tag<Block> SMALL_LOG_PILES = TagRegistry.block(AurorasDeco.id("small_log_piles"));
-    public static final Tag<Block> STUMPS = TagRegistry.block(AurorasDeco.id("stumps"));
+    public static final Tag<Item> BLACKBOARD_ITEMS = TagRegistry.item(id("blackboards"));
+    public static final Tag<Block> BRAZIERS = TagRegistry.block(id("braziers"));
+    public static final Tag<Block> COPPER_SULFATE_DECOMPOSABLE = TagRegistry.block(id("copper_sulfate_decomposable"));
+    public static final Tag<Block> PET_BEDS = TagRegistry.block(id("pet_beds"));
+    public static final Tag<Block> SHELVES = TagRegistry.block(id("shelves"));
+    public static final Tag<Block> SMALL_LOG_PILES = TagRegistry.block(id("small_log_piles"));
+    public static final Tag<Block> STUMPS = TagRegistry.block(id("stumps"));
 
     /* POI */
 
     public static final PointOfInterestType AMETHYST_LANTERN_POI = PointOfInterestHelper.register(
-            AurorasDeco.id("amethyst_lantern"),
+            id("amethyst_lantern"),
             0, 2,
             AMETHYST_LANTERN_BLOCK, AMETHYST_WALL_LANTERN_BLOCK
     );
