@@ -26,6 +26,7 @@ import dev.lambdaurora.aurorasdeco.client.particle.AmethystGlintParticle;
 import dev.lambdaurora.aurorasdeco.client.renderer.*;
 import dev.lambdaurora.aurorasdeco.client.screen.SawmillScreen;
 import dev.lambdaurora.aurorasdeco.client.screen.ShelfScreen;
+import dev.lambdaurora.aurorasdeco.hook.TrinketsHooks;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
@@ -53,6 +54,8 @@ import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+
+import static dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry.*;
 
 /**
  * Represents the Aurora's Decorations client mod.
@@ -145,9 +148,9 @@ public class AurorasDecoClient implements ClientModInitializer {
                     });
         });
 
-        this.registerBlackboardItemRenderer(AurorasDecoRegistry.BLACKBOARD_BLOCK);
-        this.registerBlackboardItemRenderer(AurorasDecoRegistry.CHALKBOARD_BLOCK);
-        this.registerBlackboardItemRenderer(AurorasDecoRegistry.WAXED_BLACKBOARD_BLOCK);
+        this.registerBlackboardItemRenderer(BLACKBOARD_BLOCK);
+        this.registerBlackboardItemRenderer(CHALKBOARD_BLOCK);
+        this.registerBlackboardItemRenderer(WAXED_BLACKBOARD_BLOCK);
         this.registerBlackboardItemRenderer(AurorasDecoRegistry.WAXED_CHALKBOARD_BLOCK);
 
         ScreenRegistry.register(AurorasDecoRegistry.SAWMILL_SCREEN_HANDLER_TYPE, SawmillScreen::new);
@@ -162,6 +165,9 @@ public class AurorasDecoClient implements ClientModInitializer {
                 WindChimeBlockEntityRenderer::getTexturedModelData);
 
         ModelLoadingRegistry.INSTANCE.registerModelProvider(RenderRule::reload);
+
+        TrinketsHooks.init(BLACKBOARD_BLOCK.asItem(), WAXED_BLACKBOARD_BLOCK.asItem(),
+                CHALKBOARD_BLOCK.asItem(), WAXED_CHALKBOARD_BLOCK.asItem());
     }
 
     private void registerBlackboardItemRenderer(BlackboardBlock blackboard) {

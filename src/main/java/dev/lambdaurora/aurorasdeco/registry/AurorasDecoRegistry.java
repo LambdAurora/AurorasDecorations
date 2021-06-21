@@ -28,6 +28,7 @@ import dev.lambdaurora.aurorasdeco.block.big_flower_pot.*;
 import dev.lambdaurora.aurorasdeco.block.entity.*;
 import dev.lambdaurora.aurorasdeco.entity.FakeLeashKnotEntity;
 import dev.lambdaurora.aurorasdeco.entity.SeatEntity;
+import dev.lambdaurora.aurorasdeco.hook.TrinketsHooks;
 import dev.lambdaurora.aurorasdeco.item.BlackboardItem;
 import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
 import dev.lambdaurora.aurorasdeco.mixin.SimpleRegistryAccessor;
@@ -104,7 +105,8 @@ public final class AurorasDecoRegistry {
     public static final AuroraTorchBlock COPPER_SULFATE_TORCH_BLOCK = register("copper_sulfate_torch",
             new AuroraTorchBlock(FabricBlockSettings.copyOf(Blocks.TORCH), COPPER_SULFATE_FLAME));
     public static final AuroraWallTorchBlock COPPER_SULFATE_WALL_TORCH_BLOCK = register("copper_sulfate_wall_torch",
-            new AuroraWallTorchBlock(FabricBlockSettings.copyOf(COPPER_SULFATE_TORCH_BLOCK).dropsLike(COPPER_SULFATE_TORCH_BLOCK), COPPER_SULFATE_FLAME));
+            new AuroraWallTorchBlock(FabricBlockSettings.copyOf(COPPER_SULFATE_TORCH_BLOCK)
+                    .dropsLike(COPPER_SULFATE_TORCH_BLOCK), COPPER_SULFATE_FLAME));
     public static final WallStandingBlockItem COPPER_SULFATE_TORCH_ITEM = register("copper_sulfate_torch",
             new WallStandingBlockItem(COPPER_SULFATE_TORCH_BLOCK, COPPER_SULFATE_WALL_TORCH_BLOCK,
                     new FabricItemSettings().group(ItemGroup.DECORATIONS)));
@@ -177,7 +179,8 @@ public final class AurorasDecoRegistry {
             new FabricItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
             BlackboardItem::new);
 
-    public static final Item COPPER_SULFATE_ITEM = register("copper_sulfate", new Item(new FabricItemSettings().group(ItemGroup.MISC)));
+    public static final Item COPPER_SULFATE_ITEM = register("copper_sulfate", new Item(new FabricItemSettings()
+            .group(ItemGroup.MISC)));
 
     public static final FenceGateBlock NETHER_BRICK_FENCE_GATE = registerWithItem("nether_brick_fence_gate",
             new FenceGateBlock(FabricBlockSettings.copyOf(Blocks.NETHER_BRICK_FENCE)),
@@ -409,8 +412,10 @@ public final class AurorasDecoRegistry {
             } else if (block instanceof FlowerPotBlock flowerPotBlock) {
                 if (block == Blocks.FLOWER_POT) return;
 
-                RegistrationHelper.BLOCK.register(RegistrationHelper.getIdPath("hanging_flower_pot", id, "^potted_"),
-                        new HangingFlowerPotBlock(flowerPotBlock));
+                RegistrationHelper.BLOCK.register(
+                        RegistrationHelper.getIdPath("hanging_flower_pot", id, "^potted_"),
+                        new HangingFlowerPotBlock(flowerPotBlock)
+                );
             } else {
                 WoodType.onBlockRegister(id, block);
                 LanternRegistry.tryRegisterWallLantern(block, id);
