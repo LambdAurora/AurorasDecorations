@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.mixin.client;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
+import dev.lambdaurora.aurorasdeco.block.entity.BlackboardBlockEntity;
 import dev.lambdaurora.aurorasdeco.client.model.*;
 import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.UnbakedModel;
@@ -76,6 +77,7 @@ public abstract class ModelLoaderMixin {
                                 this.putModel(restModelId, model);
                                 this.modelsToBake.put(restModelId, model);
                             });
+                    BlackboardBlockEntity.markAllMeshesDirty();
                 }
 
                 if (modelId.getNamespace().equals(AurorasDeco.NAMESPACE)) {

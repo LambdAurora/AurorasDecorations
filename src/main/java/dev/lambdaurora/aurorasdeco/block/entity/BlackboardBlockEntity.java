@@ -20,12 +20,14 @@ package dev.lambdaurora.aurorasdeco.block.entity;
 import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 import net.fabricmc.fabric.api.util.NbtType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.world.ClientWorld;
@@ -38,6 +40,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Set;
+
 /**
  * Represents a blackboard block entity, stores the pixels of a blackboard.
  *
@@ -48,10 +52,14 @@ import org.jetbrains.annotations.Nullable;
 public class BlackboardBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Nameable,
         RenderAttachmentBlockEntity {
     @Environment(EnvType.CLIENT)
-    private Mesh mesh = null;
-
+    private static final Set<BlackboardBlockEntity> ACTIVE_BLACKBOARDS = new ObjectOpenHashSet<>();
     private final Blackboard blackboard = new AssignedBlackboard();
     private @Nullable Text customName;
+
+    @Environment(EnvType.CLIENT)
+    private Mesh mesh = null;
+    @Environment(EnvType.CLIENT)
+    private boolean meshDirty = true;
 
     public BlackboardBlockEntity(BlockPos pos, BlockState state) {
         super(AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE, pos, state);
@@ -132,11 +140,59 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
         return ((BlackboardBlock) this.getCachedState().getBlock()).isLocked();
     }
 
+    @Override
+    public void markRemoved() {
+        super.markRemoved();
+
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            this.markBlackboardRemoved();
+        }
+    }
+
+    @Override
+    public void cancelRemoval() {
+        super.cancelRemoval();
+
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            ACTIVE_BLACKBOARDS.add(this);
+        }
+    }
+
     /* Client */
 
     @Override
     public @Nullable Object getRenderAttachmentData() {
+        if (this.meshDirty)
+            this.rebuildMesh();
         return this.mesh;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public void markMeshDirty() {
+        this.meshDirty = true;
+    }
+
+    @Environment(EnvType.CLIENT)
+    private void rebuildMesh() {
+        this.meshDirty = false;
+        int light = this.blackboard.isLit() ? 0xf000f0 : 0;
+        this.mesh = this.blackboard.buildMesh(this.getCachedState().get(BlackboardBlock.FACING), light);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public void markBlackboardRemoved() {
+        ACTIVE_BLACKBOARDS.remove(this);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void markAllMeshesDirty() {
+        ACTIVE_BLACKBOARDS.forEach(BlackboardBlockEntity::markMeshDirty);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void onWorldChange(@Nullable ClientWorld world) {
+        ACTIVE_BLACKBOARDS.removeIf(blackboardBlockEntity -> blackboardBlockEntity.world == null
+                || blackboardBlockEntity.world != world);
     }
 
     /* Serialization */
@@ -172,8 +228,7 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
     public void fromClientTag(NbtCompound nbt) {
         this.readBlackBoardNbt(nbt);
 
-        int light = this.blackboard.isLit() ? 0xf000f0 : 0;
-        this.mesh = this.blackboard.buildMesh(this.getCachedState().get(BlackboardBlock.FACING), light);
+        this.rebuildMesh();
         ((ClientWorld) this.world).scheduleBlockRenders(
                 ChunkSectionPos.getSectionCoord(this.getPos().getX()),
                 ChunkSectionPos.getSectionCoord(this.getPos().getY()),

@@ -43,6 +43,7 @@
     "client.BlockDustParticleFactoryMixin",
     "client.BlockStateParticleEffectAccessor",
     "client.ClientRecipeBookMixin",
+    "client.MinecraftClientMixin",
     "client.MobEntityRendererAccessor",
     "client.ModelLoaderMixin",
     "client.NativeImageAccessor",
