@@ -85,6 +85,10 @@ import static net.minecraft.stat.Stats.CUSTOM;
  * @since 1.0.0
  */
 public final class AurorasDecoRegistry {
+    private AurorasDecoRegistry() {
+        throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");
+    }
+
     /* Particles */
 
     public static final DefaultParticleType AMETHYST_GLINT = registerParticle("amethyst_glint");
