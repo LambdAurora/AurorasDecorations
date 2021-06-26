@@ -85,6 +85,7 @@ public class ShelfScreenHandler extends ScreenHandler {
         return this.inventory.canPlayerUse(player);
     }
 
+    @Override
     public ItemStack transferSlot(PlayerEntity player, int index) {
         var stack = ItemStack.EMPTY;
         var slot = this.slots.get(index);

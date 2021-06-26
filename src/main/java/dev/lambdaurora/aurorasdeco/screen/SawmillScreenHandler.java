@@ -73,6 +73,7 @@ public final class SawmillScreenHandler extends ScreenHandler {
         this.contentsChangedListener = () -> {
         };
         this.input = new SimpleInventory(1) {
+            @Override
             public void markDirty() {
                 super.markDirty();
                 SawmillScreenHandler.this.onContentChanged(this);

@@ -263,6 +263,8 @@ public final class AurorasDecoRegistry {
             FabricBlockEntityTypeBuilder.create(WindChimeBlockEntity::new, WIND_CHIME_BLOCK).build()
     );
 
+    /* Screen handlers */
+
     public static final ScreenHandlerType<SawmillScreenHandler> SAWMILL_SCREEN_HANDLER_TYPE =
             ScreenHandlerRegistry.registerSimple(id("sawmill"), SawmillScreenHandler::new);
 
