@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "aurorasdeco:polished_tuff"
+    }
+  },
+  "result": {
+    "item": "aurorasdeco:polished_tuff_slab",
+    "count": 6
+  }
+}

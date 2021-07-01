@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:calcite"
+    }
+  },
+  "result": {
+    "item": "aurorasdeco:calcite_slab",
+    "count": 6
+  }
+}

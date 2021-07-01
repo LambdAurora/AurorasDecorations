@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "aurorasdeco:block/tuff/brick_slab"
+    },
+    "type=double": {
+      "model": "aurorasdeco:block/tuff/bricks"
+    },
+    "type=top": {
+      "model": "aurorasdeco:block/tuff/brick_slab_top"
+    }
+  }
+}

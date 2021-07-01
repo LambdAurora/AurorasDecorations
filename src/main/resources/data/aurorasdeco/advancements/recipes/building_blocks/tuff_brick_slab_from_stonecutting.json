@@ -1,0 +1,73 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "aurorasdeco:tuff_brick_slab_from_stonecutting"
+    ]
+  },
+  "criteria": {
+    "has_self": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "aurorasdeco:tuff_brick_slab"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "aurorasdeco:tuff_brick_slab_from_stonecutting"
+      }
+    },
+    "has_tuff": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:tuff"
+            ]
+          }
+        ]
+      }
+    },
+    "has_polished_tuff": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "aurorasdeco:polished_tuff"
+            ]
+          }
+        ]
+      }
+    },
+    "has_tuff_bricks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "aurorasdeco:tuff_bricks"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_self",
+      "has_the_recipe",
+      "has_tuff",
+      "has_polished_tuff",
+      "has_tuff_bricks"
+    ]
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "aurorasdeco:block/tuff_bricks",
+    "top": "aurorasdeco:block/tuff_bricks",
+    "side": "aurorasdeco:block/tuff_bricks"
+  }
+}

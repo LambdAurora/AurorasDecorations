@@ -223,16 +223,45 @@ public final class AurorasDecoRegistry {
                     2, COPPER_SULFATE_FLAME),
             new FabricItemSettings().group(ItemGroup.DECORATIONS));
 
+    private static final Derivator CALCITE_DERIVATOR = new Derivator(Blocks.CALCITE.getDefaultState());
+    public static final SlabBlock CALCITE_SLAB = CALCITE_DERIVATOR.slab(Items.DEEPSLATE_TILE_SLAB);
+    public static final StairsBlock CALCITE_STAIRS = CALCITE_DERIVATOR.stairs(Items.DEEPSLATE_TILE_STAIRS);
+
     public static final HangingFlowerPotBlock HANGING_FLOWER_POT_BLOCK = register("hanging_flower_pot",
             new HangingFlowerPotBlock((FlowerPotBlock) Blocks.FLOWER_POT));
 
     public static final FenceLikeWallBlock POLISHED_BASALT_WALL = registerWithItem("polished_basalt_wall",
             new FenceLikeWallBlock(FabricBlockSettings.copyOf(Blocks.POLISHED_BASALT)),
-            new FabricItemSettings().group(ItemGroup.DECORATIONS));
+            new FabricItemSettings().group(ItemGroup.DECORATIONS),
+            (block, settings) -> new DerivedBlockItem(block, KindSearcher.WALL_SEARCHER, KindSearcher::findLastOfGroup, settings));
 
     private static final Derivator TUFF_DERIVATOR = new Derivator(Blocks.TUFF.getDefaultState());
     public static final SlabBlock TUFF_SLAB = TUFF_DERIVATOR.slab(Items.DEEPSLATE_TILE_SLAB);
     public static final StairsBlock TUFF_STAIRS = TUFF_DERIVATOR.stairs(Items.DEEPSLATE_TILE_STAIRS);
+
+    public static final Block POLISHED_TUFF = registerWithItem("polished_tuff", new Block(FabricBlockSettings.copyOf(Blocks.TUFF)),
+            new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+            (block, settings) -> new DerivedBlockItem(block,
+                    KindSearcher.itemIdentifierSearcher(entry -> entry.stack().isOf(Items.TUFF))
+                            .afterMapped(Items.TUFF, ItemStack::getItem)
+                            .build(), KindSearcher::findLastOfGroup, settings));
+    private static final Derivator POLISHED_TUFF_DERIVATOR = new Derivator(POLISHED_TUFF.getDefaultState());
+    public static final SlabBlock POLISHED_TUFF_SLAB = POLISHED_TUFF_DERIVATOR.slab(Items.DEEPSLATE_TILE_SLAB);
+    public static final StairsBlock POLISHED_TUFF_STAIRS = POLISHED_TUFF_DERIVATOR.stairs(Items.DEEPSLATE_TILE_STAIRS);
+    public static final WallBlock POLISHED_TUFF_WALL = POLISHED_TUFF_DERIVATOR.wall();
+
+    public static final Block TUFF_BRICKS = registerWithItem("tuff_bricks", new Block(FabricBlockSettings.copyOf(POLISHED_TUFF)),
+            new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+            (block, settings) -> new DerivedBlockItem(block,
+                    KindSearcher.itemIdentifierSearcher(entry -> entry.stack().isOf(Items.CHISELED_DEEPSLATE))
+                            .afterMapped(Items.CHISELED_DEEPSLATE, ItemStack::getItem)
+                            .build(), KindSearcher::findLastOfGroup, settings));
+    private static final Derivator TUFF_BRICKS_DERIVATOR = new Derivator(TUFF_BRICKS.getDefaultState());
+    public static final Block CRACKED_TUFF_BRICKS = TUFF_BRICKS_DERIVATOR.cracked();
+    public static final Block CHISELED_TUFF_BRICKS = TUFF_BRICKS_DERIVATOR.chiseled();
+    public static final SlabBlock TUFF_BRICK_SLAB = TUFF_BRICKS_DERIVATOR.slab(Items.DEEPSLATE_TILE_SLAB);
+    public static final StairsBlock TUFF_BRICK_STAIRS = TUFF_BRICKS_DERIVATOR.stairs(Items.DEEPSLATE_TILE_STAIRS);
+    public static final WallBlock TUFF_BRICK_WALL = TUFF_BRICKS_DERIVATOR.wall();
 
     /* Block Entities */
 

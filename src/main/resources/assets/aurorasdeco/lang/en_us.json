@@ -13,6 +13,9 @@
 
   "block.aurorasdeco.bench": "%s Bench",
 
+  "block.aurorasdeco.calcite_slab": "Calcite Slab",
+  "block.aurorasdeco.calcite_stairs": "Calcite Stairs",
+
   "block.aurorasdeco.copper_sulfate_brazier": "Copper Sulfate Brazier",
   "block.aurorasdeco.copper_sulfate_campfire": "Copper Sulfate Campfire",
   "block.aurorasdeco.copper_sulfate_lantern": "Copper Sulfate Lantern",
@@ -72,6 +75,16 @@
 
   "block.aurorasdeco.tuff_slab": "Tuff Slab",
   "block.aurorasdeco.tuff_stairs": "Tuff Stairs",
+  "block.aurorasdeco.polished_tuff": "Polished Tuff",
+  "block.aurorasdeco.polished_tuff_slab": "Polished Tuff Slab",
+  "block.aurorasdeco.polished_tuff_stairs": "Polished Tuff Stairs",
+  "block.aurorasdeco.polished_tuff_wall": "Polished Tuff Wall",
+  "block.aurorasdeco.tuff_bricks": "Tuff Bricks",
+  "block.aurorasdeco.cracked_tuff_bricks": "Cracked Tuff Bricks",
+  "block.aurorasdeco.chiseled_tuff_bricks": "Chiseled Tuff Bricks",
+  "block.aurorasdeco.tuff_brick_slab": "Tuff Brick Slab",
+  "block.aurorasdeco.tuff_brick_stairs": "Tuff Brick Stairs",
+  "block.aurorasdeco.tuff_brick_wall": "Tuff Brick Wall",
 
   "block.aurorasdeco.wind_chime": "Wind Chime",
 

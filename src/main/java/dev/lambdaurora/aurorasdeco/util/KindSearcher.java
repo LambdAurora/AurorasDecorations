@@ -20,6 +20,7 @@ package dev.lambdaurora.aurorasdeco.util;
 import net.minecraft.block.CampfireBlock;
 import net.minecraft.block.LanternBlock;
 import net.minecraft.block.TorchBlock;
+import net.minecraft.block.WallBlock;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -164,5 +165,10 @@ public class KindSearcher<I, O> {
             entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof TorchBlock
     )
             .afterMapped(Items.SOUL_TORCH, ItemStack::getItem)
+            .build();
+    public static final KindSearcher<ItemStack, StackEntry> WALL_SEARCHER = itemIdentifierSearcher(
+            entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof WallBlock
+    )
+            .afterMapped(Items.COBBLESTONE_WALL, ItemStack::getItem)
             .build();
 }

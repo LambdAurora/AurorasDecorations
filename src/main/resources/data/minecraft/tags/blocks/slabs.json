@@ -1,6 +1,9 @@
 {
   "replace": false,
   "values": [
+    "aurorasdeco:calcite_slab",
+    "aurorasdeco:polished_tuff_slab",
+    "aurorasdeco:tuff_brick_slab",
     "aurorasdeco:tuff_slab"
   ]
 }

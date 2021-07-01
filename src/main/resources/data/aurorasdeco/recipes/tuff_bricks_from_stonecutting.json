@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": [
+    {
+      "item": "minecraft:tuff"
+    },
+    {
+      "item": "aurorasdeco:polished_tuff"
+    }
+  ],
+  "result": "aurorasdeco:tuff_bricks",
+  "count": 1
+}

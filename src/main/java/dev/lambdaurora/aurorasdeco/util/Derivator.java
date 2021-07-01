@@ -22,11 +22,9 @@ import dev.lambdaurora.aurorasdeco.block.AuroraStairsBlock;
 import dev.lambdaurora.aurorasdeco.item.DerivedBlockItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SlabBlock;
-import net.minecraft.block.StairsBlock;
+import net.minecraft.block.*;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.registry.Registry;
 
@@ -41,43 +39,80 @@ import static dev.lambdaurora.aurorasdeco.AurorasDeco.id;
  */
 public class Derivator {
     private final BlockState base;
-    private final String baseName;
+    private final String normalBaseName;
+    private final String singularBaseName;
 
     public Derivator(BlockState base) {
         this.base = base;
-        this.baseName = Registry.BLOCK.getId(base.getBlock()).getPath();
+        this.normalBaseName = Registry.BLOCK.getId(base.getBlock()).getPath();
+        this.singularBaseName = this.normalBaseName.endsWith("bricks")
+                ? this.normalBaseName.substring(0, this.normalBaseName.length() - 1)
+                : this.normalBaseName;
+    }
+
+    public Block cracked() {
+        var derivative = new Derivative("cracked", true);
+        var item = base.getBlock().asItem();
+        return registerWithItem(this.normalBaseName, derivative,
+                new Block(FabricBlockSettings.copyOf(this.base.getBlock())),
+                derivativeSearcher(new Derivative(this.normalBaseName, false)).build(),
+                new FabricItemSettings().group(item.getGroup()));
+    }
+
+    public Block chiseled() {
+        var derivative = new Derivative("chiseled", true);
+        var item = base.getBlock().asItem();
+        return registerWithItem(this.normalBaseName, derivative,
+                new Block(FabricBlockSettings.copyOf(this.base.getBlock())),
+                derivativeSearcher(new Derivative(this.normalBaseName, false)).build(),
+                new FabricItemSettings().group(item.getGroup()));
+    }
+
+    public WallBlock wall() {
+        var derivative = new Derivative("wall", false);
+        var name = derivative.apply(this.singularBaseName);
+        var block = register(name, new WallBlock(FabricBlockSettings.copyOf(this.base.getBlock())));
+        register(name, new DerivedBlockItem(block, KindSearcher.WALL_SEARCHER, KindSearcher::findLastOfGroup,
+                new FabricItemSettings().group(ItemGroup.DECORATIONS)));
+        return block;
     }
 
     public SlabBlock slab() {
+        var derivative = new Derivative("slab", false);
         var item = base.getBlock().asItem();
-        return registerWithItem(this.baseName, "slab", new SlabBlock(FabricBlockSettings.copyOf(this.base.getBlock())),
-                derivativeSearcher("slab").build(),
+        return registerWithItem(this.singularBaseName, derivative,
+                new SlabBlock(FabricBlockSettings.copyOf(this.base.getBlock())),
+                derivativeSearcher(derivative).build(),
                 new FabricItemSettings()
                         .group(item.getGroup()));
     }
 
     public SlabBlock slab(Item after) {
+        var derivative = new Derivative("slab", false);
         var item = base.getBlock().asItem();
-        return registerWithItem(this.baseName, "slab", new SlabBlock(FabricBlockSettings.copyOf(this.base.getBlock())),
-                closeDerivativeSearcher("slab").afterMapped(after, ItemStack::getItem).build(),
+        return registerWithItem(this.singularBaseName, derivative,
+                new SlabBlock(FabricBlockSettings.copyOf(this.base.getBlock())),
+                closeDerivativeSearcher(derivative).afterMapped(after, ItemStack::getItem).build(),
                 new FabricItemSettings()
                         .group(item.getGroup()));
     }
 
     public StairsBlock stairs() {
+        var derivative = new Derivative("stairs", false);
         var item = base.getBlock().asItem();
-        return registerWithItem(this.baseName, "stairs", new AuroraStairsBlock(this.base,
+        return registerWithItem(this.singularBaseName, derivative, new AuroraStairsBlock(this.base,
                         FabricBlockSettings.copyOf(this.base.getBlock())),
-                derivativeSearcher("stairs").build(),
+                derivativeSearcher(derivative).build(),
                 new FabricItemSettings()
                         .group(item.getGroup()));
     }
 
     public StairsBlock stairs(Item after) {
+        var derivative = new Derivative("stairs", false);
         var item = base.getBlock().asItem();
-        return registerWithItem(this.baseName, "stairs", new AuroraStairsBlock(this.base,
+        return registerWithItem(this.singularBaseName, derivative, new AuroraStairsBlock(this.base,
                         FabricBlockSettings.copyOf(this.base.getBlock())),
-                closeDerivativeSearcher("stairs").afterMapped(after, ItemStack::getItem).build(),
+                closeDerivativeSearcher(derivative).afterMapped(after, ItemStack::getItem).build(),
                 new FabricItemSettings()
                         .group(item.getGroup()));
     }
@@ -90,24 +125,36 @@ public class Derivator {
         return Registry.register(Registry.ITEM, id(name), item);
     }
 
-    private static KindSearcher.Builder<ItemStack, KindSearcher.StackEntry> derivativeSearcher(String derivative) {
+    private static KindSearcher.Builder<ItemStack, KindSearcher.StackEntry> derivativeSearcher(Derivative derivative) {
         return KindSearcher.itemIdentifierSearcher(entry ->
                 (entry.id().getNamespace().equals("minecraft") || entry.id().getNamespace().equals(AurorasDeco.NAMESPACE))
-                        && entry.id().getPath().endsWith(derivative));
+                        && derivative.matches(entry.id().getPath()));
     }
 
-    private static KindSearcher.Builder<ItemStack, KindSearcher.StackEntry> closeDerivativeSearcher(String derivative) {
+    private static KindSearcher.Builder<ItemStack, KindSearcher.StackEntry> closeDerivativeSearcher(Derivative derivative) {
         return KindSearcher.itemIdentifierSearcher(entry ->
                 (entry.id().getNamespace().equals("minecraft") || entry.id().getNamespace().equals(AurorasDeco.NAMESPACE))
-                        && entry.id().getPath().endsWith(derivative) && entry.stack().getItem() instanceof DerivedBlockItem);
+                        && derivative.matches(entry.id().getPath()) && entry.stack().getItem() instanceof DerivedBlockItem);
     }
 
-    private static <T extends Block> T registerWithItem(String base, String derivative, T block,
+    private static <T extends Block> T registerWithItem(String base, Derivative derivative, T block,
                                                         KindSearcher<ItemStack, KindSearcher.StackEntry> searcher,
                                                         Item.Settings settings) {
-        var name = base + '_' + derivative;
+        var name = derivative.apply(base);
         register(name, block);
         register(name, new DerivedBlockItem(block, searcher, settings));
         return block;
+    }
+
+    public record Derivative(String name, boolean prefix) {
+        public String apply(String base) {
+            if (this.prefix) return this.name + '_' + base;
+            else return base + '_' + this.name;
+        }
+
+        public boolean matches(String path) {
+            if (this.prefix) return path.startsWith(this.name);
+            else return path.endsWith(this.name);
+        }
     }
 }

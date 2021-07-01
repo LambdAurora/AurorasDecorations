@@ -15,6 +15,7 @@
     "PistonBlockMixin",
     "PointOfInterestTypeMixin",
     "RecipeManagerMixin",
+    "ServerAdvancementLoaderMixin",
     "SimpleRegistryAccessor",
     "SpawnHelperMixin",
     "StateManagerBuilderAccessor",

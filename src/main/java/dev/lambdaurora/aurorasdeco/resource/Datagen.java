@@ -37,6 +37,11 @@ import dev.lambdaurora.aurorasdeco.resource.datagen.*;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.advancement.Advancement;
+import net.minecraft.advancement.AdvancementRewards;
+import net.minecraft.advancement.CriterionMerger;
+import net.minecraft.advancement.criterion.InventoryChangedCriterion;
+import net.minecraft.advancement.criterion.RecipeUnlockedCriterion;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.Material;
@@ -44,10 +49,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.predicate.NumberRange;
+import net.minecraft.predicate.entity.EntityPredicate;
+import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.recipe.*;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
-import net.minecraft.tag.ItemTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
@@ -101,9 +108,18 @@ public final class Datagen {
 
     private static final Map<RecipeType<?>, List<Recipe<?>>> RECIPES = new Object2ObjectOpenHashMap<>();
     private static final Map<Recipe<?>, String> RECIPES_CATEGORIES = new Object2ObjectOpenHashMap<>();
+    private static final Map<Identifier, Advancement.Task> ADVANCEMENTS = new Object2ObjectOpenHashMap<>();
 
     private Datagen() {
         throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");
+    }
+
+    public static void applyAdvancements(Map<Identifier, Advancement.Task> builder) {
+        ADVANCEMENTS.forEach((identifier, task) -> {
+            task.parent((Advancement) null);
+
+            builder.put(identifier, task);
+        });
     }
 
     public static void applyRecipes(Map<Identifier, JsonElement> map,
@@ -134,20 +150,15 @@ public final class Datagen {
         recipes.add(recipe);
         RECIPES_CATEGORIES.put(recipe, category);
 
+        register(new Identifier(recipe.getId().getNamespace(), "recipes/" + category + "/" + recipe.getId().getPath()),
+                simpleRecipeUnlock(recipe));
+
         return recipe;
     }
 
-    public static JsonObject blockModelBase(Identifier parent) {
-        var root = new JsonObject();
-        root.addProperty("parent", parent.toString());
-        return root;
-    }
-
-    public static JsonObject blockModelTextures(JsonObject root, Map<String, Identifier> textures) {
-        var texturesJson = new JsonObject();
-        textures.forEach((key, id) -> texturesJson.addProperty(key, id.toString()));
-        root.add("textures", texturesJson);
-        return root;
+    public static Advancement.Task register(Identifier id, Advancement.Task advancement) {
+        ADVANCEMENTS.put(id, advancement);
+        return advancement;
     }
 
     public static void registerBetterGrassLayer(Identifier blockId, Identifier data) {
@@ -165,32 +176,7 @@ public final class Datagen {
         registerBetterGrassLayer(Registry.BLOCK.getId(block), data);
     }
 
-    public static JsonObject inventoryChangedCriteria(String type, Identifier item) {
-        var root = new JsonObject();
-        root.addProperty("trigger", "minecraft:inventory_changed");
-        var conditions = new JsonObject();
-        var items = new JsonArray();
-        items.add(switch (type) {
-            case "item", "block" -> {
-                var itemJson = new JsonObject();
-                itemJson.add(type + 's', jsonArray(item));
-                yield itemJson;
-            }
-            default -> {
-                var obj = new JsonObject();
-                obj.addProperty(type, item.toString());
-                yield obj;
-            }
-        });
-        conditions.add("items", items);
-        root.add("conditions", conditions);
-        return root;
-    }
-
-    public static JsonObject inventoryChangedCriteria(Ingredient item) {
-        var root = new JsonObject();
-        root.addProperty("trigger", "minecraft:inventory_changed");
-        var conditions = new JsonObject();
+    public static InventoryChangedCriterion.Conditions inventoryChangedCriterion(Ingredient item) {
         var items = new JsonArray();
         var ingredientJson = item.toJson();
         if (ingredientJson instanceof JsonObject ingredientJsonObject) {
@@ -200,83 +186,31 @@ public final class Datagen {
                 items.add(child);
             } else items.add(ingredientJson);
         }
-        conditions.add("items", items);
-        root.add("conditions", conditions);
-        return root;
+        return new InventoryChangedCriterion.Conditions(EntityPredicate.Extended.EMPTY,
+                NumberRange.IntRange.ANY, NumberRange.IntRange.ANY, NumberRange.IntRange.ANY,
+                ItemPredicate.deserializeAll(items));
     }
 
-    public static JsonObject recipeUnlockedCriteria(Identifier recipe) {
-        var root = new JsonObject();
-        root.addProperty("trigger", "minecraft:recipe_unlocked");
-        var conditions = new JsonObject();
-        conditions.addProperty("recipe", recipe.toString());
-        root.add("conditions", conditions);
-        return root;
-    }
+    public static Advancement.Task simpleRecipeUnlock(Recipe<?> recipe) {
+        var advancement = Advancement.Task.create();
 
-    public static JsonObject simpleRecipeUnlock(Identifier recipe, List<Ingredient> ingredients, Ingredient output) {
-        var root = new JsonObject();
-        root.addProperty("parent", "minecraft:recipes/root");
-        var rewards = new JsonObject();
-        rewards.add("recipes", jsonArray(recipe));
-        root.add("rewards", rewards);
+        advancement.parent(new Identifier("recipes/root"));
+        advancement.rewards(AdvancementRewards.Builder.recipe(recipe.getId()));
+        advancement.criteriaMerger(CriterionMerger.OR);
+        advancement.criterion("has_self", InventoryChangedCriterion.Conditions.items(recipe.getOutput().getItem()));
+        advancement.criterion("has_the_recipe",
+                new RecipeUnlockedCriterion.Conditions(EntityPredicate.Extended.EMPTY, recipe.getId())
+        );
 
-        var criteria = new JsonObject();
-        var requirements = new JsonArray();
-        int i = 0;
-        for (var ingredient : ingredients) {
-            criteria.add("has_" + i, inventoryChangedCriteria(ingredient));
-            requirements.add("has_" + i);
-            i++;
-        }
-
-        criteria.add("has_self", inventoryChangedCriteria(output));
-        criteria.add("has_the_recipe", recipeUnlockedCriteria(recipe));
-        root.add("criteria", criteria);
-
-        requirements.add("has_self");
-        requirements.add("has_the_recipe");
-        root.add("requirements", requirements);
-        return root;
-    }
-
-    public static JsonObject simpleRecipeUnlock(Recipe<?> recipe) {
-        var root = new JsonObject();
-        root.addProperty("parent", "minecraft:recipes/root");
-        var rewards = new JsonObject();
-        rewards.add("recipes", jsonArray(recipe.getId()));
-        root.add("rewards", rewards);
-
-        var criteria = new JsonObject();
-        var requirements = new JsonArray();
         int i = 0;
         for (var ingredient : recipe.getIngredients()) {
             if (ingredient.isEmpty())
                 continue;
-            criteria.add("has_" + i, inventoryChangedCriteria(ingredient));
-            requirements.add("has_" + i);
+            advancement.criterion("has_" + i, inventoryChangedCriterion(ingredient));
             i++;
         }
 
-        criteria.add("has_self", inventoryChangedCriteria(Ingredient.ofItems(recipe.getOutput().getItem())));
-        criteria.add("has_the_recipe", recipeUnlockedCriteria(recipe.getId()));
-        root.add("criteria", criteria);
-
-        requirements.add("has_self");
-        requirements.add("has_the_recipe");
-        root.add("requirements", jsonArray(requirements));
-        return root;
-    }
-
-    public static void registerSimpleRecipesUnlock() {
-        RECIPES_CATEGORIES.forEach((recipe, category) -> {
-            var json = simpleRecipeUnlock(recipe);
-
-            var id = new Identifier(recipe.getId().getNamespace(),
-                    "advancements/recipes/" + category + "/" + recipe.getId().getPath());
-
-            AurorasDeco.RESOURCE_PACK.putJson(ResourceType.SERVER_DATA, id, json);
-        });
+        return advancement;
     }
 
     private static JsonObject generateBlockLootTableSimplePool(Identifier id, boolean copyName) {
@@ -476,10 +410,6 @@ public final class Datagen {
     }
 
     public static void registerDefaultWoodcuttingRecipes() {
-        registerRecipe(new WoodcuttingRecipe(new Identifier("woodcutting/stick"), "",
-                Ingredient.fromTag(ItemTags.PLANKS),
-                new ItemStack(Items.STICK, 2)), "misc");
-
         WoodType.forEach(type -> {
             var log = type.getLog();
             var planks = type.getComponent(WoodType.ComponentType.PLANKS);

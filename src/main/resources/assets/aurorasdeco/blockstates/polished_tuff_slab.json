@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "aurorasdeco:block/tuff/polished_slab"
+    },
+    "type=double": {
+      "model": "aurorasdeco:block/tuff/polished"
+    },
+    "type=top": {
+      "model": "aurorasdeco:block/tuff/polished_slab_top"
+    }
+  }
+}

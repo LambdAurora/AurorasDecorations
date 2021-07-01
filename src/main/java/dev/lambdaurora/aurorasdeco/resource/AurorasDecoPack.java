@@ -126,8 +126,6 @@ public class AurorasDecoPack implements ModResourcePack {
                 .map(Registry.BLOCK::getId));
         this.registerTag(new String[]{"blocks"}, AurorasDeco.id("wall_lanterns"), LanternRegistry.streamIds());
 
-        Datagen.registerSimpleRecipesUnlock();
-
         LOGGER.info("Registered " + this.resources.size() + " resources.");
 
         return this;

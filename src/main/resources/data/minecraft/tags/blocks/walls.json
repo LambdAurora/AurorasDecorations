@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
-    "aurorasdeco:polished_basalt_wall"
+    "aurorasdeco:polished_basalt_wall",
+    "aurorasdeco:polished_tuff_wall",
+    "aurorasdeco:tuff_brick_wall"
   ]
 }
