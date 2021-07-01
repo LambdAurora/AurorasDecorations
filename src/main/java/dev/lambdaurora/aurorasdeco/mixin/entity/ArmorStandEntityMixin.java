@@ -17,7 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.mixin.entity;
 
-import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoSounds;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -80,7 +80,7 @@ public abstract class ArmorStandEntityMixin extends LivingEntity {
             cir.setReturnValue(ActionResult.SUCCESS);
         } else if (stack.isOf(Items.SHEARS) && player.isSneaking() && !this.shouldHideBasePlate()) {
             this.setHideBasePlate(true);
-            this.playSound(AurorasDecoRegistry.ARMOR_STAND_HIDE_BASE_PLATE_SOUND_EVENT, 1.f, 1.f);
+            this.playSound(AurorasDecoSounds.ARMOR_STAND_HIDE_BASE_PLATE_SOUND_EVENT, 1.f, 1.f);
             stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
             world.emitGameEvent(player, GameEvent.SHEAR, this.getBlockPos());
             cir.setReturnValue(ActionResult.SUCCESS);

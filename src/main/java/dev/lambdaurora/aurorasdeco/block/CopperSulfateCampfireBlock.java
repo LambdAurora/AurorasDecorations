@@ -18,7 +18,7 @@
 package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.block.behavior.CopperSulfateBehavior;
-import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoParticles;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CampfireBlock;
 import net.minecraft.server.world.ServerWorld;
@@ -66,7 +66,7 @@ public class CopperSulfateCampfireBlock extends CampfireBlock {
 
             if (random.nextInt(5) == 0) {
                 for (int i = 0; i < random.nextInt(1) + 1; ++i) {
-                    world.addParticle(AurorasDecoRegistry.COPPER_SULFATE_LAVA,
+                    world.addParticle(AurorasDecoParticles.COPPER_SULFATE_LAVA,
                             pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5,
                             random.nextFloat() / 2.f, 5.0E-5d, random.nextFloat() / 2.f);
                 }

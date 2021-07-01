@@ -18,7 +18,7 @@
 package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoParticles;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -51,7 +51,7 @@ public class AmethystLanternBlock extends LanternBlock {
             double x = pos.getX() + random.nextFloat();
             double y = pos.getY() + random.nextFloat();
             double z = pos.getZ() + random.nextFloat();
-            world.addParticle(AurorasDecoRegistry.AMETHYST_GLINT, x, y, z, 0.f, 0.f, 0.f);
+            world.addParticle(AurorasDecoParticles.AMETHYST_GLINT, x, y, z, 0.f, 0.f, 0.f);
         }
     }
 }

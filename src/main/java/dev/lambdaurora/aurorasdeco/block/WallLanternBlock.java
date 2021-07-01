@@ -24,6 +24,7 @@ import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
 import dev.lambdaurora.aurorasdeco.mixin.BlockAccessor;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoSounds;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.util.CustomStateBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -279,7 +280,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
             else
                 blockEntity.activate(direction, entity, lanternCollisionAxis);
             if (!previousColliding) {
-                world.playSound(null, pos, AurorasDecoRegistry.LANTERN_SWING_SOUND_EVENT, SoundCategory.BLOCKS,
+                world.playSound(null, pos, AurorasDecoSounds.LANTERN_SWING_SOUND_EVENT, SoundCategory.BLOCKS,
                         2.f, 1.f);
                 world.emitGameEvent(entity, GameEvent.RING_BELL, pos);
             }

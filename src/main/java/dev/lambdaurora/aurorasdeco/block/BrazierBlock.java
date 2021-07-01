@@ -18,6 +18,7 @@
 package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoSounds;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -185,7 +186,7 @@ public class BrazierBlock extends Block implements Waterloggable {
         if (state.get(LIT)) {
             if (random.nextInt(10) == 0) {
                 world.playSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                        AurorasDecoRegistry.BRAZIER_CRACKLE_SOUND_EVENT, SoundCategory.BLOCKS,
+                        AurorasDecoSounds.BRAZIER_CRACKLE_SOUND_EVENT, SoundCategory.BLOCKS,
                         .5f + random.nextFloat(), random.nextFloat() * .7f + .6f, false);
             }
 

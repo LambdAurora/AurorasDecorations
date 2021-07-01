@@ -17,7 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.mixin.entity;
 
-import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoSounds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.decoration.AbstractDecorationEntity;
@@ -67,7 +67,7 @@ public abstract class ItemFrameEntityMixin extends AbstractDecorationEntity {
             if (!heldStack.isEmpty() && stack.isOf(Items.SHEARS) && !this.isInvisible()) {
                 if (!this.getEntityWorld().isClient()) {
                     this.setInvisible(true);
-                    this.playSound(AurorasDecoRegistry.ITEM_FRAME_HIDE_BACKGROUND_EVENT, 1.f, 1.f);
+                    this.playSound(AurorasDecoSounds.ITEM_FRAME_HIDE_BACKGROUND_SOUND_EVENT, 1.f, 1.f);
                     stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
                     world.emitGameEvent(player, GameEvent.SHEAR, this.getBlockPos());
                     cir.setReturnValue(ActionResult.CONSUME);

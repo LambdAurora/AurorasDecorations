@@ -27,6 +27,7 @@ import dev.lambdaurora.aurorasdeco.client.renderer.*;
 import dev.lambdaurora.aurorasdeco.client.screen.SawmillScreen;
 import dev.lambdaurora.aurorasdeco.client.screen.ShelfScreen;
 import dev.lambdaurora.aurorasdeco.hook.TrinketsHooks;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoParticles;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
@@ -70,6 +71,7 @@ public class AurorasDecoClient implements ClientModInitializer {
     public static final ModelIdentifier BLACKBOARD_MASK = new ModelIdentifier(AurorasDeco.id("blackboard_mask"),
             "inventory");
 
+    @SuppressWarnings("UnstableApiUsage")
     @Override
     public void onInitializeClient() {
         BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE,
@@ -101,9 +103,9 @@ public class AurorasDecoClient implements ClientModInitializer {
                 AurorasDecoRegistry.WIND_CHIME_BLOCK
         );
 
-        ParticleFactoryRegistry.getInstance().register(AurorasDecoRegistry.AMETHYST_GLINT, AmethystGlintParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(AurorasDecoRegistry.COPPER_SULFATE_FLAME, FlameParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(AurorasDecoRegistry.COPPER_SULFATE_LAVA, LavaEmberParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(AurorasDecoParticles.AMETHYST_GLINT, AmethystGlintParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(AurorasDecoParticles.COPPER_SULFATE_FLAME, FlameParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(AurorasDecoParticles.COPPER_SULFATE_LAVA, LavaEmberParticle.Factory::new);
 
         StumpBlock.streamLogStumps()
                 .forEach(block -> BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout()));

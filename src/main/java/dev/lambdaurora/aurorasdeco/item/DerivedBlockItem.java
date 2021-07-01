@@ -17,55 +17,45 @@
 
 package dev.lambdaurora.aurorasdeco.item;
 
-import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import dev.lambdaurora.aurorasdeco.util.KindSearcher;
-import net.minecraft.item.Item;
+import net.minecraft.block.Block;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.function.ToIntBiFunction;
 
 /**
- * Represents a seat rest item.
+ * Represents an block item which got derived from another.
  *
  * @author LambdAurora
  * @version 1.0.0
  * @since 1.0.0
  */
-public class SeatRestItem extends Item {
-    private static final KindSearcher<ItemStack, Item> SEAT_REST_KIND_SEARCHER
-            = KindSearcher.assignableSearcher(SeatRestItem.class, ItemStack::getItem).build();
-    private static final List<SeatRestItem> SEAT_RESTS = new ArrayList<>();
+public class DerivedBlockItem extends BlockItem {
+    private final KindSearcher<ItemStack, KindSearcher.StackEntry> searcher;
+    private final SearchMethod searchMethod;
 
-    private final WoodType woodType;
-
-    public SeatRestItem(WoodType woodType, Settings settings) {
-        super(settings);
-        this.woodType = woodType;
-
-        SEAT_RESTS.add(this);
+    public DerivedBlockItem(Block block, KindSearcher<ItemStack, KindSearcher.StackEntry> searcher, Settings settings) {
+        this(block, searcher, KindSearcher::findAfter, settings);
     }
 
-    public static Stream<SeatRestItem> streamSeatRests() {
-        return SEAT_RESTS.stream();
-    }
-
-    /**
-     * Gets the wood type of this rest item.
-     *
-     * @return the wood type
-     */
-    public WoodType getWoodType() {
-        return this.woodType;
+    public DerivedBlockItem(Block block, KindSearcher<ItemStack, KindSearcher.StackEntry> searcher, SearchMethod searchMethod,
+                            Settings settings) {
+        super(block, settings);
+        this.searcher = searcher;
+        this.searchMethod = searchMethod;
     }
 
     @Override
     public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
         if (this.isIn(group)) {
-            stacks.add(SEAT_REST_KIND_SEARCHER.findLastOfGroup(stacks), new ItemStack(this));
+            stacks.add(this.searchMethod.applyAsInt(this.searcher, stacks), new ItemStack(this));
         }
+    }
+
+    public interface SearchMethod extends ToIntBiFunction<KindSearcher<ItemStack, KindSearcher.StackEntry>, List<ItemStack>> {
     }
 }

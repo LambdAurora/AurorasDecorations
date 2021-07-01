@@ -17,7 +17,6 @@
 
 package dev.lambdaurora.aurorasdeco.registry;
 
-import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.accessor.BlockEntityTypeAccessor;
 import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
@@ -29,6 +28,7 @@ import dev.lambdaurora.aurorasdeco.block.entity.*;
 import dev.lambdaurora.aurorasdeco.entity.FakeLeashKnotEntity;
 import dev.lambdaurora.aurorasdeco.entity.SeatEntity;
 import dev.lambdaurora.aurorasdeco.item.BlackboardItem;
+import dev.lambdaurora.aurorasdeco.item.DerivedBlockItem;
 import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
 import dev.lambdaurora.aurorasdeco.mixin.SimpleRegistryAccessor;
 import dev.lambdaurora.aurorasdeco.recipe.BlackboardCloneRecipe;
@@ -36,6 +36,8 @@ import dev.lambdaurora.aurorasdeco.recipe.ExplodingRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
 import dev.lambdaurora.aurorasdeco.screen.SawmillScreenHandler;
 import dev.lambdaurora.aurorasdeco.screen.ShelfScreenHandler;
+import dev.lambdaurora.aurorasdeco.util.Derivator;
+import dev.lambdaurora.aurorasdeco.util.KindSearcher;
 import dev.lambdaurora.aurorasdeco.util.RegistrationHelper;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.advancement.CriterionRegistry;
@@ -43,7 +45,6 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
-import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.fabricmc.fabric.api.tag.TagRegistry;
@@ -55,7 +56,6 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.*;
-import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
@@ -63,7 +63,6 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.SpecialRecipeSerializer;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.stat.StatFormatter;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.DyeColor;
@@ -75,6 +74,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static dev.lambdaurora.aurorasdeco.AurorasDeco.id;
+import static dev.lambdaurora.aurorasdeco.registry.AurorasDecoParticles.COPPER_SULFATE_FLAME;
 import static net.minecraft.stat.Stats.CUSTOM;
 
 /**
@@ -89,22 +89,19 @@ public final class AurorasDecoRegistry {
         throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");
     }
 
-    /* Particles */
-
-    public static final DefaultParticleType AMETHYST_GLINT = registerParticle("amethyst_glint");
-    public static final DefaultParticleType COPPER_SULFATE_FLAME = registerParticle("copper_sulfate_flame");
-    public static final DefaultParticleType COPPER_SULFATE_LAVA = registerParticle("copper_sulfate_lava");
-
     /* Blocks & Items */
 
     public static final LanternBlock AMETHYST_LANTERN_BLOCK = registerWithItem("amethyst_lantern",
-            new AmethystLanternBlock(), new FabricItemSettings().group(ItemGroup.DECORATIONS));
+            new AmethystLanternBlock(), new FabricItemSettings().group(ItemGroup.DECORATIONS),
+            (block, settings) -> new DerivedBlockItem(block, KindSearcher.LANTERN_SEARCHER, KindSearcher::findLastOfGroup, settings));
 
     public static final LanternBlock COPPER_SULFATE_LANTERN_BLOCK = registerWithItem("copper_sulfate_lantern",
-            new LanternBlock(FabricBlockSettings.copyOf(Blocks.LANTERN)), new FabricItemSettings().group(ItemGroup.DECORATIONS));
+            new LanternBlock(FabricBlockSettings.copyOf(Blocks.LANTERN)), new FabricItemSettings().group(ItemGroup.DECORATIONS),
+            (block, settings) -> new DerivedBlockItem(block, KindSearcher.LANTERN_SEARCHER, KindSearcher::findLastOfGroup, settings));
     public static final CopperSulfateCampfireBlock COPPER_SULFATE_CAMPFIRE_BLOCK = registerWithItem("copper_sulfate_campfire",
             new CopperSulfateCampfireBlock(FabricBlockSettings.copyOf(Blocks.CAMPFIRE).ticksRandomly()),
-            new FabricItemSettings().group(ItemGroup.DECORATIONS));
+            new FabricItemSettings().group(ItemGroup.DECORATIONS),
+            (block, settings) -> new DerivedBlockItem(block, KindSearcher.CAMPFIRE_SEARCHER, KindSearcher::findLastOfGroup, settings));
     public static final AuroraTorchBlock COPPER_SULFATE_TORCH_BLOCK = register("copper_sulfate_torch",
             new AuroraTorchBlock(FabricBlockSettings.copyOf(Blocks.TORCH), COPPER_SULFATE_FLAME));
     public static final AuroraWallTorchBlock COPPER_SULFATE_WALL_TORCH_BLOCK = register("copper_sulfate_wall_torch",
@@ -233,6 +230,10 @@ public final class AurorasDecoRegistry {
             new FenceLikeWallBlock(FabricBlockSettings.copyOf(Blocks.POLISHED_BASALT)),
             new FabricItemSettings().group(ItemGroup.DECORATIONS));
 
+    private static final Derivator TUFF_DERIVATOR = new Derivator(Blocks.TUFF.getDefaultState());
+    public static final SlabBlock TUFF_SLAB = TUFF_DERIVATOR.slab(Items.DEEPSLATE_TILE_SLAB);
+    public static final StairsBlock TUFF_STAIRS = TUFF_DERIVATOR.stairs(Items.DEEPSLATE_TILE_STAIRS);
+
     /* Block Entities */
 
     public static final BlockEntityType<BenchBlockEntity> BENCH_BLOCK_ENTITY_TYPE = Registry.register(
@@ -300,13 +301,6 @@ public final class AurorasDecoRegistry {
 
     public static final Identifier INTERACT_WITH_SAWMILL = register("interact_with_sawmill", StatFormatter.DEFAULT);
 
-    /* Sounds */
-
-    public static final SoundEvent BRAZIER_CRACKLE_SOUND_EVENT = registerSound("block.brazier.crackle");
-    public static final SoundEvent LANTERN_SWING_SOUND_EVENT = registerSound("block.lantern.swing");
-    public static final SoundEvent ARMOR_STAND_HIDE_BASE_PLATE_SOUND_EVENT = registerSound("entity.armor_stand.hide_base_plate");
-    public static final SoundEvent ITEM_FRAME_HIDE_BACKGROUND_EVENT = registerSound("entity.item_frame.hide_background");
-
     /* Recipes */
 
     public static final SpecialRecipeSerializer<BlackboardCloneRecipe> BLACKBOARD_CLONE_RECIPE_SERIALIZER
@@ -359,10 +353,6 @@ public final class AurorasDecoRegistry {
         return block;
     }
 
-    private static DefaultParticleType registerParticle(String name) {
-        return Registry.register(Registry.PARTICLE_TYPE, AurorasDeco.id(name), FabricParticleTypes.simple());
-    }
-
     private static PetBedBlock registerPetBed(DyeColor color) {
         return registerWithItem("pet_bed/" + color.getName(),
                 new PetBedBlock(FabricBlockSettings.of(Material.WOOL)
@@ -391,11 +381,6 @@ public final class AurorasDecoRegistry {
         });
     }
 
-    private static SoundEvent registerSound(String path) {
-        var id = id(path);
-        return Registry.register(Registry.SOUND_EVENT, id, new SoundEvent(id));
-    }
-
     private static Identifier register(String id, StatFormatter statFormatter) {
         var identifier = id(id);
         Registry.register(Registry.CUSTOM_STAT, id, identifier);
@@ -405,6 +390,8 @@ public final class AurorasDecoRegistry {
 
     @SuppressWarnings("unchecked")
     public static void init() {
+        AurorasDecoSounds.init();
+
         ((BlockEntityTypeAccessor) BlockEntityType.CAMPFIRE).aurorasdeco$addSupportedBlock(COPPER_SULFATE_CAMPFIRE_BLOCK);
         ((BlockItemAccessor) Items.FLOWER_POT).aurorasdeco$setCeilingBlock(HANGING_FLOWER_POT_BLOCK);
         Item.BLOCK_ITEMS.put(HANGING_FLOWER_POT_BLOCK, Items.FLOWER_POT);

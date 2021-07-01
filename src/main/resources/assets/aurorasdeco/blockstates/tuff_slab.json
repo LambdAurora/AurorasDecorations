@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "aurorasdeco:block/tuff_slab"
+    },
+    "type=double": {
+      "model": "minecraft:block/tuff"
+    },
+    "type=top": {
+      "model": "aurorasdeco:block/tuff_slab_top"
+    }
+  }
+}
