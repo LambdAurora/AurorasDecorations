@@ -4,7 +4,7 @@
       "model": "aurorasdeco:block/calcite/polished_slab"
     },
     "type=double": {
-      "model": "aurorasdeco:block/calcite/polished"
+      "model": "aurorasdeco:block/calcite/polished_slab_double"
     },
     "type=top": {
       "model": "aurorasdeco:block/calcite/polished_slab_top"

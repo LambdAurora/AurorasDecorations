@@ -3,6 +3,6 @@
   "textures": {
     "bottom": "aurorasdeco:block/polished_tuff",
     "top": "aurorasdeco:block/polished_tuff",
-    "side": "aurorasdeco:block/polished_tuff"
+    "side": "aurorasdeco:block/polished_tuff_slab_side"
   }
 }
