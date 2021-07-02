@@ -22,6 +22,7 @@ import net.minecraft.block.LanternBlock;
 import net.minecraft.block.TorchBlock;
 import net.minecraft.block.WallBlock;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
@@ -104,6 +105,12 @@ public class KindSearcher<I, O> {
 
     public static Builder<ItemStack, StackEntry> itemIdentifierSearcher(Predicate<StackEntry> tester) {
         return new Builder<>(tester, stack -> new StackEntry(stack, Registry.ITEM.getId(stack.getItem())));
+    }
+
+    public static KindSearcher<ItemStack, StackEntry> strictlyAfter(Item item) {
+        return KindSearcher.itemIdentifierSearcher(entry -> entry.stack().isOf(item))
+                .afterMapped(item, ItemStack::getItem)
+                .build();
     }
 
     public record StackEntry(ItemStack stack, Identifier id) {

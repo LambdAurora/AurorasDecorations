@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "aurorasdeco:polished_calcite"
+    }
+  },
+  "result": {
+    "item": "aurorasdeco:polished_calcite_stairs",
+    "count": 4
+  }
+}

@@ -37,7 +37,7 @@ import java.util.function.Function;
  */
 public final class MapUtil {
     private MapUtil() {
-        throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");
+        throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
     }
 
     public static <K, I, O> Map<K, O> map(Map<K, I> map, Function<I, O> mapper) {

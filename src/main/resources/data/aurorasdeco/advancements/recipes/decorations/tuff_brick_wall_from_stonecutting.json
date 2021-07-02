@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "aurorasdeco:tuff_brick_wall_from_tuff_bricks_stonecutting"
+      "aurorasdeco:tuff_brick_wall_from_stonecutting"
     ]
   },
   "criteria": {
@@ -21,7 +21,31 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "aurorasdeco:tuff_brick_wall_from_tuff_bricks_stonecutting"
+        "recipe": "aurorasdeco:tuff_brick_wall_from_stonecutting"
+      }
+    },
+    "has_tuff": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:tuff"
+            ]
+          }
+        ]
+      }
+    },
+    "has_polished_tuff": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "aurorasdeco:polished_tuff"
+            ]
+          }
+        ]
       }
     },
     "has_tuff_bricks": {
@@ -41,6 +65,8 @@
     [
       "has_self",
       "has_the_recipe",
+      "has_tuff",
+      "has_polished_tuff",
       "has_tuff_bricks"
     ]
   ]

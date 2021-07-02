@@ -45,8 +45,11 @@ function parse_ingredients(recipe) {
         }
 
         return ingredients;
-    } else if (recipe.type === 'minecraft:stonecutting' || recipe.type === 'aurorasdeco:woodcutting' || recipe.type === 'minecraft:smelting') {
-        return [recipe.ingredient];
+    } else if (recipe.type === 'minecraft:stonecutting' || recipe.type === 'aurorasdeco:woodcutting'
+        || recipe.type === 'minecraft:smelting') {
+        if (recipe.ingredient instanceof Array) {
+            return recipe.ingredient;
+        } else return [recipe.ingredient];
     }
 }
 

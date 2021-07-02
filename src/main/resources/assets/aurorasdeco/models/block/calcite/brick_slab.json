@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "aurorasdeco:block/calcite_bricks",
+    "top": "aurorasdeco:block/calcite_bricks",
+    "side": "aurorasdeco:block/calcite_bricks"
+  }
+}

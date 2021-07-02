@@ -1,7 +1,9 @@
 {
   "replace": false,
   "values": [
+    "aurorasdeco:calcite_brick_stairs",
     "aurorasdeco:calcite_stairs",
+    "aurorasdeco:polished_calcite_stairs",
     "aurorasdeco:polished_tuff_stairs",
     "aurorasdeco:tuff_brick_stairs",
     "aurorasdeco:tuff_stairs"

@@ -80,7 +80,8 @@ public final class RegistrationHelper<T> {
 
     public void addRegistrationCallback(RegistrationCallback<T> callback) {
         this.registrationCallbacks.add(callback);
-        RegistryEntryAddedCallback.event(this.registry).register((rawId, id, object) -> callback.onRegistration(this, id, object));
+        RegistryEntryAddedCallback.event(this.registry)
+                .register((rawId, id, object) -> callback.onRegistration(this, id, object));
     }
 
     @SuppressWarnings("unchecked")

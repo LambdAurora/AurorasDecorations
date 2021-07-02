@@ -31,7 +31,7 @@ import net.minecraft.util.registry.Registry;
  */
 public final class AurorasDecoParticles {
     private AurorasDecoParticles() {
-        throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");
+        throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
     }
 
     public static final DefaultParticleType AMETHYST_GLINT = register("amethyst_glint");

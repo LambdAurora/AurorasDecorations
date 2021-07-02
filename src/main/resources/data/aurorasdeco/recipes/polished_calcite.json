@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SS",
+    "SS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:calcite"
+    }
+  },
+  "result": {
+    "item": "aurorasdeco:polished_calcite",
+    "count": 4
+  }
+}

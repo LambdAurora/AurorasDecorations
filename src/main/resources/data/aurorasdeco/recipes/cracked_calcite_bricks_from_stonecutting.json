@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": [
+    {
+      "item": "minecraft:calcite"
+    },
+    {
+      "item": "aurorasdeco:polished_calcite"
+    },
+    {
+      "item": "aurorasdeco:calcite_bricks"
+    }
+  ],
+  "result": "aurorasdeco:cracked_calcite_bricks",
+  "count": 1
+}

@@ -33,7 +33,7 @@ import java.util.List;
 
 public final class AuroraUtil {
     private AuroraUtil() {
-        throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");
+        throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
     }
 
     public static Identifier toResourcePackId(Identifier id, String prefix, String extension) {
@@ -73,7 +73,8 @@ public final class AuroraUtil {
     }
 
     public static boolean isShapeEqual(Box s1, Box s2) {
-        return s1.minX == s2.minX && s1.minY == s2.minY && s1.minZ == s2.minZ && s1.maxX == s2.maxX && s1.maxY == s2.maxY && s1.maxZ == s2.maxZ;
+        return s1.minX == s2.minX && s1.minY == s2.minY && s1.minZ == s2.minZ
+                && s1.maxX == s2.maxX && s1.maxY == s2.maxY && s1.maxZ == s2.maxZ;
     }
 
     public static Identifier appendWithNamespace(String prefix, Identifier id) {

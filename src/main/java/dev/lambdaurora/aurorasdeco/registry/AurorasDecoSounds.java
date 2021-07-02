@@ -31,7 +31,7 @@ import static dev.lambdaurora.aurorasdeco.AurorasDeco.id;
  */
 public final class AurorasDecoSounds {
     private AurorasDecoSounds() {
-        throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");
+        throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
     }
 
     public static final SoundEvent BRAZIER_CRACKLE_SOUND_EVENT = register("block.brazier.crackle");

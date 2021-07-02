@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "aurorasdeco:block/calcite/brick_slab"
+    },
+    "type=double": {
+      "model": "aurorasdeco:block/calcite/bricks"
+    },
+    "type=top": {
+      "model": "aurorasdeco:block/calcite/brick_slab_top"
+    }
+  }
+}

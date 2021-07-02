@@ -55,7 +55,7 @@ public class Derivator {
         var item = base.getBlock().asItem();
         return registerWithItem(this.normalBaseName, derivative,
                 new Block(FabricBlockSettings.copyOf(this.base.getBlock())),
-                derivativeSearcher(new Derivative(this.normalBaseName, false)).build(),
+                this.derivativeSearcher(new Derivative(this.normalBaseName, false)).build(),
                 new FabricItemSettings().group(item.getGroup()));
     }
 
@@ -64,7 +64,7 @@ public class Derivator {
         var item = base.getBlock().asItem();
         return registerWithItem(this.normalBaseName, derivative,
                 new Block(FabricBlockSettings.copyOf(this.base.getBlock())),
-                derivativeSearcher(new Derivative(this.normalBaseName, false)).build(),
+                this.derivativeSearcher(new Derivative(this.normalBaseName, false)).build(),
                 new FabricItemSettings().group(item.getGroup()));
     }
 
@@ -125,7 +125,7 @@ public class Derivator {
         return Registry.register(Registry.ITEM, id(name), item);
     }
 
-    private static KindSearcher.Builder<ItemStack, KindSearcher.StackEntry> derivativeSearcher(Derivative derivative) {
+    private KindSearcher.Builder<ItemStack, KindSearcher.StackEntry> derivativeSearcher(Derivative derivative) {
         return KindSearcher.itemIdentifierSearcher(entry ->
                 (entry.id().getNamespace().equals("minecraft") || entry.id().getNamespace().equals(AurorasDeco.NAMESPACE))
                         && derivative.matches(entry.id().getPath()));

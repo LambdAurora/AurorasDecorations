@@ -37,7 +37,6 @@ import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
 import dev.lambdaurora.aurorasdeco.screen.SawmillScreenHandler;
 import dev.lambdaurora.aurorasdeco.screen.ShelfScreenHandler;
 import dev.lambdaurora.aurorasdeco.util.Derivator;
-import dev.lambdaurora.aurorasdeco.util.KindSearcher;
 import dev.lambdaurora.aurorasdeco.util.RegistrationHelper;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.advancement.CriterionRegistry;
@@ -86,22 +85,24 @@ import static net.minecraft.stat.Stats.CUSTOM;
  */
 public final class AurorasDecoRegistry {
     private AurorasDecoRegistry() {
-        throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");
+        throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
     }
 
     /* Blocks & Items */
 
     public static final LanternBlock AMETHYST_LANTERN_BLOCK = registerWithItem("amethyst_lantern",
             new AmethystLanternBlock(), new FabricItemSettings().group(ItemGroup.DECORATIONS),
-            (block, settings) -> new DerivedBlockItem(block, KindSearcher.LANTERN_SEARCHER, KindSearcher::findLastOfGroup, settings));
+            DerivedBlockItem::lantern);
 
     public static final LanternBlock COPPER_SULFATE_LANTERN_BLOCK = registerWithItem("copper_sulfate_lantern",
-            new LanternBlock(FabricBlockSettings.copyOf(Blocks.LANTERN)), new FabricItemSettings().group(ItemGroup.DECORATIONS),
-            (block, settings) -> new DerivedBlockItem(block, KindSearcher.LANTERN_SEARCHER, KindSearcher::findLastOfGroup, settings));
-    public static final CopperSulfateCampfireBlock COPPER_SULFATE_CAMPFIRE_BLOCK = registerWithItem("copper_sulfate_campfire",
+            new LanternBlock(FabricBlockSettings.copyOf(Blocks.LANTERN)),
+            new FabricItemSettings().group(ItemGroup.DECORATIONS),
+            DerivedBlockItem::lantern);
+    public static final CopperSulfateCampfireBlock COPPER_SULFATE_CAMPFIRE_BLOCK
+            = registerWithItem("copper_sulfate_campfire",
             new CopperSulfateCampfireBlock(FabricBlockSettings.copyOf(Blocks.CAMPFIRE).ticksRandomly()),
             new FabricItemSettings().group(ItemGroup.DECORATIONS),
-            (block, settings) -> new DerivedBlockItem(block, KindSearcher.CAMPFIRE_SEARCHER, KindSearcher::findLastOfGroup, settings));
+            DerivedBlockItem::campfire);
     public static final AuroraTorchBlock COPPER_SULFATE_TORCH_BLOCK = register("copper_sulfate_torch",
             new AuroraTorchBlock(FabricBlockSettings.copyOf(Blocks.TORCH), COPPER_SULFATE_FLAME));
     public static final AuroraWallTorchBlock COPPER_SULFATE_WALL_TORCH_BLOCK = register("copper_sulfate_wall_torch",
@@ -202,10 +203,12 @@ public final class AurorasDecoRegistry {
     public static final BlockEntityType<LanternBlockEntity> WALL_LANTERN_BLOCK_ENTITY_TYPE = Registry.register(
             Registry.BLOCK_ENTITY_TYPE,
             id("lantern"),
-            FabricBlockEntityTypeBuilder.create(LanternBlockEntity::new, WALL_LANTERN_BLOCK, WALL_SOUL_LANTERN_BLOCK).build()
+            FabricBlockEntityTypeBuilder.create(LanternBlockEntity::new, WALL_LANTERN_BLOCK, WALL_SOUL_LANTERN_BLOCK)
+                    .build()
     );
 
-    public static final WallLanternBlock AMETHYST_WALL_LANTERN_BLOCK = LanternRegistry.registerWallLantern(AMETHYST_LANTERN_BLOCK);
+    public static final WallLanternBlock AMETHYST_WALL_LANTERN_BLOCK
+            = LanternRegistry.registerWallLantern(AMETHYST_LANTERN_BLOCK);
 
     public static final WindChimeBlock WIND_CHIME_BLOCK = registerWithItem("wind_chime",
             new WindChimeBlock(FabricBlockSettings.of(Material.DECORATION).nonOpaque()
@@ -219,7 +222,8 @@ public final class AurorasDecoRegistry {
             new BrazierBlock(MapColor.LIGHT_BLUE, 2, 10, ParticleTypes.SOUL),
             new FabricItemSettings().group(ItemGroup.DECORATIONS));
     public static final BrazierBlock COPPER_SULFATE_BRAZIER_BLOCK = registerWithItem("copper_sulfate_brazier",
-            new CopperSulfateBrazierBlock(FabricBlockSettings.copyOf(BRAZIER_BLOCK).mapColor(MapColor.EMERALD_GREEN).luminance(14),
+            new CopperSulfateBrazierBlock(FabricBlockSettings.copyOf(BRAZIER_BLOCK)
+                    .mapColor(MapColor.EMERALD_GREEN).luminance(14),
                     2, COPPER_SULFATE_FLAME),
             new FabricItemSettings().group(ItemGroup.DECORATIONS));
 
@@ -227,35 +231,50 @@ public final class AurorasDecoRegistry {
     public static final SlabBlock CALCITE_SLAB = CALCITE_DERIVATOR.slab(Items.DEEPSLATE_TILE_SLAB);
     public static final StairsBlock CALCITE_STAIRS = CALCITE_DERIVATOR.stairs(Items.DEEPSLATE_TILE_STAIRS);
 
+    public static final Block POLISHED_CALCITE = registerWithItem("polished_calcite",
+            new Block(FabricBlockSettings.copyOf(Blocks.CALCITE)),
+            new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+            DerivedBlockItem.itemWithStrictPositionFactory(Items.CALCITE));
+    private static final Derivator POLISHED_CALCITE_DERIVATOR = new Derivator(POLISHED_CALCITE.getDefaultState());
+    public static final SlabBlock POLISHED_CALCITE_SLAB = POLISHED_CALCITE_DERIVATOR.slab(Items.DEEPSLATE_TILE_SLAB);
+    public static final StairsBlock POLISHED_CALCITE_STAIRS = POLISHED_CALCITE_DERIVATOR.stairs(Items.DEEPSLATE_TILE_STAIRS);
+    public static final WallBlock POLISHED_CALCITE_WALL = POLISHED_CALCITE_DERIVATOR.wall();
+
+    public static final Block CALCITE_BRICKS = registerWithItem("calcite_bricks",
+            new Block(FabricBlockSettings.copyOf(POLISHED_CALCITE)),
+            new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+            DerivedBlockItem.itemWithStrictPositionFactory(Items.CHISELED_DEEPSLATE));
+    private static final Derivator CALCITE_BRICKS_DERIVATOR = new Derivator(CALCITE_BRICKS.getDefaultState());
+    public static final Block CRACKED_CALCITE_BRICKS = CALCITE_BRICKS_DERIVATOR.cracked();
+    public static final Block CHISELED_CALCITE_BRICKS = CALCITE_BRICKS_DERIVATOR.chiseled();
+    public static final SlabBlock CALCITE_BRICK_SLAB = CALCITE_BRICKS_DERIVATOR.slab(Items.DEEPSLATE_TILE_SLAB);
+    public static final StairsBlock CALCITE_BRICK_STAIRS = CALCITE_BRICKS_DERIVATOR.stairs(Items.DEEPSLATE_TILE_STAIRS);
+    public static final WallBlock CALCITE_BRICK_WALL = CALCITE_BRICKS_DERIVATOR.wall();
+
     public static final HangingFlowerPotBlock HANGING_FLOWER_POT_BLOCK = register("hanging_flower_pot",
             new HangingFlowerPotBlock((FlowerPotBlock) Blocks.FLOWER_POT));
 
     public static final FenceLikeWallBlock POLISHED_BASALT_WALL = registerWithItem("polished_basalt_wall",
             new FenceLikeWallBlock(FabricBlockSettings.copyOf(Blocks.POLISHED_BASALT)),
-            new FabricItemSettings().group(ItemGroup.DECORATIONS),
-            (block, settings) -> new DerivedBlockItem(block, KindSearcher.WALL_SEARCHER, KindSearcher::findLastOfGroup, settings));
+            new FabricItemSettings().group(ItemGroup.DECORATIONS), DerivedBlockItem::wall);
 
     private static final Derivator TUFF_DERIVATOR = new Derivator(Blocks.TUFF.getDefaultState());
     public static final SlabBlock TUFF_SLAB = TUFF_DERIVATOR.slab(Items.DEEPSLATE_TILE_SLAB);
     public static final StairsBlock TUFF_STAIRS = TUFF_DERIVATOR.stairs(Items.DEEPSLATE_TILE_STAIRS);
 
-    public static final Block POLISHED_TUFF = registerWithItem("polished_tuff", new Block(FabricBlockSettings.copyOf(Blocks.TUFF)),
+    public static final Block POLISHED_TUFF = registerWithItem("polished_tuff",
+            new Block(FabricBlockSettings.copyOf(Blocks.TUFF)),
             new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
-            (block, settings) -> new DerivedBlockItem(block,
-                    KindSearcher.itemIdentifierSearcher(entry -> entry.stack().isOf(Items.TUFF))
-                            .afterMapped(Items.TUFF, ItemStack::getItem)
-                            .build(), KindSearcher::findLastOfGroup, settings));
+            DerivedBlockItem.itemWithStrictPositionFactory(Items.TUFF));
     private static final Derivator POLISHED_TUFF_DERIVATOR = new Derivator(POLISHED_TUFF.getDefaultState());
     public static final SlabBlock POLISHED_TUFF_SLAB = POLISHED_TUFF_DERIVATOR.slab(Items.DEEPSLATE_TILE_SLAB);
     public static final StairsBlock POLISHED_TUFF_STAIRS = POLISHED_TUFF_DERIVATOR.stairs(Items.DEEPSLATE_TILE_STAIRS);
     public static final WallBlock POLISHED_TUFF_WALL = POLISHED_TUFF_DERIVATOR.wall();
 
-    public static final Block TUFF_BRICKS = registerWithItem("tuff_bricks", new Block(FabricBlockSettings.copyOf(POLISHED_TUFF)),
+    public static final Block TUFF_BRICKS = registerWithItem("tuff_bricks",
+            new Block(FabricBlockSettings.copyOf(POLISHED_TUFF)),
             new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
-            (block, settings) -> new DerivedBlockItem(block,
-                    KindSearcher.itemIdentifierSearcher(entry -> entry.stack().isOf(Items.CHISELED_DEEPSLATE))
-                            .afterMapped(Items.CHISELED_DEEPSLATE, ItemStack::getItem)
-                            .build(), KindSearcher::findLastOfGroup, settings));
+            DerivedBlockItem.itemWithStrictPositionFactory(CHISELED_CALCITE_BRICKS.asItem()));
     private static final Derivator TUFF_BRICKS_DERIVATOR = new Derivator(TUFF_BRICKS.getDefaultState());
     public static final Block CRACKED_TUFF_BRICKS = TUFF_BRICKS_DERIVATOR.cracked();
     public static final Block CHISELED_TUFF_BRICKS = TUFF_BRICKS_DERIVATOR.chiseled();
@@ -366,7 +385,8 @@ public final class AurorasDecoRegistry {
 
     /* Advancement Criteria */
 
-    public static final PetUsePetBedCriterion PET_USE_PET_BED_CRITERION = CriterionRegistry.register(new PetUsePetBedCriterion());
+    public static final PetUsePetBedCriterion PET_USE_PET_BED_CRITERION = CriterionRegistry
+            .register(new PetUsePetBedCriterion());
 
     private static <T extends Block> T register(String name, T block) {
         return Registry.register(Registry.BLOCK, id(name), block);

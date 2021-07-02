@@ -20,11 +20,13 @@ package dev.lambdaurora.aurorasdeco.item;
 import dev.lambdaurora.aurorasdeco.util.KindSearcher;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.ToIntBiFunction;
 
 /**
@@ -54,6 +56,26 @@ public class DerivedBlockItem extends BlockItem {
         if (this.isIn(group)) {
             stacks.add(this.searchMethod.applyAsInt(this.searcher, stacks), new ItemStack(this));
         }
+    }
+
+    public static BiFunction<Block, Settings, BlockItem> itemWithStrictPositionFactory(Item after) {
+        return (block, settings) -> newItemWithStrictPosition(block, after, settings);
+    }
+
+    public static DerivedBlockItem newItemWithStrictPosition(Block block, Item after, Settings settings) {
+        return new DerivedBlockItem(block, KindSearcher.strictlyAfter(after), KindSearcher::findLastOfGroup, settings);
+    }
+
+    public static DerivedBlockItem campfire(Block block, Settings settings) {
+        return new DerivedBlockItem(block, KindSearcher.CAMPFIRE_SEARCHER, KindSearcher::findLastOfGroup, settings);
+    }
+
+    public static DerivedBlockItem lantern(Block block, Settings settings) {
+        return new DerivedBlockItem(block, KindSearcher.LANTERN_SEARCHER, KindSearcher::findLastOfGroup, settings);
+    }
+
+    public static DerivedBlockItem wall(Block block, Settings settings) {
+        return new DerivedBlockItem(block, KindSearcher.WALL_SEARCHER, KindSearcher::findLastOfGroup, settings);
     }
 
     public interface SearchMethod extends ToIntBiFunction<KindSearcher<ItemStack, KindSearcher.StackEntry>, List<ItemStack>> {

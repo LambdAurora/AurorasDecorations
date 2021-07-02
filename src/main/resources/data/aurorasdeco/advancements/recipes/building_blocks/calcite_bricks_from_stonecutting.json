@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "aurorasdeco:polished_tuff_wall_from_tuff_stonecutting"
+      "aurorasdeco:calcite_bricks_from_stonecutting"
     ]
   },
   "criteria": {
@@ -12,7 +12,7 @@
         "items": [
           {
             "items": [
-              "aurorasdeco:polished_tuff_wall"
+              "aurorasdeco:calcite_bricks"
             ]
           }
         ]
@@ -21,16 +21,28 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "aurorasdeco:polished_tuff_wall_from_tuff_stonecutting"
+        "recipe": "aurorasdeco:calcite_bricks_from_stonecutting"
       }
     },
-    "has_tuff": {
+    "has_calcite": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:tuff"
+              "minecraft:calcite"
+            ]
+          }
+        ]
+      }
+    },
+    "has_polished_calcite": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "aurorasdeco:polished_calcite"
             ]
           }
         ]
@@ -41,7 +53,8 @@
     [
       "has_self",
       "has_the_recipe",
-      "has_tuff"
+      "has_calcite",
+      "has_polished_calcite"
     ]
   ]
 }

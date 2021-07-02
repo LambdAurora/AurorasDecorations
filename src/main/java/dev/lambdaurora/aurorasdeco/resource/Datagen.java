@@ -111,7 +111,7 @@ public final class Datagen {
     private static final Map<Identifier, Advancement.Task> ADVANCEMENTS = new Object2ObjectOpenHashMap<>();
 
     private Datagen() {
-        throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");
+        throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
     }
 
     public static void applyAdvancements(Map<Identifier, Advancement.Task> builder) {
