@@ -42,6 +42,11 @@ public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<Lante
     }
 
     @Override
+    public int getRenderDistance() {
+        return 128;
+    }
+
+    @Override
     public void render(LanternBlockEntity lantern, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
                        int light, int overlay) {
         var pos = lantern.getPos();

@@ -52,6 +52,17 @@ public class CustomStateBuilder<O, S extends State<O, S>> extends StateManager.B
         return this;
     }
 
+    @SuppressWarnings("unchecked")
+    public CustomStateBuilder<O, S> safeAdd(Property<?>... properties) {
+        for (var property : properties) {
+            if (this.excludes.contains(property.getName())
+                    || ((StateManagerBuilderAccessor<O, S>) this.parent).getNamedProperties().containsKey(property.getName()))
+                continue;
+            this.parent.add(property);
+        }
+        return this;
+    }
+
     @Override
     public StateManager<O, S> build(Function<O, S> ownerToStateFunction, StateManager.Factory<O, S> factory) {
         return this.parent.build(ownerToStateFunction, factory);

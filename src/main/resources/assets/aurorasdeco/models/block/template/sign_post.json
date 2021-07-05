@@ -1,0 +1,80 @@
+{
+  "credit": "Made by LambdAurora",
+  "parent": "block/block",
+  "textures": {
+    "particle": "#sign"
+  },
+  "elements": [
+    {
+      "from": [ 2, 5, 5 ],
+      "to": [ 18, 10, 6 ],
+      "rotation": {"angle": 0, "axis": "y", "origin": [ 8, 0, 8 ]},
+      "faces": {
+        "north": {"uv": [ 0, 0, 16, 5], "texture": "#sign"},
+        "east":  {"uv": [ 11, 7, 12, 12], "texture": "#sign"},
+        "south": {"uv": [ 16, 0, 0, 5], "texture": "#sign"},
+        "west":  {"uv": [ 15, 0, 16, 5], "texture": "#sign"},
+        "up":    {"uv": [ 16, 5, 0, 6], "texture": "#sign"},
+        "down":  {"uv": [ 16, 6, 0, 7], "texture": "#sign"}
+      }
+    },
+    {
+      "from": [ 0, 6, 5 ],
+      "to": [ 2, 9, 6 ],
+      "rotation": {"angle": 0, "axis": "y", "origin": [ 8, 0, 8 ]},
+      "faces": {
+        "north": {"uv": [ 12, 7, 14, 10], "texture": "#sign"},
+        "south": {"uv": [ 14, 7, 12, 10], "texture": "#sign"},
+        "west":  {"uv": [ 13, 7, 14, 10], "texture": "#sign"},
+        "up":    {"uv": [ 14, 7, 16, 8], "texture": "#sign"},
+        "down":  {"uv": [ 16, 9, 14, 10], "texture": "#sign"}
+      }
+    },
+    {
+      "from": [ -2, 7, 5 ],
+      "to": [ 0, 8, 6 ],
+      "rotation": {"angle": 0, "axis": "y", "origin": [ 8, 0, 8 ]},
+      "faces": {
+        "north": {"uv": [ 0, 8, 2, 9], "texture": "#sign"},
+        "south": {"uv": [ 2, 10, 0, 11], "texture": "#sign"},
+        "west":  {"uv": [ 2, 8, 3, 9], "texture": "#sign"},
+        "up":    {"uv": [ 0, 7, 2, 8], "texture": "#sign"},
+        "down":  {"uv": [ 0, 9, 2, 10], "texture": "#sign"}
+      }
+    }
+  ],
+  "gui_light": "front",
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [ 75, 9.25, 0 ],
+      "translation": [ 0, -0.5, 1 ],
+      "scale": [ 0.375, 0.375, 0.375 ]
+    },
+    "firstperson_righthand": {
+      "rotation": [ 0, -140, 0 ],
+      "translation": [ 0, 0.5, -0.5 ],
+      "scale": [ 0.4, 0.4, 0.4 ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [ 0, 22, 0 ],
+      "translation": [ 2.5, 0, 0 ],
+      "scale": [ 0.4, 0.4, 0.4 ]
+    },
+    "ground": {
+      "translation": [ 0, 0, 1 ],
+      "scale": [ 0.45, 0.45, 0.45 ]
+    },
+    "gui": {
+      "rotation": [ 30, -135, 0 ],
+      "translation": [ -1.5, 1, 0 ],
+      "scale": [ 0.85, 0.85, 0.85 ]
+    },
+    "head": {
+      "translation": [ -1, 5.5, -4.25 ]
+    },
+    "fixed": {
+      "translation": [ 0, 0.5, 2 ],
+      "scale": [ 1.0, 1.0, 1.0 ]
+    }
+  }
+}

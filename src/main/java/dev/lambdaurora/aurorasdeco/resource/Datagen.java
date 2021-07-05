@@ -27,6 +27,7 @@ import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
 import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
+import dev.lambdaurora.aurorasdeco.item.SignPostItem;
 import dev.lambdaurora.aurorasdeco.mixin.AbstractBlockAccessor;
 import dev.lambdaurora.aurorasdeco.recipe.RecipeSerializerExtended;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
@@ -35,6 +36,7 @@ import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import dev.lambdaurora.aurorasdeco.resource.datagen.*;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
+import dev.lambdaurora.aurorasdeco.util.ColorUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.advancement.Advancement;
@@ -44,7 +46,9 @@ import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.advancement.criterion.RecipeUnlockedCriterion;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockWithEntity;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
+import net.minecraft.client.texture.NativeImage;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
@@ -62,6 +66,7 @@ import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -332,16 +337,6 @@ public final class Datagen {
         );
     }
 
-    public static JsonObject recipeRoot(Identifier id) {
-        return recipeRoot(id.toString());
-    }
-
-    public static JsonObject recipeRoot(String type) {
-        var json = new JsonObject();
-        json.addProperty("type", type);
-        return json;
-    }
-
     @SuppressWarnings("unchecked")
     public static JsonObject recipe(Recipe<?> recipe) {
         if (!(recipe.getSerializer() instanceof RecipeSerializerExtended))
@@ -427,15 +422,6 @@ public final class Datagen {
                 || ((AbstractBlockAccessor) block).getMaterial() == Material.NETHER_WOOD)
                 .forEach(Datagen::registerWoodcuttingRecipesForBlockVariants);
 
-        SeatRestItem.streamSeatRests().forEach(item -> {
-            var planks = item.getWoodType().getComponent(WoodType.ComponentType.PLANKS).item();
-            var recipe = new WoodcuttingRecipe(
-                    id("woodcutting/seat_rest/" + item.getWoodType().getPathName()),
-                    "seat_rests", Ingredient.ofItems(planks),
-                    new ItemStack(item));
-            registerRecipe(recipe, "misc");
-        });
-
         BenchBlock.streamBenches().forEach(block -> {
             var planks = block.getWoodType().getComponent(WoodType.ComponentType.PLANKS).item();
             var recipe = new WoodcuttingRecipe(
@@ -455,6 +441,24 @@ public final class Datagen {
                         new ItemStack(block, 2));
                 registerRecipe(crafting, "decorations");
             }
+        });
+
+        SeatRestItem.streamSeatRests().forEach(item -> {
+            var planks = item.getWoodType().getComponent(WoodType.ComponentType.PLANKS).item();
+            var recipe = new WoodcuttingRecipe(
+                    id("woodcutting/seat_rest/" + item.getWoodType().getPathName()),
+                    "seat_rests", Ingredient.ofItems(planks),
+                    new ItemStack(item));
+            registerRecipe(recipe, "misc");
+        });
+
+        SignPostItem.stream().forEach(item -> {
+            var planks = item.getWoodType().getComponent(WoodType.ComponentType.PLANKS).item();
+            var recipe = new WoodcuttingRecipe(
+                    id("woodcutting/sign_post/" + item.getWoodType().getPathName()),
+                    "sign_posts", Ingredient.ofItems(planks),
+                    new ItemStack(item));
+            registerRecipe(recipe, "misc");
         });
 
         ShelfBlock.streamShelves().forEach(block -> {
@@ -521,6 +525,7 @@ public final class Datagen {
 
     public static void generateClientData(ResourceManager resourceManager, LangBuilder langBuilder) {
         generateBenchesClientData(resourceManager, langBuilder);
+        generateDirectionalSignsClientData(resourceManager, langBuilder);
         generateShelvesClientData(resourceManager, langBuilder);
         generateSmallLogPilesClientData(resourceManager, langBuilder);
         generateStumpsClientData(resourceManager, langBuilder);
@@ -666,6 +671,64 @@ public final class Datagen {
             langBuilder.addEntry("block.aurorasdeco.bench." + block.getWoodType().getAbsoluteLangPath(),
                     "block.aurorasdeco.bench", "aurorasdeco.wood_type." + block.getWoodType().getLangPath());
         });
+    }
+
+    private static void generateDirectionalSignsClientData(ResourceManager resourceManager, LangBuilder langBuilder) {
+        NativeImage oakTexture = null;
+        try (var resource = resourceManager.getResource(SignPostItem.ABSOLUTE_OAK_SIGN_POST_TEXTURE)) {
+            oakTexture = NativeImage.read(resource.getInputStream());
+        } catch (IOException e) {
+            LOGGER.error("Cannot read the default texture of the directional sign.", e);
+        }
+
+        final var defaultTexture = oakTexture;
+        final var defaultPalette = ColorUtil.getPaletteFromImage(defaultTexture);
+
+        SignPostItem.stream().forEach(item -> {
+            var planks = item.getWoodType().getComponent(WoodType.ComponentType.PLANKS);
+
+            var textureId = id("special/sign_post/" + item.getWoodType().getPathName());
+
+            modelBuilder(SignPostItem.SIGN_POST_MODEL)
+                    .texture("sign", textureId)
+                    .register(item);
+
+            langBuilder.addEntry("item.aurorasdeco.sign_post." + item.getWoodType().getAbsoluteLangPath(),
+                    "item.aurorasdeco.sign_post", "aurorasdeco.wood_type." + item.getWoodType().getLangPath());
+
+            if (planks.block() == Blocks.OAK_PLANKS || defaultTexture == null)
+                return;
+
+            var planksTextureId = planks.texture();
+            var texturePath = new Identifier(planksTextureId.getNamespace(), "textures/" + planksTextureId.getPath() + ".png");
+            try (var resource = resourceManager.getResource(texturePath)) {
+                var image = NativeImage.read(resource.getInputStream());
+
+                var woodPalette = ColorUtil.getPaletteFromImage(image, 8);
+                var outputImage = new NativeImage(defaultTexture.getWidth(), defaultTexture.getHeight(), true);
+
+                for (int y = 0; y < defaultTexture.getHeight(); y++) {
+                    for (int x = 0; x < defaultTexture.getWidth(); x++) {
+                        var paletteIndex = defaultPalette.indexOf(defaultTexture.getPixelColor(x, y));
+
+                        if (paletteIndex < 0)
+                            continue;
+                        else if (paletteIndex >= woodPalette.size())
+                            paletteIndex = woodPalette.size() - 1;
+
+                        outputImage.setPixelColor(x, y, woodPalette.getInt(paletteIndex));
+                    }
+                }
+
+                image.close();
+                AurorasDecoClient.RESOURCE_PACK.putImage(textureId, outputImage);
+                outputImage.close();
+            } catch (IOException e) {
+                LOGGER.error("Cannot read the planks texture to generate the directional sign texture.", e);
+            }
+        });
+
+        defaultTexture.close();
     }
 
     private static void generateShelvesClientData(ResourceManager resourceManager, LangBuilder langBuilder) {
@@ -832,7 +895,11 @@ public final class Datagen {
     }
 
     public static String toPath(Identifier id, ResourceType type) {
-        return type.getDirectory() + '/' + id.getNamespace() + '/' + id.getPath();
+        return toPath(id, type, "");
+    }
+
+    public static String toPath(Identifier id, ResourceType type, String prefix) {
+        return type.getDirectory() + '/' + id.getNamespace() + '/' + prefix + id.getPath();
     }
 
     public static BlockStateBuilder blockStateBuilder(Block block) {

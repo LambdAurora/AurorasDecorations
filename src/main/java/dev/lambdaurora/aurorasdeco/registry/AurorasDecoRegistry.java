@@ -30,6 +30,7 @@ import dev.lambdaurora.aurorasdeco.entity.SeatEntity;
 import dev.lambdaurora.aurorasdeco.item.BlackboardItem;
 import dev.lambdaurora.aurorasdeco.item.DerivedBlockItem;
 import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
+import dev.lambdaurora.aurorasdeco.item.SignPostItem;
 import dev.lambdaurora.aurorasdeco.mixin.SimpleRegistryAccessor;
 import dev.lambdaurora.aurorasdeco.recipe.BlackboardCloneRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.ExplodingRecipe;
@@ -306,6 +307,11 @@ public final class AurorasDecoRegistry {
             id("shelf"),
             FabricBlockEntityTypeBuilder.create(ShelfBlockEntity::new).build()
     );
+    public static final BlockEntityType<SignPostBlockEntity> SIGN_POST_BLOCK_ENTITY_TYPE = Registry.register(
+            Registry.BLOCK_ENTITY_TYPE,
+            id("sign_post"),
+            FabricBlockEntityTypeBuilder.create(SignPostBlockEntity::new).build()
+    );
     public static final BlockEntityType<WindChimeBlockEntity> WIND_CHIME_BLOCK_ENTITY_TYPE = Registry.register(
             Registry.BLOCK_ENTITY_TYPE,
             id("wind_chime"),
@@ -459,7 +465,14 @@ public final class AurorasDecoRegistry {
                 );
             } else {
                 WoodType.onBlockRegister(id, block);
-                LanternRegistry.tryRegisterWallLantern(block, id);
+                if (block instanceof FenceBlock fenceBlock) {
+                    var signPostBlock = RegistrationHelper.BLOCK.register(
+                            RegistrationHelper.getIdPath("sign_post", id, "_fence$"),
+                            new SignPostBlock(fenceBlock)
+                    );
+
+                    ((BlockEntityTypeAccessor) SIGN_POST_BLOCK_ENTITY_TYPE).aurorasdeco$addSupportedBlock(signPostBlock);
+                } else LanternRegistry.tryRegisterWallLantern(block, id);
             }
         });
 
@@ -519,6 +532,8 @@ public final class AurorasDecoRegistry {
         WoodType.registerWoodTypeModificationCallback(woodType -> {
             register("seat_rest/" + woodType.getPathName(),
                     new SeatRestItem(woodType, new FabricItemSettings().group(ItemGroup.MISC)));
+            register("sign_post/" + woodType.getPathName(),
+                    new SignPostItem(woodType, new FabricItemSettings().group(ItemGroup.DECORATIONS)));
         }, WoodType.ComponentType.PLANKS);
 
         WoodType.registerWoodTypeModificationCallback(woodType -> {

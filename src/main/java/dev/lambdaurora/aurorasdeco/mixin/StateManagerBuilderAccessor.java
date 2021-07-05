@@ -19,11 +19,17 @@ package dev.lambdaurora.aurorasdeco.mixin;
 
 import net.minecraft.state.State;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.Property;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
+
+import java.util.Map;
 
 @Mixin(StateManager.Builder.class)
 public interface StateManagerBuilderAccessor<O, S extends State<O, S>> {
     @Accessor
     O getOwner();
+
+    @Accessor
+    Map<String, Property<?>> getNamedProperties();
 }

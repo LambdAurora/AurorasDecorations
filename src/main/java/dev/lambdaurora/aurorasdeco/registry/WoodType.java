@@ -52,8 +52,10 @@ import java.util.function.Consumer;
  * @since 1.0.0
  */
 public final class WoodType {
-    private static final List<WoodType> TYPES = new ArrayList<>();
+    public static final WoodType OAK;
+
     private static final List<ModificationCallbackEntry> CALLBACKS = new ArrayList<>();
+    private static final List<WoodType> TYPES;
     private final Map<ComponentType, Component> components = new Object2ObjectOpenHashMap<>();
     private final List<ModificationCallbackEntry> toTrigger = new ArrayList<>();
     private final Identifier id;
@@ -68,6 +70,11 @@ public final class WoodType {
         this.langPath = getLangPath(this.id);
 
         this.toTrigger.addAll(CALLBACKS);
+    }
+
+    static {
+        OAK = new WoodType(new Identifier("oak"));
+        TYPES = new ArrayList<>(List.of(OAK));
     }
 
     /**
@@ -159,6 +166,16 @@ public final class WoodType {
             callbackEntry.callback().accept(this);
             this.toTrigger.remove(callbackEntry);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "WoodType{" +
+                "id=" + this.id +
+                ", pathName='" + this.pathName + '\'' +
+                ", remaining_registry_callbacks=" + this.toTrigger.size() +
+                ", components=" + this.components.keySet() +
+                '}';
     }
 
     public static void registerWoodTypeModificationCallback(Consumer<WoodType> callback, ComponentType... requiredComponents) {

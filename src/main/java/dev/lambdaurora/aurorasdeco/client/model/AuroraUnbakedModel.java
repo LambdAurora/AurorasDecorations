@@ -17,6 +17,8 @@
 
 package dev.lambdaurora.aurorasdeco.client.model;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.model.UnbakedModel;
 
 /**
@@ -26,5 +28,6 @@ import net.minecraft.client.render.model.UnbakedModel;
  * @version 1.0.0
  * @since 1.0.0
  */
+@Environment(EnvType.CLIENT)
 public interface AuroraUnbakedModel extends UnbakedModel {
 }

@@ -21,6 +21,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import net.minecraft.block.BlockState;
+import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
@@ -97,6 +98,11 @@ public final class AuroraUtil {
         if (dst.contains(property))
             dst = dst.with(property, src.get(property));
         return dst;
+    }
+
+    public static boolean isWaterLogged(BlockState state) {
+        if (state.getProperties().contains(Properties.WATERLOGGED)) return state.get(Properties.WATERLOGGED);
+        return false;
     }
 
     /* Shape Utils */

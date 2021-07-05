@@ -19,6 +19,8 @@ package dev.lambdaurora.aurorasdeco.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.lambdaurora.aurorasdeco.screen.SawmillScreenHandler;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -36,6 +38,7 @@ import net.minecraft.util.math.MathHelper;
  * @version 1.0.0
  * @since 1.0.0
  */
+@Environment(EnvType.CLIENT)
 public class SawmillScreen extends HandledScreen<SawmillScreenHandler> {
     private static final Identifier TEXTURE = new Identifier("textures/gui/container/stonecutter.png");
     private float scrollAmount;

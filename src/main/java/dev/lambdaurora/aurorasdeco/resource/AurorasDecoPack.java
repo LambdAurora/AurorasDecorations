@@ -23,6 +23,7 @@ import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.*;
+import dev.lambdaurora.aurorasdeco.mixin.client.NativeImageAccessor;
 import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
 import dev.lambdaurora.aurorasdeco.resource.datagen.LangBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -30,6 +31,8 @@ import net.fabricmc.fabric.api.resource.ModResourcePack;
 import net.fabricmc.fabric.impl.resource.loader.ModResourcePackUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModMetadata;
+import net.minecraft.block.Material;
+import net.minecraft.client.texture.NativeImage;
 import net.minecraft.resource.AbstractFileResourcePack;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
@@ -40,10 +43,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
+import java.io.*;
+import java.nio.channels.Channels;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -120,6 +121,10 @@ public class AurorasDecoPack implements ModResourcePack {
                 .map(Registry.BLOCK::getId));
         this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("shelves"), ShelfBlock.streamShelves()
                 .map(Registry.BLOCK::getId));
+        this.registerTag(new String[]{"blocks"}, new Identifier("mineable/axe"), SignPostBlock.stream()
+                .filter(block -> block.getDefaultState().getMaterial() == Material.WOOD
+                        || block.getDefaultState().getMaterial() == Material.NETHER_WOOD)
+                .map(Registry.BLOCK::getId));
         this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("small_log_piles"), SmallLogPileBlock.stream()
                 .map(Registry.BLOCK::getId));
         this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("stumps"), StumpBlock.streamLogStumps()
@@ -164,6 +169,27 @@ public class AurorasDecoPack implements ModResourcePack {
             LOGGER.error("Failed to write JSON at {}.", resource, e);
         }
         this.putResource(resource, stringWriter.toString().getBytes(StandardCharsets.UTF_8));
+    }
+
+    public void putImage(Identifier id, NativeImage image) {
+        this.namespaces.add(id.getNamespace());
+
+        String path = Datagen.toPath(id, ResourceType.CLIENT_RESOURCES, "textures/") + ".png";
+        this.putImage(path, image);
+    }
+
+    public void putImage(String location, NativeImage image) {
+        var byteOut = new ByteArrayOutputStream();
+        var out = Channels.newChannel(byteOut);
+        // Please forgive me
+        ((NativeImageAccessor) (Object) image).aurorasdeco$write(out);
+
+        this.putResource(location, byteOut.toByteArray());
+        try {
+            out.close();
+        } catch (IOException e) {
+            LOGGER.warn("Could not close output channel for texture " + location + ".", e);
+        }
     }
 
     @Override

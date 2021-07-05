@@ -18,6 +18,8 @@
 package dev.lambdaurora.aurorasdeco.client.model;
 
 import com.mojang.datafixers.util.Pair;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.ModelLoader;
@@ -38,6 +40,7 @@ import java.util.function.Function;
  * @version 1.0.0
  * @since 1.0.0
  */
+@Environment(EnvType.CLIENT)
 public record UnbakedForwardingModel(UnbakedModel baseModel,
                                      Function<BakedModel, BakedModel> factory) implements AuroraUnbakedModel {
     @Override

@@ -20,6 +20,7 @@ package dev.lambdaurora.aurorasdeco.resource.datagen;
 import com.google.gson.JsonObject;
 import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -50,6 +51,12 @@ public class ModelBuilder {
         var id = Registry.BLOCK.getId(block);
         return this.register(new Identifier(id.getNamespace(), "block/" + id.getPath()));
     }
+
+    public Identifier register(Item block) {
+        var id = Registry.ITEM.getId(block);
+        return this.register(new Identifier(id.getNamespace(), "item/" + id.getPath()));
+    }
+
 
     public Identifier register(Identifier id) {
         AurorasDecoClient.RESOURCE_PACK.putJson(ResourceType.CLIENT_RESOURCES,

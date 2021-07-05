@@ -22,11 +22,13 @@ import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
 import dev.lambdaurora.aurorasdeco.block.HangingFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.StumpBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
+import dev.lambdaurora.aurorasdeco.client.model.BakedSignPostModel;
 import dev.lambdaurora.aurorasdeco.client.particle.AmethystGlintParticle;
 import dev.lambdaurora.aurorasdeco.client.renderer.*;
 import dev.lambdaurora.aurorasdeco.client.screen.SawmillScreen;
 import dev.lambdaurora.aurorasdeco.client.screen.ShelfScreen;
 import dev.lambdaurora.aurorasdeco.hook.TrinketsHooks;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPackets;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoParticles;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
@@ -37,6 +39,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;
@@ -76,10 +79,12 @@ public class AurorasDecoClient implements ClientModInitializer {
     public void onInitializeClient() {
         BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE,
                 BookPileEntityRenderer::new);
-        BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE,
-                LanternBlockEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE,
                 ShelfBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.INSTANCE.register(SIGN_POST_BLOCK_ENTITY_TYPE,
+                SignPostBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE,
+                LanternBlockEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE,
                 WindChimeBlockEntityRenderer::new);
 
@@ -109,6 +114,8 @@ public class AurorasDecoClient implements ClientModInitializer {
 
         StumpBlock.streamLogStumps()
                 .forEach(block -> BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout()));
+
+        ClientPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_OPEN_GUI, AurorasDecoPackets.Client::handleSignPostOpenGuiPacket);
 
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
             PottedPlantType.stream()
@@ -167,6 +174,7 @@ public class AurorasDecoClient implements ClientModInitializer {
                 WindChimeBlockEntityRenderer::getTexturedModelData);
 
         ModelLoadingRegistry.INSTANCE.registerModelProvider(RenderRule::reload);
+        ModelLoadingRegistry.INSTANCE.registerVariantProvider(resourceManager -> new BakedSignPostModel.Provider());
 
         TrinketsHooks.init(BLACKBOARD_BLOCK.asItem(), WAXED_BLACKBOARD_BLOCK.asItem(),
                 CHALKBOARD_BLOCK.asItem(), WAXED_CHALKBOARD_BLOCK.asItem());

@@ -18,6 +18,8 @@
 package dev.lambdaurora.aurorasdeco.client.model;
 
 import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -37,6 +39,7 @@ import java.util.function.Supplier;
  * @version 1.0.0
  * @since 1.0.0
  */
+@Environment(EnvType.CLIENT)
 public class BakedBenchModel extends ForwardingBakedModel {
     private final RestModelManager restModelManager;
 

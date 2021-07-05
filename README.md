@@ -91,6 +91,15 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
   - Right-click with an item will place it into the shelf.
   - Left-click with an empty world in survival will emptied the targeted item.
   - Waterloggable.
+- Sign Posts
+  - Place it on a fence post!
+  - Use it to indicate directions.
+  - Right-click empty-handed to edit the text.
+  - Right-click empty-handed while sneaking to invert the direction.
+  - Right-click with a compass to point to the world spawn.
+  - Right-click with a lodestone compass to point to a lodestone.
+  - Right-click with glow ink to make the text glow.
+  - Right-click with dye to make the text colored.
 - Sleeping bags
   - Cozy to sleep while on your outside adventures.
   - Players and villagers can sleep in them.
@@ -141,6 +150,8 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 ![Shelves](images/shelves.png)
 
 ![Polished Basalt Wall](images/polished_basalt_wall.png)
+
+![Sign Posts](images/sign_post.png)
 
 ![Sleeping bags](images/sleeping_bags.png)
 

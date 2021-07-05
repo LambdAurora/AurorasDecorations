@@ -19,14 +19,18 @@ package dev.lambdaurora.aurorasdeco;
 
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigPottedCactusBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPackets;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Blocks;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Represents the Aurora's Decorations mod.
@@ -37,6 +41,7 @@ import net.minecraft.util.registry.Registry;
  */
 public class AurorasDeco implements ModInitializer {
     public static final String NAMESPACE = "aurorasdeco";
+    public static final Logger LOGGER = LogManager.getLogger();
     public static final AurorasDecoPack RESOURCE_PACK = new AurorasDecoPack(ResourceType.SERVER_DATA);
 
     @Override
@@ -56,6 +61,9 @@ public class AurorasDeco implements ModInitializer {
 
             Blackboard.Color.tryRegisterColorFromItem(id, object);
         });
+
+        ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_OPEN_GUI_FAIL, AurorasDecoPackets::handleSignPostOpenGuiFailPacket);
+        ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_SET_TEXT, AurorasDecoPackets::handleSignPostSetTextPacket);
     }
 
     public static Identifier id(String path) {
