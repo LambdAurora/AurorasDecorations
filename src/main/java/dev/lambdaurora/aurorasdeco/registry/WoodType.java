@@ -306,7 +306,7 @@ public final class WoodType {
         PLANKS((id, block) -> {
             if (!id.getPath().endsWith("_planks")) return null;
             return id.getPath().substring(0, id.getPath().length() - "_planks".length());
-        }, BASIC_TEXTURE_PROVIDER, BASIC_TEXTURE_PROVIDER),
+        }),
         LOG((id, block) -> {
             var material = ((AbstractBlockAccessor) block).getMaterial();
             if (material != Material.WOOD && material != Material.NETHER_WOOD) return null;
@@ -342,12 +342,8 @@ public final class WoodType {
             }
             return texture;
         }),
-        SLAB((id, block) -> {
-            if (!id.getPath().endsWith("_slab")) return null;
-            var material = ((AbstractBlockAccessor) block).getMaterial();
-            if (material != Material.WOOD && material != Material.NETHER_WOOD) return null;
-            return id.getPath().substring(0, id.getPath().length() - "_slab".length());
-        }, BASIC_TEXTURE_PROVIDER, BASIC_TEXTURE_PROVIDER),
+        SLAB(simpleWoodFilter("slab")),
+        STAIRS(simpleWoodFilter("stairs")),
         LEAVES((id, block) -> {
             String leavesType;
             if (AuroraUtil.idEqual(id, "minecraft", "nether_wart_block"))
@@ -359,7 +355,13 @@ public final class WoodType {
             if (id.getPath().startsWith("flowering")) return null;
 
             return id.getPath().substring(0, id.getPath().length() - leavesType.length());
-        }, BASIC_TEXTURE_PROVIDER, BASIC_TEXTURE_PROVIDER);
+        }),
+        PRESSURE_PLATE(simpleWoodFilter("pressure_plate")),
+        TRAPDOOR(simpleWoodFilter("trapdoor")),
+        DOOR(simpleWoodFilter("door")),
+        FENCE(simpleWoodFilter("fence")),
+        FENCE_GATE(simpleWoodFilter("fence_gate")),
+        LADDER(simpleWoodFilter("ladder"));
 
         private static final List<ComponentType> COMPONENT_TYPES = List.of(values());
         private final Filter filter;
@@ -370,6 +372,10 @@ public final class WoodType {
             this.filter = filter;
             this.textureProvider = textureProvider;
             this.topTextureProvider = topTextureProvider;
+        }
+
+        ComponentType(Filter filter) {
+            this(filter, BASIC_TEXTURE_PROVIDER, BASIC_TEXTURE_PROVIDER);
         }
 
         public @Nullable String filter(Identifier id, Block block) {
@@ -391,6 +397,15 @@ public final class WoodType {
 
     public interface Filter {
         @Nullable String filter(Identifier id, Block block);
+    }
+
+    private static Filter simpleWoodFilter(String suffix) {
+        return (id, block) -> {
+            if (!id.getPath().endsWith('_' + suffix)) return null;
+            var material = ((AbstractBlockAccessor) block).getMaterial();
+            if (material != Material.WOOD && material != Material.NETHER_WOOD) return null;
+            return id.getPath().substring(0, id.getPath().length() - (suffix.length() + 1));
+        };
     }
 
     public static final TextureProvider BASIC_TEXTURE_PROVIDER = (resourceManager, component) -> component.texture();

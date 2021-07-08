@@ -110,6 +110,7 @@ public class AurorasDecoPack implements ModResourcePack {
         }
 
         BenchBlock.streamBenches().forEach(Datagen::registerBenchBlockLootTable);
+        ExtendedCandleBlock.stream().forEach(Datagen::registerCandleLikeBlockLootTable);
         ShelfBlock.streamShelves().forEach(Datagen::registerDoubleBlockLootTable);
         SmallLogPileBlock.stream().forEach(Datagen::registerDoubleBlockLootTable);
         StumpBlock.streamLogStumps().forEach(Datagen::dropsSelf);
@@ -151,6 +152,17 @@ public class AurorasDecoPack implements ModResourcePack {
         }
     }
 
+    public void putJsonText(ResourceType type, Identifier id, String json) {
+        this.namespaces.add(id.getNamespace());
+
+        String path = Datagen.toPath(id, type) + ".json";
+        this.putText(path, json);
+    }
+
+    public void putText(String resource, String text) {
+        this.putResource(resource, text.getBytes(StandardCharsets.UTF_8));
+    }
+
     public void putJson(ResourceType type, Identifier id, JsonObject json) {
         this.namespaces.add(id.getNamespace());
 
@@ -168,7 +180,7 @@ public class AurorasDecoPack implements ModResourcePack {
         } catch (IOException e) {
             LOGGER.error("Failed to write JSON at {}.", resource, e);
         }
-        this.putResource(resource, stringWriter.toString().getBytes(StandardCharsets.UTF_8));
+        this.putText(resource, stringWriter.toString());
     }
 
     public void putImage(Identifier id, NativeImage image) {

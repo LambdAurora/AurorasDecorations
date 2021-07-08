@@ -142,7 +142,9 @@ public abstract class BlockItemMixin extends Item implements BlockItemAccessor {
         server.getRecipeManager()
                 .getFirstMatch(AurorasDecoRegistry.EXPLODING_RECIPE_TYPE, inv, entity.getEntityWorld())
                 .ifPresent(explodingRecipe -> {
-                    ItemUsage.spawnItemContents(entity, Stream.of(explodingRecipe.craft(inv)));
+                    int count = entity.getStack().getCount();
+                    for (int i = 0; i < count; i++)
+                        ItemUsage.spawnItemContents(entity, Stream.of(explodingRecipe.craft(inv)));
                     ci.cancel();
                 });
     }

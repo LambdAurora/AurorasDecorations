@@ -20,16 +20,31 @@ package dev.lambdaurora.aurorasdeco.block;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.CandleBlock;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 public class ExtendedCandleBlock extends CandleBlock {
+    private static final List<ExtendedCandleBlock> EXTENDED_CANDLE_BLOCKS = new ArrayList<>();
+
     protected final CandleBlock parent;
 
     public ExtendedCandleBlock(CandleBlock candleBlock) {
         super(FabricBlockSettings.copyOf(candleBlock)
-                .dropsLike(candleBlock)
                 // Bump up a little bit the luminance,
                 // especially since the candles extending this are not on the floor.
                 .luminance((state) -> CandleBlock.STATE_TO_LUMINANCE.applyAsInt(state) + 2)
         );
         this.parent = candleBlock;
+
+        EXTENDED_CANDLE_BLOCKS.add(this);
+    }
+
+    public static Stream<ExtendedCandleBlock> stream() {
+        return EXTENDED_CANDLE_BLOCKS.stream();
+    }
+
+    public CandleBlock getParent() {
+        return parent;
     }
 }

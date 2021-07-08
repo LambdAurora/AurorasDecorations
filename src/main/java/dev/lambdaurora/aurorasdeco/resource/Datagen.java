@@ -59,6 +59,7 @@ import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.recipe.*;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.tag.ItemTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
@@ -69,6 +70,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -229,10 +231,12 @@ public final class Datagen {
         entry.addProperty("type", "minecraft:item");
         entry.addProperty("name", id.toString());
 
-        var function = new JsonObject();
-        function.addProperty("function", "minecraft:copy_name");
-        function.addProperty("source", "block_entity");
-        entry.add("functions", jsonArray(function));
+        if (copyName) {
+            var function = new JsonObject();
+            function.addProperty("function", "minecraft:copy_name");
+            function.addProperty("source", "block_entity");
+            entry.add("functions", jsonArray(function));
+        }
 
         entries.add(entry);
 
@@ -324,6 +328,84 @@ public final class Datagen {
         );
     }
 
+    private static String candleLikeBlockLootTable(Identifier blockId, Identifier itemId) {
+        return """
+                {
+                  "type": "minecraft:block",
+                  "pools": [
+                    {
+                      "rolls": 1.0,
+                      "bonus_rolls": 0.0,
+                      "entries": [
+                        {
+                          "type": "minecraft:item",
+                          "functions": [
+                            {
+                              "function": "minecraft:set_count",
+                              "conditions": [
+                                {
+                                  "condition": "minecraft:block_state_property",
+                                  "block": "${block}",
+                                  "properties": {
+                                    "candles": "2"
+                                  }
+                                }
+                              ],
+                              "count": 2.0,
+                              "add": false
+                            },
+                            {
+                              "function": "minecraft:set_count",
+                              "conditions": [
+                                {
+                                  "condition": "minecraft:block_state_property",
+                                  "block": "${block}",
+                                  "properties": {
+                                    "candles": "3"
+                                  }
+                                }
+                              ],
+                              "count": 3.0,
+                              "add": false
+                            },
+                            {
+                              "function": "minecraft:set_count",
+                              "conditions": [
+                                {
+                                  "condition": "minecraft:block_state_property",
+                                  "block": "${block}",
+                                  "properties": {
+                                    "candles": "4"
+                                  }
+                                }
+                              ],
+                              "count": 4.0,
+                              "add": false
+                            },
+                            {
+                              "function": "minecraft:explosion_decay"
+                            }
+                          ],
+                          "name": "${item}"
+                        }
+                      ]
+                    }
+                  ]
+                }
+                """
+                .replace("${block}", blockId.toString())
+                .replace("${item}", itemId.toString());
+    }
+
+    public static void registerCandleLikeBlockLootTable(ExtendedCandleBlock block) {
+        var blockId = Registry.BLOCK.getId(block);
+        AurorasDeco.RESOURCE_PACK.putJsonText(
+                ResourceType.SERVER_DATA,
+                new Identifier(blockId.getNamespace(), "loot_tables/blocks/" + blockId.getPath()),
+                candleLikeBlockLootTable(blockId, Registry.ITEM.getId(block.getParent().asItem()))
+        );
+    }
+
     public static void dropsSelf(Block block) {
         registerSimpleBlockLootTable(Registry.BLOCK.getId(block), Registry.ITEM.getId(block.asItem()),
                 block instanceof BlockWithEntity);
@@ -346,27 +428,8 @@ public final class Datagen {
     }
 
     public static void registerWoodcuttingRecipesForBlockVariants(Block block) {
-        if (!(((AbstractBlockAccessor) block).getMaterial() == Material.WOOD
-                || ((AbstractBlockAccessor) block).getMaterial() == Material.NETHER_WOOD))
-            return;
-
         var blockId = Registry.BLOCK.getId(block);
-        if (blockId.getPath().endsWith("planks")) {
-            char separator = '_';
-            var basePath = PLANKS_TO_BASE_ID.matcher(blockId.getPath()).replaceAll("");
-            if (PLANKS_SEPARATOR_DETECTOR.matcher(blockId.getPath()).matches()) separator = '/';
-            basePath += separator;
-
-            tryRegisterWoodcuttingRecipeFor(block, basePath, "slab", 2, "building_blocks");
-            tryRegisterWoodcuttingRecipeFor(block, basePath, "stairs", 1, "building_blocks");
-            tryRegisterWoodcuttingRecipeFor(block, basePath, "button", 1, "redstone");
-            tryRegisterWoodcuttingRecipeFor(block, basePath, "pressure_plate", 1,
-                    "redstone");
-            tryRegisterWoodcuttingRecipeFor(block, basePath, "trapdoor", 1, "redstone");
-            tryRegisterWoodcuttingRecipeFor(block, basePath, "door", 1, "redstone");
-            tryRegisterWoodcuttingRecipeFor(block, basePath, "fence", 2, "decorations");
-            tryRegisterWoodcuttingRecipeFor(block, basePath, "fence_gate", 1, "redstone");
-        } else if (blockId.getPath().endsWith("log")) {
+        if (blockId.getPath().endsWith("log")) {
             char separator = '_';
             var basePath = LOG_TO_BASE_ID.matcher(blockId.getPath()).replaceAll("");
             if (LOG_SEPARATOR_DETECTOR.matcher(blockId.getPath()).matches()) separator = '/';
@@ -406,17 +469,42 @@ public final class Datagen {
 
     public static void registerDefaultWoodcuttingRecipes() {
         WoodType.forEach(type -> {
-            var log = type.getLog();
+            var log = type.getComponent(WoodType.ComponentType.LOG);
             var planks = type.getComponent(WoodType.ComponentType.PLANKS);
 
-            if (log == null || planks == null) return;
+            if (planks != null) {
+                tryRegisterWoodcuttingRecipeFor(type, planks, WoodType.ComponentType.SLAB, 2, "building_blocks");
+                tryRegisterWoodcuttingRecipeFor(type, planks, WoodType.ComponentType.STAIRS, 1, "building_blocks");
+                tryRegisterWoodcuttingRecipeFor(type, planks, WoodType.ComponentType.PRESSURE_PLATE, 1, "redstone");
+                tryRegisterWoodcuttingRecipeFor(type, planks, WoodType.ComponentType.TRAPDOOR, 1, "redstone");
+                tryRegisterWoodcuttingRecipeFor(type, planks, WoodType.ComponentType.DOOR, 1, "redstone");
+                tryRegisterWoodcuttingRecipeFor(type, planks, WoodType.ComponentType.FENCE, 2, "decorations");
+                tryRegisterWoodcuttingRecipeFor(type, planks, WoodType.ComponentType.FENCE_GATE, 1, "redstone");
+                // Not in vanilla by default, but some mods do add it.
+                tryRegisterWoodcuttingRecipeFor(type, planks, WoodType.ComponentType.LADDER, 4, "misc");
 
-            var planksId = planks.getItemId();
-            registerRecipe(new WoodcuttingRecipe(AuroraUtil.appendWithNamespace("woodcutting", planksId),
-                            "planks",
-                            Ingredient.ofItems(log), new ItemStack(planks.item(), 4)),
-                    "building_blocks");
+                char separator = '_';
+                var basePath = type.getId().getPath();
+                if (PLANKS_SEPARATOR_DETECTOR.matcher(planks.id().getPath()).matches()) separator = '/';
+                basePath += separator;
+
+                tryRegisterWoodcuttingRecipeFor(planks.block(), basePath, "button", 1, "misc");
+                tryRegisterWoodcuttingRecipeFor(planks.block(), basePath, "boat", 1, "misc");
+
+                if (log == null) return;
+                var planksId = planks.getItemId();
+                registerRecipe(new WoodcuttingRecipe(AuroraUtil.appendWithNamespace("woodcutting", planksId),
+                                "planks",
+                                Ingredient.ofItems(log.item()), new ItemStack(planks.item(), 4)),
+                        "building_blocks");
+            }
         });
+
+        registerRecipe(new WoodcuttingRecipe(id("woodcutting/ladder"),
+                        "",
+                        Ingredient.fromTag(ItemTags.PLANKS),
+                        new ItemStack(Items.LADDER, 4)),
+                "misc");
 
         Registry.BLOCK.stream().filter(block -> ((AbstractBlockAccessor) block).getMaterial() == Material.WOOD
                 || ((AbstractBlockAccessor) block).getMaterial() == Material.NETHER_WOOD)
@@ -520,6 +608,17 @@ public final class Datagen {
                     "", Ingredient.ofItems(planks),
                     new ItemStack(item, count));
             registerRecipe(recipe, category);
+        }
+    }
+
+    public static void tryRegisterWoodcuttingRecipeFor(WoodType woodType, WoodType.Component planks, WoodType.ComponentType target, int count, String category) {
+        var component = woodType.getComponent(target);
+        if (component != null && component.hasItem()) {
+            var output = component.getItemId();
+            registerRecipe(new WoodcuttingRecipe(AuroraUtil.appendWithNamespace("woodcutting", output),
+                            target.name().toLowerCase(Locale.ROOT),
+                            Ingredient.ofItems(planks.item()), new ItemStack(component.item(), count)),
+                    category);
         }
     }
 
