@@ -2,3 +2,6 @@
 - Telescope to look at pretty Ecotones sky.
 - Wind Chime
 - Lamp post (like in Dungeons)
+- Fix candle-derived blocks loot tables (only drop one despite multiple candles being present)
+- Add boat, ladder (x4) and more recipes in sawmill.
+  - Maybe even try to detect modded wooden variants like \<woodtype\> ladder?
