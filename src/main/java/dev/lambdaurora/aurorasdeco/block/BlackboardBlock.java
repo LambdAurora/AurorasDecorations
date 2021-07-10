@@ -125,7 +125,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
         var pos = ctx.getBlockPos();
         var directions = ctx.getPlacementDirections();
 
-        var nbt = ctx.getStack().getSubTag("BlockEntityTag");
+        var nbt = ctx.getStack().getSubNbt("BlockEntityTag");
         if (nbt != null && nbt.contains("lit")) {
             state = state.with(LIT, nbt.getBoolean("lit"));
         }
@@ -161,7 +161,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
                 blackboard.setCustomName(stack.getName());
             }
 
-            var nbt = stack.getSubTag("BlockEntityTag");
+            var nbt = stack.getSubNbt("BlockEntityTag");
             if (state.get(WATERLOGGED) && !this.isLocked())
                 return;
 
@@ -309,7 +309,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
                 var stack = new ItemStack(this);
                 var nbt = blackboard.writeBlackBoardNbt(new NbtCompound());
                 nbt.remove("custom_name");
-                stack.putSubTag("BlockEntityTag", nbt);
+                stack.setSubNbt("BlockEntityTag", nbt);
 
                 if (blackboard.hasCustomName()) {
                     stack.setCustomName(blackboard.getCustomName());
@@ -332,7 +332,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
         if (blackboard != null) {
             var nbt = blackboard.writeBlackBoardNbt(new NbtCompound());
             nbt.remove("custom_name");
-            stack.putSubTag("BlockEntityTag", nbt);
+            stack.setSubNbt("BlockEntityTag", nbt);
         }
 
         return stack;

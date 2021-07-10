@@ -84,7 +84,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
                 if (OUTPUT.test(craftStack) && !this.isInput(craftStack)) {
                     output = craftStack;
                 } else if (this.isInput(craftStack)) {
-                    var nbt = craftStack.getSubTag("BlockEntityTag");
+                    var nbt = craftStack.getSubNbt("BlockEntityTag");
                     blackboard = Blackboard.fromNbt(nbt);
                     if (craftStack.hasCustomName())
                         customName = craftStack.getName();
@@ -95,7 +95,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
 
         var out = output.copy();
         out.setCount(1);
-        var nbt = out.getOrCreateSubTag("BlockEntityTag");
+        var nbt = out.getOrCreateSubNbt("BlockEntityTag");
         blackboard.writeNbt(nbt);
 
         if (customName != null)
@@ -105,7 +105,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
     }
 
     private boolean isInput(ItemStack stack) {
-        var nbt = stack.getSubTag("BlockEntityTag");
+        var nbt = stack.getSubNbt("BlockEntityTag");
         if (nbt != null) {
             if (nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
                 byte[] pixels = nbt.getByteArray("pixels");

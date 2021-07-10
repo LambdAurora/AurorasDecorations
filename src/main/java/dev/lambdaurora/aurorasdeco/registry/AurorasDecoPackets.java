@@ -104,7 +104,7 @@ public final class AurorasDecoPackets {
                     return;
                 }
 
-                client.openScreen(new SignPostEditScreen(signPost));
+                client.setScreen(new SignPostEditScreen(signPost));
             });
         }
     }

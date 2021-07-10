@@ -125,7 +125,7 @@ public class SignPostItem extends Item {
                 boolean up = y % ((int) y) > 0.5;
 
                 var text = stack.hasCustomName()
-                        ? Text.Serializer.fromJson(stack.getSubTag(ItemStack.DISPLAY_KEY).getString(ItemStack.NAME_KEY))
+                        ? Text.Serializer.fromJson(stack.getSubNbt(ItemStack.DISPLAY_KEY).getString(ItemStack.NAME_KEY))
                         : LiteralText.EMPTY;
                 if (up) {
                     if (signPostBlockEntity.getUp() == null) {

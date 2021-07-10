@@ -61,7 +61,7 @@ public class BlackboardItem extends BlockItem {
         if (clickType == ClickType.RIGHT) {
             if (otherStack.isOf(Items.WATER_BUCKET)
                     || (otherStack.isOf(Items.POTION) && PotionUtil.getPotion(otherStack) == Potions.WATER)) {
-                var nbt = self.getOrCreateSubTag("BlockEntityTag");
+                var nbt = self.getOrCreateSubNbt("BlockEntityTag");
                 var blackboard = Blackboard.fromNbt(nbt);
                 if (blackboard.isEmpty())
                     return false;
@@ -106,8 +106,8 @@ public class BlackboardItem extends BlockItem {
     }
 
     private ItemStack ensureValidStack(ItemStack stack) {
-        if (stack.getSubTag("BlockEntityTag") == null) {
-            var nbt = stack.getOrCreateSubTag("BlockEntityTag");
+        if (stack.getSubNbt("BlockEntityTag") == null) {
+            var nbt = stack.getOrCreateSubNbt("BlockEntityTag");
             var blackboard = new Blackboard();
             blackboard.writeNbt(nbt);
         }
@@ -117,7 +117,7 @@ public class BlackboardItem extends BlockItem {
     @Environment(EnvType.CLIENT)
     @Override
     public Optional<TooltipData> getTooltipData(ItemStack stack) {
-        var nbt = stack.getSubTag("BlockEntityTag");
+        var nbt = stack.getSubNbt("BlockEntityTag");
         if (nbt != null && nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
             var blackboard = Blackboard.fromNbt(nbt);
             return Optional.of(new BlackboardTooltipComponent(

@@ -208,7 +208,7 @@ public class SignPostBlock extends BlockWithEntity {
             }
         } else if (compass) {
             var pointingPos = CompassItem.hasLodestone(stack)
-                    ? this.getLodestonePos(world, stack.getOrCreateTag())
+                    ? this.getLodestonePos(world, stack.getOrCreateNbt())
                     : this.getWorldSpawnPos(world);
 
             if (pointingPos != null) {

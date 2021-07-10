@@ -115,7 +115,7 @@ public class SignPostEditScreen extends Screen {
 
     private void finishEditing() {
         this.signPost.markDirty();
-        this.client.openScreen(null);
+        this.client.setScreen(null);
     }
 
     @Override
