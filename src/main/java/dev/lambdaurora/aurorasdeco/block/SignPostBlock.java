@@ -164,7 +164,9 @@ public class SignPostBlock extends BlockWithEntity {
         boolean glowInkSac = stack.isOf(Items.GLOW_INK_SAC);
         boolean inkSac = stack.isOf(Items.INK_SAC);
         boolean compass = stack.isOf(Items.COMPASS);
-        boolean success = (handEmpty || dye || glowInkSac || inkSac || compass) && player.getAbilities().allowModifyWorld;
+        boolean canFlipSign = !dye && !glowInkSac && !inkSac && !compass && player.getStackInHand(Hand.MAIN_HAND).isEmpty()
+                && player.shouldCancelInteraction();
+        boolean success = (handEmpty || dye || glowInkSac || inkSac || compass || canFlipSign) && player.getAbilities().allowModifyWorld;
         if (world.isClient()) {
             return success ? ActionResult.SUCCESS : ActionResult.CONSUME;
         }
@@ -173,16 +175,15 @@ public class SignPostBlock extends BlockWithEntity {
         boolean up = y % ((int) y) > 0.5d;
 
         var sign = signPost.getSign(up);
-        if ((sign == null || !player.getAbilities().allowModifyWorld) && !(handEmpty && !player.isSneaking()))
+
+        if ((sign == null || !player.getAbilities().allowModifyWorld) && !(handEmpty && !canFlipSign))
             return ActionResult.SUCCESS;
 
-        if (handEmpty) {
-            if (player.isSneaking())
-                sign.setLeft(!sign.isLeft());
-            else if (!signPost.hasEditor() && player instanceof ServerPlayerEntity serverPlayerEntity &&
-                    (signPost.getUp() != null || signPost.getDown() != null)) {
-                signPost.startEdit(serverPlayerEntity);
-            }
+        if (canFlipSign) {
+            sign.setLeft(!sign.isLeft());
+        } else if (handEmpty && !signPost.hasEditor() && player instanceof ServerPlayerEntity serverPlayerEntity &&
+                (signPost.getUp() != null || signPost.getDown() != null)) {
+            signPost.startEdit(serverPlayerEntity);
         } else if (dye || glowInkSac || inkSac) {
             boolean shouldConsume;
             if (dye) {
