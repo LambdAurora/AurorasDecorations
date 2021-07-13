@@ -18,6 +18,7 @@
 package dev.lambdaurora.aurorasdeco.entity.goal;
 
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoTags;
 import net.minecraft.entity.ai.goal.MoveToTargetPosGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.AnimalEntity;
@@ -112,6 +113,6 @@ public abstract class SleepInPetBedGoal extends MoveToTargetPosGoal {
         }
 
         var state = world.getBlockState(pos);
-        return state.isIn(AurorasDecoRegistry.PET_BEDS);
+        return state.isIn(AurorasDecoTags.PET_BEDS);
     }
 }

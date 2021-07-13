@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.mixin;
+package dev.lambdaurora.aurorasdeco.mixin.block;
 
 import dev.lambdaurora.aurorasdeco.block.SeatBlock;
 import dev.lambdaurora.aurorasdeco.entity.SeatEntity;

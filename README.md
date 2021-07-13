@@ -52,6 +52,9 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 - Candles
   - Can now be put on walls.
   - Can now be put on ceilings as chandeliers.
+- Copper Hopper
+  - Can filter items and simplifies redstone contraptions.
+  - The filtering is not entirely strict (some parameters may not be accounted like durability).
 - Copper Sulfate
   - Made by exploding copper blocks.
   - Copper Sulfate Torch with a green tint.
@@ -134,6 +137,8 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 ![Burning Vine Tips](images/burnt_vine.png)
 
 ![Chandeliers](images/chandeliers.png)
+
+![Copper Hopper](images/copper_hopper.png)
 
 ![Copper Sulfate](images/copper_sulfate.png)
 

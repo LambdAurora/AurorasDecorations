@@ -25,6 +25,7 @@ import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.client.model.BakedSignPostModel;
 import dev.lambdaurora.aurorasdeco.client.particle.AmethystGlintParticle;
 import dev.lambdaurora.aurorasdeco.client.renderer.*;
+import dev.lambdaurora.aurorasdeco.client.screen.CopperHopperScreen;
 import dev.lambdaurora.aurorasdeco.client.screen.SawmillScreen;
 import dev.lambdaurora.aurorasdeco.client.screen.ShelfScreen;
 import dev.lambdaurora.aurorasdeco.hook.TrinketsHooks;
@@ -160,15 +161,16 @@ public class AurorasDecoClient implements ClientModInitializer {
         this.registerBlackboardItemRenderer(BLACKBOARD_BLOCK);
         this.registerBlackboardItemRenderer(CHALKBOARD_BLOCK);
         this.registerBlackboardItemRenderer(WAXED_BLACKBOARD_BLOCK);
-        this.registerBlackboardItemRenderer(AurorasDecoRegistry.WAXED_CHALKBOARD_BLOCK);
+        this.registerBlackboardItemRenderer(WAXED_CHALKBOARD_BLOCK);
 
-        ScreenRegistry.register(AurorasDecoRegistry.SAWMILL_SCREEN_HANDLER_TYPE, SawmillScreen::new);
-        ScreenRegistry.register(AurorasDecoRegistry.SHELF_SCREEN_HANDLER_TYPE, ShelfScreen::new);
+        ScreenRegistry.register(COPPER_HOPPER_SCREEN_HANDLER_TYPE, CopperHopperScreen::new);
+        ScreenRegistry.register(SAWMILL_SCREEN_HANDLER_TYPE, SawmillScreen::new);
+        ScreenRegistry.register(SHELF_SCREEN_HANDLER_TYPE, ShelfScreen::new);
 
         ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) ->
                         world != null && pos != null
                                 ? BiomeColors.getFoliageColor(world, pos) : FoliageColors.getDefaultColor(),
-                AurorasDecoRegistry.BURNT_VINE_BLOCK);
+                BURNT_VINE_BLOCK);
 
         EntityModelLayerRegistry.registerModelLayer(WindChimeBlockEntityRenderer.WIND_CHIME_MODEL_LAYER,
                 WindChimeBlockEntityRenderer::getTexturedModelData);

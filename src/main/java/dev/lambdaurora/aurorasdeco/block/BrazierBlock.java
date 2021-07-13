@@ -17,8 +17,8 @@
 
 package dev.lambdaurora.aurorasdeco.block;
 
-import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoSounds;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoTags;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -221,10 +221,10 @@ public class BrazierBlock extends Block implements Waterloggable {
     }
 
     public static boolean canBeLit(BlockState state) {
-        return state.isIn(AurorasDecoRegistry.BRAZIERS, s -> s.contains(LIT) && !state.get(LIT));
+        return state.isIn(AurorasDecoTags.BRAZIERS, s -> s.contains(LIT) && !state.get(LIT));
     }
 
     public static boolean canBeUnlit(BlockState state) {
-        return state.isIn(AurorasDecoRegistry.BRAZIERS, s -> s.contains(LIT) && state.get(LIT));
+        return state.isIn(AurorasDecoTags.BRAZIERS, s -> s.contains(LIT) && state.get(LIT));
     }
 }

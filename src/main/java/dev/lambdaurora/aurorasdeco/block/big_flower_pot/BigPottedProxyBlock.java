@@ -17,7 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.block.big_flower_pot;
 
-import dev.lambdaurora.aurorasdeco.mixin.BlockAccessor;
+import dev.lambdaurora.aurorasdeco.mixin.block.BlockAccessor;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.block.Block;

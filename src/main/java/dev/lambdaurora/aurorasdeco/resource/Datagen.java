@@ -28,7 +28,7 @@ import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
 import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
 import dev.lambdaurora.aurorasdeco.item.SignPostItem;
-import dev.lambdaurora.aurorasdeco.mixin.AbstractBlockAccessor;
+import dev.lambdaurora.aurorasdeco.mixin.block.AbstractBlockAccessor;
 import dev.lambdaurora.aurorasdeco.recipe.RecipeSerializerExtended;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
@@ -59,7 +59,6 @@ import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.recipe.*;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
-import net.minecraft.tag.ItemTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
@@ -499,12 +498,6 @@ public final class Datagen {
                         "building_blocks");
             }
         });
-
-        registerRecipe(new WoodcuttingRecipe(id("woodcutting/ladder"),
-                        "",
-                        Ingredient.fromTag(ItemTags.PLANKS),
-                        new ItemStack(Items.LADDER, 4)),
-                "misc");
 
         Registry.BLOCK.stream().filter(block -> ((AbstractBlockAccessor) block).getMaterial() == Material.WOOD
                 || ((AbstractBlockAccessor) block).getMaterial() == Material.NETHER_WOOD)

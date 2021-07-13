@@ -70,6 +70,10 @@ public class DerivedBlockItem extends BlockItem {
         return new DerivedBlockItem(block, KindSearcher.CAMPFIRE_SEARCHER, KindSearcher::findLastOfGroup, settings);
     }
 
+    public static DerivedBlockItem hopper(Block block, Settings settings) {
+        return new DerivedBlockItem(block, KindSearcher.HOPPER_SEARCHER, KindSearcher::findLastOfGroup, settings);
+    }
+
     public static DerivedBlockItem lantern(Block block, Settings settings) {
         return new DerivedBlockItem(block, KindSearcher.LANTERN_SEARCHER, KindSearcher::findLastOfGroup, settings);
     }

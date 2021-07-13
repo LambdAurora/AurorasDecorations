@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.MapCodec;
 import dev.lambdaurora.aurorasdeco.block.entity.SignPostBlockEntity;
 import dev.lambdaurora.aurorasdeco.item.SignPostItem;
-import dev.lambdaurora.aurorasdeco.mixin.BlockAccessor;
+import dev.lambdaurora.aurorasdeco.mixin.block.BlockAccessor;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.util.CustomStateBuilder;

@@ -17,9 +17,9 @@
 
 package dev.lambdaurora.aurorasdeco.block.big_flower_pot;
 
-import dev.lambdaurora.aurorasdeco.mixin.AbstractBlockAccessor;
-import dev.lambdaurora.aurorasdeco.mixin.BlockAccessor;
-import dev.lambdaurora.aurorasdeco.mixin.BlockSettingsAccessor;
+import dev.lambdaurora.aurorasdeco.mixin.block.AbstractBlockAccessor;
+import dev.lambdaurora.aurorasdeco.mixin.block.BlockAccessor;
+import dev.lambdaurora.aurorasdeco.mixin.block.BlockSettingsAccessor;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;

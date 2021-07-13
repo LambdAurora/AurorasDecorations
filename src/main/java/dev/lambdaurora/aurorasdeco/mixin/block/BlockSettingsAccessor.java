@@ -15,15 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.mixin;
+package dev.lambdaurora.aurorasdeco.mixin.block;
 
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.VineBlock;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Invoker;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(VineBlock.class)
-public interface VineBlockAccessor {
-    @Invoker("hasAdjacentBlocks")
-    boolean aurorasdeco$hasAdjacentBlocks(BlockState state);
+import java.util.function.ToIntFunction;
+
+@Mixin(AbstractBlock.Settings.class)
+public interface BlockSettingsAccessor {
+    @Accessor
+    ToIntFunction<BlockState> getLuminance();
 }

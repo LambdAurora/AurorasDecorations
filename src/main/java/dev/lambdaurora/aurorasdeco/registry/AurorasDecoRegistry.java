@@ -35,6 +35,7 @@ import dev.lambdaurora.aurorasdeco.mixin.SimpleRegistryAccessor;
 import dev.lambdaurora.aurorasdeco.recipe.BlackboardCloneRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.ExplodingRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
+import dev.lambdaurora.aurorasdeco.screen.CopperHopperScreenHandler;
 import dev.lambdaurora.aurorasdeco.screen.SawmillScreenHandler;
 import dev.lambdaurora.aurorasdeco.screen.ShelfScreenHandler;
 import dev.lambdaurora.aurorasdeco.util.Derivator;
@@ -47,8 +48,8 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
-import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -64,7 +65,6 @@ import net.minecraft.recipe.SpecialRecipeSerializer;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.stat.StatFormatter;
-import net.minecraft.tag.Tag;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -94,6 +94,11 @@ public final class AurorasDecoRegistry {
     public static final LanternBlock AMETHYST_LANTERN_BLOCK = registerWithItem("amethyst_lantern",
             new AmethystLanternBlock(), new FabricItemSettings().group(ItemGroup.DECORATIONS),
             DerivedBlockItem::lantern);
+
+    public static final CopperHopperBlock COPPER_HOPPER_BLOCK = registerWithItem("copper_hopper",
+            new CopperHopperBlock(FabricBlockSettings.copyOf(Blocks.HOPPER).mapColor(MapColor.ORANGE)),
+            new FabricItemSettings().group(ItemGroup.REDSTONE),
+            DerivedBlockItem::hopper);
 
     public static final LanternBlock COPPER_SULFATE_LANTERN_BLOCK = registerWithItem("copper_sulfate_lantern",
             new LanternBlock(FabricBlockSettings.copyOf(Blocks.LANTERN)),
@@ -285,40 +290,34 @@ public final class AurorasDecoRegistry {
 
     /* Block Entities */
 
-    public static final BlockEntityType<BenchBlockEntity> BENCH_BLOCK_ENTITY_TYPE = Registry.register(
-            Registry.BLOCK_ENTITY_TYPE,
-            id("bench"),
-            FabricBlockEntityTypeBuilder.create(BenchBlockEntity::new).build()
+    public static final BlockEntityType<BenchBlockEntity> BENCH_BLOCK_ENTITY_TYPE = registerBlockEntity(
+            "bench", BenchBlockEntity::new
     );
-    public static final BlockEntityType<BlackboardBlockEntity> BLACKBOARD_BLOCK_ENTITY_TYPE = Registry.register(
-            Registry.BLOCK_ENTITY_TYPE,
-            id("blackboard"),
-            FabricBlockEntityTypeBuilder.create(BlackboardBlockEntity::new,
-                    BLACKBOARD_BLOCK, CHALKBOARD_BLOCK, WAXED_BLACKBOARD_BLOCK, WAXED_CHALKBOARD_BLOCK)
-                    .build()
+    public static final BlockEntityType<BlackboardBlockEntity> BLACKBOARD_BLOCK_ENTITY_TYPE = registerBlockEntity(
+            "blackboard",
+            BlackboardBlockEntity::new,
+            BLACKBOARD_BLOCK, CHALKBOARD_BLOCK, WAXED_BLACKBOARD_BLOCK, WAXED_CHALKBOARD_BLOCK
     );
-    public static final BlockEntityType<BookPileBlockEntity> BOOK_PILE_BLOCK_ENTITY_TYPE = Registry.register(
-            Registry.BLOCK_ENTITY_TYPE,
-            id("book_pile"),
-            FabricBlockEntityTypeBuilder.create(BookPileBlockEntity::new, BOOK_PILE_BLOCK).build()
+    public static final BlockEntityType<BookPileBlockEntity> BOOK_PILE_BLOCK_ENTITY_TYPE = registerBlockEntity(
+            "book_pile", BookPileBlockEntity::new, BOOK_PILE_BLOCK
     );
-    public static final BlockEntityType<ShelfBlockEntity> SHELF_BLOCK_ENTITY_TYPE = Registry.register(
-            Registry.BLOCK_ENTITY_TYPE,
-            id("shelf"),
-            FabricBlockEntityTypeBuilder.create(ShelfBlockEntity::new).build()
+    public static final BlockEntityType<CopperHopperBlockEntity> COPPER_HOPPER_BLOCK_ENTITY_TYPE = registerBlockEntity(
+            "copper_hopper", CopperHopperBlockEntity::new, COPPER_HOPPER_BLOCK
     );
-    public static final BlockEntityType<SignPostBlockEntity> SIGN_POST_BLOCK_ENTITY_TYPE = Registry.register(
-            Registry.BLOCK_ENTITY_TYPE,
-            id("sign_post"),
-            FabricBlockEntityTypeBuilder.create(SignPostBlockEntity::new).build()
+    public static final BlockEntityType<ShelfBlockEntity> SHELF_BLOCK_ENTITY_TYPE = registerBlockEntity(
+            "shelf", ShelfBlockEntity::new
     );
-    public static final BlockEntityType<WindChimeBlockEntity> WIND_CHIME_BLOCK_ENTITY_TYPE = Registry.register(
-            Registry.BLOCK_ENTITY_TYPE,
-            id("wind_chime"),
-            FabricBlockEntityTypeBuilder.create(WindChimeBlockEntity::new, WIND_CHIME_BLOCK).build()
+    public static final BlockEntityType<SignPostBlockEntity> SIGN_POST_BLOCK_ENTITY_TYPE = registerBlockEntity(
+            "sign_post", SignPostBlockEntity::new
+    );
+    public static final BlockEntityType<WindChimeBlockEntity> WIND_CHIME_BLOCK_ENTITY_TYPE = registerBlockEntity(
+            "wind_chime", WindChimeBlockEntity::new, WIND_CHIME_BLOCK
     );
 
     /* Screen handlers */
+
+    public static final ScreenHandlerType<CopperHopperScreenHandler> COPPER_HOPPER_SCREEN_HANDLER_TYPE =
+            ScreenHandlerRegistry.registerSimple(id("copper_hopper"), CopperHopperScreenHandler::new);
 
     public static final ScreenHandlerType<SawmillScreenHandler> SAWMILL_SCREEN_HANDLER_TYPE =
             ScreenHandlerRegistry.registerSimple(id("sawmill"), SawmillScreenHandler::new);
@@ -371,16 +370,6 @@ public final class AurorasDecoRegistry {
     public static final RecipeSerializer<WoodcuttingRecipe> WOODCUTTING_RECIPE_SERIALIZER
             = register("woodcutting", WoodcuttingRecipe.SERIALIZER);
 
-    /* Tags */
-
-    public static final Tag<Item> BLACKBOARD_ITEMS = TagRegistry.item(id("blackboards"));
-    public static final Tag<Block> BRAZIERS = TagRegistry.block(id("braziers"));
-    public static final Tag<Block> COPPER_SULFATE_DECOMPOSABLE = TagRegistry.block(id("copper_sulfate_decomposable"));
-    public static final Tag<Block> PET_BEDS = TagRegistry.block(id("pet_beds"));
-    public static final Tag<Block> SHELVES = TagRegistry.block(id("shelves"));
-    public static final Tag<Block> SMALL_LOG_PILES = TagRegistry.block(id("small_log_piles"));
-    public static final Tag<Block> STUMPS = TagRegistry.block(id("stumps"));
-
     /* POI */
 
     public static final PointOfInterestType AMETHYST_LANTERN_POI = PointOfInterestHelper.register(
@@ -422,6 +411,12 @@ public final class AurorasDecoRegistry {
 
     private static <T extends Item> T register(String name, T item) {
         return Registry.register(Registry.ITEM, id(name), item);
+    }
+
+    private static <T extends BlockEntity> BlockEntityType<T> registerBlockEntity(String name,
+                                                                                  FabricBlockEntityTypeBuilder.Factory<T> factory,
+                                                                                  Block... blocks) {
+        return Registry.register(Registry.BLOCK_ENTITY_TYPE, id(name), FabricBlockEntityTypeBuilder.create(factory, blocks).build());
     }
 
     private static <R extends Recipe<?>, T extends RecipeSerializer<R>> T register(String name, T recipe) {
@@ -549,7 +544,7 @@ public final class AurorasDecoRegistry {
                 FlammableBlockRegistry.getDefaultInstance().add(block, entry.getBurnChance(), entry.getSpreadChance());
         }, WoodType.ComponentType.PLANKS);
 
-        FlammableBlockRegistry.getDefaultInstance().add(PET_BEDS, 10, 30);
+        FlammableBlockRegistry.getDefaultInstance().add(AurorasDecoTags.PET_BEDS, 10, 30);
 
         ((ItemExtensions) Items.BOOK).makePlaceable(BOOK_PILE_BLOCK);
         ((ItemExtensions) Items.ENCHANTED_BOOK).makePlaceable(BOOK_PILE_BLOCK);

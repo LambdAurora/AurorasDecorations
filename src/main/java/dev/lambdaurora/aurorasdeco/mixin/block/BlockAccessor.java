@@ -15,18 +15,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.mixin;
+package dev.lambdaurora.aurorasdeco.mixin.block;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Material;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.state.StateManager;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(AbstractBlock.class)
-public interface AbstractBlockAccessor {
-    @Accessor
-    Material getMaterial();
+@Mixin(Block.class)
+public interface BlockAccessor {
+    @Invoker("appendProperties")
+    void aurorasdeco$appendProperties(StateManager.Builder<Block, BlockState> builder);
 
-    @Accessor
-    AbstractBlock.Settings getSettings();
+    @Mutable
+    @Accessor("stateManager")
+    void setStateManager(StateManager<Block, BlockState> stateManager);
 }

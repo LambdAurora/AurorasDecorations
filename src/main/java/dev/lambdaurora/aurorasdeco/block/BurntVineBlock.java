@@ -17,7 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.block;
 
-import dev.lambdaurora.aurorasdeco.mixin.VineBlockAccessor;
+import dev.lambdaurora.aurorasdeco.mixin.block.VineBlockAccessor;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;

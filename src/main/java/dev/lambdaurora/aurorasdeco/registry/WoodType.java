@@ -17,7 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.registry;
 
-import dev.lambdaurora.aurorasdeco.mixin.AbstractBlockAccessor;
+import dev.lambdaurora.aurorasdeco.mixin.block.AbstractBlockAccessor;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.api.EnvType;

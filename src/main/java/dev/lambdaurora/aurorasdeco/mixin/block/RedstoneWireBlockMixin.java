@@ -15,17 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.mixin;
+package dev.lambdaurora.aurorasdeco.mixin.block;
 
-import net.minecraft.block.AbstractBlock;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoTags;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.RedstoneWireBlock;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.function.ToIntFunction;
-
-@Mixin(AbstractBlock.Settings.class)
-public interface BlockSettingsAccessor {
-    @Accessor
-    ToIntFunction<BlockState> getLuminance();
+@Mixin(RedstoneWireBlock.class)
+public class RedstoneWireBlockMixin {
+    @Inject(method = "canRunOnTop", at = @At("RETURN"), cancellable = true)
+    private void onCanRunOnTop(BlockView world, BlockPos pos, BlockState floor, CallbackInfoReturnable<Boolean> cir) {
+        if (!cir.getReturnValue() && floor.isIn(AurorasDecoTags.HOPPERS)) {
+            cir.setReturnValue(true);
+        }
+    }
 }

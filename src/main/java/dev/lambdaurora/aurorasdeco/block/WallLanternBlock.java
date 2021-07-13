@@ -22,7 +22,7 @@ import com.google.common.collect.Maps;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
-import dev.lambdaurora.aurorasdeco.mixin.BlockAccessor;
+import dev.lambdaurora.aurorasdeco.mixin.block.BlockAccessor;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoSounds;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;

@@ -17,7 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.block.behavior;
 
-import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -48,7 +48,7 @@ public final class CopperSulfateBehavior {
             currentPos.move(0, 1, 0);
 
             var currentState = world.getBlockState(currentPos);
-            if (currentState.isIn(AurorasDecoRegistry.COPPER_SULFATE_DECOMPOSABLE)) {
+            if (currentState.isIn(AurorasDecoTags.COPPER_SULFATE_DECOMPOSABLE)) {
                 if (currentState.isIn(BlockTags.LEAVES))
                     Block.dropStacks(currentState, world, currentPos, world.getBlockEntity(pos));
                 else {

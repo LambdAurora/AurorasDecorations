@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "aurorasdeco:block/copper_hopper"
+    },
+    "facing=east": {
+      "model": "aurorasdeco:block/copper_hopper_side",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "aurorasdeco:block/copper_hopper_side"
+    },
+    "facing=south": {
+      "model": "aurorasdeco:block/copper_hopper_side",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "aurorasdeco:block/copper_hopper_side",
+      "y": 270
+    }
+  }
+}
