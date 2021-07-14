@@ -17,16 +17,21 @@
 
 package dev.lambdaurora.aurorasdeco;
 
+import dev.lambdaurora.aurorasdeco.block.SignPostBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigPottedCactusBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPackets;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Blocks;
+import net.minecraft.item.ShieldItem;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
@@ -60,6 +65,21 @@ public class AurorasDeco implements ModInitializer {
             }
 
             Blackboard.Color.tryRegisterColorFromItem(id, object);
+        });
+        UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
+            var offStack = player.getStackInHand(Hand.OFF_HAND);
+            // Trigger the sign post block interaction to flip a sign.
+            // But why is this necessary?
+            // Because when you have an item in your offhand, it will try to interact with that one instead
+            // and refuse to trigger the block. Which can be very annoying for players usually holding something
+            // in their offhand.
+            if (!(offStack.getItem() instanceof ShieldItem) && player.shouldCancelInteraction() && player.getMainHandStack().isEmpty()) {
+                var state = world.getBlockState(hitResult.getBlockPos());
+                if (state.getBlock() instanceof SignPostBlock) {
+                    return state.onUse(world, player, hand, hitResult);
+                }
+            }
+            return ActionResult.PASS;
         });
 
         ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_OPEN_GUI_FAIL, AurorasDecoPackets::handleSignPostOpenGuiFailPacket);

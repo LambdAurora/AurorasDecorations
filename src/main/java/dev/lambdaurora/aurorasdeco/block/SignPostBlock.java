@@ -164,7 +164,7 @@ public class SignPostBlock extends BlockWithEntity {
         boolean glowInkSac = stack.isOf(Items.GLOW_INK_SAC);
         boolean inkSac = stack.isOf(Items.INK_SAC);
         boolean compass = stack.isOf(Items.COMPASS);
-        boolean canFlipSign = !dye && !glowInkSac && !inkSac && !compass && player.getStackInHand(Hand.MAIN_HAND).isEmpty()
+        boolean canFlipSign = !dye && !glowInkSac && !inkSac && !compass && player.getMainHandStack().isEmpty()
                 && player.shouldCancelInteraction();
         boolean success = (handEmpty || dye || glowInkSac || inkSac || compass || canFlipSign) && player.getAbilities().allowModifyWorld;
         if (world.isClient()) {
@@ -190,7 +190,7 @@ public class SignPostBlock extends BlockWithEntity {
                 shouldConsume = sign.setColor(((DyeItem) stack.getItem()).getColor());
                 world.playSound(null, pos, SoundEvents.ITEM_DYE_USE, SoundCategory.BLOCKS, 1.f, 1.f);
             } else if (glowInkSac) {
-                world.playSound(null, pos, SoundEvents.ITEM_GLOW_INK_SAC_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                world.playSound(null, pos, SoundEvents.ITEM_GLOW_INK_SAC_USE, SoundCategory.BLOCKS, 1.f, 1.f);
                 shouldConsume = sign.setGlowing(true);
                 if (shouldConsume && player instanceof ServerPlayerEntity serverPlayerEntity) {
                     Criteria.ITEM_USED_ON_BLOCK.test(serverPlayerEntity, pos, stack);
