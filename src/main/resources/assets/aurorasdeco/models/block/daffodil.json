@@ -1,0 +1,101 @@
+{
+  "credit": "Made by LambdAurora",
+  "parent": "block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "cross": "aurorasdeco:block/daffodil_leaves",
+    "particle": "aurorasdeco:block/daffodil_front",
+    "front": "aurorasdeco:block/daffodil_front"
+  },
+  "elements": [
+    {
+      "name": "leaf",
+      "from": [ 0.8, 0, 8 ],
+      "to": [ 15.2, 8, 8 ],
+      "shade": false,
+      "rotation": {"angle": 45, "axis": "y", "origin": [ 8, 8, 8 ]},
+      "faces": {
+        "north": {"uv": [ 0, 8, 16, 16 ], "texture": "#cross"},
+        "south": {"uv": [ 0, 8, 16, 16 ], "texture": "#cross"}
+      }
+    },
+    {
+      "name": "leaf",
+      "from": [ 8, 0, 0.8 ],
+      "to": [ 8, 8, 15.2 ],
+      "shade": false,
+      "rotation": {"angle": 45, "axis": "y", "origin": [ 8, 8, 8 ]},
+      "faces": {
+        "east": {"uv": [ 0, 8, 16, 16 ], "texture": "#cross"},
+        "west": {"uv": [ 0, 8, 16, 16 ], "texture": "#cross"}
+      }
+    },
+    {
+      "name": "stem",
+      "from": [ 5, 0, 8 ],
+      "to": [ 11, 10, 8 ],
+      "faces": {
+        "north": {"uv": [ 14, 6, 8, 16 ], "texture": "#front"},
+        "south": {"uv": [ 8, 6, 14, 16 ], "texture": "#front"}
+      }
+    },
+    {
+      "name": "petals",
+      "from": [ 10.2, 5, 4 ],
+      "to": [ 10.2, 13, 12 ],
+      "shade": false,
+      "rotation": {"angle": 22.5, "axis": "z", "origin": [ 8, 8, 8 ], "rescale": true},
+      "faces": {
+        "east": {"uv": [ 0, 0, 8, 8 ], "texture": "#front"},
+        "west": {"uv": [ 8, 0, 0, 8 ], "texture": "#front"}
+      }
+    },
+    {
+      "name": "inner_flower_up",
+      "from": [ 10.2, 10, 7 ],
+      "to": [ 12.2, 10, 9 ],
+      "rotation": {"angle": 22.5, "axis": "z", "origin": [ 8, 8, 8 ], "rescale": true},
+      "faces": {
+        "up": {"uv": [ 14, 0, 16, 2 ], "rotation": 180, "texture": "#front"},
+        "down": {"uv": [ 14, 0, 16, 2 ], "texture": "#front"}
+      }
+    },
+    {
+      "name": "inner_flower_down",
+      "from": [ 10.2, 8, 7 ],
+      "to": [ 12.2, 8, 9 ],
+      "rotation": {"angle": 22.5, "axis": "z", "origin": [ 8, 8, 8 ], "rescale": true},
+      "faces": {
+        "up": {"uv": [ 14, 0, 16, 2 ], "texture": "#front"},
+        "down": {"uv": [ 14, 0, 16, 2 ], "rotation": 180, "texture": "#front"}
+      }
+    },
+    {
+      "name": "inner_flower_right",
+      "from": [ 10.2, 8, 7 ],
+      "to": [ 12.2, 10, 7 ],
+      "rotation": {"angle": 22.5, "axis": "z", "origin": [ 8, 8, 8 ], "rescale": true},
+      "faces": {
+        "north": {"uv": [ 14, 0, 16, 2 ], "rotation": 180, "texture": "#front"},
+        "south": {"uv": [ 14, 0, 16, 2 ], "rotation": 180, "texture": "#front"}
+      }
+    },
+    {
+      "name": "inner_flower_left",
+      "from": [ 10.2, 8, 9 ],
+      "to": [ 12.2, 10, 9 ],
+      "rotation": {"angle": 22.5, "axis": "z", "origin": [ 8, 8, 8 ], "rescale": true},
+      "faces": {
+        "north": {"uv": [ 14, 0, 16, 2 ], "texture": "#front"},
+        "south": {"uv": [ 14, 0, 16, 2 ], "texture": "#front"}
+      }
+    }
+  ],
+  "groups": [0, 1, 2,
+    {
+      "name": "flower",
+      "origin": [ 8, 8, 8 ],
+      "children": [ 3, 4, 5, 6, 7 ]
+    }
+  ]
+}

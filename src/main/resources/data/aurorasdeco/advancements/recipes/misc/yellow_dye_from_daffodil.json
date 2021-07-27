@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "aurorasdeco:yellow_dye_from_daffodil"
+    ]
+  },
+  "criteria": {
+    "has_daffodil": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "aurorasdeco:daffodil"
+            ]
+          }
+        ]
+      }
+    },
+    "has_self": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:yellow_dye"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "aurorasdeco:yellow_dye_from_daffodil"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_daffodil",
+      "has_self",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -288,6 +288,12 @@ public final class AurorasDecoRegistry {
     public static final StairsBlock TUFF_BRICK_STAIRS = TUFF_BRICKS_DERIVATOR.stairs(Items.DEEPSLATE_TILE_STAIRS);
     public static final WallBlock TUFF_BRICK_WALL = TUFF_BRICKS_DERIVATOR.wall();
 
+    /* Plants */
+
+    public static final DaffodilBlock DAFFODIL = registerWithItem("daffodil", new DaffodilBlock(),
+            new FabricItemSettings().group(ItemGroup.DECORATIONS),
+            DerivedBlockItem::flower);
+
     /* Block Entities */
 
     public static final BlockEntityType<BenchBlockEntity> BENCH_BLOCK_ENTITY_TYPE = registerBlockEntity(

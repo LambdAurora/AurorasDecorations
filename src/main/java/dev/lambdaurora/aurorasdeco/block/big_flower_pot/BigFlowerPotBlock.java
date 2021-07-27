@@ -139,7 +139,8 @@ public class BigFlowerPotBlock extends Block/* implements FluidFillable*/ {
                 if (!world.getBlockState(up).isAir())
                     return ActionResult.PASS;
 
-                world.setBlockState(pos, toPlace.getDefaultState(), Block.NOTIFY_ALL);
+                world.setBlockState(pos, toPlace.getPlacementState(new ItemPlacementContext(player, hand, handStack, hit)),
+                        Block.NOTIFY_ALL);
                 player.incrementStat(Stats.POT_FLOWER);
                 if (!player.getAbilities().creativeMode) {
                     handStack.decrement(1);

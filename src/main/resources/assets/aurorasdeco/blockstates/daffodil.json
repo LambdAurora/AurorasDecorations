@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "aurorasdeco:block/daffodil",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "aurorasdeco:block/daffodil"
+    },
+    "facing=south": {
+      "model": "aurorasdeco:block/daffodil",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "aurorasdeco:block/daffodil",
+      "y": 180
+    }
+  }
+}

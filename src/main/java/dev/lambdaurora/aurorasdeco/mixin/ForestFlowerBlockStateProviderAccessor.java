@@ -15,20 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.mixin.client;
+package dev.lambdaurora.aurorasdeco.mixin;
 
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.block.BlockState;
+import net.minecraft.world.gen.stateprovider.ForestFlowerBlockStateProvider;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Invoker;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(MobEntityRenderer.class)
-public interface MobEntityRendererAccessor<T extends MobEntity> {
-    @Invoker("renderLeash")
-    <E extends Entity> void aurorasdeco$renderLeash(T entity, float tickDelta,
-                                                    MatrixStack matrices, VertexConsumerProvider provider,
-                                                    E holdingEntity);
+@Mixin(ForestFlowerBlockStateProvider.class)
+public interface ForestFlowerBlockStateProviderAccessor {
+    @Accessor("FLOWERS")
+    static BlockState[] getFlowers() {
+        throw new UnsupportedOperationException("Mixin injection failed.");
+    }
+
+    @Mutable
+    @Accessor("FLOWERS")
+    static void setFlowers(BlockState[] flowers) {
+        throw new UnsupportedOperationException("Mixin injection failed.");
+    }
 }

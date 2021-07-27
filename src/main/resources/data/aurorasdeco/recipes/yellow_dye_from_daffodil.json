@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "yellow_dye",
+  "ingredients": [
+    {
+      "item": "aurorasdeco:daffodil"
+    }
+  ],
+  "result": {
+    "item": "minecraft:yellow_dye"
+  }
+}

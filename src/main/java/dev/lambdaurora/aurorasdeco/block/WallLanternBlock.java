@@ -120,7 +120,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
         ASSOCIATED_LANTERN_INIT.remove();
 
         var customBuilder = new CustomStateBuilder<>(builder);
-        customBuilder.exclude("hanging");
+        customBuilder.exclude("hanging", "facing");
         ((BlockAccessor) lantern).aurorasdeco$appendProperties(customBuilder);
 
         builder.add(FACING);

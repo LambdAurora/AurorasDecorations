@@ -23,6 +23,7 @@ import dev.lambdaurora.aurorasdeco.block.HangingFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.StumpBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.client.model.BakedSignPostModel;
+import dev.lambdaurora.aurorasdeco.client.model.UnbakedBlackboardModel;
 import dev.lambdaurora.aurorasdeco.client.particle.AmethystGlintParticle;
 import dev.lambdaurora.aurorasdeco.client.renderer.*;
 import dev.lambdaurora.aurorasdeco.client.screen.CopperHopperScreen;
@@ -104,6 +105,7 @@ public class AurorasDecoClient implements ClientModInitializer {
                 AurorasDecoRegistry.COPPER_SULFATE_LANTERN_BLOCK,
                 AurorasDecoRegistry.COPPER_SULFATE_TORCH_BLOCK,
                 AurorasDecoRegistry.COPPER_SULFATE_WALL_TORCH_BLOCK,
+                DAFFODIL,
                 AurorasDecoRegistry.SAWMILL_BLOCK,
                 AurorasDecoRegistry.SOUL_BRAZIER_BLOCK,
                 AurorasDecoRegistry.WIND_CHIME_BLOCK

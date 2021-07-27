@@ -17,6 +17,8 @@
 
 package dev.lambdaurora.aurorasdeco.block.big_flower_pot;
 
+import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import dev.lambdaurora.aurorasdeco.block.DaffodilBlock;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.block.*;
@@ -71,6 +73,8 @@ public final class PottedPlantType {
         var id = plantId.toString();
         if (id.startsWith("minecraft:")) {
             id = id.substring("minecraft:".length());
+        } else if (id.startsWith(AurorasDeco.NAMESPACE + ':')) {
+            id = id.substring(AurorasDeco.NAMESPACE.length() + 1);
         } else {
             id = id.replace(':', '/');
         }
@@ -86,6 +90,8 @@ public final class PottedPlantType {
             return register(id, plant, item, BigPottedSweetBerryBushBlock::new);
         else if (plant instanceof NetherWartBlock)
             return register(id, plant, item, BigPottedNetherWartBlock::new);
+        else if (plant instanceof DaffodilBlock)
+            return register(id, plant, item, BigPottedProxyBlock::new);
         //else if (plant instanceof SeaPickleBlock)
         //    return register(id, plant, item, BigPottedSeaPickleBlock::new);
         return register(id, plant, item, BigFlowerPotBlock::new);

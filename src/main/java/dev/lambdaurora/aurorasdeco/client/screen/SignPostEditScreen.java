@@ -177,10 +177,12 @@ public class SignPostEditScreen extends Screen {
         matrices.scale(1, -1, -0.6666667f);
         var immediate = this.client.getBufferBuilders().getEntityVertexConsumers();
         if (upData != null)
-            this.renderSign(upData, 0, -6 / 16.f, matrices, immediate, LightmapTextureManager.field_32767, OverlayTexture.DEFAULT_UV);
+            this.renderSign(upData, 0, -6 / 16.f, matrices, immediate,
+                    LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
 
         if (downData != null)
-            this.renderSign(downData, 1, 3 / 16.f, matrices, immediate, LightmapTextureManager.field_32767, OverlayTexture.DEFAULT_UV);
+            this.renderSign(downData, 1, 3 / 16.f, matrices, immediate,
+                    LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
 
         matrices.pop();
         DiffuseLighting.enableGuiDepthLighting();

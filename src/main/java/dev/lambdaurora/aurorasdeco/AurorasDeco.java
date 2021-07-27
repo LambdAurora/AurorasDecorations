@@ -20,6 +20,7 @@ package dev.lambdaurora.aurorasdeco;
 import dev.lambdaurora.aurorasdeco.block.SignPostBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigPottedCactusBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
+import dev.lambdaurora.aurorasdeco.mixin.ForestFlowerBlockStateProviderAccessor;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPackets;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
@@ -36,6 +37,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Arrays;
 
 /**
  * Represents the Aurora's Decorations mod.
@@ -84,6 +87,11 @@ public class AurorasDeco implements ModInitializer {
 
         ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_OPEN_GUI_FAIL, AurorasDecoPackets::handleSignPostOpenGuiFailPacket);
         ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_SET_TEXT, AurorasDecoPackets::handleSignPostSetTextPacket);
+
+        int aurorasDecoStart = ForestFlowerBlockStateProviderAccessor.getFlowers().length;
+        var flowers = Arrays.copyOf(ForestFlowerBlockStateProviderAccessor.getFlowers(), aurorasDecoStart + 1);
+        flowers[aurorasDecoStart] = AurorasDecoRegistry.DAFFODIL.getDefaultState();
+        ForestFlowerBlockStateProviderAccessor.setFlowers(flowers);
     }
 
     public static Identifier id(String path) {

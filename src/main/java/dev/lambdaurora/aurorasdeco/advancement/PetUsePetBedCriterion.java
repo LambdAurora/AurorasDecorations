@@ -68,7 +68,7 @@ public class PetUsePetBedCriterion extends AbstractCriterion<PetUsePetBedCriteri
     }
 
     public void trigger(ServerPlayerEntity player, ServerWorld world, BlockPos pos) {
-        this.test(player, (conditions) -> conditions.matches(world, pos));
+        this.trigger(player, conditions -> conditions.matches(world, pos));
     }
 
     public static class Conditions extends AbstractCriterionConditions {

@@ -96,7 +96,7 @@ public class SignPostBlockEntityRenderer implements BlockEntityRenderer<SignPost
         boolean glowing = sign.isGlowing();
         boolean shouldRenderGlow = this.shouldRender(entity, color) && glowing;
         {
-            int textLight = glowing ? LightmapTextureManager.field_32767 : light;
+            int textLight = glowing ? LightmapTextureManager.MAX_LIGHT_COORDINATE : light;
             int backgroundColor = color;
             if (glowing) {
                 color = sign.getColor().getSignColor();

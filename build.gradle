@@ -27,11 +27,7 @@ String getMCVersionString() {
 }
 
 String getTerraformersMCMaven() {
-    def terraformersUrl = 'https://maven.terraformersmc.com/'
-    if (pingUrl(terraformersUrl))
-        return terraformersUrl
-    else
-        return 'https://maven.kotlindiscord.com/repository/terraformers/'
+    return 'https://maven.kotlindiscord.com/repository/terraformers/'
 }
 
 boolean pingUrl(String address) {

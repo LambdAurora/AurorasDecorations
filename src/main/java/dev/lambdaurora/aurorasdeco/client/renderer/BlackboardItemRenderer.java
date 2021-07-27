@@ -24,6 +24,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.model.json.ModelTransformation.Mode;
 import net.minecraft.client.util.ModelIdentifier;
@@ -90,7 +91,7 @@ public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.Dynam
 
             var blackboard = Blackboard.fromNbt(nbt);
             BlackboardTexture.fromBlackboard(blackboard)
-                    .render(matrices.peek().getModel(), vertexConsumers, blackboard.isLit() ? 0xf000f0 : light);
+                    .render(matrices.peek().getModel(), vertexConsumers, blackboard.isLit() ? LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE : light);
         }
 
         matrices.pop();

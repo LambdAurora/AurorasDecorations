@@ -160,6 +160,11 @@ public class KindSearcher<I, O> {
     )
             .afterMapped(Items.SOUL_CAMPFIRE, ItemStack::getItem)
             .build();
+    public static final KindSearcher<ItemStack, StackEntry> FLOWER_SEARCHER = itemIdentifierSearcher(
+            entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof FlowerBlock
+    )
+            .afterMapped(Items.WITHER_ROSE, ItemStack::getItem)
+            .build();
     public static final KindSearcher<ItemStack, StackEntry> HOPPER_SEARCHER = itemIdentifierSearcher(
             entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof HopperBlock
     )

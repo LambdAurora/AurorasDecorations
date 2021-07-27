@@ -193,7 +193,7 @@ public class SignPostBlock extends BlockWithEntity {
                 world.playSound(null, pos, SoundEvents.ITEM_GLOW_INK_SAC_USE, SoundCategory.BLOCKS, 1.f, 1.f);
                 shouldConsume = sign.setGlowing(true);
                 if (shouldConsume && player instanceof ServerPlayerEntity serverPlayerEntity) {
-                    Criteria.ITEM_USED_ON_BLOCK.test(serverPlayerEntity, pos, stack);
+                    Criteria.ITEM_USED_ON_BLOCK.trigger(serverPlayerEntity, pos, stack);
                 }
             } else {
                 world.playSound(null, pos, SoundEvents.ITEM_INK_SAC_USE, SoundCategory.BLOCKS, 1.f, 1.f);

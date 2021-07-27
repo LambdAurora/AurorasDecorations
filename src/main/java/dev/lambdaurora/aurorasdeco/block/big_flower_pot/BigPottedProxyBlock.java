@@ -23,6 +23,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.server.world.ServerWorld;
@@ -86,6 +87,18 @@ public class BigPottedProxyBlock extends BigFlowerPotBlock {
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         this.getPlant().randomTick(state, world, pos, random);
+    }
+
+    /* Placement */
+
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        var state = super.getPlacementState(ctx);
+        if (state == null) return null;
+        var plantState = this.type.getPlant().getPlacementState(ctx);
+        if (plantState != null)
+            return AuroraUtil.remapBlockState(plantState, state);
+        return state;
     }
 
     /* Loot table */
