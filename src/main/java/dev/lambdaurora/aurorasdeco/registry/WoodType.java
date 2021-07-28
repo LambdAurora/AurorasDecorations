@@ -86,6 +86,26 @@ public final class WoodType {
         return this.id;
     }
 
+    public static Identifier getBetterNetherEndPaths(Identifier texture, boolean top) {
+        if (top) {
+            if (texture.getPath().contains("stalagnate")) {
+                String newPath = texture.getPath().substring(0, texture.getPath().length() - 8) + "_bark_top";
+                return new Identifier(texture.getNamespace(), newPath);
+            }
+            return texture;
+        }
+
+        if (texture.getNamespace().equals("betternether") || texture.getNamespace().equals("betterend")) {
+            String newPath = texture.getPath().substring(0,texture.getPath().length()-4) + "_bark";
+            boolean logSides = texture.getNamespace().equals("betterend") || texture.getPath().contains("rubeus") || texture.getPath().contains("nether_sakura") || texture.getPath().contains("anchor_tree");
+            if (logSides) newPath = texture.getPath() + "_side";
+            if (texture.getPath().contains("stalagnate")) newPath += "_side";
+            return new Identifier(texture.getNamespace(),newPath);
+        }
+
+        return texture;
+    }
+
     public String getPathName() {
         return this.pathName;
     }
@@ -312,6 +332,7 @@ public final class WoodType {
             if (material != Material.WOOD && material != Material.NETHER_WOOD) return null;
             String logType;
             if (id.getPath().startsWith("stripped_")) return null;
+            else if (id.getPath().startsWith("striped_")) return null;
             else if (id.getPath().endsWith("_log")) logType = "_log";
             else if (id.getPath().endsWith("_stem")) logType = "_stem";
             else return null;
@@ -319,7 +340,7 @@ public final class WoodType {
             return id.getPath().substring(0, id.getPath().length() - logType.length());
         }, (resourceManager, component) -> {
             var componentId = component.id();
-            var texture = component.texture();
+            var texture = getBetterNetherEndPaths(component.texture(),false);
             if (resourceManager.containsResource(AuroraUtil.toAbsoluteTexturesId(texture)))
                 return texture;
             else {
@@ -331,7 +352,7 @@ public final class WoodType {
             return texture;
         }, (resourceManager, component) -> {
             var componentId = component.id();
-            var texture = component.topTexture();
+            var texture = getBetterNetherEndPaths(component.topTexture(),true);
             if (resourceManager.containsResource(AuroraUtil.toAbsoluteTexturesId(texture)))
                 return texture;
             else {

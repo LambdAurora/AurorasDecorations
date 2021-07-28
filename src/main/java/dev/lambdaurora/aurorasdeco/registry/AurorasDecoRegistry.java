@@ -453,6 +453,8 @@ public final class AurorasDecoRegistry {
         Item.BLOCK_ITEMS.put(HANGING_FLOWER_POT_BLOCK, Items.FLOWER_POT);
 
         RegistrationHelper.BLOCK.addRegistrationCallback((helper, id, block) -> {
+            if ((id.getNamespace().equals("betternether") || id.getNamespace().equals("betterend")) && (id.getPath().contains("stripped") || (id.getPath().contains("mushroom") && !id.getPath().contains("mushroom_fir")) || id.getPath().contains("amaranita"))) return;
+            if (id.getNamespace().equals("aurorasdeco") && id.getPath().contains("sign_post")) return;
             if (PottedPlantType.isValidPlant(block)) {
                 var potBlock = PottedPlantType.registerFromBlock(block);
                 if (potBlock != null)
