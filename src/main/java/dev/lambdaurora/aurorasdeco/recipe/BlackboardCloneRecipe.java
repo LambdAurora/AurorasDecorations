@@ -20,6 +20,7 @@ package dev.lambdaurora.aurorasdeco.recipe;
 import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.recipe.Ingredient;
@@ -84,7 +85,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
                 if (OUTPUT.test(craftStack) && !this.isInput(craftStack)) {
                     output = craftStack;
                 } else if (this.isInput(craftStack)) {
-                    var nbt = craftStack.getSubNbt("BlockEntityTag");
+                    var nbt = craftStack.getSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
                     blackboard = Blackboard.fromNbt(nbt);
                     if (craftStack.hasCustomName())
                         customName = craftStack.getName();
@@ -95,7 +96,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
 
         var out = output.copy();
         out.setCount(1);
-        var nbt = out.getOrCreateSubNbt("BlockEntityTag");
+        var nbt = out.getOrCreateSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
         blackboard.writeNbt(nbt);
 
         if (customName != null)
@@ -105,7 +106,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
     }
 
     private boolean isInput(ItemStack stack) {
-        var nbt = stack.getSubNbt("BlockEntityTag");
+        var nbt = stack.getSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
         if (nbt != null) {
             if (nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
                 byte[] pixels = nbt.getByteArray("pixels");

@@ -30,6 +30,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -125,7 +126,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
         var pos = ctx.getBlockPos();
         var directions = ctx.getPlacementDirections();
 
-        var nbt = ctx.getStack().getSubNbt("BlockEntityTag");
+        var nbt = ctx.getStack().getSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
         if (nbt != null && nbt.contains("lit")) {
             state = state.with(LIT, nbt.getBoolean("lit"));
         }
@@ -161,7 +162,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
                 blackboard.setCustomName(stack.getName());
             }
 
-            var nbt = stack.getSubNbt("BlockEntityTag");
+            var nbt = stack.getSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
             if (state.get(WATERLOGGED) && !this.isLocked())
                 return;
 
@@ -309,7 +310,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
                 var stack = new ItemStack(this);
                 var nbt = blackboard.writeBlackBoardNbt(new NbtCompound());
                 nbt.remove("custom_name");
-                stack.setSubNbt("BlockEntityTag", nbt);
+                stack.setSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY, nbt);
 
                 if (blackboard.hasCustomName()) {
                     stack.setCustomName(blackboard.getCustomName());
@@ -332,7 +333,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
         if (blackboard != null) {
             var nbt = blackboard.writeBlackBoardNbt(new NbtCompound());
             nbt.remove("custom_name");
-            stack.setSubNbt("BlockEntityTag", nbt);
+            stack.setSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY, nbt);
         }
 
         return stack;

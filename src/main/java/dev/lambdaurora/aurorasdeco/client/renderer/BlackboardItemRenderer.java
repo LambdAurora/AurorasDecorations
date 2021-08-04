@@ -29,6 +29,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.model.json.ModelTransformation.Mode;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtElement;
 
@@ -65,7 +66,7 @@ public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.Dynam
                     false, matrices, vertexConsumers, light, overlay, maskModel);
         }
 
-        var nbt = stack.getSubNbt("BlockEntityTag");
+        var nbt = stack.getSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
         if (nbt != null && nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
             float z = .933f;
             if (mode == Mode.HEAD) {
