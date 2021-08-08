@@ -40,6 +40,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.event.GameEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +77,14 @@ public class HangingFlowerPotBlock extends Block {
 
     public static Stream<HangingFlowerPotBlock> stream() {
         return HANGING_FLOWER_POT_BLOCKS.stream();
+    }
+
+    public static @Nullable Block getFromFlowerPot(FlowerPotBlock flowerPot) {
+        return getFromContent(flowerPot.getContent());
+    }
+
+    public static @Nullable Block getFromContent(Block content) {
+        return CONTENT_TO_POTTED.get(content);
     }
 
     /**

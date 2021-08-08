@@ -20,6 +20,7 @@ package dev.lambdaurora.aurorasdeco.mixin.item;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
 import dev.lambdaurora.aurorasdeco.block.ChandelierBlock;
+import dev.lambdaurora.aurorasdeco.block.HangingFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.WallCandleBlock;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
@@ -96,6 +97,9 @@ public abstract class BlockItemMixin extends Item implements BlockItemAccessor {
                 map.put(this.aurorasdeco$wallBlock, item);
                 map.put(this.aurorasdeco$ceilingBlock, item);
             }
+        } else if (this.getBlock() instanceof FlowerPotBlock flowerPot) {
+            this.aurorasdeco$ceilingBlock = HangingFlowerPotBlock.getFromFlowerPot(flowerPot);
+            map.put(this.aurorasdeco$ceilingBlock, item);
         }
     }
 
