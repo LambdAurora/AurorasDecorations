@@ -110,6 +110,10 @@ public class BigFlowerPotBlock extends Block/* implements FluidFillable*/ {
         return !this.isEmpty();
     }
 
+    public float getScale() {
+        return .65f;
+    }
+
     /* Shapes */
 
     @Override

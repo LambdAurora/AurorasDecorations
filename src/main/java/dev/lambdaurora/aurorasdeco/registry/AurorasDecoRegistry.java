@@ -294,6 +294,11 @@ public final class AurorasDecoRegistry {
             new FabricItemSettings().group(ItemGroup.DECORATIONS),
             DerivedBlockItem::flower);
 
+    /* Potted Plants */
+
+    public static final FlowerPotBlock POTTED_DAFFODIL = register("potted/daffodil",
+            new DirectionalFlowerPotBlock(DAFFODIL, FabricBlockSettings.of(Material.DECORATION).nonOpaque().breakInstantly()));
+
     /* Block Entities */
 
     public static final BlockEntityType<BenchBlockEntity> BENCH_BLOCK_ENTITY_TYPE = registerBlockEntity(

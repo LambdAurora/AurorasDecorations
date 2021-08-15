@@ -91,7 +91,7 @@ public final class PottedPlantType {
         else if (plant instanceof NetherWartBlock)
             return register(id, plant, item, BigPottedNetherWartBlock::new);
         else if (plant instanceof DaffodilBlock)
-            return register(id, plant, item, BigPottedProxyBlock::new);
+            return register(id, plant, item, BigPottedDaffodilBlock::new);
         //else if (plant instanceof SeaPickleBlock)
         //    return register(id, plant, item, BigPottedSeaPickleBlock::new);
         return register(id, plant, item, BigFlowerPotBlock::new);

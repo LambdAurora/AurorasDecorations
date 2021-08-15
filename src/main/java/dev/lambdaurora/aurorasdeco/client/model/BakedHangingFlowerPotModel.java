@@ -52,7 +52,7 @@ public class BakedHangingFlowerPotModel extends ForwardingBakedModel {
         super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 
         if (state.getBlock() instanceof HangingFlowerPotBlock hangingFlowerPotBlock) {
-            var model = this.client.getBakedModelManager().getBlockModels().getModel(hangingFlowerPotBlock.getFlowerPot().getDefaultState());
+            var model = this.client.getBakedModelManager().getBlockModels().getModel(hangingFlowerPotBlock.getFlowerPotState(state));
             if (model instanceof FabricBakedModel fabricBakedModel)
                 fabricBakedModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
         }

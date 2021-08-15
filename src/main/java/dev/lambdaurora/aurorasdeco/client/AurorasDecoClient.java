@@ -95,19 +95,20 @@ public class AurorasDecoClient implements ClientModInitializer {
                 SeatEntityRenderer::new);
 
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutoutMipped(),
-                AurorasDecoRegistry.BURNT_VINE_BLOCK);
+                BURNT_VINE_BLOCK);
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(),
-                AurorasDecoRegistry.AMETHYST_LANTERN_BLOCK,
-                AurorasDecoRegistry.BRAZIER_BLOCK,
-                AurorasDecoRegistry.COPPER_SULFATE_BRAZIER_BLOCK,
-                AurorasDecoRegistry.COPPER_SULFATE_CAMPFIRE_BLOCK,
-                AurorasDecoRegistry.COPPER_SULFATE_LANTERN_BLOCK,
-                AurorasDecoRegistry.COPPER_SULFATE_TORCH_BLOCK,
-                AurorasDecoRegistry.COPPER_SULFATE_WALL_TORCH_BLOCK,
+                AMETHYST_LANTERN_BLOCK,
+                BRAZIER_BLOCK,
+                COPPER_SULFATE_BRAZIER_BLOCK,
+                COPPER_SULFATE_CAMPFIRE_BLOCK,
+                COPPER_SULFATE_LANTERN_BLOCK,
+                COPPER_SULFATE_TORCH_BLOCK,
+                COPPER_SULFATE_WALL_TORCH_BLOCK,
                 DAFFODIL,
-                AurorasDecoRegistry.SAWMILL_BLOCK,
-                AurorasDecoRegistry.SOUL_BRAZIER_BLOCK,
-                AurorasDecoRegistry.WIND_CHIME_BLOCK
+                POTTED_DAFFODIL,
+                SAWMILL_BLOCK,
+                SOUL_BRAZIER_BLOCK,
+                WIND_CHIME_BLOCK
         );
 
         ParticleFactoryRegistry.getInstance().register(AurorasDecoParticles.AMETHYST_GLINT, AmethystGlintParticle.Factory::new);

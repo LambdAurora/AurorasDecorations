@@ -18,6 +18,7 @@
     "block.BlockEntityTypeMixin",
     "block.BlockSettingsAccessor",
     "block.CandleBlockMixin",
+    "block.FlowerPotBlockMixin",
     "block.HopperBlockEntityMixin",
     "block.LanternBlockMixin",
     "block.PistonBlockEntityMixin",

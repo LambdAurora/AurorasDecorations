@@ -18,14 +18,18 @@
 package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import dev.lambdaurora.aurorasdeco.mixin.block.BlockAccessor;
+import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stat.Stats;
+import net.minecraft.state.StateManager;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -68,8 +72,17 @@ public class HangingFlowerPotBlock extends Block {
     public HangingFlowerPotBlock(FlowerPotBlock flowerPot) {
         super(FabricBlockSettings.copyOf(flowerPot).dropsLike(flowerPot));
         this.flowerPot = flowerPot;
-        CONTENT_TO_POTTED.put(this.flowerPot.getContent(), this);
+        CONTENT_TO_POTTED.put(flowerPot.getContent(), this);
         HANGING_FLOWER_POT_BLOCKS.add(this);
+
+        if (flowerPot instanceof DirectionalFlowerPotBlock) {
+            var builder = new StateManager.Builder<Block, BlockState>(this);
+            this.appendProperties(builder);
+            ((BlockAccessor) flowerPot).aurorasdeco$appendProperties(builder);
+            ((BlockAccessor) this).setStateManager(builder.build(Block::getDefaultState, BlockState::new));
+
+            this.setDefaultState(AuroraUtil.remapBlockState(flowerPot.getDefaultState(), this.stateManager.getDefaultState()));
+        }
 
         if (flowerPot == Blocks.FLOWER_POT)
             DEFAULT = this;
@@ -92,6 +105,13 @@ public class HangingFlowerPotBlock extends Block {
      */
     public FlowerPotBlock getFlowerPot() {
         return this.flowerPot;
+    }
+
+    /**
+     * {@return the associated flower pot}
+     */
+    public BlockState getFlowerPotState(BlockState state) {
+        return AuroraUtil.remapBlockState(state, this.getFlowerPot().getDefaultState());
     }
 
     /**
@@ -120,6 +140,16 @@ public class HangingFlowerPotBlock extends Block {
                 VoxelShapes.fullCube(), BooleanBiFunction.ONLY_SECOND);
     }
 
+    @Override
+    public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
+        var state = super.getPlacementState(ctx);
+        if (state == null) return null;
+        var plantState = this.getContent().getPlacementState(ctx);
+        if (plantState != null)
+            return AuroraUtil.remapBlockState(plantState, state);
+        return state;
+    }
+
     /* Updates */
 
     @Override
@@ -138,9 +168,9 @@ public class HangingFlowerPotBlock extends Block {
         var blockState = (handStack.getItem() instanceof BlockItem blockItem ?
                 CONTENT_TO_POTTED.getOrDefault(blockItem.getBlock(), Blocks.AIR)
                 : Blocks.AIR
-        ).getDefaultState();
+        ).getPlacementState(new ItemPlacementContext(player, hand, handStack, hit));
         boolean empty = this.isEmpty();
-        if (blockState.isOf(Blocks.AIR) != empty) {
+        if ((blockState == null || blockState.isOf(Blocks.AIR)) != empty) {
             if (empty) {
                 world.setBlockState(pos, blockState, Block.NOTIFY_ALL);
                 player.incrementStat(Stats.POT_FLOWER);

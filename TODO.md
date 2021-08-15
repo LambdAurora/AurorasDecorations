@@ -1,3 +1,5 @@
+- Mossy Deepslate Bricks
+- Mossy Tuff Bricks
 - Jar
 - Telescope to look at pretty Ecotones sky.
 - Wind Chime

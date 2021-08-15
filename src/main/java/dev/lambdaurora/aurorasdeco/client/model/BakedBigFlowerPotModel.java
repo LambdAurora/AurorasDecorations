@@ -62,7 +62,7 @@ public class BakedBigFlowerPotModel extends ForwardingBakedModel {
 
         var plantState = potBlock.getPlantState(state);
         if (!plantState.isAir()) {
-            float ratio = .65f;
+            float ratio = potBlock.getScale();
             float offset = (1.f - ratio) / 2.f;
 
             if (!(potBlock instanceof BigPottedProxyBlock))
