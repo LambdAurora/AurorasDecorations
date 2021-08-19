@@ -131,7 +131,7 @@ public class SignPostBlockEntity extends BlockEntity implements BlockEntityClien
 
                 this.editor = null;
             } else {
-                AurorasDeco.LOGGER.warn("Player {} just tried to change non-editable sign", player.getName().getString());
+                AurorasDeco.warn("Player {} just tried to change non-editable sign", player.getName().getString());
             }
         }
     }

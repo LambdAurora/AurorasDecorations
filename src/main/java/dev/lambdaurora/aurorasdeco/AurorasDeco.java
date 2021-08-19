@@ -94,6 +94,14 @@ public class AurorasDeco implements ModInitializer {
         ForestFlowerBlockStateProviderAccessor.setFlowers(flowers);
     }
 
+    public static void log(String message) {
+        LOGGER.info("[AurorasDeco] " + message);
+    }
+
+    public static void warn(String message, Object... params) {
+        LOGGER.warn("[AurorasDeco] " + message, params);
+    }
+
     public static Identifier id(String path) {
         return new Identifier(NAMESPACE, path);
     }

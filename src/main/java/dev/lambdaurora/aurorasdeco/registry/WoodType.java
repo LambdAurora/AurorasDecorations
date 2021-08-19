@@ -86,26 +86,6 @@ public final class WoodType {
         return this.id;
     }
 
-    public static Identifier getBetterNetherEndPaths(Identifier texture, boolean top) {
-        if (top) {
-            if (texture.getPath().contains("stalagnate")) {
-                String newPath = texture.getPath().substring(0, texture.getPath().length() - 8) + "_bark_top";
-                return new Identifier(texture.getNamespace(), newPath);
-            }
-            return texture;
-        }
-
-        if (texture.getNamespace().equals("betternether") || texture.getNamespace().equals("betterend")) {
-            String newPath = texture.getPath().substring(0,texture.getPath().length()-4) + "_bark";
-            boolean logSides = texture.getNamespace().equals("betterend") || texture.getPath().contains("rubeus") || texture.getPath().contains("nether_sakura") || texture.getPath().contains("anchor_tree");
-            if (logSides) newPath = texture.getPath() + "_side";
-            if (texture.getPath().contains("stalagnate")) newPath += "_side";
-            return new Identifier(texture.getNamespace(),newPath);
-        }
-
-        return texture;
-    }
-
     public String getPathName() {
         return this.pathName;
     }
@@ -433,6 +413,26 @@ public final class WoodType {
 
     public interface TextureProvider {
         Identifier searchTexture(ResourceManager resourceManager, Component component);
+    }
+
+    public static Identifier getBetterNetherEndPaths(Identifier texture, boolean top) {
+        if (top) {
+            if (texture.getPath().contains("stalagnate")) {
+                String newPath = texture.getPath().substring(0, texture.getPath().length() - 8) + "_bark_top";
+                return new Identifier(texture.getNamespace(), newPath);
+            }
+            return texture;
+        }
+
+        if (texture.getNamespace().equals("betternether") || texture.getNamespace().equals("betterend")) {
+            String newPath = texture.getPath().substring(0,texture.getPath().length()-4) + "_bark";
+            boolean logSides = texture.getNamespace().equals("betterend") || texture.getPath().contains("rubeus") || texture.getPath().contains("nether_sakura") || texture.getPath().contains("anchor_tree");
+            if (logSides) newPath = texture.getPath() + "_side";
+            if (texture.getPath().contains("stalagnate")) newPath += "_side";
+            return new Identifier(texture.getNamespace(),newPath);
+        }
+
+        return texture;
     }
 
     private record ModificationCallbackEntry(Consumer<WoodType> callback, List<ComponentType> requiredComponents) {
