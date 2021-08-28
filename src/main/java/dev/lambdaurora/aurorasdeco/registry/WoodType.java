@@ -320,7 +320,7 @@ public final class WoodType {
             return id.getPath().substring(0, id.getPath().length() - logType.length());
         }, (resourceManager, component) -> {
             var componentId = component.id();
-            var texture = getBetterNetherEndPaths(component.texture(),false);
+            var texture = getBetterNetherEndPaths(component.texture(), false);
             if (resourceManager.containsResource(AuroraUtil.toAbsoluteTexturesId(texture)))
                 return texture;
             else {
@@ -332,7 +332,7 @@ public final class WoodType {
             return texture;
         }, (resourceManager, component) -> {
             var componentId = component.id();
-            var texture = getBetterNetherEndPaths(component.topTexture(),true);
+            var texture = getBetterNetherEndPaths(component.topTexture(), true);
             if (resourceManager.containsResource(AuroraUtil.toAbsoluteTexturesId(texture)))
                 return texture;
             else {
@@ -425,11 +425,11 @@ public final class WoodType {
         }
 
         if (texture.getNamespace().equals("betternether") || texture.getNamespace().equals("betterend")) {
-            String newPath = texture.getPath().substring(0,texture.getPath().length()-4) + "_bark";
+            String newPath = texture.getPath().substring(0, texture.getPath().length() - 4) + "_bark";
             boolean logSides = texture.getNamespace().equals("betterend") || texture.getPath().contains("rubeus") || texture.getPath().contains("nether_sakura") || texture.getPath().contains("anchor_tree");
             if (logSides) newPath = texture.getPath() + "_side";
             if (texture.getPath().contains("stalagnate")) newPath += "_side";
-            return new Identifier(texture.getNamespace(),newPath);
+            return new Identifier(texture.getNamespace(), newPath);
         }
 
         return texture;

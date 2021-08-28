@@ -19,7 +19,7 @@ package dev.lambdaurora.aurorasdeco.item;
 
 import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
-import dev.lambdaurora.aurorasdeco.client.tooltip.BlackboardTooltipComponent;
+import dev.lambdaurora.aurorasdeco.tooltip.BlackboardTooltipData;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipData;
@@ -120,7 +120,7 @@ public class BlackboardItem extends BlockItem {
         var nbt = stack.getSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
         if (nbt != null && nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
             var blackboard = Blackboard.fromNbt(nbt);
-            return Optional.of(new BlackboardTooltipComponent(
+            return Optional.of(new BlackboardTooltipData(
                     Registry.ITEM.getId(this).getPath().replace("waxed_", ""),
                     blackboard, this.locked));
         }

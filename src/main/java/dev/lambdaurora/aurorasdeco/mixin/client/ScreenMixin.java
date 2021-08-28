@@ -17,10 +17,11 @@
 
 package dev.lambdaurora.aurorasdeco.mixin.client;
 
-import dev.lambdaurora.aurorasdeco.client.tooltip.BlackboardTooltipComponent;
+import dev.lambdaurora.aurorasdeco.tooltip.ConvertibleTooltipData;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.item.TooltipData;
+import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -31,10 +32,11 @@ import java.util.List;
 
 @Mixin(Screen.class)
 public class ScreenMixin {
+    @Dynamic
     @Inject(method = "method_32635", at = @At("HEAD"), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD, remap = false)
     private static void onComponentConstruct(List<TooltipComponent> list, TooltipData data, CallbackInfo info) {
-        if (data instanceof BlackboardTooltipComponent) {
-            list.add((BlackboardTooltipComponent) data);
+        if (data instanceof ConvertibleTooltipData convertibleTooltipData) {
+            list.add(convertibleTooltipData.toComponent());
             info.cancel();
         }
     }

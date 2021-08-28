@@ -25,7 +25,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.item.TooltipData;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.ItemRenderer;
@@ -42,7 +41,7 @@ import net.minecraft.util.math.Matrix4f;
  * @since 1.0.0
  */
 @Environment(EnvType.CLIENT)
-public class BlackboardTooltipComponent implements TooltipComponent, TooltipData {
+public class BlackboardTooltipComponent implements TooltipComponent {
     private static final Identifier LOCK_ICON_TEXTURE = new Identifier("textures/gui/container/cartography_table.png");
     private static final Identifier GLOW_TEXTURE = AurorasDeco.id("textures/gui/glowing_sprite.png");
 
