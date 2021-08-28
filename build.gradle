@@ -26,20 +26,6 @@ String getMCVersionString() {
     return version[0] + '.' + version[1]
 }
 
-String getTerraformersMCMaven() {
-    return 'https://maven.kotlindiscord.com/repository/terraformers/'
-}
-
-boolean pingUrl(String address) {
-    try {
-        def conn = (HttpURLConnection) new URL(address).openConnection()
-        int responseCode = conn.getResponseCode()
-        return (200 <= responseCode && responseCode <= 399)
-    } catch (IOException ignored) {
-        return false
-    }
-}
-
 minecraft {
 }
 
@@ -50,7 +36,7 @@ repositories {
     }
     maven {
         name 'TerraformersMC'
-        url getTerraformersMCMaven()
+        url 'https://maven.terraformersmc.com/'
         content {
             includeGroup 'dev.emi'
             includeGroup 'com.terraformersmc'
