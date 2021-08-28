@@ -28,11 +28,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(LivingEntity.class)
@@ -55,6 +55,7 @@ public abstract class LivingEntityMixin extends Entity {
         }
     }
 
+    @Dynamic
     @Inject(
             method = "method_18404",
             at = @At(
@@ -77,16 +78,5 @@ public abstract class LivingEntityMixin extends Entity {
             this.setYaw(yaw);
             this.setPitch(0.f);
         }
-    }
-
-    @Inject(
-            method = "method_18405",
-            at = @At("HEAD"),
-            cancellable = true,
-            remap = false
-    )
-    private void onIsSleepingInBed(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if (this.world.getBlockState(pos).getBlock() instanceof SleepingBagBlock)
-            cir.setReturnValue(true);
     }
 }
