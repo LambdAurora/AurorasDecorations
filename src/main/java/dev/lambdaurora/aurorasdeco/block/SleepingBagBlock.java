@@ -20,6 +20,7 @@ package dev.lambdaurora.aurorasdeco.block;
 import com.google.common.collect.ImmutableMap;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.accessor.PointOfInterestTypeAccessor;
+import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.*;
@@ -69,6 +70,7 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 1.0.0
  */
+@SuppressWarnings("deprecation")
 public class SleepingBagBlock extends HorizontalFacingBlock {
     public static final EnumProperty<BedPart> PART = Properties.BED_PART;
     public static final BooleanProperty OCCUPIED = Properties.OCCUPIED;
@@ -274,6 +276,26 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
             sleepingBag.getStateManager().getStates().stream()
                     .filter(state -> state.get(SleepingBagBlock.PART) == BedPart.HEAD)
                     .forEach(states::add);
+        });
+    }
+
+    static {
+        EntitySleepEvents.ALLOW_BED.register((entity, sleepingPos, state, vanillaResult) -> {
+            if (state.getBlock() instanceof SleepingBagBlock) {
+                return ActionResult.SUCCESS;
+            }
+            return ActionResult.PASS;
+        });
+
+        /* To fix the broken code path that Fabric API introduces... */
+        EntitySleepEvents.MODIFY_SLEEPING_DIRECTION.register((entity, sleepingPos, sleepingDirection) -> {
+            if (sleepingDirection == null) {
+                var state = entity.getEntityWorld().getBlockState(sleepingPos);
+                if (state.getBlock() instanceof SleepingBagBlock) {
+                    return state.get(HorizontalFacingBlock.FACING);
+                }
+            }
+            return sleepingDirection;
         });
     }
 }

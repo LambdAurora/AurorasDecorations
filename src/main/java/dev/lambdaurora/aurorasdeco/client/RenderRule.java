@@ -22,7 +22,7 @@ import com.google.gson.JsonParser;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.tag.TagRegistry;
+import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -156,7 +156,7 @@ public record RenderRule(List<Model> models) {
                         success = true;
                     } else if (match.has("tag")) {
                         var tagId = Identifier.tryParse(match.get("tag").getAsString());
-                        var tag = TagRegistry.item(tagId);
+                        var tag = TagFactory.ITEM.create(tagId);
                         TAG_RULES.put(tag, renderRule);
                         success = true;
                     }
@@ -228,7 +228,7 @@ public record RenderRule(List<Model> models) {
                     if (blockId == null) {
                         LOGGER.error("Failed to parse tag identifier in render rule {}.", manifest);
                     } else {
-                        restrictedBlockTag = TagRegistry.block(blockId);
+                        restrictedBlockTag = TagFactory.BLOCK.create(blockId);
                     }
                 }
             }

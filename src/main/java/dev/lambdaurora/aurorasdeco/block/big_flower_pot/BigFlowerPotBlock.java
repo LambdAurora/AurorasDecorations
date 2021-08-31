@@ -56,6 +56,7 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 1.0.0
  */
+@SuppressWarnings("deprecation")
 public class BigFlowerPotBlock extends Block/* implements FluidFillable*/ {
     private static final Identifier PLANT = AurorasDeco.id("plant");
 

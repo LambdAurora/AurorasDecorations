@@ -31,6 +31,7 @@ import dev.lambdaurora.aurorasdeco.item.BlackboardItem;
 import dev.lambdaurora.aurorasdeco.item.DerivedBlockItem;
 import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
 import dev.lambdaurora.aurorasdeco.item.SignPostItem;
+import dev.lambdaurora.aurorasdeco.mixin.ForestFlowerBlockStateProviderAccessor;
 import dev.lambdaurora.aurorasdeco.mixin.SimpleRegistryAccessor;
 import dev.lambdaurora.aurorasdeco.recipe.BlackboardCloneRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.ExplodingRecipe;
@@ -39,6 +40,7 @@ import dev.lambdaurora.aurorasdeco.screen.CopperHopperScreenHandler;
 import dev.lambdaurora.aurorasdeco.screen.SawmillScreenHandler;
 import dev.lambdaurora.aurorasdeco.screen.ShelfScreenHandler;
 import dev.lambdaurora.aurorasdeco.util.Derivator;
+import dev.lambdaurora.aurorasdeco.util.Registrar;
 import dev.lambdaurora.aurorasdeco.util.RegistrationHelper;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.advancement.CriterionRegistry;
@@ -70,6 +72,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
 
+import java.util.Arrays;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -104,11 +107,11 @@ public final class AurorasDecoRegistry {
             new LanternBlock(FabricBlockSettings.copyOf(Blocks.LANTERN)),
             new FabricItemSettings().group(ItemGroup.DECORATIONS),
             DerivedBlockItem::lantern);
-    public static final CopperSulfateCampfireBlock COPPER_SULFATE_CAMPFIRE_BLOCK
-            = registerWithItem("copper_sulfate_campfire",
-            new CopperSulfateCampfireBlock(FabricBlockSettings.copyOf(Blocks.CAMPFIRE).ticksRandomly()),
-            new FabricItemSettings().group(ItemGroup.DECORATIONS),
-            DerivedBlockItem::campfire);
+    public static final CopperSulfateCampfireBlock COPPER_SULFATE_CAMPFIRE_BLOCK = Registrar.register("copper_sulfate_campfire",
+                    new CopperSulfateCampfireBlock(FabricBlockSettings.copyOf(Blocks.CAMPFIRE).ticksRandomly()))
+            .withItem(new FabricItemSettings().group(ItemGroup.DECORATIONS), DerivedBlockItem::campfire)
+            .addSelfTo(BlockEntityType.CAMPFIRE)
+            .finish();
     public static final AuroraTorchBlock COPPER_SULFATE_TORCH_BLOCK = register("copper_sulfate_torch",
             new AuroraTorchBlock(FabricBlockSettings.copyOf(Blocks.TORCH), COPPER_SULFATE_FLAME));
     public static final AuroraWallTorchBlock COPPER_SULFATE_WALL_TORCH_BLOCK = register("copper_sulfate_wall_torch",
@@ -171,9 +174,13 @@ public final class AurorasDecoRegistry {
             new FabricItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
             BlackboardItem::new);
 
-    public static final BookPileBlock BOOK_PILE_BLOCK = register("book_pile",
-            new BookPileBlock(FabricBlockSettings.of(Material.DECORATION).strength(.2f)
-                    .nonOpaque()));
+    public static final BookPileBlock BOOK_PILE_BLOCK = Registrar.register("book_pile",
+                    new BookPileBlock(FabricBlockSettings.of(Material.DECORATION).strength(.2f)
+                            .nonOpaque()))
+            .then(block -> {
+                ((ItemExtensions) Items.BOOK).makePlaceable(block);
+                ((ItemExtensions) Items.ENCHANTED_BOOK).makePlaceable(block);
+            }).finish();
 
     public static final BurntVineBlock BURNT_VINE_BLOCK = register("burnt_vine", new BurntVineBlock());
 
@@ -290,9 +297,15 @@ public final class AurorasDecoRegistry {
 
     /* Plants */
 
-    public static final DaffodilBlock DAFFODIL = registerWithItem("daffodil", new DaffodilBlock(),
-            new FabricItemSettings().group(ItemGroup.DECORATIONS),
-            DerivedBlockItem::flower);
+    public static final DaffodilBlock DAFFODIL = Registrar.register("daffodil", new DaffodilBlock())
+            .withItem(new FabricItemSettings().group(ItemGroup.DECORATIONS), DerivedBlockItem::flower)
+            .then(block -> {
+                int aurorasDecoStart = ForestFlowerBlockStateProviderAccessor.getFlowers().length;
+                var flowers = Arrays.copyOf(ForestFlowerBlockStateProviderAccessor.getFlowers(), aurorasDecoStart + 1);
+                flowers[aurorasDecoStart] = block.getDefaultState();
+                ForestFlowerBlockStateProviderAccessor.setFlowers(flowers);
+            })
+            .finish();
 
     /* Potted Plants */
 
@@ -453,7 +466,6 @@ public final class AurorasDecoRegistry {
     public static void init() {
         AurorasDecoSounds.init();
 
-        ((BlockEntityTypeAccessor) BlockEntityType.CAMPFIRE).aurorasdeco$addSupportedBlock(COPPER_SULFATE_CAMPFIRE_BLOCK);
         ((BlockItemAccessor) Items.FLOWER_POT).aurorasdeco$setCeilingBlock(HANGING_FLOWER_POT_BLOCK);
         Item.BLOCK_ITEMS.put(HANGING_FLOWER_POT_BLOCK, Items.FLOWER_POT);
 
@@ -495,9 +507,11 @@ public final class AurorasDecoRegistry {
                         type -> new BigPottedCactusBlock(type, BigPottedCactusBlock.POCKET_CACTUS_SHAPE)));
 
         var colors = DyeColor.values();
+
         for (var color : colors) {
             registerPetBed(color);
         }
+
         for (var color : colors) {
             var block = SleepingBagBlock.register(color);
             register("sleeping_bag/" + block.getColor().getName(),
@@ -525,18 +539,11 @@ public final class AurorasDecoRegistry {
                 FlammableBlockRegistry.getDefaultInstance().add(block, entry.getBurnChance(), entry.getSpreadChance());
         }, WoodType.ComponentType.LOG);
 
-        WoodType.registerWoodTypeModificationCallback(woodType -> {
-            var block = registerWithItem("shelf/" + woodType.getPathName(),
-                    new ShelfBlock(woodType),
-                    new FabricItemSettings().group(ItemGroup.DECORATIONS));
-
-            ((BlockEntityTypeAccessor) AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE)
-                    .aurorasdeco$addSupportedBlock(block);
-
-            var entry = woodType.getComponent(WoodType.ComponentType.PLANKS).getFlammableEntry();
-            if (entry != null && entry.getBurnChance() != 0 && entry.getSpreadChance() != 0)
-                FlammableBlockRegistry.getDefaultInstance().add(block, entry.getBurnChance(), entry.getSpreadChance());
-        }, WoodType.ComponentType.PLANKS);
+        WoodType.registerWoodTypeModificationCallback(woodType -> Registrar.register("shelf/" + woodType.getPathName(), new ShelfBlock(woodType))
+                        .withItem(new FabricItemSettings().group(ItemGroup.DECORATIONS))
+                        .addSelfTo(SHELF_BLOCK_ENTITY_TYPE)
+                        .flammable(woodType.getComponent(WoodType.ComponentType.PLANKS).getFlammableEntry()),
+                WoodType.ComponentType.PLANKS);
 
         WoodType.registerWoodTypeModificationCallback(woodType -> {
             register("seat_rest/" + woodType.getPathName(),
@@ -545,22 +552,12 @@ public final class AurorasDecoRegistry {
                     new SignPostItem(woodType, new FabricItemSettings().group(ItemGroup.DECORATIONS)));
         }, WoodType.ComponentType.PLANKS);
 
-        WoodType.registerWoodTypeModificationCallback(woodType -> {
-            var block = registerWithItem("bench/" + woodType.getPathName(),
-                    new BenchBlock(woodType),
-                    new FabricItemSettings().group(ItemGroup.DECORATIONS));
-
-            ((BlockEntityTypeAccessor) AurorasDecoRegistry.BENCH_BLOCK_ENTITY_TYPE)
-                    .aurorasdeco$addSupportedBlock(block);
-
-            var entry = woodType.getComponent(WoodType.ComponentType.PLANKS).getFlammableEntry();
-            if (entry != null && entry.getBurnChance() != 0 && entry.getSpreadChance() != 0)
-                FlammableBlockRegistry.getDefaultInstance().add(block, entry.getBurnChance(), entry.getSpreadChance());
-        }, WoodType.ComponentType.PLANKS);
+        WoodType.registerWoodTypeModificationCallback(woodType -> Registrar.register("bench/" + woodType.getPathName(), new BenchBlock(woodType))
+                        .withItem(new FabricItemSettings().group(ItemGroup.DECORATIONS))
+                        .addSelfTo(BENCH_BLOCK_ENTITY_TYPE)
+                        .flammable(woodType.getComponent(WoodType.ComponentType.PLANKS).getFlammableEntry()),
+                WoodType.ComponentType.PLANKS);
 
         FlammableBlockRegistry.getDefaultInstance().add(AurorasDecoTags.PET_BEDS, 10, 30);
-
-        ((ItemExtensions) Items.BOOK).makePlaceable(BOOK_PILE_BLOCK);
-        ((ItemExtensions) Items.ENCHANTED_BOOK).makePlaceable(BOOK_PILE_BLOCK);
     }
 }

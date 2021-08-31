@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+@SuppressWarnings("deprecation")
 public class StumpBlock extends Block implements SeatBlock, Waterloggable {
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 

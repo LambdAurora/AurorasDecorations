@@ -178,7 +178,7 @@ public class Blackboard {
 
                     int squareY = 15 - y;
                     emitter.square(facing, x / 16.f, squareY / 16.f,
-                            (x + 1) / 16.f, (squareY + 1) / 16.f, 0.928f)
+                                    (x + 1) / 16.f, (squareY + 1) / 16.f, 0.928f)
                             .spriteBake(0, WHITE_SPRITE, MutableQuadView.BAKE_LOCK_UV)
                             .spriteColor(0, color, color, color, color)
                             .material(material);

@@ -54,6 +54,7 @@ import java.util.stream.Stream;
  * @version 1.0.0
  * @since 1.0.0
  */
+@SuppressWarnings("deprecation")
 public class SmallLogPileBlock extends Block implements Waterloggable {
     public static final EnumProperty<PartType> TYPE = AurorasDecoProperties.PART_TYPE;
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;

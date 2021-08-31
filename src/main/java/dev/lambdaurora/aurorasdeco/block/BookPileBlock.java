@@ -57,6 +57,7 @@ import java.util.List;
  * @version 1.0.0
  * @since 1.0.0
  */
+@SuppressWarnings("deprecation")
 public class BookPileBlock extends BlockWithEntity implements Waterloggable {
     private static final Identifier BOOKS = AurorasDeco.id("books");
 

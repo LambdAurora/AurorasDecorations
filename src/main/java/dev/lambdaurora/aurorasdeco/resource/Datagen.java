@@ -500,7 +500,7 @@ public final class Datagen {
         });
 
         Registry.BLOCK.stream().filter(block -> ((AbstractBlockAccessor) block).getMaterial() == Material.WOOD
-                || ((AbstractBlockAccessor) block).getMaterial() == Material.NETHER_WOOD)
+                        || ((AbstractBlockAccessor) block).getMaterial() == Material.NETHER_WOOD)
                 .forEach(Datagen::registerWoodcuttingRecipesForBlockVariants);
 
         BenchBlock.streamBenches().forEach(block -> {

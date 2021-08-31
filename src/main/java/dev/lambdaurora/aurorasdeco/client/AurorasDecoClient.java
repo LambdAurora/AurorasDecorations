@@ -42,11 +42,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.minecraft.block.TallPlantBlock;
 import net.minecraft.client.color.world.BiomeColors;
@@ -75,23 +71,22 @@ public class AurorasDecoClient implements ClientModInitializer {
     public static final ModelIdentifier BLACKBOARD_MASK = new ModelIdentifier(AurorasDeco.id("blackboard_mask"),
             "inventory");
 
-    @SuppressWarnings("UnstableApiUsage")
     @Override
     public void onInitializeClient() {
-        BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE,
+        BlockEntityRendererRegistry.register(AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE,
                 BookPileEntityRenderer::new);
-        BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE,
+        BlockEntityRendererRegistry.register(AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE,
                 ShelfBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.INSTANCE.register(SIGN_POST_BLOCK_ENTITY_TYPE,
+        BlockEntityRendererRegistry.register(SIGN_POST_BLOCK_ENTITY_TYPE,
                 SignPostBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE,
+        BlockEntityRendererRegistry.register(AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE,
                 LanternBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE,
+        BlockEntityRendererRegistry.register(AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE,
                 WindChimeBlockEntityRenderer::new);
 
-        EntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.FAKE_LEASH_KNOT_ENTITY_TYPE,
+        EntityRendererRegistry.register(AurorasDecoRegistry.FAKE_LEASH_KNOT_ENTITY_TYPE,
                 FakeLeashKnotEntityRenderer::new);
-        EntityRendererRegistry.INSTANCE.register(AurorasDecoRegistry.SEAT_ENTITY_TYPE,
+        EntityRendererRegistry.register(AurorasDecoRegistry.SEAT_ENTITY_TYPE,
                 SeatEntityRenderer::new);
 
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutoutMipped(),

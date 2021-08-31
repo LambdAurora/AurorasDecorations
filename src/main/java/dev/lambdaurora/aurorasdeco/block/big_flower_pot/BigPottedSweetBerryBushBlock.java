@@ -42,6 +42,7 @@ import java.util.Random;
  * @version 1.0.0
  * @since 1.0.0
  */
+@SuppressWarnings("deprecation")
 public class BigPottedSweetBerryBushBlock extends BigPottedProxyBlock implements Fertilizable {
     private static final Box SWEET_BERRY_BUSH_BOX;
 

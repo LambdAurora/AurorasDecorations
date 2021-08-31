@@ -17,7 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.registry;
 
-import net.fabricmc.fabric.api.tag.TagRegistry;
+import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.tag.Tag;
@@ -36,13 +36,13 @@ public final class AurorasDecoTags {
         throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
     }
 
-    public static final Tag<Item> BLACKBOARD_ITEMS = TagRegistry.item(id("blackboards"));
+    public static final Tag<Item> BLACKBOARD_ITEMS = TagFactory.ITEM.create(id("blackboards"));
 
-    public static final Tag<Block> BRAZIERS = TagRegistry.block(id("braziers"));
-    public static final Tag<Block> COPPER_SULFATE_DECOMPOSABLE = TagRegistry.block(id("copper_sulfate_decomposable"));
-    public static final Tag<Block> HOPPERS = TagRegistry.block(id("hoppers"));
-    public static final Tag<Block> PET_BEDS = TagRegistry.block(id("pet_beds"));
-    public static final Tag<Block> SHELVES = TagRegistry.block(id("shelves"));
-    public static final Tag<Block> SMALL_LOG_PILES = TagRegistry.block(id("small_log_piles"));
-    public static final Tag<Block> STUMPS = TagRegistry.block(id("stumps"));
+    public static final Tag<Block> BRAZIERS = TagFactory.BLOCK.create(id("braziers"));
+    public static final Tag<Block> COPPER_SULFATE_DECOMPOSABLE = TagFactory.BLOCK.create(id("copper_sulfate_decomposable"));
+    public static final Tag<Block> HOPPERS = TagFactory.BLOCK.create(id("hoppers"));
+    public static final Tag<Block> PET_BEDS = TagFactory.BLOCK.create(id("pet_beds"));
+    public static final Tag<Block> SHELVES = TagFactory.BLOCK.create(id("shelves"));
+    public static final Tag<Block> SMALL_LOG_PILES = TagFactory.BLOCK.create(id("small_log_piles"));
+    public static final Tag<Block> STUMPS = TagFactory.BLOCK.create(id("stumps"));
 }

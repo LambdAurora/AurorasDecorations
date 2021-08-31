@@ -67,6 +67,7 @@ java {
 
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = 'UTF-8'
+    it.options.deprecation(true)
 
     it.options.release.set(targetJavaVersion)
 }

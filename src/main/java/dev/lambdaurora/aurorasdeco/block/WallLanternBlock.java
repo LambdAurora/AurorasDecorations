@@ -73,6 +73,7 @@ import java.util.Random;
  * @version 1.0.0
  * @since 1.0.0
  */
+@SuppressWarnings("deprecation")
 public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
     public static final EnumProperty<ExtensionType> EXTENSION = AurorasDecoProperties.EXTENSION;

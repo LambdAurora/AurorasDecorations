@@ -232,6 +232,7 @@ public class LanternBlockEntity extends SwayingBlockEntity {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void setCachedState(BlockState state) {
         super.setCachedState(state);

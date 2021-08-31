@@ -25,6 +25,7 @@ import dev.lambdaurora.aurorasdeco.mixin.block.BlockAccessor;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.util.CustomStateBuilder;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.*;
@@ -66,6 +67,7 @@ import java.util.stream.Stream;
  * @version 1.0.0
  * @since 1.0.0
  */
+@SuppressWarnings("deprecation")
 public class SignPostBlock extends BlockWithEntity {
     private static final List<SignPostBlock> SIGN_POSTS = new ArrayList<>();
 
@@ -307,6 +309,24 @@ public class SignPostBlock extends BlockWithEntity {
 
     private static FabricBlockSettings settings(FenceBlock fenceBlock) {
         return FabricBlockSettings.copyOf(fenceBlock);
+    }
+
+    static {
+        UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
+            var offStack = player.getStackInHand(Hand.OFF_HAND);
+            // Trigger the sign post block interaction to flip a sign.
+            // But why is this necessary?
+            // Because when you have an item in your offhand, it will try to interact with that one instead
+            // and refuse to trigger the block. Which can be very annoying for players usually holding something
+            // in their offhand.
+            if (!(offStack.getItem() instanceof ShieldItem) && player.shouldCancelInteraction() && player.getMainHandStack().isEmpty()) {
+                var state = world.getBlockState(hitResult.getBlockPos());
+                if (state.getBlock() instanceof SignPostBlock) {
+                    return state.onUse(world, player, hand, hitResult);
+                }
+            }
+            return ActionResult.PASS;
+        });
     }
 
     /**

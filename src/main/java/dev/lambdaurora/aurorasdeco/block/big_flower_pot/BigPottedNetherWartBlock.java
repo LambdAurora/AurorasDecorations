@@ -50,6 +50,7 @@ public class BigPottedNetherWartBlock extends BigPottedProxyBlock {
         return this.getPlant().hasRandomTicks(state);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         this.getPlant().randomTick(state, world, pos, random);

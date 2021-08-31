@@ -58,7 +58,7 @@ public final class RegistrationHelper<T> {
      * @param obj the object to register
      * @return the registered object
      */
-    public T register(String name, T obj) {
+    public <V extends T> V register(String name, V obj) {
         return this.register(AurorasDeco.id(name), obj);
     }
 
@@ -70,7 +70,7 @@ public final class RegistrationHelper<T> {
      * @param obj the object to register
      * @return the registered object
      */
-    public T register(Identifier id, T obj) {
+    public <V extends T> V register(Identifier id, V obj) {
         if (this.early) {
             this.delayedRegistry.put(id, obj);
             return obj;

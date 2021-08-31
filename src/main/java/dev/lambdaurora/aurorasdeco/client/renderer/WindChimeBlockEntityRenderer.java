@@ -27,9 +27,9 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class WindChimeBlockEntityRenderer implements BlockEntityRenderer<WindChi
     public static final EntityModelLayer WIND_CHIME_MODEL_LAYER = new EntityModelLayer(AurorasDeco.id("wind_chime"),
             "main");
     public static final SpriteIdentifier WIND_CHIME_TEXTURE = new SpriteIdentifier(
-            SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE,
+            PlayerScreenHandler.BLOCK_ATLAS_TEXTURE,
             AurorasDeco.id("block/wind_chime"));
 
     private final ModelPart root;

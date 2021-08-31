@@ -56,6 +56,7 @@ import static net.minecraft.block.SeaPickleBlock.PICKLES;
  * @version 1.0.0
  * @since 1.0.0
  */
+@SuppressWarnings("deprecation")
 public class BigPottedSeaPickleBlock extends BigFlowerPotBlock implements Waterloggable {
     private final Map<BlockState, VoxelShape> shapeCache = new Object2ObjectOpenHashMap<>();
 

@@ -42,6 +42,7 @@ public final class BigPottedDaffodilBlock extends BigPottedProxyBlock {
 
     /* Shapes */
 
+    @SuppressWarnings("deprecation")
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return BIG_FLOWER_POT_SHAPE;

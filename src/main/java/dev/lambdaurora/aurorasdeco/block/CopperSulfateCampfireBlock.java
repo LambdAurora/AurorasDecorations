@@ -48,6 +48,7 @@ public class CopperSulfateCampfireBlock extends CampfireBlock {
         return state.get(LIT);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         CopperSulfateBehavior.attemptToDecompose(state, world, pos, random, 15);

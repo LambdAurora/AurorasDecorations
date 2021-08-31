@@ -66,6 +66,7 @@ public final class BigPottedCactusBlock extends BigFlowerPotBlock {
 
     /* Collision */
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         Box cactusBox = this.cactusBox.offset(pos).expand(0.1);

@@ -47,6 +47,7 @@ import net.minecraft.world.event.GameEvent;
  * @version 1.0.0
  * @since 1.0.0
  */
+@SuppressWarnings("deprecation")
 public class PieBlock extends Block {
     public static final IntProperty BITES = IntProperty.of("bites", 0, 3);
     public static final VoxelShape FULL_SHAPE = createCuboidShape(

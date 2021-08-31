@@ -44,6 +44,7 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 1.0.0
  */
+@SuppressWarnings("deprecation")
 public class BigPottedProxyBlock extends BigFlowerPotBlock {
     private final Map<BlockState, VoxelShape> shapeCache = new Object2ObjectOpenHashMap<>();
 

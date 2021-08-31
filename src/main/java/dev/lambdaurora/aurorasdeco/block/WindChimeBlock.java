@@ -37,6 +37,7 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("deprecation")
 public class WindChimeBlock extends BlockWithEntity {
     public static final VoxelShape SHAPE;
     public static final Box COLLISION_BOX;

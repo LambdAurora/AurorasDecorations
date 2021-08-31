@@ -58,6 +58,7 @@ import java.util.stream.Stream;
  * @version 1.0.0
  * @since 1.0.0
  */
+@SuppressWarnings("deprecation")
 public class HangingFlowerPotBlock extends Block {
     private static final List<HangingFlowerPotBlock> HANGING_FLOWER_POT_BLOCKS = new ArrayList<>();
     private static final Map<Block, Block> CONTENT_TO_POTTED = new Object2ObjectOpenHashMap<>();

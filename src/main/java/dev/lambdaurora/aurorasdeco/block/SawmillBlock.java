@@ -53,6 +53,7 @@ import net.minecraft.world.World;
  * @version 1.0.0
  * @since 1.0.0
  */
+@SuppressWarnings("deprecation")
 public final class SawmillBlock extends Block {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
