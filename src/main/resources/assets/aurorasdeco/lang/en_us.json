@@ -25,6 +25,10 @@
   "block.aurorasdeco.calcite_brick_slab": "Calcite Brick Slab",
   "block.aurorasdeco.calcite_brick_stairs": "Calcite Brick Stairs",
   "block.aurorasdeco.calcite_brick_wall": "Calcite Brick Wall",
+  "block.aurorasdeco.mossy_calcite_bricks": "Mossy Calcite Bricks",
+  "block.aurorasdeco.mossy_calcite_brick_slab": "Mossy Calcite Brick Slab",
+  "block.aurorasdeco.mossy_calcite_brick_stairs": "Mossy Calcite Brick Stairs",
+  "block.aurorasdeco.mossy_calcite_brick_wall": "Mossy Calcite Brick Wall",
 
   "block.aurorasdeco.copper_hopper": "Copper Hopper",
 
@@ -34,6 +38,11 @@
   "block.aurorasdeco.copper_sulfate_torch": "Copper Sulfate Torch",
 
   "block.aurorasdeco.daffodil": "Daffodil",
+
+  "block.aurorasdeco.mossy_deepslate_bricks": "Mossy Deepslate Bricks",
+  "block.aurorasdeco.mossy_deepslate_brick_slab": "Mossy Deepslate Brick Slab",
+  "block.aurorasdeco.mossy_deepslate_brick_stairs": "Mossy Deepslate Brick Stairs",
+  "block.aurorasdeco.mossy_deepslate_brick_wall": "Mossy Deepslate Brick Wall",
 
   "block.aurorasdeco.nether_brick_fence_gate": "Nether Brick Fence Gate",
 
@@ -96,6 +105,10 @@
   "block.aurorasdeco.tuff_bricks": "Tuff Bricks",
   "block.aurorasdeco.cracked_tuff_bricks": "Cracked Tuff Bricks",
   "block.aurorasdeco.chiseled_tuff_bricks": "Chiseled Tuff Bricks",
+  "block.aurorasdeco.mossy_tuff_bricks": "Mossy Tuff Bricks",
+  "block.aurorasdeco.mossy_tuff_brick_slab": "Mossy Tuff Brick Slab",
+  "block.aurorasdeco.mossy_tuff_brick_stairs": "Mossy Tuff Brick Stairs",
+  "block.aurorasdeco.mossy_tuff_brick_wall": "Mossy Tuff Brick Wall",
   "block.aurorasdeco.tuff_brick_slab": "Tuff Brick Slab",
   "block.aurorasdeco.tuff_brick_stairs": "Tuff Brick Stairs",
   "block.aurorasdeco.tuff_brick_wall": "Tuff Brick Wall",

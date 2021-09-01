@@ -258,11 +258,23 @@ public final class AurorasDecoRegistry {
             new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
             DerivedBlockItem.itemWithStrictPositionFactory(Items.CHISELED_DEEPSLATE));
     private static final Derivator CALCITE_BRICKS_DERIVATOR = new Derivator(CALCITE_BRICKS.getDefaultState());
+    public static final Block MOSSY_CALCITE_BRICKS = CALCITE_BRICKS_DERIVATOR.mossy();
     public static final Block CRACKED_CALCITE_BRICKS = CALCITE_BRICKS_DERIVATOR.cracked();
     public static final Block CHISELED_CALCITE_BRICKS = CALCITE_BRICKS_DERIVATOR.chiseled();
     public static final SlabBlock CALCITE_BRICK_SLAB = CALCITE_BRICKS_DERIVATOR.slab(Items.DEEPSLATE_TILE_SLAB);
     public static final StairsBlock CALCITE_BRICK_STAIRS = CALCITE_BRICKS_DERIVATOR.stairs(Items.DEEPSLATE_TILE_STAIRS);
     public static final WallBlock CALCITE_BRICK_WALL = CALCITE_BRICKS_DERIVATOR.wall();
+    private static final Derivator MOSSY_CALCITE_BRICKS_DERIVATOR = new Derivator(MOSSY_CALCITE_BRICKS.getDefaultState());
+    public static final SlabBlock MOSSY_CALCITE_BRICK_SLAB = MOSSY_CALCITE_BRICKS_DERIVATOR.slab(Items.DEEPSLATE_TILE_SLAB);
+    public static final StairsBlock MOSSY_CALCITE_BRICK_STAIRS = MOSSY_CALCITE_BRICKS_DERIVATOR.stairs(Items.DEEPSLATE_TILE_STAIRS);
+    public static final WallBlock MOSSY_CALCITE_BRICK_WALL = MOSSY_CALCITE_BRICKS_DERIVATOR.wall();
+
+    private static final Derivator DEEPSLATE_BRICKS_DERIVATOR = new Derivator(Blocks.DEEPSLATE_BRICKS.getDefaultState());
+    public static final Block MOSSY_DEEPSLATE_BRICKS = DEEPSLATE_BRICKS_DERIVATOR.mossy();
+    private static final Derivator MOSSY_DEEPSLATE_BRICKS_DERIVATOR = new Derivator(MOSSY_DEEPSLATE_BRICKS.getDefaultState());
+    public static final SlabBlock MOSSY_DEEPSLATE_BRICK_SLAB = MOSSY_DEEPSLATE_BRICKS_DERIVATOR.slab(Items.DEEPSLATE_BRICK_SLAB);
+    public static final StairsBlock MOSSY_DEEPSLATE_BRICK_STAIRS = MOSSY_DEEPSLATE_BRICKS_DERIVATOR.stairs(Items.DEEPSLATE_BRICK_STAIRS);
+    public static final WallBlock MOSSY_DEEPSLATE_BRICK_WALL = MOSSY_DEEPSLATE_BRICKS_DERIVATOR.wall();
 
     public static final HangingFlowerPotBlock HANGING_FLOWER_POT_BLOCK = register("hanging_flower_pot",
             new HangingFlowerPotBlock((FlowerPotBlock) Blocks.FLOWER_POT));
@@ -289,11 +301,16 @@ public final class AurorasDecoRegistry {
             new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
             DerivedBlockItem.itemWithStrictPositionFactory(CHISELED_CALCITE_BRICKS.asItem()));
     private static final Derivator TUFF_BRICKS_DERIVATOR = new Derivator(TUFF_BRICKS.getDefaultState());
+    public static final Block MOSSY_TUFF_BRICKS = TUFF_BRICKS_DERIVATOR.mossy();
     public static final Block CRACKED_TUFF_BRICKS = TUFF_BRICKS_DERIVATOR.cracked();
     public static final Block CHISELED_TUFF_BRICKS = TUFF_BRICKS_DERIVATOR.chiseled();
     public static final SlabBlock TUFF_BRICK_SLAB = TUFF_BRICKS_DERIVATOR.slab(Items.DEEPSLATE_TILE_SLAB);
     public static final StairsBlock TUFF_BRICK_STAIRS = TUFF_BRICKS_DERIVATOR.stairs(Items.DEEPSLATE_TILE_STAIRS);
     public static final WallBlock TUFF_BRICK_WALL = TUFF_BRICKS_DERIVATOR.wall();
+    private static final Derivator MOSSY_TUFF_BRICKS_DERIVATOR = new Derivator(MOSSY_TUFF_BRICKS.getDefaultState());
+    public static final SlabBlock MOSSY_TUFF_BRICK_SLAB = MOSSY_TUFF_BRICKS_DERIVATOR.slab(Items.DEEPSLATE_TILE_SLAB);
+    public static final StairsBlock MOSSY_TUFF_BRICK_STAIRS = MOSSY_TUFF_BRICKS_DERIVATOR.stairs(Items.DEEPSLATE_TILE_STAIRS);
+    public static final WallBlock MOSSY_TUFF_BRICK_WALL = MOSSY_TUFF_BRICKS_DERIVATOR.wall();
 
     /* Plants */
 

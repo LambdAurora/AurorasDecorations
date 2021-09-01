@@ -50,6 +50,15 @@ public class Derivator {
                 : this.normalBaseName;
     }
 
+    public Block mossy() {
+        var derivative = new Derivative("mossy", true);
+        var item = base.getBlock().asItem();
+        return registerWithItem(this.normalBaseName, derivative,
+                new Block(FabricBlockSettings.copyOf(this.base.getBlock())),
+                this.derivativeSearcher(new Derivative(this.normalBaseName, false)).build(),
+                new FabricItemSettings().group(item.getGroup()));
+    }
+
     public Block cracked() {
         var derivative = new Derivative("cracked", true);
         var item = base.getBlock().asItem();

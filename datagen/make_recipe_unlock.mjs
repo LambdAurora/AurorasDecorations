@@ -45,6 +45,8 @@ function parse_ingredients(recipe) {
         }
 
         return ingredients;
+    } else if (recipe.type === 'minecraft:crafting_shapeless') {
+        return recipe.ingredients;
     } else if (recipe.type === 'minecraft:stonecutting' || recipe.type === 'aurorasdeco:woodcutting'
         || recipe.type === 'minecraft:smelting') {
         if (recipe.ingredient instanceof Array) {

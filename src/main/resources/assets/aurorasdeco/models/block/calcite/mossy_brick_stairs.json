@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "aurorasdeco:block/mossy_calcite_bricks",
+    "top": "aurorasdeco:block/mossy_calcite_bricks",
+    "side": "aurorasdeco:block/mossy_calcite_bricks"
+  }
+}

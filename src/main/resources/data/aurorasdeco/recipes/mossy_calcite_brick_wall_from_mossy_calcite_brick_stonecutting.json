@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "aurorasdeco:mossy_calcite_bricks"
+  },
+  "result": "aurorasdeco:mossy_calcite_brick_wall",
+  "count": 1
+}

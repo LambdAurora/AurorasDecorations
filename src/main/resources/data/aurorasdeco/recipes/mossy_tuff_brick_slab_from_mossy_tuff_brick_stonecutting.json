@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "aurorasdeco:mossy_tuff_bricks"
+  },
+  "result": "aurorasdeco:mossy_tuff_brick_slab",
+  "count": 2
+}
