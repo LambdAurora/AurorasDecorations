@@ -286,16 +286,5 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
             }
             return ActionResult.PASS;
         });
-
-        /* To fix the broken code path that Fabric API introduces... */
-        EntitySleepEvents.MODIFY_SLEEPING_DIRECTION.register((entity, sleepingPos, sleepingDirection) -> {
-            if (sleepingDirection == null) {
-                var state = entity.getEntityWorld().getBlockState(sleepingPos);
-                if (state.getBlock() instanceof SleepingBagBlock) {
-                    return state.get(HorizontalFacingBlock.FACING);
-                }
-            }
-            return sleepingDirection;
-        });
     }
 }
