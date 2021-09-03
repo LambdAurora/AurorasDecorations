@@ -25,8 +25,11 @@ import dev.lambdaurora.aurorasdeco.mixin.block.BlockAccessor;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.util.CustomStateBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -83,7 +86,7 @@ public class SignPostBlock extends BlockWithEntity {
         var customBuilder = new CustomStateBuilder<>(builder);
         customBuilder.exclude("north", "east", "south", "west");
         ((BlockAccessor) this.fenceBlock).aurorasdeco$appendProperties(customBuilder);
-        ((BlockAccessor) this).setStateManager(builder.build(Block::getDefaultState, State::new)); // This is super cursed.
+        ((BlockAccessor) this).setStateManager(builder.build(Block::getDefaultState, getStateFactory())); // This is super cursed.
 
         this.setDefaultState(AuroraUtil.remapBlockState(this.fenceBlock.getDefaultState(), this.stateManager.getDefaultState()));
 
@@ -311,6 +314,13 @@ public class SignPostBlock extends BlockWithEntity {
         return FabricBlockSettings.copyOf(fenceBlock);
     }
 
+    private static StateManager.Factory<Block, BlockState> getStateFactory() {
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            return State::new;
+        }
+        return BlockState::new;
+    }
+
     static {
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
             var offStack = player.getStackInHand(Hand.OFF_HAND);
@@ -334,6 +344,7 @@ public class SignPostBlock extends BlockWithEntity {
      * <p>
      * It allows to emit the block quads of a fence post block without a crash.
      */
+    @Environment(EnvType.CLIENT)
     public static class State extends BlockState {
         public State(Block block, ImmutableMap<Property<?>, Comparable<?>> immutableMap, MapCodec<BlockState> mapCodec) {
             super(block, immutableMap, mapCodec);

@@ -61,8 +61,8 @@ public class BakedSignPostModel extends ForwardingBakedModel {
     @Override
     public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier,
                                RenderContext context) {
-        if (state.getBlock() instanceof SignPostBlock) {
-            ((FabricBakedModel) this.wrapped).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+        if (state.getBlock() instanceof SignPostBlock signPostBlock) {
+            ((FabricBakedModel) this.wrapped).emitBlockQuads(blockView, signPostBlock.getFenceState(state), pos, randomSupplier, context);
         }
     }
 
