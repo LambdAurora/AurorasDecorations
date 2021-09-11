@@ -135,7 +135,10 @@ function fix_links_in_html(nodes) {
 function get_markdown_title(doc) {
     for (const node of doc.blocks) {
         if (node instanceof md.Heading && node.level === 'h1') {
-            return `Aurora's Decorations - ${node.toString().substr(2)}`;
+            let title = node.toString().substr(2);
+            if (title.startsWith("Aurora's Decorations - "))
+                return title;
+            return `Aurora's Decorations - ${title}`;
         }
     }
     return "Aurora's Decorations";
