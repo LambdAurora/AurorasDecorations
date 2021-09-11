@@ -2,7 +2,7 @@ import {existsSync} from 'https://deno.land/std/fs/mod.ts';
 import {default as md, html} from 'https://lambdaurora.dev/lib.md/lib/index.mjs';
 
 const WEBSITE = "https://lambdaurora.dev/";
-const WEBSITE_PREFIX = WEBSITE + "aurorasdecorations/";
+const WEBSITE_PREFIX = WEBSITE + "AurorasDecorations/";
 
 console.log('Creating deploy directory.');
 if (existsSync('deploy_out'))
