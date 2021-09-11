@@ -1,7 +1,13 @@
 # Blackboards
 
+<!--description:Learn everything about the blackboards!
+Wonderful blocks on which you can draw on.-->
+<!--thumbnail:images/blackboards.png-->
+
 Blackboards are blocks which you can draw on with dyes.
 They come in two variants: blackboard and chalkboard (green).
+
+They also can be worn as masks on the helmet slot, and on a dedicated slot if [Trinkets] is present.
 
 ![Blackboards](../images/blackboards.png)
 
@@ -9,11 +15,53 @@ They come in two variants: blackboard and chalkboard (green).
 
 ### Blackboard
 
-Crafted by surrounding a black concrete block with sticks.
+<table class="crafting-grid">
+<thead>
+    <th>Crafting Table</th>
+</thead>
+<tbody>
+    <tr>
+        <td>Stick</td>
+        <td>Stick</td>
+        <td>Stick</td>
+    </tr>
+    <tr>
+        <td>Stick</td>
+        <td>Black Concrete</td>
+        <td>Stick</td>
+    </tr>
+    <tr>
+        <td>Stick</td>
+        <td>Stick</td>
+        <td>Stick</td>
+    </tr>
+</tbody>
+</table>
 
 ### Chalkboard
 
-Crafted by surrounding a green concrete block with sticks.
+<table class="crafting-grid">
+<thead>
+    <th>Crafting</th>
+</thead>
+<tbody>
+    <tr>
+        <td>Stick</td>
+        <td>Stick</td>
+        <td>Stick</td>
+    </tr>
+    <tr>
+        <td>Stick</td>
+        <td>Green Concrete</td>
+        <td>Stick</td>
+    </tr>
+    <tr>
+        <td>Stick</td>
+        <td>Stick</td>
+        <td>Stick</td>
+    </tr>
+</tbody>
+</table>
 
 ### Copy
 
@@ -29,6 +77,7 @@ To erase a blackboard you can either:
  - put it in water
  - use a water bucket on it
  - use a water potion on it, will consume the water in the bottle
+ - place a non-waxed blackboard in water
 
 You also can erase a single pixel with paper.
 
@@ -45,3 +94,4 @@ Waxed blackboards are made uneditable.
  - Blueberries (if Ecotones is present)
 
 [dyes]: #dyes
+[Trinkets]: https://modrinth.com/mod/trinkets

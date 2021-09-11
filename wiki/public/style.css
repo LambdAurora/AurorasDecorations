@@ -1,0 +1,30 @@
+.responsive-img {
+    max-width: 100%;
+    height: auto;
+}
+
+.crafting-grid {
+    table-layout: fixed;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.crafting-grid td, .crafting-grid th  {
+    border: 1px solid var(--ls-theme-border-color);
+    text-align: center;
+}
+
+.crafting-grid th {
+    border-left: 2px solid var(--ls-theme-border-color);
+    border-top: 2px solid var(--ls-theme-border-color);
+    border-right: 2px solid var(--ls-theme-border-color);
+    text-align: center;
+
+    background-color: #eee;
+}
+
+@media (prefers-color-scheme: dark) {
+    .crafting-grid th {
+        background-color: #333;
+    }
+}
