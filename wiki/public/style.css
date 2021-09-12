@@ -9,7 +9,7 @@
     width: 100%;
 }
 
-.crafting-grid td, .crafting-grid th  {
+.crafting-grid td, .crafting-grid th {
     border: 1px solid var(--ls-theme-border-color);
     text-align: center;
 }
@@ -67,4 +67,10 @@ pre {
     line-height: 1.45;
     border: 1px solid #ffffff1a !important;
     border-radius: 3px;
+}
+
+.wiki-gallery {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
 }
