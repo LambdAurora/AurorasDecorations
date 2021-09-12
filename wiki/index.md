@@ -17,10 +17,7 @@ You will find information about this mod's features here.
   - Can hold a plant, can dynamically support some modded plants (or new plants in Minecraft if the mod hasn't been updated).
   - Can hold tall plants.
 - [Blackboards](blackboards.md)
-- Braziers
-  - A new nice light source crafted with iron ingots and a campfire.
-  - Burns entities that stands inside them.
-  - Comes in normal and soul variants.
+- [Braziers](braziers.md)
 - Burnt-vine
   - Use a flint of steel on a vine block to burn the tip of a vine.
   - Burnt-vine is not able to grow.
@@ -62,14 +59,7 @@ You will find information about this mod's features here.
   Now you can!
 - Polished Basalt Wall
 - [Sawmill](sawmill.md)
-- Shelves
-  - Comes in every wood types.
-    - Supports some modded wood types.
-  - Can be put on the bottom or/and the top of the side of a block.
-  - Stores up to 8 stacks that are displayed in-world.
-  - Right-click with an item will place it into the shelf.
-  - Left-click with an empty world in survival will emptied the targeted item.
-  - Waterloggable.
+- [Shelves](shelves.md)
 - [Sign Posts](sign_posts.md)
 - Sleeping bags
   - Cozy to sleep while on your outside adventures.

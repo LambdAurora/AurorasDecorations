@@ -1,27 +1,32 @@
-import {existsSync} from 'https://deno.land/std/fs/mod.ts';
-import {default as md, html} from 'https://lambdaurora.dev/lib.md/lib/index.mjs';
+import {existsSync} from "https://deno.land/std/fs/mod.ts";
+import {default as md, html} from "https://lambdaurora.dev/lib.md/lib/index.mjs";
 
 const WEBSITE = "https://lambdaurora.dev/";
 const WEBSITE_PREFIX = WEBSITE + "AurorasDecorations/";
 
-console.log('Creating deploy directory.');
-if (existsSync('deploy_out'))
-    await Deno.remove('deploy_out', {recursive: true});
-await Deno.mkdir('deploy_out');
+console.log("Creating deploy directory.");
+if (existsSync("deploy_out"))
+    await Deno.remove("deploy_out", {recursive: true});
+await Deno.mkdir("deploy_out");
 
-console.log('Deploying...');
+console.log("Deploying...");
 
-await deploy_dir('.');
-await deploy_dir('../images');
+let markdown_pages = {};
+await deploy_dir(".", markdown_pages);
+await deploy_dir("../images");
 
-function deploy_path(path) {
-    if (path.startsWith('./public'))
-        return path.replace(/^\.\/public/, './deploy_out');
-    else
-        return path.replace(/^\.\.?/, './deploy_out')
+for (const page of Object.values(markdown_pages)) {
+    await deploy_markdown(markdown_pages, page);
 }
 
-async function deploy_dir(path, level = 0) {
+function deploy_path(path) {
+    if (path.startsWith("./public"))
+        return path.replace(/^\.\/public/, "./deploy_out");
+    else
+        return path.replace(/^\.\.?/, "./deploy_out")
+}
+
+async function deploy_dir(path, markdown_pages = [], level = 0) {
     console.log("  ".repeat(level) + `Deploying "${path}"...`);
 
     const deploy_dir_path = deploy_path(path);
@@ -29,20 +34,21 @@ async function deploy_dir(path, level = 0) {
         await Deno.mkdir(deploy_dir_path);
 
     for await (const dir_entry of Deno.readDir(path)) {
-        if (dir_entry.isFile && !path.startsWith('./public') && dir_entry.name.endsWith('.md')) {
+        if (dir_entry.isFile && !path.startsWith("./public") && dir_entry.name.endsWith(".md")) {
             console.log(" ".repeat(level) + `  Loading ${dir_entry.name}...`);
-            await deploy_markdown(path + '/' + dir_entry.name);
-        } else if (dir_entry.isDirectory && dir_entry.name !== 'deploy_out') {
-            await deploy_dir(path + '/' + dir_entry.name, level + 1);
-        } else if (path.startsWith('./public') || path.startsWith('../images')) {
-            console.log(" ".repeat(level) + `  Copying public file ${path + '/' + dir_entry.name}...`);
-            await Deno.copyFile(path + '/' + dir_entry.name, deploy_path(path + '/' + dir_entry.name));
+            let markdown_path = path + "/" + dir_entry.name;
+            markdown_pages[markdown_path] = await load_markdown(markdown_path);
+        } else if (dir_entry.isDirectory && dir_entry.name !== "deploy_out") {
+            await deploy_dir(path + "/" + dir_entry.name, markdown_pages, level + 1);
+        } else if (path.startsWith("./public") || path.startsWith("../images")) {
+            console.log(" ".repeat(level) + `  Copying public file ${path + "/" + dir_entry.name}...`);
+            await Deno.copyFile(path + "/" + dir_entry.name, deploy_path(path + "/" + dir_entry.name));
         }
     }
 }
 
-async function deploy_markdown(path) {
-    const decoder = new TextDecoder('utf-8');
+async function load_markdown(path) {
+    const decoder = new TextDecoder("utf-8");
     const content = decoder.decode(await Deno.readFile(path));
     let doc = md.parser.parse(content);
 
@@ -53,18 +59,18 @@ async function deploy_markdown(path) {
         if (page_thumbnail) {
             return `<meta property="og:image" content="${WEBSITE_PREFIX + page_thumbnail}"/>`;
         }
-        return '';
+        return "";
     }
 
-    let main = html.create_element('main');
+    let main = html.create_element("main");
     main.children = md.render_to_html(doc, {image: {class_name: "responsive-img"}, spoiler: {enable: true}, parent: main}).children
         .filter(node => {
             if (node instanceof html.Comment) {
-                if (node.content.startsWith('description:')) {
-                    page_description = node.content.substr('description:'.length);
+                if (node.content.startsWith("description:")) {
+                    page_description = node.content.substr("description:".length);
                     return false;
-                } else if (node.content.startsWith('thumbnail:')) {
-                    page_thumbnail = node.content.substr('thumbnail:'.length);
+                } else if (node.content.startsWith("thumbnail:")) {
+                    page_thumbnail = node.content.substr("thumbnail:".length);
                     return false;
                 }
             }
@@ -73,31 +79,88 @@ async function deploy_markdown(path) {
         });
 
     fix_links_in_html(main.children);
-    console.log(JSON.stringify(main.toJSON(), null, '  '));
+
+    let raw_title = get_raw_markdown_title(doc);
+    return {
+        path: path.replace(/\.md$/, ".html"),
+        title: get_markdown_title(raw_title),
+        raw_title: raw_title,
+        main: main,
+        description: page_description,
+        thumbnail_meta: get_thumbnail_meta_tag()
+    };
+}
+
+async function deploy_markdown(markdown_pages, page_data) {
+    console.log(`Writing ${page_data.path}...`);
+
+    page_data.main.children = page_data.main.children
+        .map(node => {
+            if (node instanceof html.Comment) {
+                if (node.content.startsWith("include:")) {
+                    let include = node.content.split(":");
+
+                    if (markdown_pages[include[2]]) {
+                        let include_page_data = markdown_pages[include[2]];
+
+                        let div = html.create_element("details");
+                        let summary = html.create_element("summary");
+                        summary.append_child("Related information from the page ");
+                        let link = html.create_element("a");
+                        link.append_child(include_page_data.raw_title);
+                        link.attr('href', include_page_data.path)
+                        summary.append_child(link);
+                        summary.append_child(".");
+                        div.append_child(summary);
+
+                        div.children = div.children.concat(include_page_data.main.children.map(included_node => {
+                            if (included_node instanceof html.Element) {
+                                if (included_node.tag.name.match(/^h[1-6]$/)) {
+                                    let current_heading = parseInt(included_node.tag.name[1]);
+                                    let offset = parseInt(include[1]);
+
+                                    included_node.tag = html.Tag["h" + Math.min(current_heading + offset, 6)];
+                                }
+                            }
+
+                            return included_node;
+                        }));
+                        return div;
+                    } else {
+                        let p = html.create_element("p");
+                        p.append_child(`Failed to include page "${include[2]}".`);
+                        return p;
+                    }
+                    return false;
+                }
+            }
+
+            return node;
+        });
 
     let page = `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
 
-    <title>${get_markdown_title(doc)}</title>
+    <title>${page_data.title}</title>
 
     <meta property="og:type" content="website">
-    <meta property="og:title" content="${get_markdown_title(doc)}">
+    <meta property="og:title" content="${page_data.title}">
     <meta property="og:site_name" content="Aurora's Decorations">
-    <meta property="og:url" content="${WEBSITE_PREFIX + path.substr(2).replace(/\.md$/, '.html')}">
-    <meta property="og:description" content="${page_description}">
-    ${get_thumbnail_meta_tag()}
+    <meta property="og:url" content="${WEBSITE_PREFIX + page_data.path.substr(2)}">
+    <meta property="og:description" content="${page_data.description}">
+    ${page_data.thumbnail_meta}
 
     <link rel="stylesheet" type="text/css" href="https://lambdaurora.dev/style.css" />
-    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="${relativize_from_root(page_data.path)}style.css" />
 
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
     <main>
-      ${main.inner_html()}
+      ${page_data.main.inner_html()}
     </main>
     <footer class="ls-app-footer">
       <div class="ls-app-footer-license">
@@ -111,19 +174,19 @@ async function deploy_markdown(path) {
 `;
 
     const encoder = new TextEncoder();
-    await Deno.writeFile(deploy_path(path.replace(/\.md$/, '.html')), encoder.encode(page));
+    await Deno.writeFile(deploy_path(page_data.path), encoder.encode(page));
 }
 
 function fix_links_in_html(nodes) {
     for (let node of nodes) {
         if (node instanceof html.Element) {
             for (let attr of node.attributes) {
-                if (attr.name === 'href' || attr.name === 'src') {
+                if (attr.name === "href" || attr.name === "src") {
                     let value = attr.value();
-                    if (value.startsWith('../'))
+                    if (value.startsWith("../"))
                         node.attr(attr.name, value.substr(3));
-                    if (value.endsWith('.md'))
-                        node.attr(attr.name, value.replace(/\.md$/, '.html'));
+                    if (value.includes('.md'))
+                        node.attr(attr.name, value.replace(/\.md/, ".html"));
                 }
             }
 
@@ -132,14 +195,22 @@ function fix_links_in_html(nodes) {
     }
 }
 
-function get_markdown_title(doc) {
+function get_raw_markdown_title(doc) {
     for (const node of doc.blocks) {
-        if (node instanceof md.Heading && node.level === 'h1') {
-            let title = node.toString().substr(2);
-            if (title.startsWith("Aurora's Decorations - "))
-                return title;
-            return `Aurora's Decorations - ${title}`;
+        if (node instanceof md.Heading && node.level === "h1") {
+            return node.toString().substr(2);
         }
     }
     return "Aurora's Decorations";
+}
+
+function get_markdown_title(title) {
+    if (title.startsWith("Aurora's Decorations"))
+        return title;
+    else
+        return `Aurora's Decorations - ${title}`;
+}
+
+function relativize_from_root(path) {
+    return "../".repeat(path.split("/").length - 2);
 }

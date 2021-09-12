@@ -1,13 +1,13 @@
 # Sawmill
 
 <!--description:Learn everything about the Sawmill, a very practical crafting station.-->
-<!--thumbnail:images/sawmill.png-->
+<!--thumbnail:images/render/sawmill.png-->
 
 The sawmill is a very practical crafting station centered around wood blocks.
 It works the same as a regular stonecutter.
 
 <div style="display: flex; justify-content: center;">
-<img alt="Sawmill" src="../images/sawmill.png" width="256" height="256" />
+<img alt="Sawmill" src="../images/render/sawmill.png" width="256" height="256" />
 </div>
 
 ## Crafting
@@ -43,7 +43,7 @@ From a plank you can craft:
 - Boat
 - Ladder (4)
 - Seat Rest
-- Shelf
+- [Shelves](shelves.md)
 - [Sign Post](sign_posts.md)
 - Stick (2)
 - Wooden Button
