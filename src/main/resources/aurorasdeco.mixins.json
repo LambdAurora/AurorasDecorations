@@ -40,6 +40,7 @@
     "entity.ZombieVillagerEntityMixin",
     "item.BlockItemMixin",
     "item.FlintAndSteelItemMixin",
+    "item.HoneycombItemMixin",
     "item.ItemMixin",
     "item.LeadItemMixin",
     "item.ShovelItemMixin"

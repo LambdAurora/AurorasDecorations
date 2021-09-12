@@ -83,7 +83,7 @@ You also can erase a single pixel with paper.
 
 A blackboard can be glow in the dark if a glow ink sac is used on it, to stop the glow a normal ink sac can be used.
 
-Once you are satisfied with your drawing you can use wax it using honeycomb in a crafting grid.
+Once you are satisfied with your drawing you can use wax it using honeycomb, either by right-clicking it or by using a smithing table.
 Waxed blackboards are made uneditable.
 
 ### Dyes

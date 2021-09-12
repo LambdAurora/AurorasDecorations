@@ -106,8 +106,16 @@ let advancement = {
     }
 };
 
+function get_criteria_name_from_ingredient(ingredient) {
+    if (ingredient.tag) {
+        return parse_id(ingredient.tag).path;
+    } else {
+        return parse_id(ingredient.item).path.replace("/", "_");
+    }
+}
+
 for (const ingredient of ingredients) {
-    advancement.criteria['has_' + parse_id(ingredient.item).path] = {
+    advancement.criteria['has_' + get_criteria_name_from_ingredient(ingredient)] = {
         trigger: 'minecraft:inventory_changed',
         conditions: {
             items: [

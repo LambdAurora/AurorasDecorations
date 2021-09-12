@@ -29,6 +29,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
@@ -47,12 +48,17 @@ public final class PottedPlantType {
     private final String id;
     private final Block plant;
     private final Item item;
+    private final Category category;
     private BigFlowerPotBlock pot;
 
     private PottedPlantType(String id, Block plant, Item item) {
         this.id = id;
         this.plant = plant;
         this.item = item;
+
+        this.category = Arrays.stream(Category.values())
+                .filter(category -> category.filter(id, plant, item))
+                .findFirst().orElse(Category.UNKNOWN);
     }
 
     public static PottedPlantType fromId(String id) {
@@ -130,6 +136,24 @@ public final class PottedPlantType {
     }
 
     /**
+     * Returns the category of this plant type.
+     *
+     * @return the category
+     */
+    public Category getCategory() {
+        return this.category;
+    }
+
+    /**
+     * Returns whether this plant type is tall or not.
+     *
+     * @return {@code true} if this plant is tall, else {@code false}
+     */
+    public boolean isTall() {
+        return this.getPlant() instanceof TallPlantBlock;
+    }
+
+    /**
      * Returns the big flower pot block associated with this plant type.
      *
      * @return the big flower pot block
@@ -175,5 +199,49 @@ public final class PottedPlantType {
     @Override
     public int hashCode() {
         return Objects.hash(this.getId(), this.getPlant(), this.getItem());
+    }
+
+    /**
+     * Represents a plant category.
+     *
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    public enum Category {
+        AZALEA((id, plant, item) -> plant instanceof AzaleaBlock, false),
+        BAMBOO((id, plant, item) -> item == Items.BAMBOO, false),
+        CACTUS((id, plant, item) -> plant instanceof CactusBlock || id.equals("pocket_cactus"), false),
+        FLOWER((id, plant, item) -> plant instanceof FlowerBlock, true),
+        MASCOT((id, plant, item) -> item == Items.POTATO || item == Items.PUMPKIN, false),
+        MUSHROOM((id, plant, item) -> plant instanceof MushroomPlantBlock || plant instanceof FungusBlock, true),
+        SAPLING((id, plant, item) -> plant instanceof SaplingBlock, true),
+        SWEET_BERRY_BUSH((id, plant, item) -> plant instanceof SweetBerryBushBlock || id.equals("ecotones/blueberry_bush"), false),
+        UNKNOWN((id, plant, item) -> true, true);
+
+        private final CategoryFilter filter;
+        private final boolean allowBlocksOnTop;
+
+        Category(CategoryFilter filter, boolean allowBlocksOnTop) {
+            this.filter = filter;
+            this.allowBlocksOnTop = allowBlocksOnTop;
+        }
+
+        public boolean allowBlocksOnTop() {
+            return this.allowBlocksOnTop;
+        }
+
+        private boolean filter(String id, Block plant, Item item) {
+            return this.filter.filter(id, plant, item);
+        }
+    }
+
+    /**
+     * Represents a category filter.
+     *
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    private interface CategoryFilter {
+        boolean filter(String id, Block plant, Item item);
     }
 }

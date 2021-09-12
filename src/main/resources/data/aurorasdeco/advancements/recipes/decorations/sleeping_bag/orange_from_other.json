@@ -1,0 +1,58 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "aurorasdeco:sleeping_bag/orange_from_other"
+    ]
+  },
+  "criteria": {
+    "has_self": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "aurorasdeco:sleeping_bag/orange"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "aurorasdeco:sleeping_bag/orange_from_other"
+      }
+    },
+    "has_sleeping_bags": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "aurorasdeco:sleeping_bags"
+          }
+        ]
+      }
+    },
+    "has_orange_dye": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:orange_dye"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_self",
+      "has_the_recipe",
+      "has_sleeping_bags",
+      "has_orange_dye"
+    ]
+  ]
+}

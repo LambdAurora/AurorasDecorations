@@ -115,6 +115,12 @@ public class BigFlowerPotBlock extends Block/* implements FluidFillable*/ {
         return .65f;
     }
 
+    public boolean allowBlocksOnTop() {
+        if (this.getPlantType().isTall())
+            return false;
+        return this.getPlantType().getCategory().allowBlocksOnTop();
+    }
+
     /* Shapes */
 
     @Override
@@ -141,7 +147,7 @@ public class BigFlowerPotBlock extends Block/* implements FluidFillable*/ {
         if (empty != toPlaceEmpty) {
             var up = pos.up();
             if (empty) {
-                if (!world.getBlockState(up).isAir())
+                if (!toPlace.allowBlocksOnTop() && !world.getBlockState(up).isAir())
                     return ActionResult.PASS;
 
                 world.setBlockState(pos, toPlace.getPlacementState(new ItemPlacementContext(player, hand, handStack, hit)),
@@ -151,7 +157,8 @@ public class BigFlowerPotBlock extends Block/* implements FluidFillable*/ {
                     handStack.decrement(1);
                 }
 
-                world.setBlockState(up, AurorasDecoRegistry.PLANT_AIR_BLOCK.getDefaultState());
+                if (!toPlace.allowBlocksOnTop())
+                    world.setBlockState(up, AurorasDecoRegistry.PLANT_AIR_BLOCK.getDefaultState());
                 world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
             } else {
                 this.removePlant(world, pos, state, player, hand, true);

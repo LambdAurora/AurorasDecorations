@@ -1,0 +1,58 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "aurorasdeco:sleeping_bag/light_gray_from_other"
+    ]
+  },
+  "criteria": {
+    "has_self": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "aurorasdeco:sleeping_bag/light_gray"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "aurorasdeco:sleeping_bag/light_gray_from_other"
+      }
+    },
+    "has_sleeping_bags": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "aurorasdeco:sleeping_bags"
+          }
+        ]
+      }
+    },
+    "has_light_gray_dye": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:light_gray_dye"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_self",
+      "has_the_recipe",
+      "has_sleeping_bags",
+      "has_light_gray_dye"
+    ]
+  ]
+}
