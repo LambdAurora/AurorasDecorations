@@ -1,7 +1,6 @@
-.responsive-img {
-    max-width: 100%;
-    height: auto;
-}
+/* Markdown styling */
+
+/* Grids */
 
 .crafting-grid {
     table-layout: fixed;
@@ -23,11 +22,25 @@
     background-color: #eee;
 }
 
+.explosion-crafting {
+    border-collapse: collapse;
+}
+
+.explosion-crafting td, .crafting-grid th {
+    border: 1px solid var(--ls-theme-border-color);
+}
+
+td img, th img {
+    vertical-align: middle;
+}
+
 @media (prefers-color-scheme: dark) {
     .crafting-grid th {
         background-color: #333;
     }
 }
+
+/* Code blocks */
 
 code {
     padding: .2em .4em;
@@ -67,6 +80,17 @@ pre {
     line-height: 1.45;
     border: 1px solid #ffffff1a !important;
     border-radius: 3px;
+}
+
+/* Images */
+
+.responsive-img {
+    max-width: 100%;
+    height: auto;
+}
+
+img.item {
+    image-rendering: crisp-edges;
 }
 
 .wiki-gallery {

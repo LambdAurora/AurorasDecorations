@@ -3,6 +3,8 @@ import {default as md, html} from "https://lambdaurora.dev/lib.md/lib/index.mjs"
 
 const WEBSITE = "https://lambdaurora.dev/";
 const WEBSITE_PREFIX = WEBSITE + "AurorasDecorations/";
+const TEXTURES_PATH = "../src/main/resources/assets/aurorasdeco/textures";
+const ASSETS_PATH_REGEX = /..\/src\/main\/resources\/assets\/aurorasdeco\/textures\/((?:[a-z_]+\/)+[a-z_]+\.png)/;
 
 console.log("Creating deploy directory.");
 if (existsSync("deploy_out"))
@@ -12,8 +14,10 @@ await Deno.mkdir("deploy_out");
 console.log("Deploying...");
 
 let markdown_pages = {};
-await deploy_dir(".", markdown_pages);
-await deploy_dir("../images");
+let assets_to_copy = {};
+await deploy_dir(".", path => path.startsWith("./public"), markdown_pages, assets_to_copy);
+await deploy_dir("../images", path => path.startsWith("../images"));
+await deploy_dir(TEXTURES_PATH, path =>  assets_to_copy[path.substr(TEXTURES_PATH.length + 1)] !== undefined);
 
 for (const page of Object.values(markdown_pages)) {
     await deploy_markdown(markdown_pages, page);
@@ -22,11 +26,13 @@ for (const page of Object.values(markdown_pages)) {
 function deploy_path(path) {
     if (path.startsWith("./public"))
         return path.replace(/^\.\/public/, "./deploy_out");
+    else if (path.startsWith(TEXTURES_PATH))
+        return path.replace(TEXTURES_PATH, "./deploy_out/images");
     else
         return path.replace(/^\.\.?/, "./deploy_out")
 }
 
-async function deploy_dir(path, markdown_pages = [], level = 0) {
+async function deploy_dir(path, filter = _ => true, markdown_pages = {}, assets_to_copy = {}, level = 0) {
     console.log("  ".repeat(level) + `Deploying "${path}"...`);
 
     const deploy_dir_path = deploy_path(path);
@@ -34,20 +40,20 @@ async function deploy_dir(path, markdown_pages = [], level = 0) {
         await Deno.mkdir(deploy_dir_path);
 
     for await (const dir_entry of Deno.readDir(path)) {
-        if (dir_entry.isFile && !path.startsWith("./public") && dir_entry.name.endsWith(".md")) {
+        if (dir_entry.isFile && !path.startsWith("./public") && !path.startsWith("../images") && dir_entry.name.endsWith(".md")) {
             console.log(" ".repeat(level) + `  Loading ${dir_entry.name}...`);
             let markdown_path = path + "/" + dir_entry.name;
-            markdown_pages[markdown_path] = await load_markdown(markdown_path);
+            markdown_pages[markdown_path] = await load_markdown(markdown_path, assets_to_copy);
         } else if (dir_entry.isDirectory && dir_entry.name !== "deploy_out") {
-            await deploy_dir(path + "/" + dir_entry.name, markdown_pages, level + 1);
-        } else if (path.startsWith("./public") || path.startsWith("../images")) {
+            await deploy_dir(path + "/" + dir_entry.name, filter, markdown_pages, assets_to_copy, level + 1);
+        } else if (filter(path + "/" + dir_entry.name)) {
             console.log(" ".repeat(level) + `  Copying public file ${path + "/" + dir_entry.name}...`);
             await Deno.copyFile(path + "/" + dir_entry.name, deploy_path(path + "/" + dir_entry.name));
         }
     }
 }
 
-async function load_markdown(path) {
+async function load_markdown(path, assets_to_copy) {
     const decoder = new TextDecoder("utf-8");
     const content = decoder.decode(await Deno.readFile(path));
     let doc = md.parser.parse(content);
@@ -78,7 +84,7 @@ async function load_markdown(path) {
             return true;
         });
 
-    fix_links_in_html(main.children);
+    fix_links_in_html(main.children, assets_to_copy);
 
     let raw_title = get_raw_markdown_title(doc);
     return {
@@ -177,20 +183,29 @@ async function deploy_markdown(markdown_pages, page_data) {
     await Deno.writeFile(deploy_path(page_data.path), encoder.encode(page));
 }
 
-function fix_links_in_html(nodes) {
+function fix_links_in_html(nodes, assets_to_copy) {
     for (let node of nodes) {
         if (node instanceof html.Element) {
             for (let attr of node.attributes) {
                 if (attr.name === "href" || attr.name === "src") {
                     let value = attr.value();
+
+                    let result;
+                    if ((result = ASSETS_PATH_REGEX.exec(value))) {
+                        let replaced = value.replace(TEXTURES_PATH, 'images');
+                        assets_to_copy[result[1]] = "../src/main/resources/assets/aurorasdeco/textures/" + result[1];
+                        node.attr(attr.name, replaced);
+                        continue;
+                    }
+
                     if (value.startsWith("../"))
-                        node.attr(attr.name, value.substr(3));
+                        value = node.attr(attr.name, value.substr(3)).value();
                     if (value.includes('.md'))
                         node.attr(attr.name, value.replace(/\.md/, ".html"));
                 }
             }
 
-            fix_links_in_html(node.children);
+            fix_links_in_html(node.children, assets_to_copy);
         }
     }
 }

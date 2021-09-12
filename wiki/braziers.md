@@ -38,4 +38,4 @@ Note: the type of the resulting brazier will depend on the type of campfire put 
 ## Notes
 
 - Braziers will burn entities inside them.
-- Copper Sulfate Brazier inherits the special properties of the [Copper Sulfate Campfire](copper_sulfate.md#campfire)
+- Copper Sulfate Brazier inherits the special properties of the [Copper Sulfate Campfire](copper_sulfate.md#campfire).

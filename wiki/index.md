@@ -27,13 +27,7 @@ You will find information about this mod's features here.
 - Copper Hopper
   - Can filter items and simplifies redstone contraptions.
   - The filtering is not entirely strict (some parameters may not be accounted like durability).
-- Copper Sulfate
-  - Made by exploding copper blocks.
-  - Copper Sulfate Torch with a green tint.
-  - Copper Sulfate Lantern.
-  - Copper Sulfate Campfire and Brazier.
-    - Decay leaves, mushroom blocks and nether wart blocks.
-    - Mushroom blocks and nether wart blocks are decayed like if Silk Touch was used.
+- [Copper Sulfate](copper_sulfate.md)
 - Daffodils
   - A cute yellow flower.
   - Can be found in flower forests.
