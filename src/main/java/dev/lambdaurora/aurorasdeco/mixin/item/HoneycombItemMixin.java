@@ -51,15 +51,7 @@ public class HoneycombItemMixin {
     }
 
     @Dynamic
-    @Inject(
-            method = "method_34719",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"
-            ),
-            remap = false,
-            cancellable = true
-    )
+    @Inject(method = "method_34719", at = @At("HEAD"), remap = false, cancellable = true)
     private static void onBeforeReplace(ItemUsageContext context, BlockPos pos, World world, BlockState state, CallbackInfoReturnable<ActionResult> cir) {
         if (state.getBlock() instanceof BlackboardBlock) {
             var blockEntity = AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE.get(world, pos);
@@ -70,15 +62,7 @@ public class HoneycombItemMixin {
     }
 
     @Dynamic
-    @Inject(
-            method = "method_34719",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/World;syncWorldEvent(Lnet/minecraft/entity/player/PlayerEntity;ILnet/minecraft/util/math/BlockPos;I)V"
-            ),
-            remap = false,
-            cancellable = true
-    )
+    @Inject(method = "method_34719", at = @At("RETURN"), remap = false, cancellable = true)
     private static void onAfterReplace(ItemUsageContext context, BlockPos pos, World world, BlockState state, CallbackInfoReturnable<ActionResult> cir) {
         if (state.getBlock() instanceof BlackboardBlock) {
             var blockEntity = AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE.get(world, pos);
