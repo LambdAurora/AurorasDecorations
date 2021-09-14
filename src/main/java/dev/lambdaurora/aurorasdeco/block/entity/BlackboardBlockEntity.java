@@ -18,6 +18,7 @@
 package dev.lambdaurora.aurorasdeco.block.entity;
 
 import dev.lambdaurora.aurorasdeco.Blackboard;
+import dev.lambdaurora.aurorasdeco.BlackboardHandler;
 import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -31,6 +32,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -50,11 +52,15 @@ import java.util.Set;
  * @since 1.0.0
  */
 public class BlackboardBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Nameable,
-        RenderAttachmentBlockEntity {
+        RenderAttachmentBlockEntity, BlackboardHandler {
     @Environment(EnvType.CLIENT)
     private static final Set<BlackboardBlockEntity> ACTIVE_BLACKBOARDS = new ObjectOpenHashSet<>();
     private final Blackboard blackboard = new AssignedBlackboard();
     private @Nullable Text customName;
+
+    public PlayerEntity lastUser;
+    public int lastX;
+    public int lastY;
 
     @Environment(EnvType.CLIENT)
     private Mesh mesh = null;
@@ -65,24 +71,69 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
         super(AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE, pos, state);
     }
 
-    public byte getColor(int x, int y) {
+    @Override
+    public byte getPixel(int x, int y) {
         return this.blackboard.getPixel(x, y);
     }
 
-    /**
-     * Sets the pixel color at the specified coordinates.
-     *
-     * @param x the X coordinate
-     * @param y the Y coordinate
-     * @param color the color
-     */
-    public void setPixel(int x, int y, Blackboard.Color color, int shade) {
+    @Override
+    public boolean setPixel(int x, int y, Blackboard.Color color, int shade) {
         if (this.blackboard.setPixel(x, y, color, shade)) {
             if (this.getWorld() instanceof ServerWorld) {
                 this.sync();
                 this.markDirty();
             }
+            return true;
         }
+        return false;
+    }
+
+    @Override
+    public boolean brush(int x, int y, Blackboard.Color color, int shade) {
+        if (this.blackboard.brush(x, y, color, shade)) {
+            if (this.getWorld() instanceof ServerWorld) {
+                this.sync();
+                this.markDirty();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean replace(int x, int y, Blackboard.Color color, int shade) {
+        if (this.blackboard.replace(x, y, color, shade)) {
+            if (this.getWorld() instanceof ServerWorld) {
+                this.sync();
+                this.markDirty();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean fill(int x, int y, Blackboard.Color color, int shade) {
+        if (this.blackboard.fill(x, y, color, shade)) {
+            if (this.getWorld() instanceof ServerWorld) {
+                this.sync();
+                this.markDirty();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean line(int x1, int y1, int x2, int y2, Blackboard.Color color, int shade) {
+        if (this.blackboard.line(x1, y1, x2, y2, color, shade)) {
+            if (this.getWorld() instanceof ServerWorld) {
+                this.sync();
+                this.markDirty();
+            }
+            return true;
+        }
+        return false;
     }
 
     public void copy(Blackboard source) {
@@ -98,6 +149,7 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
      */
     public void clear() {
         this.blackboard.clear();
+        this.lastUser = null;
         this.sync();
         this.markDirty();
     }
@@ -201,6 +253,7 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         this.readBlackBoardNbt(nbt);
+        this.lastUser = null;
     }
 
     @Override

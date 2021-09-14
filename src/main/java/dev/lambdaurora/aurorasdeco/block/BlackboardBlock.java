@@ -22,9 +22,13 @@ import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.block.entity.BlackboardBlockEntity;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.event.player.UseItemCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -45,11 +49,9 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.tag.ItemTags;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Hand;
+import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -205,11 +207,16 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
     public ActionResult onUse(BlockState state, World world, BlockPos pos,
                               PlayerEntity player, Hand hand, BlockHitResult hit) {
         var stack = player.getStackInHand(hand);
+        var offhand = player.getStackInHand(Hand.OFF_HAND);
         var facing = state.get(FACING);
 
         if (!this.isLocked() && hit.getSide() == facing) {
             var blackboard = this.getBlackboardEntity(world, pos);
             if (blackboard != null) {
+                if (blackboard.lastUser.isRemoved()) {
+                    blackboard.lastUser = null;
+                }
+
                 var color = Blackboard.getColorFromItem(stack.getItem());
                 boolean isBoneMeal = stack.isOf(Items.BONE_MEAL);
                 boolean isCoal = stack.isIn(ItemTags.COALS);
@@ -232,7 +239,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
                     world.playSound(null, pos, SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS,
                             2.f, 1.f);
                     return ActionResult.success(world.isClient());
-                } else if ((color != null || isBoneMeal || isCoal) && !state.get(WATERLOGGED)) {
+                } else if (offhand.isOf(Items.STICK) && (color != null || isBoneMeal || isCoal) && !state.get(WATERLOGGED)) {
                     int x;
                     int y = (int) (AuroraUtil.posMod(hit.getPos().getY(), 1) * 16.0);
                     y = 15 - y;
@@ -248,10 +255,37 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 
                     player.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
 
-                    this.changePixel(blackboard, x, y, color, isBoneMeal, isCoal);
+                    this.line(blackboard, player, x, y, color, isBoneMeal, isCoal);
 
                     world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                     return ActionResult.success(world.isClient());
+                } else if ((color != null || isBoneMeal || isCoal) && !state.get(WATERLOGGED)) {
+                    int x;
+                    int y = (int) (AuroraUtil.posMod(hit.getPos().getY(), 1) * 16.0);
+                    y = 15 - y;
+
+                    if (facing.getAxis() == Direction.Axis.Z) {
+                        x = (int) (AuroraUtil.posMod(hit.getPos().getX(), 1) * 16.0);
+                    } else {
+                        x = 15 - (int) (AuroraUtil.posMod(hit.getPos().getZ(), 1) * 16.0);
+                    }
+                    if (facing.getDirection() == Direction.AxisDirection.NEGATIVE) {
+                        x = 15 - x;
+                    }
+
+                    Blackboard.DrawAction action = Blackboard.DrawAction.DEFAULT;
+                    for (var possibleAction : Blackboard.DrawAction.ACTIONS) {
+                        if (possibleAction.getOffhandTool() != null && offhand.isOf(possibleAction.getOffhandTool())) {
+                            action = possibleAction;
+                            break;
+                        }
+                    }
+
+                    if (action.execute(blackboard, x, y, color, isBoneMeal, isCoal)) {
+                        player.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
+                        world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                        return ActionResult.success(world.isClient());
+                    }
                 } else if (stack.isOf(Items.GLOW_INK_SAC) || stack.isOf(Items.INK_SAC)) {
                     boolean lit = stack.isOf(Items.GLOW_INK_SAC);
                     if (lit != state.get(LIT)) {
@@ -277,18 +311,25 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
         return super.onUse(state, world, pos, player, hand, hit);
     }
 
-    private void changePixel(BlackboardBlockEntity blackboard, int x, int y,
-                             @Nullable Blackboard.Color color, boolean isBoneMeal, boolean isCoal) {
-        byte colorData = blackboard.getColor(x, y);
-        int shade = colorData & 3;
-        if (color != null) {
-            blackboard.setPixel(x, y, color, 0);
-        } else if (isBoneMeal) {
-            if (shade > 0)
-                blackboard.setPixel(x, y, Blackboard.getColor(colorData / 4), shade - 1);
-        } else if (isCoal) {
-            if (shade < 3)
-                blackboard.setPixel(x, y, Blackboard.getColor(colorData / 4), shade + 1);
+    private void line(BlackboardBlockEntity blackboard, PlayerEntity player, int x, int y,
+                      @Nullable Blackboard.Color color, boolean isBoneMeal, boolean isCoal) {
+        if (blackboard.lastUser != player) {
+            blackboard.lastUser = player;
+            blackboard.lastX = x;
+            blackboard.lastY = y;
+        } else {
+            byte colorData = blackboard.getPixel(x, y);
+            int shade = colorData & 3;
+            if (color != null) {
+                blackboard.line(blackboard.lastX, blackboard.lastY, x, y, color, 0);
+            } else if (isBoneMeal) {
+                if (shade > 0)
+                    blackboard.line(blackboard.lastX, blackboard.lastY, x, y, Blackboard.getColor(colorData / 4), shade - 1);
+            } else if (isCoal) {
+                if (shade < 3)
+                    blackboard.line(blackboard.lastX, blackboard.lastY, x, y, Blackboard.getColor(colorData / 4), shade + 1);
+            }
+            blackboard.lastUser = null;
         }
     }
 
@@ -402,6 +443,21 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
     }
 
     static {
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            UseItemCallback.EVENT.register((player, world, hand) -> {
+                if (hand == Hand.OFF_HAND && !player.isSpectator()) {
+                    var target = MinecraftClient.getInstance().crosshairTarget;
+                    if (target != null && target.getType() == HitResult.Type.BLOCK) {
+                        var targetBlock = world.getBlockState(((BlockHitResult) target).getBlockPos());
+                        if (targetBlock.isOf(AurorasDecoRegistry.BLACKBOARD_BLOCK) || targetBlock.isOf(AurorasDecoRegistry.CHALKBOARD_BLOCK))
+                            return TypedActionResult.fail(ItemStack.EMPTY);
+                    }
+                }
+
+                return TypedActionResult.pass(ItemStack.EMPTY);
+            });
+        }
+
         var builder = ImmutableMap.<Direction, VoxelShape>builder();
 
         builder.put(Direction.NORTH, createCuboidShape(0.0, 0.0, 15.0, 16.0, 16.0, 16.0));

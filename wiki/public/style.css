@@ -9,14 +9,14 @@
 }
 
 .crafting-grid td, .crafting-grid th {
-    border: 1px solid var(--ls-theme-border-color);
+    border: 1px solid var(--ls_theme_border_color);
     text-align: center;
 }
 
 .crafting-grid th {
-    border-left: 2px solid var(--ls-theme-border-color);
-    border-top: 2px solid var(--ls-theme-border-color);
-    border-right: 2px solid var(--ls-theme-border-color);
+    border-left: 2px solid var(--ls_theme_border_color);
+    border-top: 2px solid var(--ls_theme_border_color);
+    border-right: 2px solid var(--ls_theme_border_color);
     text-align: center;
 
     background-color: #eee;
@@ -27,7 +27,7 @@
 }
 
 .explosion-crafting td, .crafting-grid th {
-    border: 1px solid var(--ls-theme-border-color);
+    border: 1px solid var(--ls_theme_border_color);
 }
 
 td img, th img {
@@ -83,11 +83,6 @@ pre {
 }
 
 /* Images */
-
-.responsive-img {
-    max-width: 100%;
-    height: auto;
-}
 
 img.item {
     image-rendering: crisp-edges;

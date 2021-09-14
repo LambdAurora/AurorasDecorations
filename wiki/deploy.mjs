@@ -69,7 +69,7 @@ async function load_markdown(path, assets_to_copy) {
     }
 
     let main = html.create_element("main");
-    main.children = md.render_to_html(doc, {image: {class_name: "responsive-img"}, spoiler: {enable: true}, parent: main}).children
+    main.children = md.render_to_html(doc, {image: {class_name: "ls_responsive_img"}, spoiler: {enable: true}, parent: main}).children
         .filter(node => {
             if (node instanceof html.Comment) {
                 if (node.content.startsWith("description:")) {
@@ -168,9 +168,9 @@ async function deploy_markdown(markdown_pages, page_data) {
     <main>
       ${page_data.main.inner_html()}
     </main>
-    <footer class="ls-app-footer">
-      <div class="ls-app-footer-license">
-        <div class="right ls-subtitle2">
+    <footer class="ls_app_footer">
+      <div class="ls_app_footer_license">
+        <div class="right ls_subtitle2">
           Except where otherwise noted, content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">CC-BY 4.0 International License</a>.
         </div>
       </div>

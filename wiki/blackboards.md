@@ -73,6 +73,12 @@ To draw on a blackboard use a [dye][dyes] on blackboard in-game,
 it will color the targeted pixel.
 You can shade a pixel using bone meal to lighten it, or coal to darken it.
 
+To draw multiple things at once, you can hold in your off-hand:
+ - a white wool to use a "brush".
+ - a bucket to fill an area.
+ - an ender-pearl to replace a color.
+ - a stick to draw lines.
+
 To erase a blackboard you can either:
  - put it in water
  - use a water bucket on it
