@@ -97,7 +97,8 @@ public class Blackboard implements BlackboardHandler {
         y = y - 1;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                this.pixels[y * 16 + x] = id;
+                if (x < 16 && x >= 0 && y < 16 && y >= 0)
+                    this.pixels[y * 16 + x] = id;
                 x++;
             }
             x = x - 3;
