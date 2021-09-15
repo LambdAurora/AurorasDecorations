@@ -213,7 +213,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
         if (!this.isLocked() && hit.getSide() == facing) {
             var blackboard = this.getBlackboardEntity(world, pos);
             if (blackboard != null) {
-                if (blackboard.lastUser.isRemoved()) {
+                if (blackboard.lastUser != null && blackboard.lastUser.isRemoved()) {
                     blackboard.lastUser = null;
                 }
 
