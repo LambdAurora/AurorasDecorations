@@ -170,9 +170,12 @@ async function deploy_markdown(markdown_pages, page_data) {
     </main>
     <footer class="ls_app_footer">
       <div class="ls_app_footer_license">
-        <div class="right ls_subtitle2">
+        <span>
+          Hosted on <a href="https://pages.github.com">GitHub Pages</a>.
+        </span>
+        <span>
           Except where otherwise noted, content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">CC-BY 4.0 International License</a>.
-        </div>
+        </span>
       </div>
     </footer>
   </body>
