@@ -42,7 +42,7 @@ async function deploy_dir(path, filter = _ => true, markdown_pages = {}, assets_
     for await (const dir_entry of Deno.readDir(path)) {
         if (dir_entry.isFile && !path.startsWith("./public") && !path.startsWith("../images") && dir_entry.name.endsWith(".md")) {
             console.log(" ".repeat(level) + `  Loading ${dir_entry.name}...`);
-            let markdown_path = path + "/" + dir_entry.name;
+            const markdown_path = path + "/" + dir_entry.name;
             markdown_pages[markdown_path] = await load_markdown(markdown_path, assets_to_copy);
         } else if (dir_entry.isDirectory && dir_entry.name !== "deploy_out") {
             await deploy_dir(path + "/" + dir_entry.name, filter, markdown_pages, assets_to_copy, level + 1);
@@ -56,7 +56,7 @@ async function deploy_dir(path, filter = _ => true, markdown_pages = {}, assets_
 async function load_markdown(path, assets_to_copy) {
     const decoder = new TextDecoder("utf-8");
     const content = decoder.decode(await Deno.readFile(path));
-    let doc = md.parser.parse(content);
+    const doc = md.parser.parse(content);
 
     let page_description = "Welcome to the Aurora's Decorations wiki.";
     let page_thumbnail;
@@ -68,7 +68,7 @@ async function load_markdown(path, assets_to_copy) {
         return "";
     }
 
-    let main = html.create_element("main");
+    const main = html.create_element("main");
     main.children = md.render_to_html(doc, {image: {class_name: "ls_responsive_img"}, spoiler: {enable: true}, parent: main}).children
         .filter(node => {
             if (node instanceof html.Comment) {
@@ -86,7 +86,7 @@ async function load_markdown(path, assets_to_copy) {
 
     fix_links_in_html(main.children, assets_to_copy);
 
-    let raw_title = get_raw_markdown_title(doc);
+    const raw_title = get_raw_markdown_title(doc);
     return {
         path: path.replace(/\.md$/, ".html"),
         title: get_markdown_title(raw_title),
@@ -104,20 +104,17 @@ async function deploy_markdown(markdown_pages, page_data) {
         .map(node => {
             if (node instanceof html.Comment) {
                 if (node.content.startsWith("include:")) {
-                    let include = node.content.split(":");
+                    const include = node.content.split(":");
 
                     if (markdown_pages[include[2]]) {
-                        let include_page_data = markdown_pages[include[2]];
+                        const include_page_data = markdown_pages[include[2]];
 
-                        let div = html.create_element("details");
-                        let summary = html.create_element("summary");
-                        summary.append_child("Related information from the page ");
-                        let link = html.create_element("a");
-                        link.append_child(include_page_data.raw_title);
-                        link.attr('href', include_page_data.path)
-                        summary.append_child(link);
-                        summary.append_child(".");
-                        div.append_child(summary);
+                        const div = html.create_element("details")
+                            .with_child(html.create_element("summary")
+                                .with_child("Related information from the page ")
+                                .with_child(html.create_element("a").with_attr("href", include_page_data.path)
+                                    .with_child(include_page_data.raw_title))
+                                .with_child("."));
 
                         div.children = div.children.concat(include_page_data.main.children.map(included_node => {
                             if (included_node instanceof html.Element) {
@@ -133,18 +130,15 @@ async function deploy_markdown(markdown_pages, page_data) {
                         }));
                         return div;
                     } else {
-                        let p = html.create_element("p");
-                        p.append_child(`Failed to include page "${include[2]}".`);
-                        return p;
+                        return html.create_element("p").with_child(`Failed to include page "${include[2]}".`);
                     }
-                    return false;
                 }
             }
 
             return node;
         });
 
-    let page = `<!DOCTYPE html>
+    const page = `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -187,17 +181,16 @@ async function deploy_markdown(markdown_pages, page_data) {
 }
 
 function fix_links_in_html(nodes, assets_to_copy) {
-    for (let node of nodes) {
+    for (const node of nodes) {
         if (node instanceof html.Element) {
-            for (let attr of node.attributes) {
+            for (const attr of node.attributes) {
                 if (attr.name === "href" || attr.name === "src") {
                     let value = attr.value();
 
                     let result;
                     if ((result = ASSETS_PATH_REGEX.exec(value))) {
-                        let replaced = value.replace(TEXTURES_PATH, 'images');
                         assets_to_copy[result[1]] = "../src/main/resources/assets/aurorasdeco/textures/" + result[1];
-                        node.attr(attr.name, replaced);
+                        node.attr(attr.name, value.replace(TEXTURES_PATH, 'images'));
                         continue;
                     }
 

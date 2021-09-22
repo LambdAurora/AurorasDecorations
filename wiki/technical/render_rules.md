@@ -1,6 +1,7 @@
 # Render Rules
 
 <!--description:Technical documentation of the render rules, for resource pack maker.-->
+<!--extension:prism-->
 
 Aurora's Decorations render rules allow to use custom item models in some situations like if the item is rendered on a shelf, etc.
 
