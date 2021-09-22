@@ -38,6 +38,7 @@
     "entity.SleepTaskMixin",
     "entity.WolfEntityMixin",
     "entity.ZombieVillagerEntityMixin",
+    "item.AxeItemMixin",
     "item.BlockItemMixin",
     "item.FlintAndSteelItemMixin",
     "item.HoneycombItemMixin",

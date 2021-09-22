@@ -137,7 +137,7 @@ public class BenchBlockEntity extends BlockEntity implements BlockEntityClientSe
                     this.rest = seatRestItem;
             }
         }
-        if (hadRest == (this.rest == null)) {
+        if (hadRest == (this.rest == null) && this.world != null && !this.world.isClient()) {
             this.update();
         }
     }
