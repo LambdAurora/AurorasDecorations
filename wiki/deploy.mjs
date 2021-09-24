@@ -19,8 +19,10 @@ await deploy_dir(".", path => path.startsWith("./public"), markdown_pages, asset
 await deploy_dir("../images", path => path.startsWith("../images"));
 await deploy_dir(TEXTURES_PATH, path => assets_to_copy[path.substr(TEXTURES_PATH.length + 1)] !== undefined);
 
+const nav = build_navigation(markdown_pages);
+
 for (const page of Object.values(markdown_pages)) {
-	await deploy_markdown(markdown_pages, page);
+	await deploy_markdown(markdown_pages, nav, page);
 }
 
 function deploy_path(path) {
@@ -91,13 +93,14 @@ async function load_markdown(path, assets_to_copy) {
 		path: path.replace(/\.md$/, ".html"),
 		title: get_markdown_title(raw_title),
 		raw_title: raw_title,
+		nav: build_navigation_data(main),
 		main: main,
 		description: page_description,
 		thumbnail_meta: get_thumbnail_meta_tag()
 	};
 }
 
-async function deploy_markdown(markdown_pages, page_data) {
+async function deploy_markdown(markdown_pages, nav, page_data) {
 	console.log(`Writing ${page_data.path}...`);
 
 	page_data.main.children = page_data.main.children
@@ -159,9 +162,14 @@ async function deploy_markdown(markdown_pages, page_data) {
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	</head>
 	<body>
-		<main>
-			${page_data.main.inner_html()}
-		</main>
+		<div class="wiki_page">
+			<aside>
+				${nav.html()}
+			</aside>
+			<main>
+				${page_data.main.inner_html()}
+			</main>
+		</div>
 		<footer class="ls_app_footer">
 			<div class="ls_app_footer_license">
 				<span>
@@ -224,4 +232,65 @@ function get_markdown_title(title) {
 
 function relativize_from_root(path) {
 	return "../".repeat(path.split("/").length - 2);
+}
+
+function build_navigation_data(html, start = 0, level = 1) {
+	let data = [];
+
+	for (let i = start; i < html.children.length; i++) {
+		const child = html.children[i];
+		if (child.tag && child.tag.name.startsWith("h")) {
+			const current_level = parseInt(child.tag.name[1]);
+			if (current_level > 0) {
+				if (current_level < level)
+					break;
+				else if (current_level > level && data.length === 0) {
+					const child_data = build_navigation_data(html, i, current_level);
+					if (data.length === 0) {
+						data = child_data;
+					}
+				} else if (current_level === level)
+					data.push({ content: child.children, id: child.attr("id").value(), children: build_navigation_data(html, i + 1, level + 1) });
+			}
+		}
+	}
+
+	return data;
+}
+
+function build_navigation(pages) {
+	const list = html.create_element("ul");
+	const index_page = pages["./index.md"];
+
+	index_page.nav[0].content = [ "Main page" ];
+
+	// @TODO handle directories
+	function build_tree(page, elements) {
+		const link = html.create_element("a")
+			.with_attr("href", page.path.replace(/^\.\//, "/") + "#" + elements.id);
+		const tree = html.create_element("li").with_child(link);
+
+		elements.content.forEach(child => link.append_child(child));
+
+		if (elements.children.length > 0) {
+			const subtree = html.create_element("ul");
+
+			elements.children.forEach(item => subtree.append_child(build_tree(page, item)));
+
+			tree.append_child(subtree);
+		}
+
+		return tree;
+	}
+
+	list.append_child(build_tree(index_page, index_page.nav[0]));
+	for (const [file, page] of Object.entries(pages)) {
+		if (file !== "./index.md") {
+			for (const h1 of page.nav) {
+				list.append_child(build_tree(page, h1));
+			}
+		}
+	}
+
+	return html.create_element("nav").with_child(list);
 }

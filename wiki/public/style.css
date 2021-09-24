@@ -1,4 +1,34 @@
+/* Layout */
+
+.wiki_page {
+	display: flex;
+}
+
+.wiki_page > aside {
+	background-color: var(--ls_theme_background_accentuated);
+	padding: 0 1em;
+}
+
+.wiki_page nav ul {
+	padding-left: 1em;
+}
+
+@media(max-width: 900px) {
+	.wiki_page > aside {
+		display: none;
+		position: absolute;
+	}
+
+	.wiki_page > aside.opened {
+		display: block;
+	}
+}
+
 /* Markdown styling */
+
+details > summary {
+	cursor: pointer;
+}
 
 /* Grids */
 
