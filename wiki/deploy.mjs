@@ -265,9 +265,16 @@ function build_navigation(pages) {
 	index_page.nav[0].content = [ "Main page" ];
 
 	// @TODO handle directories
-	function build_tree(page, elements) {
+	function build_tree(page, elements, first) {
+		let path = page.path.replace(/^\.\//, "/");
+		if (!first) {
+			path += "#" + elements.id;
+		}
+		// @TODO condition
+		path = "/AurorasDecorations" + path;
+
 		const link = html.create_element("a")
-			.with_attr("href", page.path.replace(/^\.\//, "/") + "#" + elements.id);
+			.with_attr("href", path);
 		const tree = html.create_element("li").with_child(link);
 
 		elements.content.forEach(child => link.append_child(child));
@@ -275,7 +282,7 @@ function build_navigation(pages) {
 		if (elements.children.length > 0) {
 			const subtree = html.create_element("ul");
 
-			elements.children.forEach(item => subtree.append_child(build_tree(page, item)));
+			elements.children.forEach(item => subtree.append_child(build_tree(page, item, false)));
 
 			tree.append_child(subtree);
 		}
@@ -283,11 +290,11 @@ function build_navigation(pages) {
 		return tree;
 	}
 
-	list.append_child(build_tree(index_page, index_page.nav[0]));
+	list.append_child(build_tree(index_page, index_page.nav[0], true));
 	for (const [file, page] of Object.entries(pages)) {
 		if (file !== "./index.md") {
 			for (const h1 of page.nav) {
-				list.append_child(build_tree(page, h1));
+				list.append_child(build_tree(page, h1, true));
 			}
 		}
 	}
