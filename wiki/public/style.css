@@ -37,8 +37,9 @@ li.wiki_nav_directory:first-child, li.wiki_nav_directory::marker {
 }
 
 li.wiki_nav_directory > ul {
-	display: none;
-	transition: all 400ms;
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 1s ease-in-out;
 }
 
 li.wiki_nav_directory[open] {
@@ -46,7 +47,8 @@ li.wiki_nav_directory[open] {
 }
 
 li.wiki_nav_directory[open] > ul {
-	display: block;
+	max-height: 1000px; /* This is a mess, someone thought it was a good idea to prevent height animation of non-absolute values. */
+	opacity: initial;
 }
 
 @media(max-width: 900px) {

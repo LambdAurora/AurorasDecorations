@@ -276,7 +276,7 @@ function build_navigation(pages, current_page) {
 		const tree = html.create_element("li").with_child(link);
 
 		if (first && page.path === current_page.path) {
-			tree.style("background-color", "rgba(0, 0, 0, 0.12)");
+			tree.style("background-color", "rgba(0, 0, 0, 0.1)");
 			tree.attr("open", "");
 		}
 
