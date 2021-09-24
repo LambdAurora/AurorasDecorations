@@ -9,9 +9,9 @@ function get_scroll_height(element) {
 	let scroll_height = element.scrollHeight;
 
 	for (let node of element.children) {
-		if (node.tagName === "LI")
+		if (node.tagName === "LI" && node.classList.contains("wiki_nav_directory"))
 			node = node.lastChild;
-		if (node.tagName === "UL" && node.classList.contains("wiki_nav_directory"))
+		if (node.tagName === "UL")
 			scroll_height += get_scroll_height(node);
 	}
 
