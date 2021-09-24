@@ -5,6 +5,7 @@ const WEBSITE = "https://lambdaurora.dev/";
 const WEBSITE_PREFIX = WEBSITE + "AurorasDecorations/";
 const TEXTURES_PATH = "../src/main/resources/assets/aurorasdeco/textures";
 const ASSETS_PATH_REGEX = /..\/src\/main\/resources\/assets\/aurorasdeco\/textures\/((?:[a-z_]+\/)+[a-z_]+\.png)/;
+const root = Deno.args[0] ? Deno.args[0] : "";
 
 console.log("Creating deploy directory.");
 if (existsSync("deploy_out"))
@@ -19,10 +20,8 @@ await deploy_dir(".", path => path.startsWith("./public"), markdown_pages, asset
 await deploy_dir("../images", path => path.startsWith("../images"));
 await deploy_dir(TEXTURES_PATH, path => assets_to_copy[path.substr(TEXTURES_PATH.length + 1)] !== undefined);
 
-const nav = build_navigation(markdown_pages);
-
 for (const page of Object.values(markdown_pages)) {
-	await deploy_markdown(markdown_pages, nav, page);
+	await deploy_markdown(markdown_pages, page);
 }
 
 function deploy_path(path) {
@@ -60,7 +59,7 @@ async function load_markdown(path, assets_to_copy) {
 	const content = decoder.decode(await Deno.readFile(path));
 	const doc = md.parser.parse(content);
 
-	let page_description = "Welcome to the Aurora's Decorations wiki.";
+	let page_description = "Welcome to the Aurora's Decorations wiki. Aurora's Decorations is a decorations-focused mod.";
 	let page_thumbnail;
 
 	function get_thumbnail_meta_tag() {
@@ -100,7 +99,7 @@ async function load_markdown(path, assets_to_copy) {
 	};
 }
 
-async function deploy_markdown(markdown_pages, nav, page_data) {
+async function deploy_markdown(markdown_pages, page_data) {
 	console.log(`Writing ${page_data.path}...`);
 
 	page_data.main.children = page_data.main.children
@@ -164,7 +163,7 @@ async function deploy_markdown(markdown_pages, nav, page_data) {
 	<body>
 		<div class="wiki_page">
 			<aside>
-				${nav.html()}
+				${build_navigation(markdown_pages, page_data).html()}
 			</aside>
 			<main>
 				${page_data.main.inner_html()}
@@ -180,6 +179,8 @@ async function deploy_markdown(markdown_pages, nav, page_data) {
 				</span>
 			</div>
 		</footer>
+
+		<script src="${relativize_from_root(page_data.path)}script.js"></script>
 	</body>
 </html>
 `;
@@ -250,7 +251,7 @@ function build_navigation_data(html, start = 0, level = 1) {
 						data = child_data;
 					}
 				} else if (current_level === level)
-					data.push({ content: child.children, id: child.attr("id").value(), children: build_navigation_data(html, i + 1, level + 1) });
+					data.push({content: child.children, id: child.attr("id").value(), children: build_navigation_data(html, i + 1, level + 1)});
 			}
 		}
 	}
@@ -258,29 +259,32 @@ function build_navigation_data(html, start = 0, level = 1) {
 	return data;
 }
 
-function build_navigation(pages) {
+function build_navigation(pages, current_page) {
 	const list = html.create_element("ul");
 	const index_page = pages["./index.md"];
 
-	index_page.nav[0].content = [ "Main page" ];
+	index_page.nav[0].content = ["Main page"];
 
-	// @TODO handle directories
 	function build_tree(page, elements, first) {
-		let path = page.path.replace(/^\.\//, "/");
+		let path = root + page.path.replace(/^\.\//, "/").replace(/index\.html$/, "");
 		if (!first) {
 			path += "#" + elements.id;
 		}
-		// @TODO condition
-		path = "/AurorasDecorations" + path;
 
-		const link = html.create_element("a")
-			.with_attr("href", path);
+		const link = html.create_element("div")
+			.with_child(html.create_element("a").with_attr("href", path));
 		const tree = html.create_element("li").with_child(link);
 
-		elements.content.forEach(child => link.append_child(child));
+		if (first && page.path === current_page.path) {
+			tree.style("background-color", "rgba(0, 0, 0, 0.12)");
+			tree.attr("open", "");
+		}
+
+		elements.content.forEach(child => link.children[0].append_child(child));
 
 		if (elements.children.length > 0) {
 			const subtree = html.create_element("ul");
+			if (first) tree.attr("class", "wiki_nav_directory");
 
 			elements.children.forEach(item => subtree.append_child(build_tree(page, item, false)));
 
@@ -290,14 +294,59 @@ function build_navigation(pages) {
 		return tree;
 	}
 
+	function find_or_append_directory(entries, path, level = 1) {
+		let result;
+		if ((result = entries.find(entry => entry.type === "dir" && entry.path === path[level]))) {
+			if (path.length > level + 2) {
+				return find_or_append_directory(result.entries, path, level + 1);
+			}
+			return result;
+		} else {
+			const entry = {
+				type: "dir",
+				path: path[level],
+				raw_title: path[level].replace(/\w/, firstLetter => firstLetter.toUpperCase()),
+				entries: []
+			};
+			entries.push(entry);
+			return entry;
+		}
+	}
+
 	list.append_child(build_tree(index_page, index_page.nav[0], true));
-	for (const [file, page] of Object.entries(pages)) {
-		if (file !== "./index.md") {
-			for (const h1 of page.nav) {
-				list.append_child(build_tree(page, h1, true));
+
+	let raw_entries = Object.entries(pages)
+		.filter(([path, _]) => path !== "./index.md")
+		.map(([path, page]) => [path.split("/"), page]);
+	const entries = [];
+
+	for (const [path, page] of raw_entries) {
+		if (path.length > 2) {
+			find_or_append_directory(entries, path).entries.push({type: "page", ...page});
+		} else {
+			entries.push({type: "page", ...page});
+		}
+	}
+
+	function build_navigational_tree(tree, entry) {
+		if (entry.type === "dir") {
+			const subtree = html.create_element("ul");
+			for (const item of entry.entries)
+				build_navigational_tree(subtree, item);
+			tree.append_child(
+				html.create_element("li").with_attr("class", "wiki_nav_directory")
+				.with_child(entry.raw_title)
+				.with_child(subtree)
+			);
+		} else {
+			for (const h1 of entry.nav) {
+				tree.append_child(build_tree(entry, h1, true));
 			}
 		}
 	}
+
+	entries.sort((page1, page2) => page1.raw_title.localeCompare(page2.raw_title))
+		.forEach(entry => build_navigational_tree(list, entry));
 
 	return html.create_element("nav").with_child(list);
 }

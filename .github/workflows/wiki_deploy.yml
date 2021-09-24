@@ -16,7 +16,7 @@ jobs:
       - name: 'Build with Deno'
         run: |
           cd wiki
-          deno run --allow-read --allow-write --unstable deploy.mjs
+          deno run --allow-read --allow-write --unstable deploy.mjs "/AurorasDecorations"
 
       - name: 'Deploy Github Pages'
         uses: JamesIves/github-pages-deploy-action@4.1.5

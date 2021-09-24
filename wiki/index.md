@@ -1,4 +1,4 @@
-# Aurora's Decorations - Wiki
+# Aurora's Decorations
 
 Welcome to the Aurora's Decorations wiki.
 You will find information about this mod's features here.

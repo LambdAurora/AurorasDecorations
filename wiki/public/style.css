@@ -2,15 +2,51 @@
 
 .wiki_page {
 	display: flex;
+	flex: 1 0 auto;
 }
 
 .wiki_page > aside {
 	background-color: var(--ls_theme_background_accentuated);
-	padding: 0 1em;
+	min-width: 15%;
+	max-width: 20%;
 }
 
 .wiki_page nav ul {
+	padding: 0;
+}
+
+.wiki_page nav > ul > li {
+	padding: 0 1em;
+}
+
+.wiki_page nav li {
 	padding-left: 1em;
+}
+
+.wiki_page nav li > div {
+	display: inline-block;
+	margin: 0.2em 0;
+}
+
+li.wiki_nav_directory {
+	list-style: disclosure-closed inside;
+}
+
+li.wiki_nav_directory:first-child, li.wiki_nav_directory::marker {
+	cursor: pointer;
+}
+
+li.wiki_nav_directory > ul {
+	display: none;
+	transition: all 400ms;
+}
+
+li.wiki_nav_directory[open] {
+	list-style-type: disclosure-open;
+}
+
+li.wiki_nav_directory[open] > ul {
+	display: block;
 }
 
 @media(max-width: 900px) {
