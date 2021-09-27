@@ -33,109 +33,109 @@ import java.util.Collection;
 import java.util.List;
 
 public final class AuroraUtil {
-    private AuroraUtil() {
-        throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
-    }
+	private AuroraUtil() {
+		throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
+	}
 
-    public static Identifier toResourcePackId(Identifier id, String prefix, String extension) {
-        return new Identifier(id.getNamespace(), prefix + id.getPath() + '.' + extension);
-    }
+	public static Identifier toResourcePackId(Identifier id, String prefix, String extension) {
+		return new Identifier(id.getNamespace(), prefix + id.getPath() + '.' + extension);
+	}
 
-    public static Identifier toAbsoluteTexturesId(Identifier id) {
-        return toResourcePackId(id, "textures/", "png");
-    }
+	public static Identifier toAbsoluteTexturesId(Identifier id) {
+		return toResourcePackId(id, "textures/", "png");
+	}
 
-    public static <T> boolean contains(Collection<T> list, List<T> required) {
-        int i = 0;
-        var it = list.iterator();
-        while (it.hasNext() && i < required.size()) {
-            if (required.contains(it.next()))
-                i++;
-        }
-        return i == required.size();
-    }
+	public static <T> boolean contains(Collection<T> list, List<T> required) {
+		int i = 0;
+		var it = list.iterator();
+		while (it.hasNext() && i < required.size()) {
+			if (required.contains(it.next()))
+				i++;
+		}
+		return i == required.size();
+	}
 
-    /**
-     * Returns whether the given id is equal to the given {@code namespace}:{@code path} id without allocation.
-     *
-     * @param id the identifier to compare
-     * @param namespace the namespace to compare to the identifier
-     * @param path the path to compare to the identifier
-     * @return {@code true} if both identifiers are equal, otherwise {@code false}
-     */
-    public static boolean idEqual(Identifier id, String namespace, String path) {
-        return id.getNamespace().equals(namespace) && id.getPath().equals(path);
-    }
+	/**
+	 * Returns whether the given id is equal to the given {@code namespace}:{@code path} id without allocation.
+	 *
+	 * @param id the identifier to compare
+	 * @param namespace the namespace to compare to the identifier
+	 * @param path the path to compare to the identifier
+	 * @return {@code true} if both identifiers are equal, otherwise {@code false}
+	 */
+	public static boolean idEqual(Identifier id, String namespace, String path) {
+		return id.getNamespace().equals(namespace) && id.getPath().equals(path);
+	}
 
-    public static double posMod(double n, double d) {
-        double v = n % d;
-        if (v < 0) v = d + v;
-        return v;
-    }
+	public static double posMod(double n, double d) {
+		double v = n % d;
+		if (v < 0) v = d + v;
+		return v;
+	}
 
-    public static boolean isShapeEqual(Box s1, Box s2) {
-        return s1.minX == s2.minX && s1.minY == s2.minY && s1.minZ == s2.minZ
-                && s1.maxX == s2.maxX && s1.maxY == s2.maxY && s1.maxZ == s2.maxZ;
-    }
+	public static boolean isShapeEqual(Box s1, Box s2) {
+		return s1.minX == s2.minX && s1.minY == s2.minY && s1.minZ == s2.minZ
+				&& s1.maxX == s2.maxX && s1.maxY == s2.maxY && s1.maxZ == s2.maxZ;
+	}
 
-    public static Identifier appendWithNamespace(String prefix, Identifier id) {
-        var path = id.getPath();
-        if (!id.getNamespace().equals("minecraft") && !id.getNamespace().equals("aurorasdeco"))
-            path = id.getNamespace() + '/' + path;
-        return AurorasDeco.id(prefix + '/' + path);
-    }
+	public static Identifier appendWithNamespace(String prefix, Identifier id) {
+		var path = id.getPath();
+		if (!id.getNamespace().equals("minecraft") && !id.getNamespace().equals("aurorasdeco"))
+			path = id.getNamespace() + '/' + path;
+		return AurorasDeco.id(prefix + '/' + path);
+	}
 
-    /* State Utils */
+	/* State Utils */
 
-    public static BlockState remapBlockState(BlockState src, BlockState dst) {
-        for (var property : src.getProperties()) {
-            dst = remapProperty(src, property, dst);
-        }
-        return dst;
-    }
+	public static BlockState remapBlockState(BlockState src, BlockState dst) {
+		for (var property : src.getProperties()) {
+			dst = remapProperty(src, property, dst);
+		}
+		return dst;
+	}
 
-    private static <T extends Comparable<T>> BlockState remapProperty(BlockState src, Property<T> property, BlockState dst) {
-        if (dst.contains(property))
-            dst = dst.with(property, src.get(property));
-        return dst;
-    }
+	private static <T extends Comparable<T>> BlockState remapProperty(BlockState src, Property<T> property, BlockState dst) {
+		if (dst.contains(property))
+			dst = dst.with(property, src.get(property));
+		return dst;
+	}
 
-    public static boolean isWaterLogged(BlockState state) {
-        if (state.getProperties().contains(Properties.WATERLOGGED)) return state.get(Properties.WATERLOGGED);
-        return false;
-    }
+	public static boolean isWaterLogged(BlockState state) {
+		if (state.getProperties().contains(Properties.WATERLOGGED)) return state.get(Properties.WATERLOGGED);
+		return false;
+	}
 
-    /* Shape Utils */
+	/* Shape Utils */
 
-    public static VoxelShape resizeVoxelShape(VoxelShape shape, double factor) {
-        var shapes = new ArrayList<VoxelShape>();
-        shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
-            shapes.add(VoxelShapes.cuboid(minX * factor, minY * factor, minZ * factor,
-                    maxX * factor, maxY * factor, maxZ * factor));
-        });
+	public static VoxelShape resizeVoxelShape(VoxelShape shape, double factor) {
+		var shapes = new ArrayList<VoxelShape>();
+		shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
+			shapes.add(VoxelShapes.cuboid(minX * factor, minY * factor, minZ * factor,
+					maxX * factor, maxY * factor, maxZ * factor));
+		});
 
-        if (shapes.size() == 1)
-            return shapes.get(0);
-        return shapes.stream().collect(VoxelShapes::empty, VoxelShapes::union, VoxelShapes::union).simplify();
-    }
+		if (shapes.size() == 1)
+			return shapes.get(0);
+		return shapes.stream().collect(VoxelShapes::empty, VoxelShapes::union, VoxelShapes::union).simplify();
+	}
 
-    /* Json Utils */
+	/* Json Utils */
 
-    public static JsonArray jsonArray(Object... elements) {
-        var array = new JsonArray();
-        for (var element : elements) {
-            if (element instanceof Number)
-                array.add((Number) element);
-            else if (element instanceof Boolean)
-                array.add((Boolean) element);
-            else if (element instanceof Character)
-                array.add((Character) element);
-            else if (element instanceof JsonElement)
-                array.add((JsonElement) element);
-            else
-                array.add(String.valueOf(element));
+	public static JsonArray jsonArray(Object... elements) {
+		var array = new JsonArray();
+		for (var element : elements) {
+			if (element instanceof Number)
+				array.add((Number) element);
+			else if (element instanceof Boolean)
+				array.add((Boolean) element);
+			else if (element instanceof Character)
+				array.add((Character) element);
+			else if (element instanceof JsonElement)
+				array.add((JsonElement) element);
+			else
+				array.add(String.valueOf(element));
 
-        }
-        return array;
-    }
+		}
+		return array;
+	}
 }

@@ -35,84 +35,84 @@ import java.util.Random;
 
 @Environment(EnvType.CLIENT)
 public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<LanternBlockEntity> {
-    private final MinecraftClient client = MinecraftClient.getInstance();
-    private final Random random = new Random();
+	private final MinecraftClient client = MinecraftClient.getInstance();
+	private final Random random = new Random();
 
-    public LanternBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
-    }
+	public LanternBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
+	}
 
-    @Override
-    public int getRenderDistance() {
-        return 128;
-    }
+	@Override
+	public int getRenderDistance() {
+		return 128;
+	}
 
-    @Override
-    public void render(LanternBlockEntity lantern, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
-                       int light, int overlay) {
-        var pos = lantern.getPos();
-        boolean fluid = !lantern.getCachedState().getFluidState().isEmpty();
-        float ticks = (float) lantern.swingTicks + tickDelta;
+	@Override
+	public void render(LanternBlockEntity lantern, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
+	                   int light, int overlay) {
+		var pos = lantern.getPos();
+		boolean fluid = !lantern.getCachedState().getFluidState().isEmpty();
+		float ticks = (float) lantern.swingTicks + tickDelta;
 
-        if (lantern.isColliding() && ticks > 4) {
-            ticks = 4.f;
-        }
-        if (fluid)
-            ticks /= 2.f;
+		if (lantern.isColliding() && ticks > 4) {
+			ticks = 4.f;
+		}
+		if (fluid)
+			ticks /= 2.f;
 
-        float pitch = 0.0F;
-        float roll = 0.0F;
-        if (lantern.isSwinging() || lantern.isColliding()) {
-            float angle = MathHelper.sin(ticks / (float) Math.PI) / (4.f + ticks / 3.f);
-            if (lantern.lastSideHit == Direction.NORTH) {
-                pitch = -angle;
-            } else if (lantern.lastSideHit == Direction.SOUTH) {
-                pitch = angle;
-            } else if (lantern.lastSideHit == Direction.EAST) {
-                roll = -angle;
-            } else if (lantern.lastSideHit == Direction.WEST) {
-                roll = angle;
-            }
-        } else {
-            float angle = this.getNaturalSwayingAngle(lantern, tickDelta);
-            if (lantern.getCachedState().get(WallLanternBlock.FACING).getAxis() == Direction.Axis.Z) roll = angle;
-            else pitch = angle;
-        }
+		float pitch = 0.0F;
+		float roll = 0.0F;
+		if (lantern.isSwinging() || lantern.isColliding()) {
+			float angle = MathHelper.sin(ticks / (float) Math.PI) / (4.f + ticks / 3.f);
+			if (lantern.lastSideHit == Direction.NORTH) {
+				pitch = -angle;
+			} else if (lantern.lastSideHit == Direction.SOUTH) {
+				pitch = angle;
+			} else if (lantern.lastSideHit == Direction.EAST) {
+				roll = -angle;
+			} else if (lantern.lastSideHit == Direction.WEST) {
+				roll = angle;
+			}
+		} else {
+			float angle = this.getNaturalSwayingAngle(lantern, tickDelta);
+			if (lantern.getCachedState().get(WallLanternBlock.FACING).getAxis() == Direction.Axis.Z) roll = angle;
+			else pitch = angle;
+		}
 
-        var lanternState = lantern.getLanternState();
-        var consumer = vertexConsumers.getBuffer(RenderLayers.getBlockLayer(lanternState));
-        matrices.push();
+		var lanternState = lantern.getLanternState();
+		var consumer = vertexConsumers.getBuffer(RenderLayers.getBlockLayer(lanternState));
+		matrices.push();
 
-        matrices.translate(8.f / 16.f, 12.f / 16.f, 8.f / 16.f);
-        if (roll != 0.f)
-            matrices.multiply(Vec3f.POSITIVE_Z.getRadialQuaternion(roll));
-        if (pitch != 0.f)
-            matrices.multiply(Vec3f.POSITIVE_X.getRadialQuaternion(pitch));
+		matrices.translate(8.f / 16.f, 12.f / 16.f, 8.f / 16.f);
+		if (roll != 0.f)
+			matrices.multiply(Vec3f.POSITIVE_Z.getRadialQuaternion(roll));
+		if (pitch != 0.f)
+			matrices.multiply(Vec3f.POSITIVE_X.getRadialQuaternion(pitch));
 
-        var facing = lantern.getCachedState().get(WallLanternBlock.FACING);
-        int angle = switch (facing) {
-            case NORTH -> 90;
-            case EAST -> 180;
-            case SOUTH -> 270;
-            default -> 0;
-        };
+		var facing = lantern.getCachedState().get(WallLanternBlock.FACING);
+		int angle = switch (facing) {
+			case NORTH -> 90;
+			case EAST -> 180;
+			case SOUTH -> 270;
+			default -> 0;
+		};
 
-        int extension = lantern.getCachedState().get(WallLanternBlock.EXTENSION).getOffset();
-        matrices.translate((-facing.getOffsetX() * extension) / 16.f,
-                0.f,
-                (-facing.getOffsetZ() * extension) / 16.f);
+		int extension = lantern.getCachedState().get(WallLanternBlock.EXTENSION).getOffset();
+		matrices.translate((-facing.getOffsetX() * extension) / 16.f,
+				0.f,
+				(-facing.getOffsetZ() * extension) / 16.f);
 
-        matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(angle));
+		matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(angle));
 
-        var lanternShape = lanternState.getOutlineShape(lantern.getWorld(), pos);
-        var lanternShapeMaxY = lanternShape.getMax(Direction.Axis.Y);
-        var lanternShapeMinY = lanternShape.getMin(Direction.Axis.Y);
-        var size = lanternShapeMaxY - lanternShapeMinY;
-        matrices.translate(-8.f / 16.f, -1.f / 16.f - size, -8.f / 16.f);
+		var lanternShape = lanternState.getOutlineShape(lantern.getWorld(), pos);
+		var lanternShapeMaxY = lanternShape.getMax(Direction.Axis.Y);
+		var lanternShapeMinY = lanternShape.getMin(Direction.Axis.Y);
+		var size = lanternShapeMaxY - lanternShapeMinY;
+		matrices.translate(-8.f / 16.f, -1.f / 16.f - size, -8.f / 16.f);
 
-        LBGHooks.pushDisableBetterLayer();
-        this.client.getBlockRenderManager().renderBlock(lanternState, pos, lantern.getWorld(), matrices, consumer,
-                false, this.random);
-        LBGHooks.popDisableBetterLayer();
-        matrices.pop();
-    }
+		LBGHooks.pushDisableBetterLayer();
+		this.client.getBlockRenderManager().renderBlock(lanternState, pos, lantern.getWorld(), matrices, consumer,
+				false, this.random);
+		LBGHooks.popDisableBetterLayer();
+		matrices.pop();
+	}
 }

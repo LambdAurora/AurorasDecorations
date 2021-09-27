@@ -9,6 +9,7 @@
 	background-color: var(--ls_theme_background_accentuated);
 	min-width: 15%;
 	max-width: 20%;
+	overflow-y: auto;
 }
 
 .wiki_page nav ul {

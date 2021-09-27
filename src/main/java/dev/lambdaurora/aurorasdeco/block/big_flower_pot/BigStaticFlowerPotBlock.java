@@ -25,23 +25,23 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
 public class BigStaticFlowerPotBlock extends BigFlowerPotBlock {
-    private final VoxelShape shape;
+	private final VoxelShape shape;
 
-    public BigStaticFlowerPotBlock(PottedPlantType type, VoxelShape shape) {
-        super(type);
+	public BigStaticFlowerPotBlock(PottedPlantType type, VoxelShape shape) {
+		super(type);
 
-        this.shape = VoxelShapes.union(shape, BIG_FLOWER_POT_SHAPE);
-    }
+		this.shape = VoxelShapes.union(shape, BIG_FLOWER_POT_SHAPE);
+	}
 
-    @Override
-    public boolean hasDynamicModel() {
-        return false;
-    }
+	@Override
+	public boolean hasDynamicModel() {
+		return false;
+	}
 
-    /* Shapes */
+	/* Shapes */
 
-    @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return this.shape;
-    }
+	@Override
+	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return this.shape;
+	}
 }

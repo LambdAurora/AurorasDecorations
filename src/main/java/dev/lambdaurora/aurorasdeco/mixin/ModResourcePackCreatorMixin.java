@@ -37,16 +37,16 @@ import java.util.function.Consumer;
  */
 @Mixin(ModResourcePackCreator.class)
 public class ModResourcePackCreatorMixin {
-    @Shadow(remap = false)
-    @Final
-    private ResourceType type;
+	@Shadow(remap = false)
+	@Final
+	private ResourceType type;
 
-    @Inject(
-            method = "register(Ljava/util/function/Consumer;Lnet/minecraft/resource/ResourcePackProfile$Factory;)V",
-            at = @At("RETURN")
-    )
-    private void onRegister(Consumer<ResourcePackProfile> consumer, ResourcePackProfile.Factory factory, CallbackInfo ci) {
-        if (this.type == ResourceType.SERVER_DATA)
-            new AurorasDecoPackCreator().register(consumer, factory);
-    }
+	@Inject(
+			method = "register(Ljava/util/function/Consumer;Lnet/minecraft/resource/ResourcePackProfile$Factory;)V",
+			at = @At("RETURN")
+	)
+	private void onRegister(Consumer<ResourcePackProfile> consumer, ResourcePackProfile.Factory factory, CallbackInfo ci) {
+		if (this.type == ResourceType.SERVER_DATA)
+			new AurorasDecoPackCreator().register(consumer, factory);
+	}
 }

@@ -39,16 +39,16 @@ import org.spongepowered.asm.mixin.injection.Redirect;
  */
 @Mixin(value = FlowerPotBlock.class, priority = 900)
 public class FlowerPotBlockMixin {
-    @Redirect(
-            method = "onUse",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;getDefaultState()Lnet/minecraft/block/BlockState;", ordinal = 0),
-            require = 0
-    )
-    private BlockState onGetToPlaceState(Block block,
-                                         BlockState currentState, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
-        BlockState state = block.getPlacementState(new ItemPlacementContext(player, hand, player.getStackInHand(hand), hitResult));
-        if (state == null)
-            return block.getDefaultState();
-        return state;
-    }
+	@Redirect(
+			method = "onUse",
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;getDefaultState()Lnet/minecraft/block/BlockState;", ordinal = 0),
+			require = 0
+	)
+	private BlockState onGetToPlaceState(Block block,
+	                                     BlockState currentState, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
+		BlockState state = block.getPlacementState(new ItemPlacementContext(player, hand, player.getStackInHand(hand), hitResult));
+		if (state == null)
+			return block.getDefaultState();
+		return state;
+	}
 }

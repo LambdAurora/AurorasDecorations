@@ -29,26 +29,26 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(CandleBlock.class)
 public abstract class CandleBlockMixin extends AbstractCandleBlock {
-    protected CandleBlockMixin(Settings settings) {
-        super(settings);
-    }
+	protected CandleBlockMixin(Settings settings) {
+		super(settings);
+	}
 
-    @Inject(
-            method = "getPlacementState",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/World;getFluidState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/fluid/FluidState;"
-            ),
-            cancellable = true
-    )
-    private void onGetPlacementState(ItemPlacementContext ctx, CallbackInfoReturnable<BlockState> cir) {
-        var placedState = ctx.getWorld().getBlockState(ctx.getBlockPos());
+	@Inject(
+			method = "getPlacementState",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/world/World;getFluidState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/fluid/FluidState;"
+			),
+			cancellable = true
+	)
+	private void onGetPlacementState(ItemPlacementContext ctx, CallbackInfoReturnable<BlockState> cir) {
+		var placedState = ctx.getWorld().getBlockState(ctx.getBlockPos());
 
-        if (!placedState.isOf(this) && placedState.getBlock() instanceof CandleBlock
-                && ctx.getStack().getItem() instanceof BlockItem
-                && ((BlockItem) ctx.getStack().getItem()).getBlock() instanceof CandleBlock)
-            // If the placed state is not the same as self, but the held item is a candle, prevent further action.
-            // Fix issues with different candles type replacing each other.
-            cir.setReturnValue(null);
-    }
+		if (!placedState.isOf(this) && placedState.getBlock() instanceof CandleBlock
+				&& ctx.getStack().getItem() instanceof BlockItem
+				&& ((BlockItem) ctx.getStack().getItem()).getBlock() instanceof CandleBlock)
+			// If the placed state is not the same as self, but the held item is a candle, prevent further action.
+			// Fix issues with different candles type replacing each other.
+			cir.setReturnValue(null);
+	}
 }

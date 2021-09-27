@@ -40,72 +40,72 @@ import net.minecraft.util.Identifier;
  * @since 1.0.0
  */
 public final class AurorasDecoPackets {
-    private AurorasDecoPackets() {
-        throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
-    }
+	private AurorasDecoPackets() {
+		throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
+	}
 
-    public static final Identifier SIGN_POST_OPEN_GUI = AurorasDeco.id("sign_post/open_gui");
-    public static final Identifier SIGN_POST_OPEN_GUI_FAIL = AurorasDeco.id("sign_post/open_gui/fail");
-    public static final Identifier SIGN_POST_SET_TEXT = AurorasDeco.id("sign_post/set_text");
+	public static final Identifier SIGN_POST_OPEN_GUI = AurorasDeco.id("sign_post/open_gui");
+	public static final Identifier SIGN_POST_OPEN_GUI_FAIL = AurorasDeco.id("sign_post/open_gui/fail");
+	public static final Identifier SIGN_POST_SET_TEXT = AurorasDeco.id("sign_post/set_text");
 
-    public static void handleSignPostOpenGuiFailPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
-                                                       PacketByteBuf buf, PacketSender responseSender) {
-        var pos = buf.readBlockPos();
+	public static void handleSignPostOpenGuiFailPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
+	                                                   PacketByteBuf buf, PacketSender responseSender) {
+		var pos = buf.readBlockPos();
 
-        server.execute(() -> {
-            var signPost = AurorasDecoRegistry.SIGN_POST_BLOCK_ENTITY_TYPE.get(player.getEntityWorld(), pos);
-            if (signPost == null)
-                return; // Sign Post is not here.
+		server.execute(() -> {
+			var signPost = AurorasDecoRegistry.SIGN_POST_BLOCK_ENTITY_TYPE.get(player.getEntityWorld(), pos);
+			if (signPost == null)
+				return; // Sign Post is not here.
 
-            signPost.cancelEditing(player);
-        });
-    }
+			signPost.cancelEditing(player);
+		});
+	}
 
-    public static void handleSignPostSetTextPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
-                                                   PacketByteBuf buf, PacketSender responseSender) {
-        var pos = buf.readBlockPos();
-        var mode = buf.readByte();
-        String upText = ((mode & 1) == 1) ? buf.readString() : null;
-        String downText = ((mode & 2) == 2) ? buf.readString() : null;
+	public static void handleSignPostSetTextPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
+	                                               PacketByteBuf buf, PacketSender responseSender) {
+		var pos = buf.readBlockPos();
+		var mode = buf.readByte();
+		String upText = ((mode & 1) == 1) ? buf.readString() : null;
+		String downText = ((mode & 2) == 2) ? buf.readString() : null;
 
-        server.execute(() -> {
-            if (!player.getAbilities().allowModifyWorld)
-                return; // Avoid griefing.
+		server.execute(() -> {
+			if (!player.getAbilities().allowModifyWorld)
+				return; // Avoid griefing.
 
-            var signPost = AurorasDecoRegistry.SIGN_POST_BLOCK_ENTITY_TYPE.get(player.getEntityWorld(), pos);
-            if (signPost == null)
-                return; // Sign Post is not here.
+			var signPost = AurorasDecoRegistry.SIGN_POST_BLOCK_ENTITY_TYPE.get(player.getEntityWorld(), pos);
+			if (signPost == null)
+				return; // Sign Post is not here.
 
-            if (player.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) >= 16) {
-                signPost.finishEditing(player, null, null);
-                return; // Be close.
-            }
+			if (player.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) >= 16) {
+				signPost.finishEditing(player, null, null);
+				return; // Be close.
+			}
 
-            signPost.finishEditing(player, upText, downText);
-        });
-    }
+			signPost.finishEditing(player, upText, downText);
+		});
+	}
 
-    @Environment(EnvType.CLIENT)
-    public static final class Client {
-        private Client() {
-            throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
-        }
+	@Environment(EnvType.CLIENT)
+	public static final class Client {
+		private Client() {
+			throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
+		}
 
-        public static void handleSignPostOpenGuiPacket(MinecraftClient client, ClientPlayNetworkHandler handler,
-                                                       PacketByteBuf buf, PacketSender responseSender) {
-            var pos = buf.readBlockPos();
+		public static void handleSignPostOpenGuiPacket(MinecraftClient client, ClientPlayNetworkHandler handler,
+		                                               PacketByteBuf buf, PacketSender responseSender) {
+			var pos = buf.readBlockPos();
 
-            client.execute(() -> {
-                var signPost = AurorasDecoRegistry.SIGN_POST_BLOCK_ENTITY_TYPE.get(client.world, pos);
-                if (signPost == null) {
-                    var buffer = PacketByteBufs.create();
-                    buffer.writeBlockPos(pos);
-                    ClientPlayNetworking.send(SIGN_POST_OPEN_GUI_FAIL, buffer);
-                    return;
-                }
+			client.execute(() -> {
+				var signPost = AurorasDecoRegistry.SIGN_POST_BLOCK_ENTITY_TYPE.get(client.world, pos);
+				if (signPost == null) {
+					var buffer = PacketByteBufs.create();
+					buffer.writeBlockPos(pos);
+					ClientPlayNetworking.send(SIGN_POST_OPEN_GUI_FAIL, buffer);
+					return;
+				}
 
-                client.setScreen(new SignPostEditScreen(signPost));
-            });
-        }
-    }
+				client.setScreen(new SignPostEditScreen(signPost));
+			});
+		}
+	}
 }

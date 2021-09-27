@@ -38,77 +38,77 @@ import net.minecraft.world.WorldAccess;
  * @since 1.0.0
  */
 public class FenceLikeWallBlock extends HorizontalConnectingBlock {
-    public FenceLikeWallBlock(Settings settings) {
-        super(4.f, 2.f, 16.f, 13.f, 24.f, settings);
-        System.arraycopy(
-                this.createShapes(4.f, 2.f, 16.f, 9.f, 13.f), 0,
-                this.boundingShapes, 0,
-                this.boundingShapes.length
-        );
+	public FenceLikeWallBlock(Settings settings) {
+		super(4.f, 2.f, 16.f, 13.f, 24.f, settings);
+		System.arraycopy(
+				this.createShapes(4.f, 2.f, 16.f, 9.f, 13.f), 0,
+				this.boundingShapes, 0,
+				this.boundingShapes.length
+		);
 
-        this.setDefaultState(this.stateManager.getDefaultState()
-                .with(NORTH, false)
-                .with(EAST, false)
-                .with(SOUTH, false)
-                .with(WEST, false)
-                .with(WATERLOGGED, false)
-        );
-    }
+		this.setDefaultState(this.stateManager.getDefaultState()
+				.with(NORTH, false)
+				.with(EAST, false)
+				.with(SOUTH, false)
+				.with(WEST, false)
+				.with(WATERLOGGED, false)
+		);
+	}
 
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(NORTH, EAST, WEST, SOUTH, WATERLOGGED);
-    }
+	@Override
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+		builder.add(NORTH, EAST, WEST, SOUTH, WATERLOGGED);
+	}
 
-    public boolean canConnect(BlockState state, boolean neighborIsFullSquare, Direction dir) {
-        return !cannotConnect(state) && neighborIsFullSquare
-                || state.isIn(BlockTags.WALLS);
-    }
+	public boolean canConnect(BlockState state, boolean neighborIsFullSquare, Direction dir) {
+		return !cannotConnect(state) && neighborIsFullSquare
+				|| state.isIn(BlockTags.WALLS);
+	}
 
-    /* Placement */
+	/* Placement */
 
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        var world = ctx.getWorld();
-        var blockPos = ctx.getBlockPos();
-        var fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
-        var northPos = blockPos.north();
-        var eastPos = blockPos.east();
-        var southPos = blockPos.south();
-        var westPos = blockPos.west();
-        var northState = world.getBlockState(northPos);
-        var eastState = world.getBlockState(eastPos);
-        var southState = world.getBlockState(southPos);
-        var westState = world.getBlockState(westPos);
-        return super.getPlacementState(ctx)
-                .with(NORTH, this.canConnect(northState, northState.isSideSolidFullSquare(world, northPos, Direction.SOUTH), Direction.SOUTH))
-                .with(EAST, this.canConnect(eastState, eastState.isSideSolidFullSquare(world, eastPos, Direction.WEST), Direction.WEST))
-                .with(SOUTH, this.canConnect(southState, southState.isSideSolidFullSquare(world, southPos, Direction.NORTH), Direction.NORTH))
-                .with(WEST, this.canConnect(westState, westState.isSideSolidFullSquare(world, westPos, Direction.EAST), Direction.EAST))
-                .with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
-    }
+	public BlockState getPlacementState(ItemPlacementContext ctx) {
+		var world = ctx.getWorld();
+		var blockPos = ctx.getBlockPos();
+		var fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
+		var northPos = blockPos.north();
+		var eastPos = blockPos.east();
+		var southPos = blockPos.south();
+		var westPos = blockPos.west();
+		var northState = world.getBlockState(northPos);
+		var eastState = world.getBlockState(eastPos);
+		var southState = world.getBlockState(southPos);
+		var westState = world.getBlockState(westPos);
+		return super.getPlacementState(ctx)
+				.with(NORTH, this.canConnect(northState, northState.isSideSolidFullSquare(world, northPos, Direction.SOUTH), Direction.SOUTH))
+				.with(EAST, this.canConnect(eastState, eastState.isSideSolidFullSquare(world, eastPos, Direction.WEST), Direction.WEST))
+				.with(SOUTH, this.canConnect(southState, southState.isSideSolidFullSquare(world, southPos, Direction.NORTH), Direction.NORTH))
+				.with(WEST, this.canConnect(westState, westState.isSideSolidFullSquare(world, westPos, Direction.EAST), Direction.EAST))
+				.with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+	}
 
-    /* Updates */
+	/* Updates */
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState,
-                                                WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
+	@SuppressWarnings("deprecation")
+	@Override
+	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState,
+	                                            WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+		if (state.get(WATERLOGGED)) {
+			world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+		}
 
-        return direction.getAxis().getType() == Direction.Type.HORIZONTAL ?
-                state.with(FACING_PROPERTIES.get(direction),
-                        this.canConnect(neighborState,
-                                neighborState.isSideSolidFullSquare(world, neighborPos, direction.getOpposite()),
-                                direction.getOpposite()))
-                : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
-    }
+		return direction.getAxis().getType() == Direction.Type.HORIZONTAL ?
+				state.with(FACING_PROPERTIES.get(direction),
+						this.canConnect(neighborState,
+								neighborState.isSideSolidFullSquare(world, neighborPos, direction.getOpposite()),
+								direction.getOpposite()))
+				: super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+	}
 
-    /* Entity Stuff */
+	/* Entity Stuff */
 
-    @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
-        return false;
-    }
+	@Override
+	public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+		return false;
+	}
 }

@@ -35,18 +35,18 @@ import java.util.Optional;
 
 @Mixin(AxeItem.class)
 public class AxeItemMixin {
-    @Inject(
-            method = "useOnBlock",
-            at = @At(value = "INVOKE", target = "Ljava/util/Optional;empty()Ljava/util/Optional;"),
-            cancellable = true,
-            locals = LocalCapture.CAPTURE_FAILHARD
-    )
-    private void onUseOnBlock(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir,
-                              World world, BlockPos pos, PlayerEntity player, BlockState state, Optional<BlockState> strippedState,
-                              Optional<BlockState> decreasedOxidationState, Optional<BlockState> unwaxState) {
-        if (unwaxState.isPresent()) {
-            if (unwaxState.get().isIn(AurorasDecoTags.BLACKBOARD_BLOCKS))
-                cir.setReturnValue(ActionResult.PASS);
-        }
-    }
+	@Inject(
+			method = "useOnBlock",
+			at = @At(value = "INVOKE", target = "Ljava/util/Optional;empty()Ljava/util/Optional;"),
+			cancellable = true,
+			locals = LocalCapture.CAPTURE_FAILHARD
+	)
+	private void onUseOnBlock(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir,
+	                          World world, BlockPos pos, PlayerEntity player, BlockState state, Optional<BlockState> strippedState,
+	                          Optional<BlockState> decreasedOxidationState, Optional<BlockState> unwaxState) {
+		if (unwaxState.isPresent()) {
+			if (unwaxState.get().isIn(AurorasDecoTags.BLACKBOARD_BLOCKS))
+				cir.setReturnValue(ActionResult.PASS);
+		}
+	}
 }

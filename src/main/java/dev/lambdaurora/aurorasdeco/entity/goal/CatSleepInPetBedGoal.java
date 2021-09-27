@@ -20,20 +20,20 @@ package dev.lambdaurora.aurorasdeco.entity.goal;
 import net.minecraft.entity.passive.CatEntity;
 
 public class CatSleepInPetBedGoal extends SleepInPetBedGoal {
-    private final CatEntity cat;
+	private final CatEntity cat;
 
-    public CatSleepInPetBedGoal(CatEntity cat, double speed) {
-        super(cat, speed);
+	public CatSleepInPetBedGoal(CatEntity cat, double speed) {
+		super(cat, speed);
 
-        this.cat = cat;
-    }
+		this.cat = cat;
+	}
 
-    @Override
-    public void setInSleepingPosition(boolean value) {
-        this.cat.setInSleepingPose(value);
+	@Override
+	public void setInSleepingPosition(boolean value) {
+		this.cat.setInSleepingPose(value);
 
-        if (!value) {
-            this.cat.setInSittingPose(this.cat.isSitting());
-        }
-    }
+		if (!value) {
+			this.cat.setInSittingPose(this.cat.isSitting());
+		}
+	}
 }

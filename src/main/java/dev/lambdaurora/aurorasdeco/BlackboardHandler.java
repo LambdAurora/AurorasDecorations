@@ -25,22 +25,22 @@ package dev.lambdaurora.aurorasdeco;
  * @since 1.0.0
  */
 public interface BlackboardHandler {
-    byte getPixel(int x, int y);
+	byte getPixel(int x, int y);
 
-    /**
-     * Sets the pixel color at the specified coordinates.
-     *
-     * @param x the X coordinate
-     * @param y the Y coordinate
-     * @param color the color
-     */
-    boolean setPixel(int x, int y, Blackboard.Color color, int shade);
+	/**
+	 * Sets the pixel color at the specified coordinates.
+	 *
+	 * @param x the X coordinate
+	 * @param y the Y coordinate
+	 * @param color the color
+	 */
+	boolean setPixel(int x, int y, Blackboard.Color color, int shade);
 
-    boolean brush(int x, int y, Blackboard.Color color, int shade);
+	boolean brush(int x, int y, Blackboard.Color color, int shade);
 
-    boolean replace(int x, int y, Blackboard.Color color, int shade);
+	boolean replace(int x, int y, Blackboard.Color color, int shade);
 
-    boolean line(int x1, int y1, int x2, int y2, Blackboard.Color color, int shade);
+	boolean line(int x1, int y1, int x2, int y2, Blackboard.Color color, int shade);
 
-    boolean fill(int x, int y, Blackboard.Color color, int shade);
+	boolean fill(int x, int y, Blackboard.Color color, int shade);
 }

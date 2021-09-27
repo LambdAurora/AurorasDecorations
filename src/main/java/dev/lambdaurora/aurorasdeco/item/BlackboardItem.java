@@ -49,81 +49,81 @@ import java.util.Optional;
  * @since 1.0.0
  */
 public class BlackboardItem extends BlockItem {
-    private final boolean locked;
+	private final boolean locked;
 
-    public BlackboardItem(BlackboardBlock blackboardBlock, Settings settings) {
-        super(blackboardBlock, settings);
-        this.locked = blackboardBlock.isLocked();
-    }
+	public BlackboardItem(BlackboardBlock blackboardBlock, Settings settings) {
+		super(blackboardBlock, settings);
+		this.locked = blackboardBlock.isLocked();
+	}
 
-    @Override
-    public boolean onClicked(ItemStack self, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStack) {
-        if (clickType == ClickType.RIGHT) {
-            if (otherStack.isOf(Items.WATER_BUCKET)
-                    || (otherStack.isOf(Items.POTION) && PotionUtil.getPotion(otherStack) == Potions.WATER)) {
-                var nbt = self.getOrCreateSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
-                var blackboard = Blackboard.fromNbt(nbt);
-                if (blackboard.isEmpty())
-                    return false;
-                blackboard.clear();
-                blackboard.writeNbt(nbt);
+	@Override
+	public boolean onClicked(ItemStack self, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStack) {
+		if (clickType == ClickType.RIGHT) {
+			if (otherStack.isOf(Items.WATER_BUCKET)
+					|| (otherStack.isOf(Items.POTION) && PotionUtil.getPotion(otherStack) == Potions.WATER)) {
+				var nbt = self.getOrCreateSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
+				var blackboard = Blackboard.fromNbt(nbt);
+				if (blackboard.isEmpty())
+					return false;
+				blackboard.clear();
+				blackboard.writeNbt(nbt);
 
-                if (otherStack.isOf(Items.POTION)) {
-                    if (!player.getAbilities().creativeMode) {
-                        var newStack = new ItemStack(Items.GLASS_BOTTLE);
-                        if (otherStack.getCount() != 1) {
-                            otherStack.decrement(1);
-                            player.getInventory().insertStack(newStack);
-                        } else {
-                            cursorStack.set(newStack);
-                        }
-                    }
-                    player.playSound(SoundEvents.ITEM_BOTTLE_EMPTY, 1.f, 1.f);
-                } else {
-                    player.playSound(SoundEvents.ITEM_BUCKET_EMPTY, 1.f, 1.f);
-                }
+				if (otherStack.isOf(Items.POTION)) {
+					if (!player.getAbilities().creativeMode) {
+						var newStack = new ItemStack(Items.GLASS_BOTTLE);
+						if (otherStack.getCount() != 1) {
+							otherStack.decrement(1);
+							player.getInventory().insertStack(newStack);
+						} else {
+							cursorStack.set(newStack);
+						}
+					}
+					player.playSound(SoundEvents.ITEM_BOTTLE_EMPTY, 1.f, 1.f);
+				} else {
+					player.playSound(SoundEvents.ITEM_BUCKET_EMPTY, 1.f, 1.f);
+				}
 
-                return true;
-            }
-        }
-        return false;
-    }
+				return true;
+			}
+		}
+		return false;
+	}
 
-    @Override
-    public void onCraft(ItemStack stack, World world, PlayerEntity player) {
-        this.ensureValidStack(stack);
-    }
+	@Override
+	public void onCraft(ItemStack stack, World world, PlayerEntity player) {
+		this.ensureValidStack(stack);
+	}
 
-    @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
-        if (this.isIn(group))
-            stacks.add(this.getDefaultStack());
-    }
+	@Override
+	public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
+		if (this.isIn(group))
+			stacks.add(this.getDefaultStack());
+	}
 
-    @Override
-    public ItemStack getDefaultStack() {
-        return this.ensureValidStack(new ItemStack(this));
-    }
+	@Override
+	public ItemStack getDefaultStack() {
+		return this.ensureValidStack(new ItemStack(this));
+	}
 
-    private ItemStack ensureValidStack(ItemStack stack) {
-        if (stack.getSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY) == null) {
-            var nbt = stack.getOrCreateSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
-            var blackboard = new Blackboard();
-            blackboard.writeNbt(nbt);
-        }
-        return stack;
-    }
+	private ItemStack ensureValidStack(ItemStack stack) {
+		if (stack.getSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY) == null) {
+			var nbt = stack.getOrCreateSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
+			var blackboard = new Blackboard();
+			blackboard.writeNbt(nbt);
+		}
+		return stack;
+	}
 
-    @Environment(EnvType.CLIENT)
-    @Override
-    public Optional<TooltipData> getTooltipData(ItemStack stack) {
-        var nbt = stack.getSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
-        if (nbt != null && nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
-            var blackboard = Blackboard.fromNbt(nbt);
-            return Optional.of(new BlackboardTooltipData(
-                    Registry.ITEM.getId(this).getPath().replace("waxed_", ""),
-                    blackboard, this.locked));
-        }
-        return super.getTooltipData(stack);
-    }
+	@Environment(EnvType.CLIENT)
+	@Override
+	public Optional<TooltipData> getTooltipData(ItemStack stack) {
+		var nbt = stack.getSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
+		if (nbt != null && nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
+			var blackboard = Blackboard.fromNbt(nbt);
+			return Optional.of(new BlackboardTooltipData(
+					Registry.ITEM.getId(this).getPath().replace("waxed_", ""),
+					blackboard, this.locked));
+		}
+		return super.getTooltipData(stack);
+	}
 }

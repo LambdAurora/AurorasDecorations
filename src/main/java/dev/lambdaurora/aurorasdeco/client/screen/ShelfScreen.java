@@ -39,35 +39,35 @@ import net.minecraft.util.Identifier;
  */
 @Environment(EnvType.CLIENT)
 public class ShelfScreen extends HandledScreen<ShelfScreenHandler> {
-    private static final Identifier TEXTURE = AurorasDeco.id("textures/gui/container/shelf.png");
+	private static final Identifier TEXTURE = AurorasDeco.id("textures/gui/container/shelf.png");
 
-    public ShelfScreen(ShelfScreenHandler handler, PlayerInventory inventory, Text title) {
-        super(handler, inventory, title);
-        this.backgroundHeight = 148;
-        this.playerInventoryTitleY = this.backgroundHeight - 94;
-    }
+	public ShelfScreen(ShelfScreenHandler handler, PlayerInventory inventory, Text title) {
+		super(handler, inventory, title);
+		this.backgroundHeight = 148;
+		this.playerInventoryTitleY = this.backgroundHeight - 94;
+	}
 
-    @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
-        RenderSystem.setShaderTexture(0, TEXTURE);
-        int x = (this.width - this.backgroundWidth) / 2;
-        int y = (this.height - this.backgroundHeight) / 2;
-        this.drawTexture(matrices, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+	@Override
+	protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
+		RenderSystem.setShaderTexture(0, TEXTURE);
+		int x = (this.width - this.backgroundWidth) / 2;
+		int y = (this.height - this.backgroundHeight) / 2;
+		this.drawTexture(matrices, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
-        if (this.handler.getPartType() != PartType.DOUBLE) {
-            x += 52;
-            y += 16;
+		if (this.handler.getPartType() != PartType.DOUBLE) {
+			x += 52;
+			y += 16;
 
-            this.drawTexture(matrices, x, y, 184, 0, 256 - 184, 18 * 2);
-        }
-    }
+			this.drawTexture(matrices, x, y, 184, 0, 256 - 184, 18 * 2);
+		}
+	}
 
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
-        super.render(matrices, mouseX, mouseY, delta);
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
-    }
+	@Override
+	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+		this.renderBackground(matrices);
+		super.render(matrices, mouseX, mouseY, delta);
+		this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+	}
 }

@@ -42,55 +42,55 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(ArmorStandEntity.class)
 public abstract class ArmorStandEntityMixin extends LivingEntity {
-    @Shadow
-    public abstract boolean shouldShowArms();
+	@Shadow
+	public abstract boolean shouldShowArms();
 
-    @Shadow
-    protected abstract void setShowArms(boolean showArms);
+	@Shadow
+	protected abstract void setShowArms(boolean showArms);
 
-    @Shadow
-    public abstract boolean shouldHideBasePlate();
+	@Shadow
+	public abstract boolean shouldHideBasePlate();
 
-    @Shadow
-    protected abstract void setHideBasePlate(boolean hideBasePlate);
+	@Shadow
+	protected abstract void setHideBasePlate(boolean hideBasePlate);
 
-    protected ArmorStandEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
-        super(entityType, world);
-    }
+	protected ArmorStandEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
+		super(entityType, world);
+	}
 
-    @Inject(
-            method = "interactAt",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/entity/decoration/ArmorStandEntity;isSlotDisabled(Lnet/minecraft/entity/EquipmentSlot;)Z",
-                    ordinal = 1
-            ),
-            cancellable = true,
-            locals = LocalCapture.CAPTURE_FAILHARD
-    )
-    private void onInteractAt(PlayerEntity player, Vec3d hitPos, Hand hand, CallbackInfoReturnable<ActionResult> cir,
-                              ItemStack stack) {
-        var world = this.getEntityWorld();
-        if (stack.isOf(Items.STICK) && !this.shouldShowArms()) {
-            this.setShowArms(true);
-            this.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 1.f, 1.f);
-            if (!player.getAbilities().creativeMode)
-                stack.decrement(1);
-            world.emitGameEvent(player, GameEvent.MOB_INTERACT, this.getBlockPos());
-            cir.setReturnValue(ActionResult.SUCCESS);
-        } else if (stack.isOf(Items.SHEARS) && player.isSneaking() && !this.shouldHideBasePlate()) {
-            this.setHideBasePlate(true);
-            this.playSound(AurorasDecoSounds.ARMOR_STAND_HIDE_BASE_PLATE_SOUND_EVENT, 1.f, 1.f);
-            stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
-            world.emitGameEvent(player, GameEvent.SHEAR, this.getBlockPos());
-            cir.setReturnValue(ActionResult.SUCCESS);
-        }
-    }
+	@Inject(
+			method = "interactAt",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/entity/decoration/ArmorStandEntity;isSlotDisabled(Lnet/minecraft/entity/EquipmentSlot;)Z",
+					ordinal = 1
+			),
+			cancellable = true,
+			locals = LocalCapture.CAPTURE_FAILHARD
+	)
+	private void onInteractAt(PlayerEntity player, Vec3d hitPos, Hand hand, CallbackInfoReturnable<ActionResult> cir,
+	                          ItemStack stack) {
+		var world = this.getEntityWorld();
+		if (stack.isOf(Items.STICK) && !this.shouldShowArms()) {
+			this.setShowArms(true);
+			this.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 1.f, 1.f);
+			if (!player.getAbilities().creativeMode)
+				stack.decrement(1);
+			world.emitGameEvent(player, GameEvent.MOB_INTERACT, this.getBlockPos());
+			cir.setReturnValue(ActionResult.SUCCESS);
+		} else if (stack.isOf(Items.SHEARS) && player.isSneaking() && !this.shouldHideBasePlate()) {
+			this.setHideBasePlate(true);
+			this.playSound(AurorasDecoSounds.ARMOR_STAND_HIDE_BASE_PLATE_SOUND_EVENT, 1.f, 1.f);
+			stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
+			world.emitGameEvent(player, GameEvent.SHEAR, this.getBlockPos());
+			cir.setReturnValue(ActionResult.SUCCESS);
+		}
+	}
 
-    @Inject(method = "breakAndDropItem", at = @At("HEAD"))
-    private void onBreakAndDropItem(DamageSource damageSource, CallbackInfo ci) {
-        if (this.shouldShowArms()) {
-            Block.dropStack(this.getEntityWorld(), this.getBlockPos(), new ItemStack(Items.STICK));
-        }
-    }
+	@Inject(method = "breakAndDropItem", at = @At("HEAD"))
+	private void onBreakAndDropItem(DamageSource damageSource, CallbackInfo ci) {
+		if (this.shouldShowArms()) {
+			Block.dropStack(this.getEntityWorld(), this.getBlockPos(), new ItemStack(Items.STICK));
+		}
+	}
 }

@@ -26,12 +26,12 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 
 @Environment(EnvType.CLIENT)
 public class SeatEntityRenderer extends EmptyEntityRenderer<SeatEntity> {
-    public SeatEntityRenderer(EntityRendererFactory.Context ctx) {
-        super(ctx);
-    }
+	public SeatEntityRenderer(EntityRendererFactory.Context ctx) {
+		super(ctx);
+	}
 
-    @Override
-    public boolean shouldRender(SeatEntity entity, Frustum frustum, double x, double y, double z) {
-        return false;
-    }
+	@Override
+	public boolean shouldRender(SeatEntity entity, Frustum frustum, double x, double y, double z) {
+		return false;
+	}
 }

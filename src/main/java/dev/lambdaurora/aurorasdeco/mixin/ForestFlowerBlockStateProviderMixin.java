@@ -32,16 +32,16 @@ import java.util.Random;
 
 @Mixin(ForestFlowerBlockStateProvider.class)
 public class ForestFlowerBlockStateProviderMixin {
-    @Inject(method = "getBlockState", at = @At("RETURN"), cancellable = true)
-    private void onGetBlockState(Random random, BlockPos pos, CallbackInfoReturnable<BlockState> cir) {
-        var state = cir.getReturnValue();
-        if (state.isOf(AurorasDecoRegistry.DAFFODIL)) {
-            var facing = Direction.random(random);
-            cir.setReturnValue(state.with(DaffodilBlock.FACING, switch (facing) {
-                case UP -> Direction.NORTH;
-                case DOWN -> Direction.SOUTH;
-                default -> facing;
-            }));
-        }
-    }
+	@Inject(method = "getBlockState", at = @At("RETURN"), cancellable = true)
+	private void onGetBlockState(Random random, BlockPos pos, CallbackInfoReturnable<BlockState> cir) {
+		var state = cir.getReturnValue();
+		if (state.isOf(AurorasDecoRegistry.DAFFODIL)) {
+			var facing = Direction.random(random);
+			cir.setReturnValue(state.with(DaffodilBlock.FACING, switch (facing) {
+				case UP -> Direction.NORTH;
+				case DOWN -> Direction.SOUTH;
+				default -> facing;
+			}));
+		}
+	}
 }

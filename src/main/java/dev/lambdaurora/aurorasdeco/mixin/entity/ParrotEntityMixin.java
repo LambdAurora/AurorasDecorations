@@ -29,15 +29,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ParrotEntity.class)
 public abstract class ParrotEntityMixin extends TameableEntity {
-    protected ParrotEntityMixin(EntityType<? extends TameableEntity> entityType, World world) {
-        super(entityType, world);
-    }
+	protected ParrotEntityMixin(EntityType<? extends TameableEntity> entityType, World world) {
+		super(entityType, world);
+	}
 
-    @Inject(
-            method = "initGoals",
-            at = @At("RETURN")
-    )
-    private void onInitGoals(CallbackInfo ci) {
-        this.goalSelector.add(2, new TameableSleepInPetBedGoal(this, 0.8));
-    }
+	@Inject(
+			method = "initGoals",
+			at = @At("RETURN")
+	)
+	private void onInitGoals(CallbackInfo ci) {
+		this.goalSelector.add(2, new TameableSleepInPetBedGoal(this, 0.8));
+	}
 }

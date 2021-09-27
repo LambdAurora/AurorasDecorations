@@ -58,98 +58,98 @@ import static net.minecraft.block.SeaPickleBlock.PICKLES;
  */
 @SuppressWarnings("deprecation")
 public class BigPottedSeaPickleBlock extends BigFlowerPotBlock implements Waterloggable {
-    private final Map<BlockState, VoxelShape> shapeCache = new Object2ObjectOpenHashMap<>();
+	private final Map<BlockState, VoxelShape> shapeCache = new Object2ObjectOpenHashMap<>();
 
-    public BigPottedSeaPickleBlock(PottedPlantType type) {
-        super(type, FabricBlockSettings.of(Material.DECORATION).strength(.1f).nonOpaque());
+	public BigPottedSeaPickleBlock(PottedPlantType type) {
+		super(type, FabricBlockSettings.of(Material.DECORATION).strength(.1f).nonOpaque());
 
-        var plantSettings = ((AbstractBlockAccessor) type.getPlant()).getSettings();
-        ((AbstractBlockAccessor) this).getSettings()
-                .luminance(((BlockSettingsAccessor) plantSettings).getLuminance());
+		var plantSettings = ((AbstractBlockAccessor) type.getPlant()).getSettings();
+		((AbstractBlockAccessor) this).getSettings()
+				.luminance(((BlockSettingsAccessor) plantSettings).getLuminance());
 
-        var builder = new StateManager.Builder<Block, BlockState>(this);
-        this.appendProperties(builder);
-        ((BlockAccessor) this.getPlant()).aurorasdeco$appendProperties(builder);
-        ((BlockAccessor) this).setStateManager(builder.build(Block::getDefaultState, BlockState::new));
+		var builder = new StateManager.Builder<Block, BlockState>(this);
+		this.appendProperties(builder);
+		((BlockAccessor) this.getPlant()).aurorasdeco$appendProperties(builder);
+		((BlockAccessor) this).setStateManager(builder.build(Block::getDefaultState, BlockState::new));
 
-        this.setDefaultState(AuroraUtil.remapBlockState(type.getPlant().getDefaultState(), this.stateManager.getDefaultState())
-                .with(Properties.WATERLOGGED, false));
-    }
+		this.setDefaultState(AuroraUtil.remapBlockState(type.getPlant().getDefaultState(), this.stateManager.getDefaultState())
+				.with(Properties.WATERLOGGED, false));
+	}
 
-    @Override
-    public BlockState getPlantState(BlockState potState) {
-        return AuroraUtil.remapBlockState(potState, super.getPlantState(potState));
-    }
+	@Override
+	public BlockState getPlantState(BlockState potState) {
+		return AuroraUtil.remapBlockState(potState, super.getPlantState(potState));
+	}
 
-    @Override
-    public @Nullable ItemStack getEquivalentPlantStack(BlockState state) {
-        return new ItemStack(this.getPlantType().getItem(), state.get(PICKLES));
-    }
+	@Override
+	public @Nullable ItemStack getEquivalentPlantStack(BlockState state) {
+		return new ItemStack(this.getPlantType().getItem(), state.get(PICKLES));
+	}
 
-    /* Shapes */
+	/* Shapes */
 
-    @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return this.shapeCache.computeIfAbsent(state, s -> shape(s, world, pos));
-    }
+	@Override
+	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return this.shapeCache.computeIfAbsent(state, s -> shape(s, world, pos));
+	}
 
-    /* Interaction */
+	/* Interaction */
 
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        var handStack = player.getStackInHand(hand);
-        if (handStack.isOf(this.getPlantType().getItem()) && state.get(PICKLES) < 4) {
-            player.incrementStat(Stats.POT_FLOWER);
-            if (!player.getAbilities().creativeMode) {
-                handStack.decrement(1);
-            }
+	@Override
+	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+		var handStack = player.getStackInHand(hand);
+		if (handStack.isOf(this.getPlantType().getItem()) && state.get(PICKLES) < 4) {
+			player.incrementStat(Stats.POT_FLOWER);
+			if (!player.getAbilities().creativeMode) {
+				handStack.decrement(1);
+			}
 
-            world.playSound(player, pos, this.getPlant().getSoundGroup(this.getPlantState(state)).getPlaceSound(), SoundCategory.BLOCKS,
-                    1.f, 1.f);
+			world.playSound(player, pos, this.getPlant().getSoundGroup(this.getPlantState(state)).getPlaceSound(), SoundCategory.BLOCKS,
+					1.f, 1.f);
 
-            world.setBlockState(pos, state.with(PICKLES, state.get(PICKLES) + 1), Block.NOTIFY_ALL);
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-            return ActionResult.success(world.isClient());
-        } else if (state.get(PICKLES) > 1) {
-            if (handStack.isEmpty()) {
-                player.setStackInHand(hand, new ItemStack(this.getPlantType().getItem()));
+			world.setBlockState(pos, state.with(PICKLES, state.get(PICKLES) + 1), Block.NOTIFY_ALL);
+			world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+			return ActionResult.success(world.isClient());
+		} else if (state.get(PICKLES) > 1) {
+			if (handStack.isEmpty()) {
+				player.setStackInHand(hand, new ItemStack(this.getPlantType().getItem()));
 
-                world.playSound(player, pos, this.getPlant().getSoundGroup(this.getPlantState(state)).getBreakSound(), SoundCategory.BLOCKS,
-                        1.f, 1.f);
+				world.playSound(player, pos, this.getPlant().getSoundGroup(this.getPlantState(state)).getBreakSound(), SoundCategory.BLOCKS,
+						1.f, 1.f);
 
-                world.setBlockState(pos, state.with(PICKLES, state.get(PICKLES) - 1), Block.NOTIFY_ALL);
-                world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-                return ActionResult.success(world.isClient());
-            }
+				world.setBlockState(pos, state.with(PICKLES, state.get(PICKLES) - 1), Block.NOTIFY_ALL);
+				world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+				return ActionResult.success(world.isClient());
+			}
 
-            return ActionResult.PASS;
-        } else
-            return super.onUse(state, world, pos, player, hand, hit);
-    }
+			return ActionResult.PASS;
+		} else
+			return super.onUse(state, world, pos, player, hand, hit);
+	}
 
-    /* Updates */
+	/* Updates */
 
-    @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState,
-                                                WorldAccess world, BlockPos pos, BlockPos posFrom) {
-        if (state.get(Properties.WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
+	@Override
+	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState,
+	                                            WorldAccess world, BlockPos pos, BlockPos posFrom) {
+		if (state.get(Properties.WATERLOGGED)) {
+			world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+		}
 
-        return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
-    }
+		return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
+	}
 
-    /* Fluid */
+	/* Fluid */
 
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
-    }
+	@Override
+	public FluidState getFluidState(BlockState state) {
+		return state.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+	}
 
-    private VoxelShape shape(BlockState state, BlockView world, BlockPos pos) {
-        var plantShape = this.getPlant().getOutlineShape(state, world, pos, ShapeContext.absent());
-        float ratio = .65f;
-        float offset = (1.f - ratio) / 2.f;
-        return VoxelShapes.union(BIG_FLOWER_POT_SHAPE, AuroraUtil.resizeVoxelShape(plantShape, ratio).offset(offset, .8f, offset));
-    }
+	private VoxelShape shape(BlockState state, BlockView world, BlockPos pos) {
+		var plantShape = this.getPlant().getOutlineShape(state, world, pos, ShapeContext.absent());
+		float ratio = .65f;
+		float offset = (1.f - ratio) / 2.f;
+		return VoxelShapes.union(BIG_FLOWER_POT_SHAPE, AuroraUtil.resizeVoxelShape(plantShape, ratio).offset(offset, .8f, offset));
+	}
 }

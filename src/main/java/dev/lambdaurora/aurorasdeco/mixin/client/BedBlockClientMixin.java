@@ -31,14 +31,14 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(BedBlock.class)
 public class BedBlockClientMixin {
-    @Inject(
-            method = "getDirection",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;getBlock()Lnet/minecraft/block/Block;"),
-            cancellable = true,
-            locals = LocalCapture.CAPTURE_FAILHARD
-    )
-    private static void onIsBed(BlockView world, BlockPos pos, CallbackInfoReturnable<Direction> cir, BlockState state) {
-        if (state.getBlock() instanceof SleepingBagBlock)
-            cir.setReturnValue(state.get(SleepingBagBlock.FACING));
-    }
+	@Inject(
+			method = "getDirection",
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;getBlock()Lnet/minecraft/block/Block;"),
+			cancellable = true,
+			locals = LocalCapture.CAPTURE_FAILHARD
+	)
+	private static void onIsBed(BlockView world, BlockPos pos, CallbackInfoReturnable<Direction> cir, BlockState state) {
+		if (state.getBlock() instanceof SleepingBagBlock)
+			cir.setReturnValue(state.get(SleepingBagBlock.FACING));
+	}
 }

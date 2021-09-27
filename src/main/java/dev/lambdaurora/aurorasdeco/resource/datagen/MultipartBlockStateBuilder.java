@@ -27,68 +27,68 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public class MultipartBlockStateBuilder {
-    private final JsonObject json = new JsonObject();
-    private final Identifier id;
-    private final JsonArray multipartJson = new JsonArray();
+	private final JsonObject json = new JsonObject();
+	private final Identifier id;
+	private final JsonArray multipartJson = new JsonArray();
 
-    public MultipartBlockStateBuilder(Identifier id) {
-        this.id = new Identifier(id.getNamespace(), "blockstates/" + id.getPath());
+	public MultipartBlockStateBuilder(Identifier id) {
+		this.id = new Identifier(id.getNamespace(), "blockstates/" + id.getPath());
 
-        this.json.add("multipart", multipartJson);
-    }
+		this.json.add("multipart", multipartJson);
+	}
 
-    public MultipartBlockStateBuilder(Block block) {
-        this(Registry.BLOCK.getId(block));
-    }
+	public MultipartBlockStateBuilder(Block block) {
+		this(Registry.BLOCK.getId(block));
+	}
 
-    public MultipartBlockStateBuilder add(StateModel model) {
-        var block = new JsonObject();
-        block.add("apply", model.toJson());
-        this.multipartJson.add(block);
-        return this;
-    }
+	public MultipartBlockStateBuilder add(StateModel model) {
+		var block = new JsonObject();
+		block.add("apply", model.toJson());
+		this.multipartJson.add(block);
+		return this;
+	}
 
-    public MultipartBlockStateBuilder addWhen(StateModel model, Property.Value<?>... when) {
-        var block = new JsonObject();
-        block.add("apply", model.toJson());
-        var whenBlock = new JsonObject();
-        block.add("when", whenBlock);
+	public MultipartBlockStateBuilder addWhen(StateModel model, Property.Value<?>... when) {
+		var block = new JsonObject();
+		block.add("apply", model.toJson());
+		var whenBlock = new JsonObject();
+		block.add("when", whenBlock);
 
-        for (var val : when) {
-            whenBlock.addProperty(val.getProperty().getName(), val.toString().split("=")[1]);
-        }
+		for (var val : when) {
+			whenBlock.addProperty(val.getProperty().getName(), val.toString().split("=")[1]);
+		}
 
-        this.multipartJson.add(block);
+		this.multipartJson.add(block);
 
-        return this;
-    }
+		return this;
+	}
 
-    public MultipartBlockStateBuilder addWhenOr(StateModel model, MultipartOr... conditions) {
-        var block = new JsonObject();
-        block.add("apply", model.toJson());
-        var whenBlock = new JsonObject();
-        block.add("when", whenBlock);
-        var or = new JsonArray();
-        whenBlock.add("OR", or);
+	public MultipartBlockStateBuilder addWhenOr(StateModel model, MultipartOr... conditions) {
+		var block = new JsonObject();
+		block.add("apply", model.toJson());
+		var whenBlock = new JsonObject();
+		block.add("when", whenBlock);
+		var or = new JsonArray();
+		whenBlock.add("OR", or);
 
-        for (var condition : conditions) {
-            var conditionBlock = new JsonObject();
-            or.add(conditionBlock);
-            for (var val : condition.when()) {
-                conditionBlock.addProperty(val.getProperty().getName(), val.toString().split("=")[1]);
-            }
-        }
+		for (var condition : conditions) {
+			var conditionBlock = new JsonObject();
+			or.add(conditionBlock);
+			for (var val : condition.when()) {
+				conditionBlock.addProperty(val.getProperty().getName(), val.toString().split("=")[1]);
+			}
+		}
 
-        this.multipartJson.add(block);
+		this.multipartJson.add(block);
 
-        return this;
-    }
+		return this;
+	}
 
-    public JsonObject toJson() {
-        return this.json;
-    }
+	public JsonObject toJson() {
+		return this.json;
+	}
 
-    public void register() {
-        AurorasDecoClient.RESOURCE_PACK.putJson(ResourceType.CLIENT_RESOURCES, this.id, this.toJson());
-    }
+	public void register() {
+		AurorasDecoClient.RESOURCE_PACK.putJson(ResourceType.CLIENT_RESOURCES, this.id, this.toJson());
+	}
 }

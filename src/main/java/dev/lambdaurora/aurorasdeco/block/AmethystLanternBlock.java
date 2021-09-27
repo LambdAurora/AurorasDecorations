@@ -37,21 +37,21 @@ import java.util.Random;
  * @since 1.0.0
  */
 public class AmethystLanternBlock extends LanternBlock {
-    public static final Identifier BLOCK_TEXTURE = AurorasDeco.id("block/amethyst_lantern");
-    public static final Identifier HANGING_MODEL = AurorasDeco.id("block/hanging_amethyst_lantern");
-    public static final int EFFECT_RADIUS = 32;
+	public static final Identifier BLOCK_TEXTURE = AurorasDeco.id("block/amethyst_lantern");
+	public static final Identifier HANGING_MODEL = AurorasDeco.id("block/hanging_amethyst_lantern");
+	public static final int EFFECT_RADIUS = 32;
 
-    public AmethystLanternBlock() {
-        super(FabricBlockSettings.copyOf(Blocks.LANTERN).luminance(14));
-    }
+	public AmethystLanternBlock() {
+		super(FabricBlockSettings.copyOf(Blocks.LANTERN).luminance(14));
+	}
 
-    @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        if (random.nextBoolean()) {
-            double x = pos.getX() + random.nextFloat();
-            double y = pos.getY() + random.nextFloat();
-            double z = pos.getZ() + random.nextFloat();
-            world.addParticle(AurorasDecoParticles.AMETHYST_GLINT, x, y, z, 0.f, 0.f, 0.f);
-        }
-    }
+	@Override
+	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+		if (random.nextBoolean()) {
+			double x = pos.getX() + random.nextFloat();
+			double y = pos.getY() + random.nextFloat();
+			double z = pos.getZ() + random.nextFloat();
+			world.addParticle(AurorasDecoParticles.AMETHYST_GLINT, x, y, z, 0.f, 0.f, 0.f);
+		}
+	}
 }

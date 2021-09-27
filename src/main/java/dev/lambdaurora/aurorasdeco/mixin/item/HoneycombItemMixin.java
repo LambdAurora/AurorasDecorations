@@ -38,42 +38,42 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(HoneycombItem.class)
 public class HoneycombItemMixin {
-    @Unique
-    private static final ThreadLocal<NbtCompound> aurorasdeco$blockEntityData = new ThreadLocal<>();
+	@Unique
+	private static final ThreadLocal<NbtCompound> aurorasdeco$blockEntityData = new ThreadLocal<>();
 
-    @Dynamic
-    @Inject(method = "method_34723", at = @At("RETURN"), remap = false, cancellable = true)
-    private static void onBuildWaxedMapping(CallbackInfoReturnable<BiMap<Block, Block>> cir) {
-        var builder = ImmutableBiMap.<Block, Block>builder().putAll(cir.getReturnValue());
-        builder.put(AurorasDecoRegistry.BLACKBOARD_BLOCK, AurorasDecoRegistry.WAXED_BLACKBOARD_BLOCK);
-        builder.put(AurorasDecoRegistry.CHALKBOARD_BLOCK, AurorasDecoRegistry.WAXED_CHALKBOARD_BLOCK);
-        cir.setReturnValue(builder.build());
-    }
+	@Dynamic
+	@Inject(method = "method_34723", at = @At("RETURN"), remap = false, cancellable = true)
+	private static void onBuildWaxedMapping(CallbackInfoReturnable<BiMap<Block, Block>> cir) {
+		var builder = ImmutableBiMap.<Block, Block>builder().putAll(cir.getReturnValue());
+		builder.put(AurorasDecoRegistry.BLACKBOARD_BLOCK, AurorasDecoRegistry.WAXED_BLACKBOARD_BLOCK);
+		builder.put(AurorasDecoRegistry.CHALKBOARD_BLOCK, AurorasDecoRegistry.WAXED_CHALKBOARD_BLOCK);
+		cir.setReturnValue(builder.build());
+	}
 
-    @Dynamic
-    @Inject(method = "method_34719", at = @At("HEAD"), remap = false, cancellable = true)
-    private static void onBeforeReplace(ItemUsageContext context, BlockPos pos, World world, BlockState state, CallbackInfoReturnable<ActionResult> cir) {
-        if (state.getBlock() instanceof BlackboardBlock) {
-            var blockEntity = AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE.get(world, pos);
-            if (blockEntity != null && !(blockEntity.isEmpty() && !blockEntity.hasCustomName())) {
-                aurorasdeco$blockEntityData.set(blockEntity.writeBlackBoardNbt(new NbtCompound()));
-            }
-        }
-    }
+	@Dynamic
+	@Inject(method = "method_34719", at = @At("HEAD"), remap = false, cancellable = true)
+	private static void onBeforeReplace(ItemUsageContext context, BlockPos pos, World world, BlockState state, CallbackInfoReturnable<ActionResult> cir) {
+		if (state.getBlock() instanceof BlackboardBlock) {
+			var blockEntity = AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE.get(world, pos);
+			if (blockEntity != null && !(blockEntity.isEmpty() && !blockEntity.hasCustomName())) {
+				aurorasdeco$blockEntityData.set(blockEntity.writeBlackBoardNbt(new NbtCompound()));
+			}
+		}
+	}
 
-    @Dynamic
-    @Inject(method = "method_34719", at = @At("RETURN"), remap = false, cancellable = true)
-    private static void onAfterReplace(ItemUsageContext context, BlockPos pos, World world, BlockState state, CallbackInfoReturnable<ActionResult> cir) {
-        if (state.getBlock() instanceof BlackboardBlock) {
-            var blockEntity = AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE.get(world, pos);
-            if (blockEntity != null && aurorasdeco$blockEntityData.get() != null) {
-                blockEntity.readBlackBoardNbt(aurorasdeco$blockEntityData.get());
-                if (!world.isClient()) {
-                    blockEntity.markDirty();
-                    blockEntity.sync();
-                }
-                aurorasdeco$blockEntityData.remove();
-            }
-        }
-    }
+	@Dynamic
+	@Inject(method = "method_34719", at = @At("RETURN"), remap = false, cancellable = true)
+	private static void onAfterReplace(ItemUsageContext context, BlockPos pos, World world, BlockState state, CallbackInfoReturnable<ActionResult> cir) {
+		if (state.getBlock() instanceof BlackboardBlock) {
+			var blockEntity = AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE.get(world, pos);
+			if (blockEntity != null && aurorasdeco$blockEntityData.get() != null) {
+				blockEntity.readBlackBoardNbt(aurorasdeco$blockEntityData.get());
+				if (!world.isClient()) {
+					blockEntity.markDirty();
+					blockEntity.sync();
+				}
+				aurorasdeco$blockEntityData.remove();
+			}
+		}
+	}
 }

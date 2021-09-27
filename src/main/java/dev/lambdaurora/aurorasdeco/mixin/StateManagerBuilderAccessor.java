@@ -27,9 +27,9 @@ import java.util.Map;
 
 @Mixin(StateManager.Builder.class)
 public interface StateManagerBuilderAccessor<O, S extends State<O, S>> {
-    @Accessor
-    O getOwner();
+	@Accessor
+	O getOwner();
 
-    @Accessor
-    Map<String, Property<?>> getNamedProperties();
+	@Accessor
+	Map<String, Property<?>> getNamedProperties();
 }

@@ -30,15 +30,15 @@ import net.minecraft.util.registry.Registry;
  * @since 1.0.0
  */
 public final class AurorasDecoParticles {
-    private AurorasDecoParticles() {
-        throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
-    }
+	private AurorasDecoParticles() {
+		throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
+	}
 
-    public static final DefaultParticleType AMETHYST_GLINT = register("amethyst_glint");
-    public static final DefaultParticleType COPPER_SULFATE_FLAME = register("copper_sulfate_flame");
-    public static final DefaultParticleType COPPER_SULFATE_LAVA = register("copper_sulfate_lava");
+	public static final DefaultParticleType AMETHYST_GLINT = register("amethyst_glint");
+	public static final DefaultParticleType COPPER_SULFATE_FLAME = register("copper_sulfate_flame");
+	public static final DefaultParticleType COPPER_SULFATE_LAVA = register("copper_sulfate_lava");
 
-    private static DefaultParticleType register(String name) {
-        return Registry.register(Registry.PARTICLE_TYPE, AurorasDeco.id(name), FabricParticleTypes.simple());
-    }
+	private static DefaultParticleType register(String name) {
+		return Registry.register(Registry.PARTICLE_TYPE, AurorasDeco.id(name), FabricParticleTypes.simple());
+	}
 }

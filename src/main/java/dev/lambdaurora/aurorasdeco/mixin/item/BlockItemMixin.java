@@ -54,102 +54,102 @@ import java.util.stream.Stream;
  */
 @Mixin(BlockItem.class)
 public abstract class BlockItemMixin extends Item implements BlockItemAccessor {
-    private BlockItemMixin(Settings settings) {
-        super(settings);
-    }
+	private BlockItemMixin(Settings settings) {
+		super(settings);
+	}
 
-    @Shadow
-    public abstract Block getBlock();
+	@Shadow
+	public abstract Block getBlock();
 
-    @Unique
-    private Block aurorasdeco$wallBlock = null;
-    @Unique
-    private Block aurorasdeco$ceilingBlock = null;
+	@Unique
+	private Block aurorasdeco$wallBlock = null;
+	@Unique
+	private Block aurorasdeco$ceilingBlock = null;
 
-    @Override
-    public void aurorasdeco$setWallBlock(Block block) {
-        this.aurorasdeco$wallBlock = block;
-    }
+	@Override
+	public void aurorasdeco$setWallBlock(Block block) {
+		this.aurorasdeco$wallBlock = block;
+	}
 
-    @Override
-    public void aurorasdeco$setCeilingBlock(Block block) {
-        this.aurorasdeco$ceilingBlock = block;
-    }
+	@Override
+	public void aurorasdeco$setCeilingBlock(Block block) {
+		this.aurorasdeco$ceilingBlock = block;
+	}
 
-    @Inject(method = "appendBlocks", at = @At("RETURN"))
-    private void onAppendBlocks(Map<Block, Item> map, Item item, CallbackInfo ci) {
-        if (this.getBlock() instanceof LanternBlock) {
-            var lanternBlock = LanternRegistry.fromItem(item);
-            if (lanternBlock != null)
-                this.aurorasdeco$setWallBlock(lanternBlock);
-            map.put(lanternBlock, item);
-        } else if (this.getBlock() instanceof CandleBlock candleBlock) {
-            var candleId = Registry.BLOCK.getId(this.getBlock());
-            if (candleId.getNamespace().equals("minecraft")) {
-                this.aurorasdeco$wallBlock = RegistrationHelper.BLOCK.register(
-                        AurorasDeco.id("wall_" + candleId.getPath()),
-                        new WallCandleBlock(candleBlock)
-                );
-                this.aurorasdeco$ceilingBlock = RegistrationHelper.BLOCK.register(
-                        AurorasDeco.id("chandelier/" + candleId.getPath().replace("_candle", "")),
-                        new ChandelierBlock(candleBlock)
-                );
-                map.put(this.aurorasdeco$wallBlock, item);
-                map.put(this.aurorasdeco$ceilingBlock, item);
-            }
-        } else if (this.getBlock() instanceof FlowerPotBlock flowerPot) {
-            this.aurorasdeco$ceilingBlock = HangingFlowerPotBlock.getFromFlowerPot(flowerPot);
-            map.put(this.aurorasdeco$ceilingBlock, item);
-        }
-    }
+	@Inject(method = "appendBlocks", at = @At("RETURN"))
+	private void onAppendBlocks(Map<Block, Item> map, Item item, CallbackInfo ci) {
+		if (this.getBlock() instanceof LanternBlock) {
+			var lanternBlock = LanternRegistry.fromItem(item);
+			if (lanternBlock != null)
+				this.aurorasdeco$setWallBlock(lanternBlock);
+			map.put(lanternBlock, item);
+		} else if (this.getBlock() instanceof CandleBlock candleBlock) {
+			var candleId = Registry.BLOCK.getId(this.getBlock());
+			if (candleId.getNamespace().equals("minecraft")) {
+				this.aurorasdeco$wallBlock = RegistrationHelper.BLOCK.register(
+						AurorasDeco.id("wall_" + candleId.getPath()),
+						new WallCandleBlock(candleBlock)
+				);
+				this.aurorasdeco$ceilingBlock = RegistrationHelper.BLOCK.register(
+						AurorasDeco.id("chandelier/" + candleId.getPath().replace("_candle", "")),
+						new ChandelierBlock(candleBlock)
+				);
+				map.put(this.aurorasdeco$wallBlock, item);
+				map.put(this.aurorasdeco$ceilingBlock, item);
+			}
+		} else if (this.getBlock() instanceof FlowerPotBlock flowerPot) {
+			this.aurorasdeco$ceilingBlock = HangingFlowerPotBlock.getFromFlowerPot(flowerPot);
+			map.put(this.aurorasdeco$ceilingBlock, item);
+		}
+	}
 
-    @Inject(method = "getPlacementState", at = @At("HEAD"), cancellable = true)
-    private void onGetPlacementState(ItemPlacementContext context, CallbackInfoReturnable<BlockState> cir) {
-        var placementDirections = context.getPlacementDirections();
-        var world = context.getWorld();
-        var pos = context.getBlockPos();
-        var placedState = world.getBlockState(pos);
+	@Inject(method = "getPlacementState", at = @At("HEAD"), cancellable = true)
+	private void onGetPlacementState(ItemPlacementContext context, CallbackInfoReturnable<BlockState> cir) {
+		var placementDirections = context.getPlacementDirections();
+		var world = context.getWorld();
+		var pos = context.getBlockPos();
+		var placedState = world.getBlockState(pos);
 
-        if (this.aurorasdeco$ceilingBlock != null
-                && (placementDirections[0] == Direction.UP || placedState.isOf(this.aurorasdeco$ceilingBlock))) {
-            var state = this.aurorasdeco$ceilingBlock.getPlacementState(context);
+		if (this.aurorasdeco$ceilingBlock != null
+				&& (placementDirections[0] == Direction.UP || placedState.isOf(this.aurorasdeco$ceilingBlock))) {
+			var state = this.aurorasdeco$ceilingBlock.getPlacementState(context);
 
-            if (state != null && state.canPlaceAt(world, pos)
-                    && world.canPlace(state, pos, ShapeContext.absent())) {
-                cir.setReturnValue(state);
-                return;
-            }
-        }
+			if (state != null && state.canPlaceAt(world, pos)
+					&& world.canPlace(state, pos, ShapeContext.absent())) {
+				cir.setReturnValue(state);
+				return;
+			}
+		}
 
-        if (this.aurorasdeco$wallBlock != null) {
-            var wallState = this.aurorasdeco$wallBlock.getPlacementState(context);
-            BlockState resultState = null;
+		if (this.aurorasdeco$wallBlock != null) {
+			var wallState = this.aurorasdeco$wallBlock.getPlacementState(context);
+			BlockState resultState = null;
 
-            for (var direction : context.getPlacementDirections()) {
-                var state = direction.getAxis().isVertical() ? this.getBlock().getPlacementState(context) : wallState;
-                if (state != null && state.canPlaceAt(world, pos)) {
-                    resultState = state;
-                    break;
-                }
-            }
+			for (var direction : context.getPlacementDirections()) {
+				var state = direction.getAxis().isVertical() ? this.getBlock().getPlacementState(context) : wallState;
+				if (state != null && state.canPlaceAt(world, pos)) {
+					resultState = state;
+					break;
+				}
+			}
 
-            if (resultState != null && world.canPlace(resultState, pos, ShapeContext.absent()))
-                cir.setReturnValue(resultState);
-        }
-    }
+			if (resultState != null && world.canPlace(resultState, pos, ShapeContext.absent()))
+				cir.setReturnValue(resultState);
+		}
+	}
 
-    @Inject(method = "onItemEntityDestroyed", at = @At("HEAD"), cancellable = true)
-    private void onItemEntityExploded(ItemEntity entity, CallbackInfo ci) {
-        var server = entity.getServer();
-        if (server == null) return;
-        var inv = new SimpleInventory(entity.getStack());
-        server.getRecipeManager()
-                .getFirstMatch(AurorasDecoRegistry.EXPLODING_RECIPE_TYPE, inv, entity.getEntityWorld())
-                .ifPresent(explodingRecipe -> {
-                    int count = entity.getStack().getCount();
-                    for (int i = 0; i < count; i++)
-                        ItemUsage.spawnItemContents(entity, Stream.of(explodingRecipe.craft(inv)));
-                    ci.cancel();
-                });
-    }
+	@Inject(method = "onItemEntityDestroyed", at = @At("HEAD"), cancellable = true)
+	private void onItemEntityExploded(ItemEntity entity, CallbackInfo ci) {
+		var server = entity.getServer();
+		if (server == null) return;
+		var inv = new SimpleInventory(entity.getStack());
+		server.getRecipeManager()
+				.getFirstMatch(AurorasDecoRegistry.EXPLODING_RECIPE_TYPE, inv, entity.getEntityWorld())
+				.ifPresent(explodingRecipe -> {
+					int count = entity.getStack().getCount();
+					for (int i = 0; i < count; i++)
+						ItemUsage.spawnItemContents(entity, Stream.of(explodingRecipe.craft(inv)));
+					ci.cancel();
+				});
+	}
 }

@@ -34,13 +34,13 @@ import java.util.Map;
 
 @Mixin(ServerAdvancementLoader.class)
 public class ServerAdvancementLoaderMixin {
-    @Inject(
-            method = "apply",
-            at = @At(value = "INVOKE", target = "Ljava/util/Map;forEach(Ljava/util/function/BiConsumer;)V"),
-            locals = LocalCapture.CAPTURE_FAILHARD
-    )
-    private void onApply(Map<Identifier, JsonElement> map, ResourceManager resourceManager, Profiler profiler, CallbackInfo ci,
-                         Map<Identifier, Advancement.Task> builder) {
-        Datagen.applyAdvancements(builder);
-    }
+	@Inject(
+			method = "apply",
+			at = @At(value = "INVOKE", target = "Ljava/util/Map;forEach(Ljava/util/function/BiConsumer;)V"),
+			locals = LocalCapture.CAPTURE_FAILHARD
+	)
+	private void onApply(Map<Identifier, JsonElement> map, ResourceManager resourceManager, Profiler profiler, CallbackInfo ci,
+	                     Map<Identifier, Advancement.Task> builder) {
+		Datagen.applyAdvancements(builder);
+	}
 }

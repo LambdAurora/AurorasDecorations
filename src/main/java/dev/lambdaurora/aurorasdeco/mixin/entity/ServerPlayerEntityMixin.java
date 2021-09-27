@@ -31,14 +31,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin extends Entity {
-    public ServerPlayerEntityMixin(EntityType<?> type, World world) {
-        super(type, world);
-    }
+	public ServerPlayerEntityMixin(EntityType<?> type, World world) {
+		super(type, world);
+	}
 
-    @Inject(method = "setSpawnPoint", at = @At("HEAD"), cancellable = true)
-    private void onSetSpawnPoint(RegistryKey<World> dimension, BlockPos pos, float angle, boolean spawnPointSet, boolean bl,
-                                 CallbackInfo ci) {
-        if (this.world.getBlockState(pos).getBlock() instanceof SleepingBagBlock)
-            ci.cancel();
-    }
+	@Inject(method = "setSpawnPoint", at = @At("HEAD"), cancellable = true)
+	private void onSetSpawnPoint(RegistryKey<World> dimension, BlockPos pos, float angle, boolean spawnPointSet, boolean bl,
+	                             CallbackInfo ci) {
+		if (this.world.getBlockState(pos).getBlock() instanceof SleepingBagBlock)
+			ci.cancel();
+	}
 }

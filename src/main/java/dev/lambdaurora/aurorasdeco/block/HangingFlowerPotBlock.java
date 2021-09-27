@@ -60,148 +60,148 @@ import java.util.stream.Stream;
  */
 @SuppressWarnings("deprecation")
 public class HangingFlowerPotBlock extends Block {
-    private static final List<HangingFlowerPotBlock> HANGING_FLOWER_POT_BLOCKS = new ArrayList<>();
-    private static final Map<Block, Block> CONTENT_TO_POTTED = new Object2ObjectOpenHashMap<>();
-    protected static final VoxelShape SHAPE = Block.createCuboidShape(5.0, 0.0, 5.0, 11.0, 6.0, 11.0);
-    private static HangingFlowerPotBlock DEFAULT;
+	private static final List<HangingFlowerPotBlock> HANGING_FLOWER_POT_BLOCKS = new ArrayList<>();
+	private static final Map<Block, Block> CONTENT_TO_POTTED = new Object2ObjectOpenHashMap<>();
+	protected static final VoxelShape SHAPE = Block.createCuboidShape(5.0, 0.0, 5.0, 11.0, 6.0, 11.0);
+	private static HangingFlowerPotBlock DEFAULT;
 
-    public static final Identifier HANGING_FLOWER_POT_ATTACHMENT_MODEL = AurorasDeco.id("block/hanging_flower_pot_attachment");
-    public static final Identifier BETTER_GRASS_DATA = new Identifier("bettergrass/data/flower_pot");
+	public static final Identifier HANGING_FLOWER_POT_ATTACHMENT_MODEL = AurorasDeco.id("block/hanging_flower_pot_attachment");
+	public static final Identifier BETTER_GRASS_DATA = new Identifier("bettergrass/data/flower_pot");
 
-    private final FlowerPotBlock flowerPot;
+	private final FlowerPotBlock flowerPot;
 
-    public HangingFlowerPotBlock(FlowerPotBlock flowerPot) {
-        super(FabricBlockSettings.copyOf(flowerPot).dropsLike(flowerPot));
-        this.flowerPot = flowerPot;
-        CONTENT_TO_POTTED.put(flowerPot.getContent(), this);
-        HANGING_FLOWER_POT_BLOCKS.add(this);
+	public HangingFlowerPotBlock(FlowerPotBlock flowerPot) {
+		super(FabricBlockSettings.copyOf(flowerPot).dropsLike(flowerPot));
+		this.flowerPot = flowerPot;
+		CONTENT_TO_POTTED.put(flowerPot.getContent(), this);
+		HANGING_FLOWER_POT_BLOCKS.add(this);
 
-        if (flowerPot instanceof DirectionalFlowerPotBlock) {
-            var builder = new StateManager.Builder<Block, BlockState>(this);
-            this.appendProperties(builder);
-            ((BlockAccessor) flowerPot).aurorasdeco$appendProperties(builder);
-            ((BlockAccessor) this).setStateManager(builder.build(Block::getDefaultState, BlockState::new));
+		if (flowerPot instanceof DirectionalFlowerPotBlock) {
+			var builder = new StateManager.Builder<Block, BlockState>(this);
+			this.appendProperties(builder);
+			((BlockAccessor) flowerPot).aurorasdeco$appendProperties(builder);
+			((BlockAccessor) this).setStateManager(builder.build(Block::getDefaultState, BlockState::new));
 
-            this.setDefaultState(AuroraUtil.remapBlockState(flowerPot.getDefaultState(), this.stateManager.getDefaultState()));
-        }
+			this.setDefaultState(AuroraUtil.remapBlockState(flowerPot.getDefaultState(), this.stateManager.getDefaultState()));
+		}
 
-        if (flowerPot == Blocks.FLOWER_POT)
-            DEFAULT = this;
-    }
+		if (flowerPot == Blocks.FLOWER_POT)
+			DEFAULT = this;
+	}
 
-    public static Stream<HangingFlowerPotBlock> stream() {
-        return HANGING_FLOWER_POT_BLOCKS.stream();
-    }
+	public static Stream<HangingFlowerPotBlock> stream() {
+		return HANGING_FLOWER_POT_BLOCKS.stream();
+	}
 
-    public static @Nullable Block getFromFlowerPot(FlowerPotBlock flowerPot) {
-        return getFromContent(flowerPot.getContent());
-    }
+	public static @Nullable Block getFromFlowerPot(FlowerPotBlock flowerPot) {
+		return getFromContent(flowerPot.getContent());
+	}
 
-    public static @Nullable Block getFromContent(Block content) {
-        return CONTENT_TO_POTTED.get(content);
-    }
+	public static @Nullable Block getFromContent(Block content) {
+		return CONTENT_TO_POTTED.get(content);
+	}
 
-    /**
-     * {@return the associated flower pot}
-     */
-    public FlowerPotBlock getFlowerPot() {
-        return this.flowerPot;
-    }
+	/**
+	 * {@return the associated flower pot}
+	 */
+	public FlowerPotBlock getFlowerPot() {
+		return this.flowerPot;
+	}
 
-    /**
-     * {@return the associated flower pot}
-     */
-    public BlockState getFlowerPotState(BlockState state) {
-        return AuroraUtil.remapBlockState(state, this.getFlowerPot().getDefaultState());
-    }
+	/**
+	 * {@return the associated flower pot}
+	 */
+	public BlockState getFlowerPotState(BlockState state) {
+		return AuroraUtil.remapBlockState(state, this.getFlowerPot().getDefaultState());
+	}
 
-    /**
-     * {@return the content of this flower pot}
-     */
-    public Block getContent() {
-        return this.flowerPot.getContent();
-    }
+	/**
+	 * {@return the content of this flower pot}
+	 */
+	public Block getContent() {
+		return this.flowerPot.getContent();
+	}
 
-    private boolean isEmpty() {
-        return this.flowerPot.getContent() == Blocks.AIR;
-    }
+	private boolean isEmpty() {
+		return this.flowerPot.getContent() == Blocks.AIR;
+	}
 
-    /* Shapes */
+	/* Shapes */
 
-    @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return SHAPE;
-    }
+	@Override
+	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return SHAPE;
+	}
 
-    /* Placement */
+	/* Placement */
 
-    @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return !VoxelShapes.matchesAnywhere(world.getBlockState(pos.up()).getSidesShape(world, pos).getFace(Direction.DOWN),
-                VoxelShapes.fullCube(), BooleanBiFunction.ONLY_SECOND);
-    }
+	@Override
+	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+		return !VoxelShapes.matchesAnywhere(world.getBlockState(pos.up()).getSidesShape(world, pos).getFace(Direction.DOWN),
+				VoxelShapes.fullCube(), BooleanBiFunction.ONLY_SECOND);
+	}
 
-    @Override
-    public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        var state = super.getPlacementState(ctx);
-        if (state == null) return null;
-        var plantState = this.getContent().getPlacementState(ctx);
-        if (plantState != null)
-            return AuroraUtil.remapBlockState(plantState, state);
-        return state;
-    }
+	@Override
+	public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
+		var state = super.getPlacementState(ctx);
+		if (state == null) return null;
+		var plantState = this.getContent().getPlacementState(ctx);
+		if (plantState != null)
+			return AuroraUtil.remapBlockState(plantState, state);
+		return state;
+	}
 
-    /* Updates */
+	/* Updates */
 
-    @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world,
-                                                BlockPos pos, BlockPos neighborPos) {
-        return direction == Direction.UP && !state.canPlaceAt(world, pos)
-                ? Blocks.AIR.getDefaultState()
-                : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
-    }
+	@Override
+	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world,
+	                                            BlockPos pos, BlockPos neighborPos) {
+		return direction == Direction.UP && !state.canPlaceAt(world, pos)
+				? Blocks.AIR.getDefaultState()
+				: super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+	}
 
-    /* Interaction */
+	/* Interaction */
 
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        var handStack = player.getStackInHand(hand);
-        var blockState = (handStack.getItem() instanceof BlockItem blockItem ?
-                CONTENT_TO_POTTED.getOrDefault(blockItem.getBlock(), Blocks.AIR)
-                : Blocks.AIR
-        ).getPlacementState(new ItemPlacementContext(player, hand, handStack, hit));
-        boolean empty = this.isEmpty();
-        if ((blockState == null || blockState.isOf(Blocks.AIR)) != empty) {
-            if (empty) {
-                world.setBlockState(pos, blockState, Block.NOTIFY_ALL);
-                player.incrementStat(Stats.POT_FLOWER);
-                if (!player.getAbilities().creativeMode) {
-                    handStack.decrement(1);
-                }
-            } else {
-                var contentStack = new ItemStack(this.getContent());
-                if (handStack.isEmpty())
-                    player.setStackInHand(hand, contentStack);
-                else if (!player.giveItemStack(contentStack))
-                    player.dropItem(contentStack, false);
+	@Override
+	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+		var handStack = player.getStackInHand(hand);
+		var blockState = (handStack.getItem() instanceof BlockItem blockItem ?
+				CONTENT_TO_POTTED.getOrDefault(blockItem.getBlock(), Blocks.AIR)
+				: Blocks.AIR
+		).getPlacementState(new ItemPlacementContext(player, hand, handStack, hit));
+		boolean empty = this.isEmpty();
+		if ((blockState == null || blockState.isOf(Blocks.AIR)) != empty) {
+			if (empty) {
+				world.setBlockState(pos, blockState, Block.NOTIFY_ALL);
+				player.incrementStat(Stats.POT_FLOWER);
+				if (!player.getAbilities().creativeMode) {
+					handStack.decrement(1);
+				}
+			} else {
+				var contentStack = new ItemStack(this.getContent());
+				if (handStack.isEmpty())
+					player.setStackInHand(hand, contentStack);
+				else if (!player.giveItemStack(contentStack))
+					player.dropItem(contentStack, false);
 
-                world.setBlockState(pos, DEFAULT.getDefaultState(), Block.NOTIFY_ALL);
-            }
+				world.setBlockState(pos, DEFAULT.getDefaultState(), Block.NOTIFY_ALL);
+			}
 
-            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-            return ActionResult.success(world.isClient);
-        } else return ActionResult.CONSUME;
-    }
+			world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+			return ActionResult.success(world.isClient);
+		} else return ActionResult.CONSUME;
+	}
 
-    @Override
-    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-        return this.isEmpty() ? super.getPickStack(world, pos, state) : new ItemStack(this.getContent());
-    }
+	@Override
+	public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+		return this.isEmpty() ? super.getPickStack(world, pos, state) : new ItemStack(this.getContent());
+	}
 
-    /* Entity Stuff */
+	/* Entity Stuff */
 
-    @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
-        return false;
-    }
+	@Override
+	public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+		return false;
+	}
 }

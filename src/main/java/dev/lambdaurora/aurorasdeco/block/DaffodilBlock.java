@@ -47,39 +47,39 @@ import java.util.List;
  * @since 1.0.0
  */
 public final class DaffodilBlock extends FlowerBlock {
-    public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+	public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
-    public DaffodilBlock() {
-        super(StatusEffects.NAUSEA, 8,
-                FabricBlockSettings.of(Material.PLANT)
-                        .noCollision()
-                        .breakInstantly()
-                        .sounds(BlockSoundGroup.GRASS)
-        );
+	public DaffodilBlock() {
+		super(StatusEffects.NAUSEA, 8,
+				FabricBlockSettings.of(Material.PLANT)
+						.noCollision()
+						.breakInstantly()
+						.sounds(BlockSoundGroup.GRASS)
+		);
 
-        this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
-    }
+		this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
+	}
 
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
-    }
+	@Override
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+		builder.add(FACING);
+	}
 
-    /* Placement */
+	/* Placement */
 
-    @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        var state = super.getPlacementState(ctx);
-        if (state != null)
-            return state.with(FACING, ctx.getPlayerFacing().getOpposite());
-        return null;
-    }
+	@Override
+	public BlockState getPlacementState(ItemPlacementContext ctx) {
+		var state = super.getPlacementState(ctx);
+		if (state != null)
+			return state.with(FACING, ctx.getPlayerFacing().getOpposite());
+		return null;
+	}
 
-    /* Tooltip */
+	/* Tooltip */
 
-    @Override
-    public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
-        super.appendTooltip(stack, world, tooltip, options);
-        tooltip.add(new LiteralText("Narcissus pseudonarcissus").formatted(Formatting.GOLD, Formatting.ITALIC));
-    }
+	@Override
+	public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
+		super.appendTooltip(stack, world, tooltip, options);
+		tooltip.add(new LiteralText("Narcissus pseudonarcissus").formatted(Formatting.GOLD, Formatting.ITALIC));
+	}
 }

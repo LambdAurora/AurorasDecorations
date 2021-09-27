@@ -55,84 +55,84 @@ import net.minecraft.world.World;
  */
 @SuppressWarnings("deprecation")
 public final class SawmillBlock extends Block {
-    public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+	public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
-    private static final VoxelShape SHAPE;
+	private static final VoxelShape SHAPE;
 
-    public SawmillBlock() {
-        super(FabricBlockSettings.of(Material.WOOD).nonOpaque().strength(2.5f).sounds(BlockSoundGroup.WOOD));
+	public SawmillBlock() {
+		super(FabricBlockSettings.of(Material.WOOD).nonOpaque().strength(2.5f).sounds(BlockSoundGroup.WOOD));
 
-        this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
-    }
+		this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
+	}
 
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
-    }
+	@Override
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+		builder.add(FACING);
+	}
 
-    @Override
-    public boolean hasSidedTransparency(BlockState state) {
-        return true;
-    }
+	@Override
+	public boolean hasSidedTransparency(BlockState state) {
+		return true;
+	}
 
-    /* Shapes */
+	/* Shapes */
 
-    @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return SHAPE;
-    }
+	@Override
+	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return SHAPE;
+	}
 
-    @Override
-    public VoxelShape getRaycastShape(BlockState state, BlockView world, BlockPos pos) {
-        return VoxelShapes.fullCube();
-    }
+	@Override
+	public VoxelShape getRaycastShape(BlockState state, BlockView world, BlockPos pos) {
+		return VoxelShapes.fullCube();
+	}
 
-    /* Placement */
+	/* Placement */
 
-    @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
-    }
+	@Override
+	public BlockState getPlacementState(ItemPlacementContext ctx) {
+		return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
+	}
 
-    @Override
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(FACING, rotation.rotate(state.get(FACING)));
-    }
+	@Override
+	public BlockState rotate(BlockState state, BlockRotation rotation) {
+		return state.with(FACING, rotation.rotate(state.get(FACING)));
+	}
 
-    @Override
-    public BlockState mirror(BlockState state, BlockMirror mirror) {
-        return state.rotate(mirror.getRotation(state.get(FACING)));
-    }
+	@Override
+	public BlockState mirror(BlockState state, BlockMirror mirror) {
+		return state.rotate(mirror.getRotation(state.get(FACING)));
+	}
 
-    /* Interaction */
+	/* Interaction */
 
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-                              BlockHitResult hit) {
-        if (world.isClient()) {
-            return ActionResult.SUCCESS;
-        } else {
-            player.openHandledScreen(state.createScreenHandlerFactory(world, pos));
-            player.incrementStat(AurorasDecoRegistry.INTERACT_WITH_SAWMILL);
-            return ActionResult.CONSUME;
-        }
-    }
+	@Override
+	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+	                          BlockHitResult hit) {
+		if (world.isClient()) {
+			return ActionResult.SUCCESS;
+		} else {
+			player.openHandledScreen(state.createScreenHandlerFactory(world, pos));
+			player.incrementStat(AurorasDecoRegistry.INTERACT_WITH_SAWMILL);
+			return ActionResult.CONSUME;
+		}
+	}
 
-    @Override
-    public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
-        return new SimpleNamedScreenHandlerFactory((syncId, playerInventory, player) ->
-                new SawmillScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(world, pos)),
-                new TranslatableText(this.getTranslationKey()));
-    }
+	@Override
+	public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
+		return new SimpleNamedScreenHandlerFactory((syncId, playerInventory, player) ->
+				new SawmillScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(world, pos)),
+				new TranslatableText(this.getTranslationKey()));
+	}
 
-    static {
-        SHAPE = VoxelShapes.union(
-                createCuboidShape(0, 14, 0, 16, 16, 16),
-                createCuboidShape(3, 12, 3, 13, 14, 13),
-                createCuboidShape(0, 0, 0, 3, 14, 3),
-                createCuboidShape(0, 0, 13, 3, 14, 16),
-                createCuboidShape(13, 0, 13, 16, 14, 16),
-                createCuboidShape(13, 0, 0, 16, 14, 3)
-        );
-    }
+	static {
+		SHAPE = VoxelShapes.union(
+				createCuboidShape(0, 14, 0, 16, 16, 16),
+				createCuboidShape(3, 12, 3, 13, 14, 13),
+				createCuboidShape(0, 0, 0, 3, 14, 3),
+				createCuboidShape(0, 0, 13, 3, 14, 16),
+				createCuboidShape(13, 0, 13, 16, 14, 16),
+				createCuboidShape(13, 0, 0, 16, 14, 3)
+		);
+	}
 }

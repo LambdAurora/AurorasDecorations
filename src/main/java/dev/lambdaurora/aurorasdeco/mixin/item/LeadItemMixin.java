@@ -37,43 +37,43 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LeadItem.class)
 public abstract class LeadItemMixin {
-    @Shadow
-    public static ActionResult attachHeldMobsToBlock(PlayerEntity player, World world, BlockPos pos) {
-        throw new UnsupportedOperationException("Mixin injection failed.");
-    }
+	@Shadow
+	public static ActionResult attachHeldMobsToBlock(PlayerEntity player, World world, BlockPos pos) {
+		throw new UnsupportedOperationException("Mixin injection failed.");
+	}
 
-    @Unique
-    private final ThreadLocal<ItemUsageContext> aurorasdeco$usageCtx = new ThreadLocal<>();
+	@Unique
+	private final ThreadLocal<ItemUsageContext> aurorasdeco$usageCtx = new ThreadLocal<>();
 
-    @Inject(method = "useOnBlock", at = @At("HEAD"))
-    private void onUseOnBlock(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir) {
-        this.aurorasdeco$usageCtx.set(context);
-    }
+	@Inject(method = "useOnBlock", at = @At("HEAD"))
+	private void onUseOnBlock(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir) {
+		this.aurorasdeco$usageCtx.set(context);
+	}
 
-    @Redirect(
-            method = "useOnBlock",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/item/LeadItem;attachHeldMobsToBlock(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/util/ActionResult;"
-            )
-    )
-    private ActionResult onAttachHeldMobsToBlock(PlayerEntity player, World world, BlockPos pos) {
-        var result = attachHeldMobsToBlock(player, world, pos);
+	@Redirect(
+			method = "useOnBlock",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/item/LeadItem;attachHeldMobsToBlock(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/util/ActionResult;"
+			)
+	)
+	private ActionResult onAttachHeldMobsToBlock(PlayerEntity player, World world, BlockPos pos) {
+		var result = attachHeldMobsToBlock(player, world, pos);
 
-        if (result == ActionResult.PASS) {
-            var stack = this.aurorasdeco$usageCtx.get().getStack();
+		if (result == ActionResult.PASS) {
+			var stack = this.aurorasdeco$usageCtx.get().getStack();
 
-            var knot = new FakeLeashKnotEntity(AurorasDecoRegistry.FAKE_LEASH_KNOT_ENTITY_TYPE, world);
-            knot.setPosition(pos.getX() + 0.5, pos.getY() + 0.5 - 1F / 8F, pos.getZ() + 0.5);
-            world.spawnEntity(knot);
-            knot.attachLeash(player, true);
+			var knot = new FakeLeashKnotEntity(AurorasDecoRegistry.FAKE_LEASH_KNOT_ENTITY_TYPE, world);
+			knot.setPosition(pos.getX() + 0.5, pos.getY() + 0.5 - 1F / 8F, pos.getZ() + 0.5);
+			world.spawnEntity(knot);
+			knot.attachLeash(player, true);
 
-            if (!player.isCreative())
-                stack.decrement(1);
-            world.playSound(null, pos, SoundEvents.ENTITY_LEASH_KNOT_PLACE, SoundCategory.BLOCKS, 1.f, 1.f);
-            return ActionResult.SUCCESS;
-        }
+			if (!player.isCreative())
+				stack.decrement(1);
+			world.playSound(null, pos, SoundEvents.ENTITY_LEASH_KNOT_PLACE, SoundCategory.BLOCKS, 1.f, 1.f);
+			return ActionResult.SUCCESS;
+		}
 
-        return result;
-    }
+		return result;
+	}
 }

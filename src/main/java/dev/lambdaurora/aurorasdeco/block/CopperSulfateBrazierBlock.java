@@ -34,20 +34,20 @@ import java.util.Random;
  * @since 1.0.0
  */
 public class CopperSulfateBrazierBlock extends BrazierBlock {
-    public CopperSulfateBrazierBlock(FabricBlockSettings settings, int fireDamage, ParticleEffect particle) {
-        super(settings.ticksRandomly(), fireDamage, particle);
-    }
+	public CopperSulfateBrazierBlock(FabricBlockSettings settings, int fireDamage, ParticleEffect particle) {
+		super(settings.ticksRandomly(), fireDamage, particle);
+	}
 
-    /* Ticking */
+	/* Ticking */
 
-    @Override
-    public boolean hasRandomTicks(BlockState state) {
-        return state.get(LIT);
-    }
+	@Override
+	public boolean hasRandomTicks(BlockState state) {
+		return state.get(LIT);
+	}
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        CopperSulfateBehavior.attemptToDecompose(state, world, pos, random, 20);
-    }
+	@SuppressWarnings("deprecation")
+	@Override
+	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+		CopperSulfateBehavior.attemptToDecompose(state, world, pos, random, 20);
+	}
 }

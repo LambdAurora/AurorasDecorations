@@ -46,59 +46,59 @@ import java.util.Map;
  */
 @Mixin(ModelLoader.class)
 public abstract class ModelLoaderMixin {
-    @Shadow
-    @Final
-    private ResourceManager resourceManager;
-    @Shadow
-    @Final
-    private ModelVariantMap.DeserializationContext variantMapDeserializationContext;
+	@Shadow
+	@Final
+	private ResourceManager resourceManager;
+	@Shadow
+	@Final
+	private ModelVariantMap.DeserializationContext variantMapDeserializationContext;
 
-    @Unique
-    private boolean aurorasdeco$firstRun = true;
-    @Unique
-    private final RestModelManager aurorasdeco$restModelManager = new RestModelManager((ModelLoader) (Object) this);
+	@Unique
+	private boolean aurorasdeco$firstRun = true;
+	@Unique
+	private final RestModelManager aurorasdeco$restModelManager = new RestModelManager((ModelLoader) (Object) this);
 
-    @Shadow
-    protected abstract void putModel(Identifier id, UnbakedModel unbakedModel);
+	@Shadow
+	protected abstract void putModel(Identifier id, UnbakedModel unbakedModel);
 
-    @Shadow
-    @Final
-    private Map<Identifier, UnbakedModel> modelsToBake;
+	@Shadow
+	@Final
+	private Map<Identifier, UnbakedModel> modelsToBake;
 
-    @Inject(method = "putModel", at = @At("HEAD"), cancellable = true)
-    private void onPutModel(Identifier id, UnbakedModel unbakedModel, CallbackInfo ci) {
-        if (id instanceof ModelIdentifier modelId
-                && !(unbakedModel instanceof AuroraUnbakedModel)) {
-            if (!modelId.getVariant().equals("inventory")) {
-                if (this.aurorasdeco$firstRun) {
-                    this.aurorasdeco$firstRun = false;
-                    this.aurorasdeco$restModelManager.init(this.resourceManager, this.variantMapDeserializationContext,
-                            (restModelId, model) -> {
-                                this.putModel(restModelId, model);
-                                this.modelsToBake.put(restModelId, model);
-                            });
-                    BlackboardBlockEntity.markAllMeshesDirty();
-                }
+	@Inject(method = "putModel", at = @At("HEAD"), cancellable = true)
+	private void onPutModel(Identifier id, UnbakedModel unbakedModel, CallbackInfo ci) {
+		if (id instanceof ModelIdentifier modelId
+				&& !(unbakedModel instanceof AuroraUnbakedModel)) {
+			if (!modelId.getVariant().equals("inventory")) {
+				if (this.aurorasdeco$firstRun) {
+					this.aurorasdeco$firstRun = false;
+					this.aurorasdeco$restModelManager.init(this.resourceManager, this.variantMapDeserializationContext,
+							(restModelId, model) -> {
+								this.putModel(restModelId, model);
+								this.modelsToBake.put(restModelId, model);
+							});
+					BlackboardBlockEntity.markAllMeshesDirty();
+				}
 
-                if (modelId.getNamespace().equals(AurorasDeco.NAMESPACE)) {
-                    if (modelId.getPath().startsWith("bench/")) {
-                        this.putModel(id, new UnbakedBenchModel(unbakedModel, this.aurorasdeco$restModelManager));
-                        ci.cancel();
-                    } else if (modelId.getPath().startsWith("big_flower_pot/")) {
-                        var potBlock = PottedPlantType.fromId(modelId.getPath().substring("big_flower_pot/".length())).getPot();
-                        if (potBlock.hasDynamicModel()) {
-                            this.putModel(id, new UnbakedForwardingModel(unbakedModel, BakedBigFlowerPotModel::new));
-                            ci.cancel();
-                        }
-                    } else if (modelId.getPath().startsWith("hanging_flower_pot")) {
-                        this.putModel(id, new UnbakedForwardingModel(unbakedModel, BakedHangingFlowerPotModel::new));
-                        ci.cancel();
-                    } else if (modelId.getPath().endsWith("board")) {
-                        this.putModel(id, new UnbakedBlackboardModel(unbakedModel));
-                        ci.cancel();
-                    }
-                }
-            }
-        }
-    }
+				if (modelId.getNamespace().equals(AurorasDeco.NAMESPACE)) {
+					if (modelId.getPath().startsWith("bench/")) {
+						this.putModel(id, new UnbakedBenchModel(unbakedModel, this.aurorasdeco$restModelManager));
+						ci.cancel();
+					} else if (modelId.getPath().startsWith("big_flower_pot/")) {
+						var potBlock = PottedPlantType.fromId(modelId.getPath().substring("big_flower_pot/".length())).getPot();
+						if (potBlock.hasDynamicModel()) {
+							this.putModel(id, new UnbakedForwardingModel(unbakedModel, BakedBigFlowerPotModel::new));
+							ci.cancel();
+						}
+					} else if (modelId.getPath().startsWith("hanging_flower_pot")) {
+						this.putModel(id, new UnbakedForwardingModel(unbakedModel, BakedHangingFlowerPotModel::new));
+						ci.cancel();
+					} else if (modelId.getPath().endsWith("board")) {
+						this.putModel(id, new UnbakedBlackboardModel(unbakedModel));
+						ci.cancel();
+					}
+				}
+			}
+		}
+	}
 }

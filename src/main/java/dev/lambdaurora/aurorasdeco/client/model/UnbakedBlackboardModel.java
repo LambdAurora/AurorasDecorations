@@ -38,26 +38,26 @@ import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public record UnbakedBlackboardModel(UnbakedModel baseModel) implements AuroraUnbakedModel {
-    private static final SpriteIdentifier WHITE = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE,
-            AurorasDeco.id("special/white"));
+	private static final SpriteIdentifier WHITE = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE,
+			AurorasDeco.id("special/white"));
 
-    @Override
-    public Collection<Identifier> getModelDependencies() {
-        return this.baseModel().getModelDependencies();
-    }
+	@Override
+	public Collection<Identifier> getModelDependencies() {
+		return this.baseModel().getModelDependencies();
+	}
 
-    @Override
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter,
-                                                               Set<Pair<String, String>> unresolvedTextureReferences) {
-        var textures = new HashSet<>(this.baseModel().getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences));
-        textures.add(WHITE);
-        return textures;
-    }
+	@Override
+	public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter,
+	                                                           Set<Pair<String, String>> unresolvedTextureReferences) {
+		var textures = new HashSet<>(this.baseModel().getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences));
+		textures.add(WHITE);
+		return textures;
+	}
 
-    @Override
-    public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer,
-                           Identifier modelId) {
-        Blackboard.setWhiteSprite(textureGetter.apply(WHITE));
-        return new BakedBlackboardModel(this.baseModel().bake(loader, textureGetter, rotationContainer, modelId));
-    }
+	@Override
+	public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer,
+	                       Identifier modelId) {
+		Blackboard.setWhiteSprite(textureGetter.apply(WHITE));
+		return new BakedBlackboardModel(this.baseModel().bake(loader, textureGetter, rotationContainer, modelId));
+	}
 }

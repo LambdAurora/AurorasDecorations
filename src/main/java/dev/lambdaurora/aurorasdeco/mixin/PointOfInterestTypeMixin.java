@@ -34,24 +34,24 @@ import java.util.Set;
 
 @Mixin(PointOfInterestType.class)
 public class PointOfInterestTypeMixin implements PointOfInterestTypeAccessor {
-    @Mutable
-    @Shadow
-    @Final
-    private Set<BlockState> blockStates;
+	@Mutable
+	@Shadow
+	@Final
+	private Set<BlockState> blockStates;
 
-    @Inject(
-            method = "<init>(Ljava/lang/String;Ljava/util/Set;II)V",
-            at = @At("RETURN")
-    )
-    private void onInit(String id, Set<BlockState> blockStates, int ticketCount, int searchDistance, CallbackInfo ci) {
-        if (id.equals("home") && blockStates instanceof ImmutableSet) {
-            // We need this one to be mutable.
-            this.blockStates = new HashSet<>(blockStates);
-        }
-    }
+	@Inject(
+			method = "<init>(Ljava/lang/String;Ljava/util/Set;II)V",
+			at = @At("RETURN")
+	)
+	private void onInit(String id, Set<BlockState> blockStates, int ticketCount, int searchDistance, CallbackInfo ci) {
+		if (id.equals("home") && blockStates instanceof ImmutableSet) {
+			// We need this one to be mutable.
+			this.blockStates = new HashSet<>(blockStates);
+		}
+	}
 
-    @Override
-    public Set<BlockState> getBlockStates() {
-        return this.blockStates;
-    }
+	@Override
+	public Set<BlockState> getBlockStates() {
+		return this.blockStates;
+	}
 }

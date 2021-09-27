@@ -21,14 +21,14 @@ import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Property;
 
 public final class AurorasDecoProperties {
-    private AurorasDecoProperties() {
-        throw new UnsupportedOperationException("Someone tried to instantiate a singleton. How?");
-    }
+	private AurorasDecoProperties() {
+		throw new UnsupportedOperationException("Someone tried to instantiate a singleton. How?");
+	}
 
-    public static final EnumProperty<ExtensionType> EXTENSION = EnumProperty.of("extension", ExtensionType.class);
-    public static final EnumProperty<PartType> PART_TYPE = EnumProperty.of("type", PartType.class);
+	public static final EnumProperty<ExtensionType> EXTENSION = EnumProperty.of("extension", ExtensionType.class);
+	public static final EnumProperty<PartType> PART_TYPE = EnumProperty.of("type", PartType.class);
 
-    public static final Property.Value<PartType> PART_TYPE_BOTTOM = PART_TYPE.createValue(PartType.BOTTOM);
-    public static final Property.Value<PartType> PART_TYPE_TOP = PART_TYPE.createValue(PartType.TOP);
-    public static final Property.Value<PartType> PART_TYPE_DOUBLE = PART_TYPE.createValue(PartType.DOUBLE);
+	public static final Property.Value<PartType> PART_TYPE_BOTTOM = PART_TYPE.createValue(PartType.BOTTOM);
+	public static final Property.Value<PartType> PART_TYPE_TOP = PART_TYPE.createValue(PartType.TOP);
+	public static final Property.Value<PartType> PART_TYPE_DOUBLE = PART_TYPE.createValue(PartType.DOUBLE);
 }

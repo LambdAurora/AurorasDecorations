@@ -25,14 +25,14 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(ForestFlowerBlockStateProvider.class)
 public interface ForestFlowerBlockStateProviderAccessor {
-    @Accessor("FLOWERS")
-    static BlockState[] getFlowers() {
-        throw new UnsupportedOperationException("Mixin injection failed.");
-    }
+	@Accessor("FLOWERS")
+	static BlockState[] getFlowers() {
+		throw new UnsupportedOperationException("Mixin injection failed.");
+	}
 
-    @Mutable
-    @Accessor("FLOWERS")
-    static void setFlowers(BlockState[] flowers) {
-        throw new UnsupportedOperationException("Mixin injection failed.");
-    }
+	@Mutable
+	@Accessor("FLOWERS")
+	static void setFlowers(BlockState[] flowers) {
+		throw new UnsupportedOperationException("Mixin injection failed.");
+	}
 }

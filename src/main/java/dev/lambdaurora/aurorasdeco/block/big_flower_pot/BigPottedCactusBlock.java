@@ -38,42 +38,42 @@ import net.minecraft.world.World;
  * @since 1.0.0
  */
 public final class BigPottedCactusBlock extends BigFlowerPotBlock {
-    public static final VoxelShape CACTUS_SHAPE = createCuboidShape(
-            3.f, 14.f, 3.f,
-            13.f, 23.1f, 13.f
-    );
-    public static final VoxelShape POCKET_CACTUS_SHAPE = VoxelShapes.union(
-            Block.createCuboidShape(6.05, 14.0, 6.05, 9.95, 16.72, 9.95),
-            Block.createCuboidShape(6.7, 16.72, 6.7, 9.3, 23.2, 9.3)
-    );
+	public static final VoxelShape CACTUS_SHAPE = createCuboidShape(
+			3.f, 14.f, 3.f,
+			13.f, 23.1f, 13.f
+	);
+	public static final VoxelShape POCKET_CACTUS_SHAPE = VoxelShapes.union(
+			Block.createCuboidShape(6.05, 14.0, 6.05, 9.95, 16.72, 9.95),
+			Block.createCuboidShape(6.7, 16.72, 6.7, 9.3, 23.2, 9.3)
+	);
 
-    private final Box cactusBox;
-    private final VoxelShape shape;
+	private final Box cactusBox;
+	private final VoxelShape shape;
 
-    public BigPottedCactusBlock(PottedPlantType plantType, VoxelShape cactusShape) {
-        super(plantType);
+	public BigPottedCactusBlock(PottedPlantType plantType, VoxelShape cactusShape) {
+		super(plantType);
 
-        this.cactusBox = cactusShape.getBoundingBox();
-        this.shape = VoxelShapes.union(cactusShape, BIG_FLOWER_POT_SHAPE);
-    }
+		this.cactusBox = cactusShape.getBoundingBox();
+		this.shape = VoxelShapes.union(cactusShape, BIG_FLOWER_POT_SHAPE);
+	}
 
-    /* Shapes */
+	/* Shapes */
 
-    @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return this.shape;
-    }
+	@Override
+	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return this.shape;
+	}
 
-    /* Collision */
+	/* Collision */
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        Box cactusBox = this.cactusBox.offset(pos).expand(0.1);
-        Box entityBox = entity.getBoundingBox();
+	@SuppressWarnings("deprecation")
+	@Override
+	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+		Box cactusBox = this.cactusBox.offset(pos).expand(0.1);
+		Box entityBox = entity.getBoundingBox();
 
-        if (cactusBox.intersects(entityBox)) {
-            entity.damage(DamageSource.CACTUS, 1.f);
-        }
-    }
+		if (cactusBox.intersects(entityBox)) {
+			entity.damage(DamageSource.CACTUS, 1.f);
+		}
+	}
 }

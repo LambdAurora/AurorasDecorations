@@ -29,19 +29,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(CatEntity.class)
 public abstract class CatEntityMixin extends TameableEntity {
-    protected CatEntityMixin(EntityType<? extends TameableEntity> entityType, World world) {
-        super(entityType, world);
-    }
+	protected CatEntityMixin(EntityType<? extends TameableEntity> entityType, World world) {
+		super(entityType, world);
+	}
 
-    @Inject(
-            method = "initGoals",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/entity/ai/goal/GoalSelector;add(ILnet/minecraft/entity/ai/goal/Goal;)V",
-                    ordinal = 7
-            )
-    )
-    private void onInitGoals(CallbackInfo ci) {
-        this.goalSelector.add(7, new CatSleepInPetBedGoal((CatEntity) (Object) this, 0.8));
-    }
+	@Inject(
+			method = "initGoals",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/entity/ai/goal/GoalSelector;add(ILnet/minecraft/entity/ai/goal/Goal;)V",
+					ordinal = 7
+			)
+	)
+	private void onInitGoals(CallbackInfo ci) {
+		this.goalSelector.add(7, new CatSleepInPetBedGoal((CatEntity) (Object) this, 0.8));
+	}
 }

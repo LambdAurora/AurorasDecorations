@@ -36,82 +36,82 @@ import net.minecraft.world.World;
  * @since 1.0.0
  */
 public class SeatEntity extends Entity {
-    private boolean timeout = false;
+	private boolean timeout = false;
 
-    public SeatEntity(EntityType<?> type, World world) {
-        super(type, world);
+	public SeatEntity(EntityType<?> type, World world) {
+		super(type, world);
 
-        this.noClip = true;
-    }
+		this.noClip = true;
+	}
 
-    public void setTimeout(boolean timeout) {
-        this.timeout = timeout;
-    }
+	public void setTimeout(boolean timeout) {
+		this.timeout = timeout;
+	}
 
-    @Override
-    protected void initDataTracker() {
-    }
+	@Override
+	protected void initDataTracker() {
+	}
 
-    @Override
-    public double getMountedHeightOffset() {
-        return 0;
-    }
+	@Override
+	public double getMountedHeightOffset() {
+		return 0;
+	}
 
-    @Override
-    public Vec3d updatePassengerForDismount(LivingEntity passenger) {
-        var vec = super.updatePassengerForDismount(passenger);
+	@Override
+	public Vec3d updatePassengerForDismount(LivingEntity passenger) {
+		var vec = super.updatePassengerForDismount(passenger);
 
-        if (this.getEntityWorld().getBlockState(this.getBlockPos().up()).isAir()) {
-            return new Vec3d(vec.x, this.getBlockY() + 1, vec.z);
-        }
+		if (this.getEntityWorld().getBlockState(this.getBlockPos().up()).isAir()) {
+			return new Vec3d(vec.x, this.getBlockY() + 1, vec.z);
+		}
 
-        return vec;
-    }
+		return vec;
+	}
 
-    @Override
-    public boolean hasNoGravity() {
-        return true;
-    }
+	@Override
+	public boolean hasNoGravity() {
+		return true;
+	}
 
-    @Override
-    public void move(MovementType movementType, Vec3d movement) {
-        if (movementType == MovementType.PISTON)
-            return;
-        super.move(movementType, movement);
-    }
+	@Override
+	public void move(MovementType movementType, Vec3d movement) {
+		if (movementType == MovementType.PISTON)
+			return;
+		super.move(movementType, movement);
+	}
 
-    /* Serialization */
+	/* Serialization */
 
-    @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) {
-    }
+	@Override
+	protected void readCustomDataFromNbt(NbtCompound nbt) {
+	}
 
-    @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) {
-    }
+	@Override
+	protected void writeCustomDataToNbt(NbtCompound nbt) {
+	}
 
-    /* Networking */
+	/* Networking */
 
-    @Override
-    public Packet<?> createSpawnPacket() {
-        return new EntitySpawnS2CPacket(this);
-    }
+	@Override
+	public Packet<?> createSpawnPacket() {
+		return new EntitySpawnS2CPacket(this);
+	}
 
-    /* Ticking */
+	/* Ticking */
 
-    @Override
-    public void tick() {
-        super.tick();
+	@Override
+	public void tick() {
+		super.tick();
 
-        if (!this.world.isClient()) {
-            var state = this.getEntityWorld().getBlockState(this.getBlockPos());
-            if (!(state.getBlock() instanceof SeatBlock || this.timeout) || !this.hasPassengers())
-                this.discard();
-        }
-    }
+		if (!this.world.isClient()) {
+			var state = this.getEntityWorld().getBlockState(this.getBlockPos());
+			if (!(state.getBlock() instanceof SeatBlock || this.timeout) || !this.hasPassengers())
+				this.discard();
+		}
+	}
 
-    @Override
-    protected void removePassenger(Entity passenger) {
-        super.removePassenger(passenger);
-    }
+	@Override
+	protected void removePassenger(Entity passenger) {
+		super.removePassenger(passenger);
+	}
 }

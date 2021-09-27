@@ -39,41 +39,41 @@ import java.util.Map;
 
 @Mixin(PistonBlock.class)
 public abstract class PistonBlockMixin {
-    @Shadow
-    protected abstract boolean move(World world, BlockPos pos, Direction dir, boolean retract);
+	@Shadow
+	protected abstract boolean move(World world, BlockPos pos, Direction dir, boolean retract);
 
-    @Inject(
-            method = "move",
-            at = @At(value = "INVOKE", target = "Ljava/util/Map;remove(Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0),
-            locals = LocalCapture.CAPTURE_FAILHARD
-    )
-    private void onMove(World world, BlockPos pos, Direction dir, boolean retract,
-                        CallbackInfoReturnable<Boolean> cir,
-                        BlockPos pistonHeadPos,
-                        PistonHandler handler, Map<BlockPos, BlockState> map,
-                        List<BlockPos> movedBlocks, List<BlockState> list2, List<BlockPos> brokenBlocks,
-                        BlockState[] affectedStates,
-                        Direction moveDir, int j, int l,
-                        BlockPos currentPos, BlockState currentState) {
-        if (currentState.getBlock() instanceof SeatBlock && !world.isClient()) {
-            var seats = world.getEntitiesByClass(SeatEntity.class,
-                    new Box(
-                            currentPos.getX() - moveDir.getOffsetX(),
-                            currentPos.getY() - moveDir.getOffsetY(),
-                            currentPos.getZ() - moveDir.getOffsetZ(),
-                            currentPos.getX() + 1 - moveDir.getOffsetX(),
-                            currentPos.getY() + 1 - moveDir.getOffsetY(),
-                            currentPos.getZ() + 1 - moveDir.getOffsetZ()),
-                    Entity::hasPassengers
-            );
+	@Inject(
+			method = "move",
+			at = @At(value = "INVOKE", target = "Ljava/util/Map;remove(Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0),
+			locals = LocalCapture.CAPTURE_FAILHARD
+	)
+	private void onMove(World world, BlockPos pos, Direction dir, boolean retract,
+	                    CallbackInfoReturnable<Boolean> cir,
+	                    BlockPos pistonHeadPos,
+	                    PistonHandler handler, Map<BlockPos, BlockState> map,
+	                    List<BlockPos> movedBlocks, List<BlockState> list2, List<BlockPos> brokenBlocks,
+	                    BlockState[] affectedStates,
+	                    Direction moveDir, int j, int l,
+	                    BlockPos currentPos, BlockState currentState) {
+		if (currentState.getBlock() instanceof SeatBlock && !world.isClient()) {
+			var seats = world.getEntitiesByClass(SeatEntity.class,
+					new Box(
+							currentPos.getX() - moveDir.getOffsetX(),
+							currentPos.getY() - moveDir.getOffsetY(),
+							currentPos.getZ() - moveDir.getOffsetZ(),
+							currentPos.getX() + 1 - moveDir.getOffsetX(),
+							currentPos.getY() + 1 - moveDir.getOffsetY(),
+							currentPos.getZ() + 1 - moveDir.getOffsetZ()),
+					Entity::hasPassengers
+			);
 
-            for (var seat : seats) {
-                seat.refreshPositionAndAngles(
-                        seat.getX() + moveDir.getOffsetX(), seat.getY() + moveDir.getOffsetY(), seat.getZ() + moveDir.getOffsetZ(),
-                        seat.getYaw(), seat.getPitch()
-                );
-                seat.setTimeout(true);
-            }
-        }
-    }
+			for (var seat : seats) {
+				seat.refreshPositionAndAngles(
+						seat.getX() + moveDir.getOffsetX(), seat.getY() + moveDir.getOffsetY(), seat.getZ() + moveDir.getOffsetZ(),
+						seat.getYaw(), seat.getPitch()
+				);
+				seat.setTimeout(true);
+			}
+		}
+	}
 }

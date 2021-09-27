@@ -41,20 +41,20 @@ import java.util.function.Supplier;
  */
 @Environment(EnvType.CLIENT)
 public class BakedHangingFlowerPotModel extends ForwardingBakedModel {
-    private final MinecraftClient client = MinecraftClient.getInstance();
+	private final MinecraftClient client = MinecraftClient.getInstance();
 
-    public BakedHangingFlowerPotModel(BakedModel baseModel) {
-        this.wrapped = baseModel;
-    }
+	public BakedHangingFlowerPotModel(BakedModel baseModel) {
+		this.wrapped = baseModel;
+	}
 
-    @Override
-    public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
-        super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+	@Override
+	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+		super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 
-        if (state.getBlock() instanceof HangingFlowerPotBlock hangingFlowerPotBlock) {
-            var model = this.client.getBakedModelManager().getBlockModels().getModel(hangingFlowerPotBlock.getFlowerPotState(state));
-            if (model instanceof FabricBakedModel fabricBakedModel)
-                fabricBakedModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
-        }
-    }
+		if (state.getBlock() instanceof HangingFlowerPotBlock hangingFlowerPotBlock) {
+			var model = this.client.getBakedModelManager().getBlockModels().getModel(hangingFlowerPotBlock.getFlowerPotState(state));
+			if (model instanceof FabricBakedModel fabricBakedModel)
+				fabricBakedModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+		}
+	}
 }

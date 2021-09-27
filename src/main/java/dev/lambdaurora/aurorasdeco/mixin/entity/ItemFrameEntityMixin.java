@@ -38,43 +38,43 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemFrameEntity.class)
 public abstract class ItemFrameEntityMixin extends AbstractDecorationEntity {
-    @Shadow
-    private boolean fixed;
+	@Shadow
+	private boolean fixed;
 
-    @Shadow
-    public abstract ItemStack getHeldItemStack();
+	@Shadow
+	public abstract ItemStack getHeldItemStack();
 
-    protected ItemFrameEntityMixin(EntityType<? extends AbstractDecorationEntity> entityType, World world) {
-        super(entityType, world);
-    }
+	protected ItemFrameEntityMixin(EntityType<? extends AbstractDecorationEntity> entityType, World world) {
+		super(entityType, world);
+	}
 
-    @Inject(
-            method = "dropHeldStack",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/entity/decoration/ItemFrameEntity;setHeldItemStack(Lnet/minecraft/item/ItemStack;)V"
-            )
-    )
-    private void onDropHeldStack(Entity entity, boolean alwaysDrop, CallbackInfo ci) {
-        this.setInvisible(false);
-    }
+	@Inject(
+			method = "dropHeldStack",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/entity/decoration/ItemFrameEntity;setHeldItemStack(Lnet/minecraft/item/ItemStack;)V"
+			)
+	)
+	private void onDropHeldStack(Entity entity, boolean alwaysDrop, CallbackInfo ci) {
+		this.setInvisible(false);
+	}
 
-    @Inject(method = "interact", at = @At("HEAD"), cancellable = true)
-    private void onInteract(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        if (!this.fixed) {
-            var stack = player.getStackInHand(hand);
-            var heldStack = this.getHeldItemStack();
-            if (!heldStack.isEmpty() && stack.isOf(Items.SHEARS) && !this.isInvisible()) {
-                if (!this.getEntityWorld().isClient()) {
-                    this.setInvisible(true);
-                    this.playSound(AurorasDecoSounds.ITEM_FRAME_HIDE_BACKGROUND_SOUND_EVENT, 1.f, 1.f);
-                    stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
-                    world.emitGameEvent(player, GameEvent.SHEAR, this.getBlockPos());
-                    cir.setReturnValue(ActionResult.CONSUME);
-                } else {
-                    cir.setReturnValue(ActionResult.SUCCESS);
-                }
-            }
-        }
-    }
+	@Inject(method = "interact", at = @At("HEAD"), cancellable = true)
+	private void onInteract(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
+		if (!this.fixed) {
+			var stack = player.getStackInHand(hand);
+			var heldStack = this.getHeldItemStack();
+			if (!heldStack.isEmpty() && stack.isOf(Items.SHEARS) && !this.isInvisible()) {
+				if (!this.getEntityWorld().isClient()) {
+					this.setInvisible(true);
+					this.playSound(AurorasDecoSounds.ITEM_FRAME_HIDE_BACKGROUND_SOUND_EVENT, 1.f, 1.f);
+					stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
+					world.emitGameEvent(player, GameEvent.SHEAR, this.getBlockPos());
+					cir.setReturnValue(ActionResult.CONSUME);
+				} else {
+					cir.setReturnValue(ActionResult.SUCCESS);
+				}
+			}
+		}
+	}
 }

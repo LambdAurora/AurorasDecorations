@@ -26,11 +26,11 @@ import net.minecraft.resource.ResourceType;
 import java.util.function.Consumer;
 
 public class AurorasDecoPackCreator implements ResourcePackProvider {
-    @Override
-    public void register(Consumer<ResourcePackProfile> consumer, ResourcePackProfile.Factory factory) {
-        consumer.accept(ResourcePackProfile.of("aurorasdeco:pack/runtime",
-                true,
-                () -> AurorasDeco.RESOURCE_PACK.rebuild(ResourceType.SERVER_DATA, null),
-                factory, ResourcePackProfile.InsertionPosition.TOP, ResourcePackSource.onlyName()));
-    }
+	@Override
+	public void register(Consumer<ResourcePackProfile> consumer, ResourcePackProfile.Factory factory) {
+		consumer.accept(ResourcePackProfile.of("aurorasdeco:pack/runtime",
+				true,
+				() -> AurorasDeco.RESOURCE_PACK.rebuild(ResourceType.SERVER_DATA, null),
+				factory, ResourcePackProfile.InsertionPosition.TOP, ResourcePackSource.onlyName()));
+	}
 }

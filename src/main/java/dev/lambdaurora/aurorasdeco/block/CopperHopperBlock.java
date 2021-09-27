@@ -37,33 +37,33 @@ import net.minecraft.world.World;
  * @since 1.0.0
  */
 public class CopperHopperBlock extends HopperBlock {
-    public CopperHopperBlock(Settings settings) {
-        super(settings);
-    }
+	public CopperHopperBlock(Settings settings) {
+		super(settings);
+	}
 
-    /* Placement */
+	/* Placement */
 
-    @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (!state.isOf(newState.getBlock()) && !moved) {
-            var copperHopper = AurorasDecoRegistry.COPPER_HOPPER_BLOCK_ENTITY_TYPE.get(world, pos);
-            if (copperHopper != null) {
-                copperHopper.dropFilter();
-            }
+	@Override
+	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+		if (!state.isOf(newState.getBlock()) && !moved) {
+			var copperHopper = AurorasDecoRegistry.COPPER_HOPPER_BLOCK_ENTITY_TYPE.get(world, pos);
+			if (copperHopper != null) {
+				copperHopper.dropFilter();
+			}
 
-            super.onStateReplaced(state, world, pos, newState, moved);
-        }
-    }
+			super.onStateReplaced(state, world, pos, newState, moved);
+		}
+	}
 
-    /* Block Entity Stuff */
+	/* Block Entity Stuff */
 
-    @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return AurorasDecoRegistry.COPPER_HOPPER_BLOCK_ENTITY_TYPE.instantiate(pos, state);
-    }
+	@Override
+	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+		return AurorasDecoRegistry.COPPER_HOPPER_BLOCK_ENTITY_TYPE.instantiate(pos, state);
+	}
 
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return world.isClient() ? null : checkType(type, AurorasDecoRegistry.COPPER_HOPPER_BLOCK_ENTITY_TYPE, HopperBlockEntity::serverTick);
-    }
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+		return world.isClient() ? null : checkType(type, AurorasDecoRegistry.COPPER_HOPPER_BLOCK_ENTITY_TYPE, HopperBlockEntity::serverTick);
+	}
 }

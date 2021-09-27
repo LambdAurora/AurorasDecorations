@@ -38,63 +38,63 @@ import net.minecraft.util.math.BlockPos;
  * @since 1.0.0
  */
 public class CopperHopperBlockEntity extends FilteredHopperBlockEntity {
-    private final SimpleInventory filterInventory = new SimpleInventory(1);
+	private final SimpleInventory filterInventory = new SimpleInventory(1);
 
-    public CopperHopperBlockEntity(BlockPos pos, BlockState state) {
-        super(pos, state);
-    }
+	public CopperHopperBlockEntity(BlockPos pos, BlockState state) {
+		super(pos, state);
+	}
 
-    public ItemStack getFilter() {
-        return this.filterInventory.getStack(0);
-    }
+	public ItemStack getFilter() {
+		return this.filterInventory.getStack(0);
+	}
 
-    public void dropFilter() {
-        ItemScatterer.spawn(this.getWorld(), this.getPos(), this.filterInventory);
-    }
+	public void dropFilter() {
+		ItemScatterer.spawn(this.getWorld(), this.getPos(), this.filterInventory);
+	}
 
-    @Override
-    public boolean testItem(ItemStack stack) {
-        return isItemAcceptedByFilter(stack, this.getFilter());
-    }
+	@Override
+	public boolean testItem(ItemStack stack) {
+		return isItemAcceptedByFilter(stack, this.getFilter());
+	}
 
-    public static boolean isItemAcceptedByFilter(ItemStack stack, ItemStack filter) {
-        if (filter.isEmpty())
-            return true;
+	public static boolean isItemAcceptedByFilter(ItemStack stack, ItemStack filter) {
+		if (filter.isEmpty())
+			return true;
 
-        // Simple mode
-        return filter.getItem() == stack.getItem();
-    }
+		// Simple mode
+		return filter.getItem() == stack.getItem();
+	}
 
-    @Override
-    public BlockEntityType<?> getType() {
-        return AurorasDecoRegistry.COPPER_HOPPER_BLOCK_ENTITY_TYPE;
-    }
+	@Override
+	public BlockEntityType<?> getType() {
+		return AurorasDecoRegistry.COPPER_HOPPER_BLOCK_ENTITY_TYPE;
+	}
 
-    @Override
-    protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        return new CopperHopperScreenHandler(syncId, playerInventory, this, this.filterInventory);
-    }
+	@Override
+	protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
+		return new CopperHopperScreenHandler(syncId, playerInventory, this, this.filterInventory);
+	}
 
-    /* Serialization */
+	/* Serialization */
 
-    @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+	@Override
+	public void readNbt(NbtCompound nbt) {
+		super.readNbt(nbt);
 
-        if (nbt.contains("filter", NbtElement.COMPOUND_TYPE))
-            this.filterInventory.setStack(0, ItemStack.fromNbt(nbt.getCompound("filter")));
-        else this.filterInventory.setStack(0, ItemStack.EMPTY);
-    }
+		if (nbt.contains("filter", NbtElement.COMPOUND_TYPE))
+			this.filterInventory.setStack(0, ItemStack.fromNbt(nbt.getCompound("filter")));
+		else this.filterInventory.setStack(0, ItemStack.EMPTY);
+	}
 
-    @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
-        var filter = this.getFilter();
-        if (!filter.isEmpty())
-            nbt.put("filter", filter.writeNbt(new NbtCompound()));
-        return super.writeNbt(nbt);
-    }
+	@Override
+	public NbtCompound writeNbt(NbtCompound nbt) {
+		var filter = this.getFilter();
+		if (!filter.isEmpty())
+			nbt.put("filter", filter.writeNbt(new NbtCompound()));
+		return super.writeNbt(nbt);
+	}
 
-    public interface Filter {
-        boolean test(ItemStack stack, ItemStack filter);
-    }
+	public interface Filter {
+		boolean test(ItemStack stack, ItemStack filter);
+	}
 }

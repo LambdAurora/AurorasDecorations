@@ -22,7 +22,7 @@ import net.minecraft.block.Block;
 import java.util.Set;
 
 public interface BlockEntityTypeAccessor {
-    Set<Block> aurorasdeco$getMutableSupportedBlocks();
+	Set<Block> aurorasdeco$getMutableSupportedBlocks();
 
-    void aurorasdeco$addSupportedBlock(Block block);
+	void aurorasdeco$addSupportedBlock(Block block);
 }

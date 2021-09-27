@@ -61,228 +61,228 @@ import java.util.stream.Stream;
  */
 @SuppressWarnings("deprecation")
 public class BenchBlock extends Block implements BlockEntityProvider, SeatBlock, Waterloggable {
-    public static final EnumProperty<Direction> FACING = Properties.HORIZONTAL_FACING;
-    public static final BooleanProperty LEFT_LEGS = BooleanProperty.of("left_legs");
-    public static final BooleanProperty RIGHT_LEGS = BooleanProperty.of("right_legs");
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+	public static final EnumProperty<Direction> FACING = Properties.HORIZONTAL_FACING;
+	public static final BooleanProperty LEFT_LEGS = BooleanProperty.of("left_legs");
+	public static final BooleanProperty RIGHT_LEGS = BooleanProperty.of("right_legs");
+	public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
-    public static final Identifier BENCH_SEAT_MODEL = AurorasDeco.id("block/template/bench_seat");
-    public static final Identifier BENCH_LEGS_MODEL = AurorasDeco.id("block/template/bench_legs");
-    public static final Identifier BENCH_FULL_MODEL = AurorasDeco.id("block/template/bench_full");
-    public static final Identifier BENCH_REST_PLANK_MODEL = AurorasDeco.id("block/template/bench_rest_plank");
-    public static final Identifier BENCH_REST_LEFT_MODEL = AurorasDeco.id("block/template/bench_rest_left");
-    public static final Identifier BENCH_REST_RIGHT_MODEL = AurorasDeco.id("block/template/bench_rest_right");
-    public static final Identifier BENCH_BETTERGRASS_DATA = AurorasDeco.id("bettergrass/data/bench");
+	public static final Identifier BENCH_SEAT_MODEL = AurorasDeco.id("block/template/bench_seat");
+	public static final Identifier BENCH_LEGS_MODEL = AurorasDeco.id("block/template/bench_legs");
+	public static final Identifier BENCH_FULL_MODEL = AurorasDeco.id("block/template/bench_full");
+	public static final Identifier BENCH_REST_PLANK_MODEL = AurorasDeco.id("block/template/bench_rest_plank");
+	public static final Identifier BENCH_REST_LEFT_MODEL = AurorasDeco.id("block/template/bench_rest_left");
+	public static final Identifier BENCH_REST_RIGHT_MODEL = AurorasDeco.id("block/template/bench_rest_right");
+	public static final Identifier BENCH_BETTERGRASS_DATA = AurorasDeco.id("bettergrass/data/bench");
 
-    private static final List<BenchBlock> BENCHES = new ArrayList<>();
+	private static final List<BenchBlock> BENCHES = new ArrayList<>();
 
-    protected static final VoxelShape X_SHAPE = createCuboidShape(0, 0, 2, 16, 8, 14);
-    protected static final VoxelShape Z_SHAPE = createCuboidShape(2, 0, 0, 14, 8, 16);
+	protected static final VoxelShape X_SHAPE = createCuboidShape(0, 0, 2, 16, 8, 14);
+	protected static final VoxelShape Z_SHAPE = createCuboidShape(2, 0, 0, 14, 8, 16);
 
-    private final WoodType woodType;
+	private final WoodType woodType;
 
-    public BenchBlock(WoodType woodType) {
-        super(settings(woodType));
-        this.woodType = woodType;
+	public BenchBlock(WoodType woodType) {
+		super(settings(woodType));
+		this.woodType = woodType;
 
-        this.setDefaultState(this.getDefaultState()
-                .with(FACING, Direction.NORTH)
-                .with(LEFT_LEGS, true)
-                .with(RIGHT_LEGS, true)
-                .with(WATERLOGGED, false)
-        );
+		this.setDefaultState(this.getDefaultState()
+				.with(FACING, Direction.NORTH)
+				.with(LEFT_LEGS, true)
+				.with(RIGHT_LEGS, true)
+				.with(WATERLOGGED, false)
+		);
 
-        BENCHES.add(this);
-    }
+		BENCHES.add(this);
+	}
 
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, LEFT_LEGS, RIGHT_LEGS, WATERLOGGED);
-    }
+	@Override
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+		builder.add(FACING, LEFT_LEGS, RIGHT_LEGS, WATERLOGGED);
+	}
 
-    public static Stream<BenchBlock> streamBenches() {
-        return BENCHES.stream();
-    }
+	public static Stream<BenchBlock> streamBenches() {
+		return BENCHES.stream();
+	}
 
-    public WoodType getWoodType() {
-        return this.woodType;
-    }
+	public WoodType getWoodType() {
+		return this.woodType;
+	}
 
-    @Override
-    public float getSitYOffset() {
-        return 0.3f;
-    }
+	@Override
+	public float getSitYOffset() {
+		return 0.3f;
+	}
 
-    private <T extends Comparable<T>, P extends Property<T>> P getPropertyTowards(Direction facing, Direction towards,
-                                                                                  P left, P right) {
-        return switch (facing) {
-            default -> towards == Direction.WEST ? right : left;
-            case EAST -> towards == Direction.NORTH ? right : left;
-            case SOUTH -> towards == Direction.EAST ? right : left;
-            case WEST -> towards == Direction.SOUTH ? right : left;
-        };
-    }
+	private <T extends Comparable<T>, P extends Property<T>> P getPropertyTowards(Direction facing, Direction towards,
+	                                                                              P left, P right) {
+		return switch (facing) {
+			default -> towards == Direction.WEST ? right : left;
+			case EAST -> towards == Direction.NORTH ? right : left;
+			case SOUTH -> towards == Direction.EAST ? right : left;
+			case WEST -> towards == Direction.SOUTH ? right : left;
+		};
+	}
 
-    private BooleanProperty getLegsTowards(Direction facing, Direction towards) {
-        return this.getPropertyTowards(facing, towards, LEFT_LEGS, RIGHT_LEGS);
-    }
+	private BooleanProperty getLegsTowards(Direction facing, Direction towards) {
+		return this.getPropertyTowards(facing, towards, LEFT_LEGS, RIGHT_LEGS);
+	}
 
-    /**
-     * Returns the rest of the bench block at the given coordinates.
-     *
-     * @param world the world the bench is in
-     * @param pos the position of the bench
-     * @return the {@link SeatRestItem} if the bench block has a rest, otherwise {@code null}
-     */
-    private @Nullable SeatRestItem getRest(BlockView world, BlockPos pos) {
-        var bench = this.getBlockEntity(world, pos);
-        if (bench != null) return bench.getRest();
-        return null;
-    }
+	/**
+	 * Returns the rest of the bench block at the given coordinates.
+	 *
+	 * @param world the world the bench is in
+	 * @param pos the position of the bench
+	 * @return the {@link SeatRestItem} if the bench block has a rest, otherwise {@code null}
+	 */
+	private @Nullable SeatRestItem getRest(BlockView world, BlockPos pos) {
+		var bench = this.getBlockEntity(world, pos);
+		if (bench != null) return bench.getRest();
+		return null;
+	}
 
-    /**
-     * Returns whether this bench can connect to the given adjacent block.
-     *
-     * @param world the world the benches are in
-     * @param otherPos the other block position
-     * @param benchFacing this bench facing direction
-     * @param rest the rest used on self
-     * @return {@code true} if this bench can connect to the given block, otherwise {@code false}
-     */
-    public boolean canConnect(BlockView world, BlockPos otherPos, Direction benchFacing, @Nullable SeatRestItem rest) {
-        return this.canConnect(world, world.getBlockState(otherPos), otherPos, benchFacing, rest);
-    }
+	/**
+	 * Returns whether this bench can connect to the given adjacent block.
+	 *
+	 * @param world the world the benches are in
+	 * @param otherPos the other block position
+	 * @param benchFacing this bench facing direction
+	 * @param rest the rest used on self
+	 * @return {@code true} if this bench can connect to the given block, otherwise {@code false}
+	 */
+	public boolean canConnect(BlockView world, BlockPos otherPos, Direction benchFacing, @Nullable SeatRestItem rest) {
+		return this.canConnect(world, world.getBlockState(otherPos), otherPos, benchFacing, rest);
+	}
 
-    /**
-     * Returns whether this bench can connect to the given adjacent block.
-     *
-     * @param world the world the benches are in
-     * @param other the other block to try to connect to
-     * @param otherPos the other block position
-     * @param benchFacing this bench facing direction
-     * @param rest the rest used on self
-     * @return {@code true} if this bench can connect to the given block, otherwise {@code false}
-     */
-    public boolean canConnect(BlockView world, BlockState other, BlockPos otherPos, Direction benchFacing, @Nullable SeatRestItem rest) {
-        return other.getBlock() == this && benchFacing == other.get(FACING)
-                && (rest == ((BenchBlock) other.getBlock()).getRest(world, otherPos));
-    }
+	/**
+	 * Returns whether this bench can connect to the given adjacent block.
+	 *
+	 * @param world the world the benches are in
+	 * @param other the other block to try to connect to
+	 * @param otherPos the other block position
+	 * @param benchFacing this bench facing direction
+	 * @param rest the rest used on self
+	 * @return {@code true} if this bench can connect to the given block, otherwise {@code false}
+	 */
+	public boolean canConnect(BlockView world, BlockState other, BlockPos otherPos, Direction benchFacing, @Nullable SeatRestItem rest) {
+		return other.getBlock() == this && benchFacing == other.get(FACING)
+				&& (rest == ((BenchBlock) other.getBlock()).getRest(world, otherPos));
+	}
 
-    /* Shapes */
+	/* Shapes */
 
-    @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return state.get(FACING).getAxis() == Direction.Axis.X ? Z_SHAPE : X_SHAPE;
-    }
+	@Override
+	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return state.get(FACING).getAxis() == Direction.Axis.X ? Z_SHAPE : X_SHAPE;
+	}
 
-    /* Placement */
+	/* Placement */
 
-    @Override
-    public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        var world = ctx.getWorld();
-        var pos = ctx.getBlockPos();
-        var fluid = world.getFluidState(pos);
+	@Override
+	public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
+		var world = ctx.getWorld();
+		var pos = ctx.getBlockPos();
+		var fluid = world.getFluidState(pos);
 
-        var facing = ctx.getPlayerFacing().getOpposite();
+		var facing = ctx.getPlayerFacing().getOpposite();
 
-        var relativeRight = pos.offset(facing.rotateYCounterclockwise());
-        var relativeLeft = pos.offset(facing.rotateYClockwise());
+		var relativeRight = pos.offset(facing.rotateYCounterclockwise());
+		var relativeLeft = pos.offset(facing.rotateYClockwise());
 
-        return this.getDefaultState()
-                .with(FACING, facing)
-                .with(LEFT_LEGS, !this.canConnect(world, relativeLeft, facing, null))
-                .with(RIGHT_LEGS, !this.canConnect(world, relativeRight, facing, null))
-                .with(WATERLOGGED, fluid.getFluid() == Fluids.WATER);
-    }
+		return this.getDefaultState()
+				.with(FACING, facing)
+				.with(LEFT_LEGS, !this.canConnect(world, relativeLeft, facing, null))
+				.with(RIGHT_LEGS, !this.canConnect(world, relativeRight, facing, null))
+				.with(WATERLOGGED, fluid.getFluid() == Fluids.WATER);
+	}
 
-    @Override
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(FACING, rotation.rotate(state.get(FACING)));
-    }
+	@Override
+	public BlockState rotate(BlockState state, BlockRotation rotation) {
+		return state.with(FACING, rotation.rotate(state.get(FACING)));
+	}
 
-    @Override
-    public BlockState mirror(BlockState state, BlockMirror mirror) {
-        return state.rotate(mirror.getRotation(state.get(FACING)));
-    }
+	@Override
+	public BlockState mirror(BlockState state, BlockMirror mirror) {
+		return state.rotate(mirror.getRotation(state.get(FACING)));
+	}
 
-    /* Updates */
+	/* Updates */
 
-    @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState,
-                                                WorldAccess world, BlockPos pos, BlockPos posFrom) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
+	@Override
+	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState,
+	                                            WorldAccess world, BlockPos pos, BlockPos posFrom) {
+		if (state.get(WATERLOGGED)) {
+			world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+		}
 
-        var newSelf = super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
-        var benchFacing = state.get(FACING);
+		var newSelf = super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
+		var benchFacing = state.get(FACING);
 
-        if (direction.getAxis().isHorizontal() && direction.getAxis() != benchFacing.getAxis()) {
-            newSelf = newSelf.with(this.getLegsTowards(benchFacing, direction),
-                    !this.canConnect(world, newState, posFrom, benchFacing, this.getRest(world, pos)));
-        }
+		if (direction.getAxis().isHorizontal() && direction.getAxis() != benchFacing.getAxis()) {
+			newSelf = newSelf.with(this.getLegsTowards(benchFacing, direction),
+					!this.canConnect(world, newState, posFrom, benchFacing, this.getRest(world, pos)));
+		}
 
-        return newSelf;
-    }
+		return newSelf;
+	}
 
-    /* Interaction */
+	/* Interaction */
 
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-                              BlockHitResult hit) {
-        var handStack = player.getStackInHand(hand);
-        if (handStack.getItem() instanceof SeatRestItem seatRestItem) {
-            var bench = this.getBlockEntity(world, pos);
-            if (bench != null && !bench.hasRest()) {
-                bench.setRest(seatRestItem);
-                if (!player.getAbilities().creativeMode) {
-                    handStack.decrement(1);
-                }
-                world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-                return ActionResult.success(world.isClient());
-            }
-        } else if (this.sit(world, pos, state, player, handStack))
-            return ActionResult.success(world.isClient());
-        return super.onUse(state, world, pos, player, hand, hit);
-    }
+	@Override
+	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+	                          BlockHitResult hit) {
+		var handStack = player.getStackInHand(hand);
+		if (handStack.getItem() instanceof SeatRestItem seatRestItem) {
+			var bench = this.getBlockEntity(world, pos);
+			if (bench != null && !bench.hasRest()) {
+				bench.setRest(seatRestItem);
+				if (!player.getAbilities().creativeMode) {
+					handStack.decrement(1);
+				}
+				world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+				return ActionResult.success(world.isClient());
+			}
+		} else if (this.sit(world, pos, state, player, handStack))
+			return ActionResult.success(world.isClient());
+		return super.onUse(state, world, pos, player, hand, hit);
+	}
 
-    /* Block Entity stuff */
+	/* Block Entity stuff */
 
-    @Override
-    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return AurorasDecoRegistry.BENCH_BLOCK_ENTITY_TYPE.instantiate(pos, state);
-    }
+	@Override
+	public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+		return AurorasDecoRegistry.BENCH_BLOCK_ENTITY_TYPE.instantiate(pos, state);
+	}
 
-    public @Nullable BenchBlockEntity getBlockEntity(BlockView world, BlockPos pos) {
-        return AurorasDecoRegistry.BENCH_BLOCK_ENTITY_TYPE.get(world, pos);
-    }
+	public @Nullable BenchBlockEntity getBlockEntity(BlockView world, BlockPos pos) {
+		return AurorasDecoRegistry.BENCH_BLOCK_ENTITY_TYPE.get(world, pos);
+	}
 
-    /* Loot table */
+	/* Loot table */
 
-    @Override
-    public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
-        var blockEntity = builder.get(LootContextParameters.BLOCK_ENTITY);
-        if (blockEntity instanceof BenchBlockEntity bench) {
-            if (bench.hasRest()) {
-                builder.putDrop(SEAT_REST, (context, consumer) -> consumer.accept(new ItemStack(bench.getRest())));
-            }
-        }
+	@Override
+	public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
+		var blockEntity = builder.get(LootContextParameters.BLOCK_ENTITY);
+		if (blockEntity instanceof BenchBlockEntity bench) {
+			if (bench.hasRest()) {
+				builder.putDrop(SEAT_REST, (context, consumer) -> consumer.accept(new ItemStack(bench.getRest())));
+			}
+		}
 
-        return super.getDroppedStacks(state, builder);
-    }
+		return super.getDroppedStacks(state, builder);
+	}
 
-    /* Fluid */
+	/* Fluid */
 
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
-    }
+	@Override
+	public FluidState getFluidState(BlockState state) {
+		return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+	}
 
-    private static FabricBlockSettings settings(WoodType woodType) {
-        var planks = woodType.getComponent(WoodType.ComponentType.PLANKS);
-        if (planks == null) throw new IllegalStateException("BenchBlock attempted to be created while the wood type is invalid.");
-        return FabricBlockSettings.copyOf(planks.block())
-                .collidable(true)
-                .nonOpaque();
-    }
+	private static FabricBlockSettings settings(WoodType woodType) {
+		var planks = woodType.getComponent(WoodType.ComponentType.PLANKS);
+		if (planks == null) throw new IllegalStateException("BenchBlock attempted to be created while the wood type is invalid.");
+		return FabricBlockSettings.copyOf(planks.block())
+				.collidable(true)
+				.nonOpaque();
+	}
 }

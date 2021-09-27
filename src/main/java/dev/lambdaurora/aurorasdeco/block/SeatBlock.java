@@ -29,39 +29,39 @@ import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 
 public interface SeatBlock {
-    Identifier SEAT_REST = AurorasDeco.id("seat_rest");
+	Identifier SEAT_REST = AurorasDeco.id("seat_rest");
 
-    default boolean canBeUsed(BlockState state) {
-        return true;
-    }
+	default boolean canBeUsed(BlockState state) {
+		return true;
+	}
 
-    default boolean canSit(World world, BlockPos pos, BlockState state) {
-        for (var player : world.getNonSpectatingEntities(PlayerEntity.class, new Box(pos))) {
-            if (player.hasVehicle()) {
-                if (player.getVehicle() instanceof SeatEntity)
-                    return false;
-            }
-        }
-        return this.canBeUsed(state);
-    }
+	default boolean canSit(World world, BlockPos pos, BlockState state) {
+		for (var player : world.getNonSpectatingEntities(PlayerEntity.class, new Box(pos))) {
+			if (player.hasVehicle()) {
+				if (player.getVehicle() instanceof SeatEntity)
+					return false;
+			}
+		}
+		return this.canBeUsed(state);
+	}
 
-    default boolean sit(World world, BlockPos pos, BlockState state, PlayerEntity player, ItemStack stack) {
-        if (world.isClient())
-            return stack.isEmpty();
-        else if (!stack.isEmpty())
-            return false;
-        else if (!this.canSit(world, pos, state))
-            return false;
+	default boolean sit(World world, BlockPos pos, BlockState state, PlayerEntity player, ItemStack stack) {
+		if (world.isClient())
+			return stack.isEmpty();
+		else if (!stack.isEmpty())
+			return false;
+		else if (!this.canSit(world, pos, state))
+			return false;
 
-        var seatEntity = AurorasDecoRegistry.SEAT_ENTITY_TYPE.create(world);
-        if (seatEntity == null)
-            return false;
-        seatEntity.setPosition(pos.getX() + .5f, pos.getY() + this.getSitYOffset(), pos.getZ() + .5f);
-        world.spawnEntity(seatEntity);
-        player.startRiding(seatEntity, true);
+		var seatEntity = AurorasDecoRegistry.SEAT_ENTITY_TYPE.create(world);
+		if (seatEntity == null)
+			return false;
+		seatEntity.setPosition(pos.getX() + .5f, pos.getY() + this.getSitYOffset(), pos.getZ() + .5f);
+		world.spawnEntity(seatEntity);
+		player.startRiding(seatEntity, true);
 
-        return true;
-    }
+		return true;
+	}
 
-    float getSitYOffset();
+	float getSitYOffset();
 }

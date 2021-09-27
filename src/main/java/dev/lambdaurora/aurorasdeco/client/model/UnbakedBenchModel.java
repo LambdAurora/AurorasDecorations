@@ -34,20 +34,20 @@ import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public record UnbakedBenchModel(UnbakedModel baseModel, RestModelManager restModelManager) implements AuroraUnbakedModel {
-    @Override
-    public Collection<Identifier> getModelDependencies() {
-        return this.baseModel().getModelDependencies();
-    }
+	@Override
+	public Collection<Identifier> getModelDependencies() {
+		return this.baseModel().getModelDependencies();
+	}
 
-    @Override
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter,
-                                                               Set<Pair<String, String>> unresolvedTextureReferences) {
-        return this.baseModel().getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences);
-    }
+	@Override
+	public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter,
+	                                                           Set<Pair<String, String>> unresolvedTextureReferences) {
+		return this.baseModel().getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences);
+	}
 
-    @Override
-    public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer,
-                           Identifier modelId) {
-        return new BakedBenchModel(this.baseModel().bake(loader, textureGetter, rotationContainer, modelId), this.restModelManager());
-    }
+	@Override
+	public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer,
+	                       Identifier modelId) {
+		return new BakedBenchModel(this.baseModel().bake(loader, textureGetter, rotationContainer, modelId), this.restModelManager());
+	}
 }

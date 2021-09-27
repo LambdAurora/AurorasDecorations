@@ -36,77 +36,77 @@ import net.minecraft.screen.slot.Slot;
  * @since 1.0.0
  */
 public class ShelfScreenHandler extends ScreenHandler {
-    private final Inventory inventory;
-    private final PartType partType;
+	private final Inventory inventory;
+	private final PartType partType;
 
-    public ShelfScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
-        this(syncId, playerInventory, new SimpleInventory(8), buf.readEnumConstant(PartType.class));
-    }
+	public ShelfScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
+		this(syncId, playerInventory, new SimpleInventory(8), buf.readEnumConstant(PartType.class));
+	}
 
-    public ShelfScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PartType partType) {
-        super(AurorasDecoRegistry.SHELF_SCREEN_HANDLER_TYPE, syncId);
-        checkSize(inventory, 8);
-        this.inventory = inventory;
-        this.partType = partType;
+	public ShelfScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PartType partType) {
+		super(AurorasDecoRegistry.SHELF_SCREEN_HANDLER_TYPE, syncId);
+		checkSize(inventory, 8);
+		this.inventory = inventory;
+		this.partType = partType;
 
-        int y;
-        int x;
+		int y;
+		int x;
 
-        int max = this.partType == PartType.TOP ? 1 : 2;
-        for (y = this.partType == PartType.BOTTOM ? 1 : 0; y < max; ++y) {
-            int rowY = 17 + y * 18;
+		int max = this.partType == PartType.TOP ? 1 : 2;
+		for (y = this.partType == PartType.BOTTOM ? 1 : 0; y < max; ++y) {
+			int rowY = 17 + y * 18;
 
-            if (this.partType != PartType.DOUBLE)
-                rowY = 26;
+			if (this.partType != PartType.DOUBLE)
+				rowY = 26;
 
-            for (x = 0; x < 4; ++x) {
-                this.addSlot(new Slot(inventory, x + y * 4, 53 + x * 18, rowY));
-            }
-        }
+			for (x = 0; x < 4; ++x) {
+				this.addSlot(new Slot(inventory, x + y * 4, 53 + x * 18, rowY));
+			}
+		}
 
-        // The player inventory.
-        for (y = 0; y < 3; ++y) {
-            for (x = 0; x < 9; ++x) {
-                this.addSlot(new Slot(playerInventory, x + y * 9 + 9, 8 + x * 18, 66 + y * 18));
-            }
-        }
-        // The player hotbar.
-        for (x = 0; x < 9; ++x) {
-            this.addSlot(new Slot(playerInventory, x, 8 + x * 18, 124));
-        }
-    }
+		// The player inventory.
+		for (y = 0; y < 3; ++y) {
+			for (x = 0; x < 9; ++x) {
+				this.addSlot(new Slot(playerInventory, x + y * 9 + 9, 8 + x * 18, 66 + y * 18));
+			}
+		}
+		// The player hotbar.
+		for (x = 0; x < 9; ++x) {
+			this.addSlot(new Slot(playerInventory, x, 8 + x * 18, 124));
+		}
+	}
 
-    public PartType getPartType() {
-        return this.partType;
-    }
+	public PartType getPartType() {
+		return this.partType;
+	}
 
-    @Override
-    public boolean canUse(PlayerEntity player) {
-        return this.inventory.canPlayerUse(player);
-    }
+	@Override
+	public boolean canUse(PlayerEntity player) {
+		return this.inventory.canPlayerUse(player);
+	}
 
-    @Override
-    public ItemStack transferSlot(PlayerEntity player, int index) {
-        var stack = ItemStack.EMPTY;
-        var slot = this.slots.get(index);
-        if (slot.hasStack()) {
-            var itemStack2 = slot.getStack();
-            stack = itemStack2.copy();
-            if (index < 8) {
-                if (!this.insertItem(itemStack2, 8, this.slots.size(), true)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (!this.insertItem(itemStack2, 0, 8, false)) {
-                return ItemStack.EMPTY;
-            }
+	@Override
+	public ItemStack transferSlot(PlayerEntity player, int index) {
+		var stack = ItemStack.EMPTY;
+		var slot = this.slots.get(index);
+		if (slot.hasStack()) {
+			var itemStack2 = slot.getStack();
+			stack = itemStack2.copy();
+			if (index < 8) {
+				if (!this.insertItem(itemStack2, 8, this.slots.size(), true)) {
+					return ItemStack.EMPTY;
+				}
+			} else if (!this.insertItem(itemStack2, 0, 8, false)) {
+				return ItemStack.EMPTY;
+			}
 
-            if (itemStack2.isEmpty()) {
-                slot.setStack(ItemStack.EMPTY);
-            } else {
-                slot.markDirty();
-            }
-        }
+			if (itemStack2.isEmpty()) {
+				slot.setStack(ItemStack.EMPTY);
+			} else {
+				slot.markDirty();
+			}
+		}
 
-        return stack;
-    }
+		return stack;
+	}
 }

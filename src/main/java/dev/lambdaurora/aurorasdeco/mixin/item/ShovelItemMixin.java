@@ -34,25 +34,25 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(ShovelItem.class)
 public class ShovelItemMixin {
-    @Inject(
-            method = "useOnBlock",
-            at = @At(value = "INVOKE", target = "Ljava/util/Map;get(Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0),
-            cancellable = true,
-            locals = LocalCapture.CAPTURE_FAILHARD
-    )
-    private void onUseOnBlock(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir,
-                              World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (BrazierBlock.canBeUnlit(state)) {
-            BrazierBlock.extinguish(context.getPlayer(), world, pos, state);
-            state = state.with(BrazierBlock.LIT, false);
-            if (!world.isClient()) {
-                world.setBlockState(pos, state, Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
-                if (player != null) {
-                    context.getStack().damage(1, player, p -> p.sendToolBreakStatus(context.getHand()));
-                }
-            }
+	@Inject(
+			method = "useOnBlock",
+			at = @At(value = "INVOKE", target = "Ljava/util/Map;get(Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0),
+			cancellable = true,
+			locals = LocalCapture.CAPTURE_FAILHARD
+	)
+	private void onUseOnBlock(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir,
+	                          World world, BlockPos pos, BlockState state, PlayerEntity player) {
+		if (BrazierBlock.canBeUnlit(state)) {
+			BrazierBlock.extinguish(context.getPlayer(), world, pos, state);
+			state = state.with(BrazierBlock.LIT, false);
+			if (!world.isClient()) {
+				world.setBlockState(pos, state, Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+				if (player != null) {
+					context.getStack().damage(1, player, p -> p.sendToolBreakStatus(context.getHand()));
+				}
+			}
 
-            cir.setReturnValue(ActionResult.success(world.isClient()));
-        }
-    }
+			cir.setReturnValue(ActionResult.success(world.isClient()));
+		}
+	}
 }

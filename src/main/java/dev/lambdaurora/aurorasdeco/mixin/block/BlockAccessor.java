@@ -27,10 +27,10 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(Block.class)
 public interface BlockAccessor {
-    @Invoker("appendProperties")
-    void aurorasdeco$appendProperties(StateManager.Builder<Block, BlockState> builder);
+	@Invoker("appendProperties")
+	void aurorasdeco$appendProperties(StateManager.Builder<Block, BlockState> builder);
 
-    @Mutable
-    @Accessor("stateManager")
-    void setStateManager(StateManager<Block, BlockState> stateManager);
+	@Mutable
+	@Accessor("stateManager")
+	void setStateManager(StateManager<Block, BlockState> stateManager);
 }

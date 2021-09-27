@@ -29,5 +29,5 @@ import java.util.Set;
  * @since 1.0.0
  */
 public interface PointOfInterestTypeAccessor {
-    Set<BlockState> getBlockStates();
+	Set<BlockState> getBlockStates();
 }

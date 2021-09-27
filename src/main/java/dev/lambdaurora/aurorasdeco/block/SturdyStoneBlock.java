@@ -36,33 +36,33 @@ import net.minecraft.world.World;
  */
 @SuppressWarnings("deprecation")
 public class SturdyStoneBlock extends Block {
-    public static final BooleanProperty POWERED = Properties.POWERED;
+	public static final BooleanProperty POWERED = Properties.POWERED;
 
-    public SturdyStoneBlock(Settings settings) {
-        super(settings);
-        this.setDefaultState(this.getDefaultState().with(POWERED, false));
-    }
+	public SturdyStoneBlock(Settings settings) {
+		super(settings);
+		this.setDefaultState(this.getDefaultState().with(POWERED, false));
+	}
 
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(POWERED);
-    }
+	@Override
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+		builder.add(POWERED);
+	}
 
-    /* Updates */
+	/* Updates */
 
-    @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-        boolean shouldPower = world.isReceivingRedstonePower(pos) || world.isReceivingRedstonePower(pos.up());
-        boolean powered = state.get(POWERED);
-        if (shouldPower != powered) {
-            world.setBlockState(pos, state.with(POWERED, shouldPower), Block.NO_REDRAW);
-        }
-    }
+	@Override
+	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+		boolean shouldPower = world.isReceivingRedstonePower(pos) || world.isReceivingRedstonePower(pos.up());
+		boolean powered = state.get(POWERED);
+		if (shouldPower != powered) {
+			world.setBlockState(pos, state.with(POWERED, shouldPower), Block.NO_REDRAW);
+		}
+	}
 
-    /* Piston */
+	/* Piston */
 
-    @Override
-    public PistonBehavior getPistonBehavior(BlockState state) {
-        return PistonBehavior.BLOCK;
-    }
+	@Override
+	public PistonBehavior getPistonBehavior(BlockState state) {
+		return PistonBehavior.BLOCK;
+	}
 }

@@ -39,34 +39,34 @@ import java.util.Random;
  * @since 1.0.0
  */
 public class BigPottedNetherWartBlock extends BigPottedProxyBlock {
-    public BigPottedNetherWartBlock(PottedPlantType type) {
-        super(type);
-    }
+	public BigPottedNetherWartBlock(PottedPlantType type) {
+		super(type);
+	}
 
-    /* Random Ticks */
+	/* Random Ticks */
 
-    @Override
-    public boolean hasRandomTicks(BlockState state) {
-        return this.getPlant().hasRandomTicks(state);
-    }
+	@Override
+	public boolean hasRandomTicks(BlockState state) {
+		return this.getPlant().hasRandomTicks(state);
+	}
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        this.getPlant().randomTick(state, world, pos, random);
-    }
+	@SuppressWarnings("deprecation")
+	@Override
+	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+		this.getPlant().randomTick(state, world, pos, random);
+	}
 
-    /* Interaction */
+	/* Interaction */
 
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        var handStack = player.getStackInHand(hand);
-        if ((handStack.isEmpty() || handStack.isIn(FabricToolTags.HOES)) && state.get(NetherWartBlock.AGE) >= 3) {
-            dropStacks(this.getPlantState(state), world, pos, null, player, handStack);
-            world.setBlockState(pos, state.with(NetherWartBlock.AGE, 0), NOTIFY_ALL);
-            world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos);
-            return ActionResult.success(world.isClient());
-        } else
-            return super.onUse(state, world, pos, player, hand, hit);
-    }
+	@Override
+	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+		var handStack = player.getStackInHand(hand);
+		if ((handStack.isEmpty() || handStack.isIn(FabricToolTags.HOES)) && state.get(NetherWartBlock.AGE) >= 3) {
+			dropStacks(this.getPlantState(state), world, pos, null, player, handStack);
+			world.setBlockState(pos, state.with(NetherWartBlock.AGE, 0), NOTIFY_ALL);
+			world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos);
+			return ActionResult.success(world.isClient());
+		} else
+			return super.onUse(state, world, pos, player, hand, hit);
+	}
 }

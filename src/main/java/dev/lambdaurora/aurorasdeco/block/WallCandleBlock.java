@@ -50,184 +50,184 @@ import java.util.Map;
  * @since 1.0.0
  */
 public class WallCandleBlock extends ExtendedCandleBlock {
-    public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
+	public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
 
-    private static final Int2ObjectMap<Map<Direction, VoxelShape>> SHAPES;
-    private static final Int2ObjectMap<Map<Direction, List<Vec3d>>> CANDLES_TO_PARTICLE_OFFSETS;
+	private static final Int2ObjectMap<Map<Direction, VoxelShape>> SHAPES;
+	private static final Int2ObjectMap<Map<Direction, List<Vec3d>>> CANDLES_TO_PARTICLE_OFFSETS;
 
-    private static final VoxelShape HOLDER_SHAPE = createCuboidShape(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
+	private static final VoxelShape HOLDER_SHAPE = createCuboidShape(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
 
-    public WallCandleBlock(CandleBlock candleBlock) {
-        super(candleBlock);
+	public WallCandleBlock(CandleBlock candleBlock) {
+		super(candleBlock);
 
-        this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
-    }
+		this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
+	}
 
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder.add(FACING));
-    }
+	@Override
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+		super.appendProperties(builder.add(FACING));
+	}
 
-    /* Shape */
+	/* Shape */
 
-    @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return SHAPES.get(state.get(CANDLES).intValue()).get(state.get(FACING));
-    }
+	@Override
+	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return SHAPES.get(state.get(CANDLES).intValue()).get(state.get(FACING));
+	}
 
-    /* Placement */
+	/* Placement */
 
-    @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        var direction = state.get(FACING);
-        var blockPos = pos.offset(direction.getOpposite());
-        var blockState = world.getBlockState(blockPos);
-        return !VoxelShapes.matchesAnywhere(blockState.getSidesShape(world, blockPos).getFace(direction),
-                HOLDER_SHAPE, BooleanBiFunction.ONLY_SECOND);
-    }
+	@Override
+	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+		var direction = state.get(FACING);
+		var blockPos = pos.offset(direction.getOpposite());
+		var blockState = world.getBlockState(blockPos);
+		return !VoxelShapes.matchesAnywhere(blockState.getSidesShape(world, blockPos).getFace(direction),
+				HOLDER_SHAPE, BooleanBiFunction.ONLY_SECOND);
+	}
 
-    @Override
-    public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        var state = super.getPlacementState(ctx);
-        if (state == null)
-            return null;
+	@Override
+	public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
+		var state = super.getPlacementState(ctx);
+		if (state == null)
+			return null;
 
-        var world = ctx.getWorld();
-        var pos = ctx.getBlockPos();
-        var directions = ctx.getPlacementDirections();
+		var world = ctx.getWorld();
+		var pos = ctx.getBlockPos();
+		var directions = ctx.getPlacementDirections();
 
-        for (var direction : directions) {
-            if (direction.getAxis().isHorizontal()) {
-                var opposite = direction.getOpposite();
-                state = state.with(FACING, opposite);
-                if (state.canPlaceAt(world, pos)) {
-                    return state;
-                }
-            }
-        }
+		for (var direction : directions) {
+			if (direction.getAxis().isHorizontal()) {
+				var opposite = direction.getOpposite();
+				state = state.with(FACING, opposite);
+				if (state.canPlaceAt(world, pos)) {
+					return state;
+				}
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    /* Updates */
+	/* Updates */
 
-    @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world,
-                                                BlockPos pos, BlockPos posFrom) {
-        state = super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
-        return direction.getOpposite() == state.get(FACING) && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : state;
-    }
+	@Override
+	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world,
+	                                            BlockPos pos, BlockPos posFrom) {
+		state = super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
+		return direction.getOpposite() == state.get(FACING) && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : state;
+	}
 
-    /* Client */
+	/* Client */
 
-    protected Iterable<Vec3d> getParticleOffsets(BlockState state) {
-        return CANDLES_TO_PARTICLE_OFFSETS.get(state.get(CANDLES).intValue()).get(state.get(FACING));
-    }
+	protected Iterable<Vec3d> getParticleOffsets(BlockState state) {
+		return CANDLES_TO_PARTICLE_OFFSETS.get(state.get(CANDLES).intValue()).get(state.get(FACING));
+	}
 
-    static {
-        SHAPES = Util.make(() -> {
-            var shapes = new Int2ObjectOpenHashMap<Map<Direction, VoxelShape>>();
+	static {
+		SHAPES = Util.make(() -> {
+			var shapes = new Int2ObjectOpenHashMap<Map<Direction, VoxelShape>>();
 
-            double highest = 12.0;
-            shapes.put(1, new EnumMap<>(ImmutableMap.of(
-                    Direction.NORTH, createCuboidShape(6.0, 2.0, 10.0, 10.0, highest, 16.0),
-                    Direction.EAST, createCuboidShape(0.0, 2.0, 6.0, 6.0, highest, 10.0),
-                    Direction.SOUTH, createCuboidShape(6.0, 2.0, 0.0, 10.0, highest, 6.0),
-                    Direction.WEST, createCuboidShape(10.0, 2.0, 6.0, 16.0, highest, 10.0)
-            )));
+			double highest = 12.0;
+			shapes.put(1, new EnumMap<>(ImmutableMap.of(
+					Direction.NORTH, createCuboidShape(6.0, 2.0, 10.0, 10.0, highest, 16.0),
+					Direction.EAST, createCuboidShape(0.0, 2.0, 6.0, 6.0, highest, 10.0),
+					Direction.SOUTH, createCuboidShape(6.0, 2.0, 0.0, 10.0, highest, 6.0),
+					Direction.WEST, createCuboidShape(10.0, 2.0, 6.0, 16.0, highest, 10.0)
+			)));
 
-            shapes.put(2, new EnumMap<>(ImmutableMap.of(
-                    Direction.NORTH, createCuboidShape(2.0, 2.0, 10.0, 14.0, highest, 16.0),
-                    Direction.EAST, createCuboidShape(0.0, 2.0, 2.0, 6.0, highest, 14.0),
-                    Direction.SOUTH, createCuboidShape(2.0, 2.0, 0.0, 14.0, highest, 6.0),
-                    Direction.WEST, createCuboidShape(10.0, 2.0, 2.0, 16.0, highest, 14.0)
-            )));
+			shapes.put(2, new EnumMap<>(ImmutableMap.of(
+					Direction.NORTH, createCuboidShape(2.0, 2.0, 10.0, 14.0, highest, 16.0),
+					Direction.EAST, createCuboidShape(0.0, 2.0, 2.0, 6.0, highest, 14.0),
+					Direction.SOUTH, createCuboidShape(2.0, 2.0, 0.0, 14.0, highest, 6.0),
+					Direction.WEST, createCuboidShape(10.0, 2.0, 2.0, 16.0, highest, 14.0)
+			)));
 
-            shapes.put(3, new EnumMap<>(ImmutableMap.of(
-                    Direction.NORTH, createCuboidShape(1.0, 2.0, 8.0, 15.0, highest, 16.0),
-                    Direction.EAST, createCuboidShape(0.0, 2.0, 1.0, 8.0, highest, 15.0),
-                    Direction.SOUTH, createCuboidShape(1.0, 2.0, 0.0, 15.0, highest, 8.0),
-                    Direction.WEST, createCuboidShape(8.0, 2.0, 1.0, 16.0, highest, 15.0)
-            )));
+			shapes.put(3, new EnumMap<>(ImmutableMap.of(
+					Direction.NORTH, createCuboidShape(1.0, 2.0, 8.0, 15.0, highest, 16.0),
+					Direction.EAST, createCuboidShape(0.0, 2.0, 1.0, 8.0, highest, 15.0),
+					Direction.SOUTH, createCuboidShape(1.0, 2.0, 0.0, 15.0, highest, 8.0),
+					Direction.WEST, createCuboidShape(8.0, 2.0, 1.0, 16.0, highest, 15.0)
+			)));
 
-            highest = 14.0;
-            shapes.put(4, new EnumMap<>(ImmutableMap.of(
-                    Direction.NORTH, createCuboidShape(1.0, 2.0, 6.0, 15.0, highest, 16.0),
-                    Direction.EAST, createCuboidShape(0.0, 2.0, 1.0, 10.0, highest, 15.0),
-                    Direction.SOUTH, createCuboidShape(1.0, 2.0, 0.0, 15.0, highest, 10.0),
-                    Direction.WEST, createCuboidShape(6.0, 2.0, 1.0, 16.0, highest, 15.0)
-            )));
+			highest = 14.0;
+			shapes.put(4, new EnumMap<>(ImmutableMap.of(
+					Direction.NORTH, createCuboidShape(1.0, 2.0, 6.0, 15.0, highest, 16.0),
+					Direction.EAST, createCuboidShape(0.0, 2.0, 1.0, 10.0, highest, 15.0),
+					Direction.SOUTH, createCuboidShape(1.0, 2.0, 0.0, 15.0, highest, 10.0),
+					Direction.WEST, createCuboidShape(6.0, 2.0, 1.0, 16.0, highest, 15.0)
+			)));
 
-            return Int2ObjectMaps.unmodifiable(shapes);
-        });
+			return Int2ObjectMaps.unmodifiable(shapes);
+		});
 
-        CANDLES_TO_PARTICLE_OFFSETS = Util.make(() -> {
-            var offsets = new Int2ObjectOpenHashMap<Map<Direction, List<Vec3d>>>();
+		CANDLES_TO_PARTICLE_OFFSETS = Util.make(() -> {
+			var offsets = new Int2ObjectOpenHashMap<Map<Direction, List<Vec3d>>>();
 
-            double highestPoint = 0.875;
-            double second = 0.8125;
-            double third = 0.75;
-            offsets.put(1, new EnumMap<>(ImmutableMap.of(
-                    Direction.NORTH, ImmutableList.of(new Vec3d(0.5, highestPoint, 0.75)),
-                    Direction.EAST, ImmutableList.of(new Vec3d(0.25, highestPoint, 0.5)),
-                    Direction.SOUTH, ImmutableList.of(new Vec3d(0.5, highestPoint, 0.25)),
-                    Direction.WEST, ImmutableList.of(new Vec3d(0.75, highestPoint, 0.5))
-            )));
+			double highestPoint = 0.875;
+			double second = 0.8125;
+			double third = 0.75;
+			offsets.put(1, new EnumMap<>(ImmutableMap.of(
+					Direction.NORTH, ImmutableList.of(new Vec3d(0.5, highestPoint, 0.75)),
+					Direction.EAST, ImmutableList.of(new Vec3d(0.25, highestPoint, 0.5)),
+					Direction.SOUTH, ImmutableList.of(new Vec3d(0.5, highestPoint, 0.25)),
+					Direction.WEST, ImmutableList.of(new Vec3d(0.75, highestPoint, 0.5))
+			)));
 
-            offsets.put(2, new EnumMap<>(ImmutableMap.of(
-                    Direction.NORTH, ImmutableList.of(new Vec3d(0.75, highestPoint, 0.75), new Vec3d(0.25, second, 0.75)),
-                    Direction.EAST, ImmutableList.of(new Vec3d(0.25, highestPoint, 0.75), new Vec3d(0.25, second, 0.25)),
-                    Direction.SOUTH, ImmutableList.of(new Vec3d(0.25, highestPoint, 0.25), new Vec3d(0.75, second, 0.25)),
-                    Direction.WEST, ImmutableList.of(new Vec3d(0.75, highestPoint, 0.25), new Vec3d(0.75, second, 0.75))
-            )));
+			offsets.put(2, new EnumMap<>(ImmutableMap.of(
+					Direction.NORTH, ImmutableList.of(new Vec3d(0.75, highestPoint, 0.75), new Vec3d(0.25, second, 0.75)),
+					Direction.EAST, ImmutableList.of(new Vec3d(0.25, highestPoint, 0.75), new Vec3d(0.25, second, 0.25)),
+					Direction.SOUTH, ImmutableList.of(new Vec3d(0.25, highestPoint, 0.25), new Vec3d(0.75, second, 0.25)),
+					Direction.WEST, ImmutableList.of(new Vec3d(0.75, highestPoint, 0.25), new Vec3d(0.75, second, 0.75))
+			)));
 
-            offsets.put(3, new EnumMap<>(ImmutableMap.of(
-                    Direction.NORTH, ImmutableList.of(
-                            new Vec3d(0.8125, highestPoint, 0.75),
-                            new Vec3d(0.1875, second, 0.75),
-                            new Vec3d(0.5, third, 0.625)),
-                    Direction.EAST, ImmutableList.of(
-                            new Vec3d(0.25, highestPoint, 0.8125),
-                            new Vec3d(0.25, second, 0.1875),
-                            new Vec3d(0.375, third, 0.5)),
-                    Direction.SOUTH, ImmutableList.of(
-                            new Vec3d(0.1875, highestPoint, 0.25),
-                            new Vec3d(0.8125, second, 0.25),
-                            new Vec3d(0.5, third, 0.375)),
-                    Direction.WEST, ImmutableList.of(
-                            new Vec3d(0.75, highestPoint, 0.1875),
-                            new Vec3d(0.75, second, 0.8125),
-                            new Vec3d(0.625, third, 0.5))
-            )));
+			offsets.put(3, new EnumMap<>(ImmutableMap.of(
+					Direction.NORTH, ImmutableList.of(
+							new Vec3d(0.8125, highestPoint, 0.75),
+							new Vec3d(0.1875, second, 0.75),
+							new Vec3d(0.5, third, 0.625)),
+					Direction.EAST, ImmutableList.of(
+							new Vec3d(0.25, highestPoint, 0.8125),
+							new Vec3d(0.25, second, 0.1875),
+							new Vec3d(0.375, third, 0.5)),
+					Direction.SOUTH, ImmutableList.of(
+							new Vec3d(0.1875, highestPoint, 0.25),
+							new Vec3d(0.8125, second, 0.25),
+							new Vec3d(0.5, third, 0.375)),
+					Direction.WEST, ImmutableList.of(
+							new Vec3d(0.75, highestPoint, 0.1875),
+							new Vec3d(0.75, second, 0.8125),
+							new Vec3d(0.625, third, 0.5))
+			)));
 
-            highestPoint = 1.0;
-            double four = second;
-            second = 0.9375;
-            third = 0.6875;
-            offsets.put(4, new EnumMap<>(ImmutableMap.of(
-                    Direction.NORTH, ImmutableList.of(
-                            new Vec3d(0.8125, highestPoint, 0.75),
-                            new Vec3d(0.1875, second, 0.75),
-                            new Vec3d(0.3125, third, 0.5),
-                            new Vec3d(0.6875, four, 0.5)),
-                    Direction.EAST, ImmutableList.of(
-                            new Vec3d(0.25, highestPoint, 0.8125),
-                            new Vec3d(0.25, second, 0.1875),
-                            new Vec3d(0.5, third, 0.3125),
-                            new Vec3d(0.5, four, 0.6875)),
-                    Direction.SOUTH, ImmutableList.of(
-                            new Vec3d(0.1875, highestPoint, 0.25),
-                            new Vec3d(0.8125, second, 0.25),
-                            new Vec3d(0.6875, third, 0.5),
-                            new Vec3d(0.3125, four, 0.5)),
-                    Direction.WEST, ImmutableList.of(
-                            new Vec3d(0.75, highestPoint, 0.1875),
-                            new Vec3d(0.75, second, 0.8125),
-                            new Vec3d(0.5, third, 0.6875),
-                            new Vec3d(0.5, four, 0.3125))
-            )));
+			highestPoint = 1.0;
+			double four = second;
+			second = 0.9375;
+			third = 0.6875;
+			offsets.put(4, new EnumMap<>(ImmutableMap.of(
+					Direction.NORTH, ImmutableList.of(
+							new Vec3d(0.8125, highestPoint, 0.75),
+							new Vec3d(0.1875, second, 0.75),
+							new Vec3d(0.3125, third, 0.5),
+							new Vec3d(0.6875, four, 0.5)),
+					Direction.EAST, ImmutableList.of(
+							new Vec3d(0.25, highestPoint, 0.8125),
+							new Vec3d(0.25, second, 0.1875),
+							new Vec3d(0.5, third, 0.3125),
+							new Vec3d(0.5, four, 0.6875)),
+					Direction.SOUTH, ImmutableList.of(
+							new Vec3d(0.1875, highestPoint, 0.25),
+							new Vec3d(0.8125, second, 0.25),
+							new Vec3d(0.6875, third, 0.5),
+							new Vec3d(0.3125, four, 0.5)),
+					Direction.WEST, ImmutableList.of(
+							new Vec3d(0.75, highestPoint, 0.1875),
+							new Vec3d(0.75, second, 0.8125),
+							new Vec3d(0.5, third, 0.6875),
+							new Vec3d(0.5, four, 0.3125))
+			)));
 
-            return Int2ObjectMaps.unmodifiable(offsets);
-        });
-    }
+			return Int2ObjectMaps.unmodifiable(offsets);
+		});
+	}
 }

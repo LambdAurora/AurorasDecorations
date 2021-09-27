@@ -36,27 +36,27 @@ import java.util.concurrent.Executor;
 
 @Mixin(ReloadableResourceManagerImpl.class)
 public abstract class ReloadableResourceManagerImplMixin {
-    @Shadow
-    @Final
-    private ResourceType type;
+	@Shadow
+	@Final
+	private ResourceType type;
 
-    @Shadow
-    public abstract void addPack(ResourcePack resourcePack);
+	@Shadow
+	public abstract void addPack(ResourcePack resourcePack);
 
-    @Inject(
-            method = "reload",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/resource/ReloadableResourceManagerImpl;clear()V",
-                    shift = At.Shift.AFTER
-            )
-    )
-    private void onBeginMonitoredReload(Executor prepareExecutor, Executor applyExecutor, CompletableFuture<Unit> initialStage,
-                                        List<ResourcePack> packs, CallbackInfoReturnable<ResourceReload> cir) {
-        if (this.type == ResourceType.CLIENT_RESOURCES) {
-            var mirror = new ReloadableResourceManagerImpl(ResourceType.CLIENT_RESOURCES);
-            packs.forEach(mirror::addPack);
-            this.addPack(AurorasDecoClient.RESOURCE_PACK.rebuild(this.type, mirror));
-        }
-    }
+	@Inject(
+			method = "reload",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/resource/ReloadableResourceManagerImpl;clear()V",
+					shift = At.Shift.AFTER
+			)
+	)
+	private void onBeginMonitoredReload(Executor prepareExecutor, Executor applyExecutor, CompletableFuture<Unit> initialStage,
+	                                    List<ResourcePack> packs, CallbackInfoReturnable<ResourceReload> cir) {
+		if (this.type == ResourceType.CLIENT_RESOURCES) {
+			var mirror = new ReloadableResourceManagerImpl(ResourceType.CLIENT_RESOURCES);
+			packs.forEach(mirror::addPack);
+			this.addPack(AurorasDecoClient.RESOURCE_PACK.rebuild(this.type, mirror));
+		}
+	}
 }

@@ -50,100 +50,100 @@ import java.util.stream.Stream;
 
 @SuppressWarnings("deprecation")
 public class StumpBlock extends Block implements SeatBlock, Waterloggable {
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+	public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
-    public static final Identifier LOG_STUMP_MODEL = AurorasDeco.id("block/template/log_stump");
-    public static final Identifier LOG_STUMP_BROWN_MUSHROOM_MODEL = AurorasDeco.id("block/template/log_stump_brown_mushroom");
-    public static final Identifier LOG_STUMP_RED_MUSHROOM_MODEL = AurorasDeco.id("block/template/log_stump_red_mushroom");
-    public static final Identifier STEM_STUMP_MODEL = AurorasDeco.id("block/template/stem_stump");
-    public static final Identifier STUMP_BETTERGRASS_DATA = AurorasDeco.id("bettergrass/data/stump");
+	public static final Identifier LOG_STUMP_MODEL = AurorasDeco.id("block/template/log_stump");
+	public static final Identifier LOG_STUMP_BROWN_MUSHROOM_MODEL = AurorasDeco.id("block/template/log_stump_brown_mushroom");
+	public static final Identifier LOG_STUMP_RED_MUSHROOM_MODEL = AurorasDeco.id("block/template/log_stump_red_mushroom");
+	public static final Identifier STEM_STUMP_MODEL = AurorasDeco.id("block/template/stem_stump");
+	public static final Identifier STUMP_BETTERGRASS_DATA = AurorasDeco.id("bettergrass/data/stump");
 
-    private static final List<StumpBlock> LOG_STUMPS = new ArrayList<>();
+	private static final List<StumpBlock> LOG_STUMPS = new ArrayList<>();
 
-    protected static final VoxelShape SHAPE = createCuboidShape(3, 0, 3, 13, 10, 13);
+	protected static final VoxelShape SHAPE = createCuboidShape(3, 0, 3, 13, 10, 13);
 
-    private final WoodType woodType;
+	private final WoodType woodType;
 
-    public StumpBlock(WoodType woodType) {
-        super(settings(woodType));
-        this.woodType = woodType;
+	public StumpBlock(WoodType woodType) {
+		super(settings(woodType));
+		this.woodType = woodType;
 
-        this.setDefaultState(this.getDefaultState().with(WATERLOGGED, false));
+		this.setDefaultState(this.getDefaultState().with(WATERLOGGED, false));
 
-        LOG_STUMPS.add(this);
-    }
+		LOG_STUMPS.add(this);
+	}
 
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(WATERLOGGED);
-    }
+	@Override
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+		builder.add(WATERLOGGED);
+	}
 
-    public static Stream<StumpBlock> streamLogStumps() {
-        return LOG_STUMPS.stream();
-    }
+	public static Stream<StumpBlock> streamLogStumps() {
+		return LOG_STUMPS.stream();
+	}
 
-    public WoodType getWoodType() {
-        return this.woodType;
-    }
+	public WoodType getWoodType() {
+		return this.woodType;
+	}
 
-    @Override
-    public float getSitYOffset() {
-        return .4f;
-    }
+	@Override
+	public float getSitYOffset() {
+		return .4f;
+	}
 
-    /* Shapes */
+	/* Shapes */
 
-    @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return SHAPE;
-    }
+	@Override
+	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return SHAPE;
+	}
 
-    /* Placement */
+	/* Placement */
 
-    @Override
-    public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        var world = ctx.getWorld();
-        var pos = ctx.getBlockPos();
-        var fluid = world.getFluidState(pos);
+	@Override
+	public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
+		var world = ctx.getWorld();
+		var pos = ctx.getBlockPos();
+		var fluid = world.getFluidState(pos);
 
-        return this.getDefaultState().with(WATERLOGGED, fluid.getFluid() == Fluids.WATER);
-    }
+		return this.getDefaultState().with(WATERLOGGED, fluid.getFluid() == Fluids.WATER);
+	}
 
-    /* Updates */
+	/* Updates */
 
-    @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState,
-                                                WorldAccess world, BlockPos pos, BlockPos posFrom) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
+	@Override
+	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState,
+	                                            WorldAccess world, BlockPos pos, BlockPos posFrom) {
+		if (state.get(WATERLOGGED)) {
+			world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+		}
 
-        return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
-    }
+		return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
+	}
 
-    /* Interaction */
+	/* Interaction */
 
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-                              BlockHitResult hit) {
-        ItemStack stack = player.getStackInHand(hand);
-        if (this.sit(world, pos, state, player, stack))
-            return ActionResult.success(world.isClient());
-        return super.onUse(state, world, pos, player, hand, hit);
-    }
+	@Override
+	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+	                          BlockHitResult hit) {
+		ItemStack stack = player.getStackInHand(hand);
+		if (this.sit(world, pos, state, player, stack))
+			return ActionResult.success(world.isClient());
+		return super.onUse(state, world, pos, player, hand, hit);
+	}
 
-    /* Fluid */
+	/* Fluid */
 
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
-    }
+	@Override
+	public FluidState getFluidState(BlockState state) {
+		return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+	}
 
-    private static FabricBlockSettings settings(WoodType woodType) {
-        var log = woodType.getComponent(WoodType.ComponentType.LOG);
-        if (log == null) throw new IllegalStateException("StumpBlock attempted to be created while the wood type is invalid.");
-        return FabricBlockSettings.copyOf(log.block())
-                .mapColor(log.mapColor())
-                .nonOpaque();
-    }
+	private static FabricBlockSettings settings(WoodType woodType) {
+		var log = woodType.getComponent(WoodType.ComponentType.LOG);
+		if (log == null) throw new IllegalStateException("StumpBlock attempted to be created while the wood type is invalid.");
+		return FabricBlockSettings.copyOf(log.block())
+				.mapColor(log.mapColor())
+				.nonOpaque();
+	}
 }

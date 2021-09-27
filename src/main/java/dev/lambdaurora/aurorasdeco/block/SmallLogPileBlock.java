@@ -56,135 +56,135 @@ import java.util.stream.Stream;
  */
 @SuppressWarnings("deprecation")
 public class SmallLogPileBlock extends Block implements Waterloggable {
-    public static final EnumProperty<PartType> TYPE = AurorasDecoProperties.PART_TYPE;
-    public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+	public static final EnumProperty<PartType> TYPE = AurorasDecoProperties.PART_TYPE;
+	public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+	public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
-    protected static final VoxelShape BOTTOM_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 7.0, 16.0);
-    protected static final VoxelShape TOP_SHAPE = Block.createCuboidShape(0.0, 9.0, 0.0, 16.0, 16.0, 16.0);
+	protected static final VoxelShape BOTTOM_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 7.0, 16.0);
+	protected static final VoxelShape TOP_SHAPE = Block.createCuboidShape(0.0, 9.0, 0.0, 16.0, 16.0, 16.0);
 
-    public static final Identifier BOTTOM_MODEL = AurorasDeco.id("block/template/small_log_pile");
-    public static final Identifier TOP_MODEL = AurorasDeco.id("block/template/small_log_pile_top");
-    public static final Identifier DOUBLE_MODEL = AurorasDeco.id("block/template/small_log_pile_double");
-    public static final Identifier BETTERGRASS_DATA = AurorasDeco.id("bettergrass/data/small_log_pile");
+	public static final Identifier BOTTOM_MODEL = AurorasDeco.id("block/template/small_log_pile");
+	public static final Identifier TOP_MODEL = AurorasDeco.id("block/template/small_log_pile_top");
+	public static final Identifier DOUBLE_MODEL = AurorasDeco.id("block/template/small_log_pile_double");
+	public static final Identifier BETTERGRASS_DATA = AurorasDeco.id("bettergrass/data/small_log_pile");
 
-    private static final List<SmallLogPileBlock> SMALL_LOG_PILES = new ArrayList<>();
+	private static final List<SmallLogPileBlock> SMALL_LOG_PILES = new ArrayList<>();
 
-    private final WoodType woodType;
+	private final WoodType woodType;
 
-    public SmallLogPileBlock(WoodType woodType) {
-        super(settings(woodType));
+	public SmallLogPileBlock(WoodType woodType) {
+		super(settings(woodType));
 
-        this.woodType = woodType;
+		this.woodType = woodType;
 
-        this.setDefaultState(this.getDefaultState()
-                .with(TYPE, PartType.BOTTOM)
-                .with(FACING, Direction.NORTH)
-                .with(WATERLOGGED, false)
-        );
+		this.setDefaultState(this.getDefaultState()
+				.with(TYPE, PartType.BOTTOM)
+				.with(FACING, Direction.NORTH)
+				.with(WATERLOGGED, false)
+		);
 
-        SMALL_LOG_PILES.add(this);
-    }
+		SMALL_LOG_PILES.add(this);
+	}
 
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(TYPE, FACING, WATERLOGGED);
-    }
+	@Override
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+		builder.add(TYPE, FACING, WATERLOGGED);
+	}
 
-    public static Stream<SmallLogPileBlock> stream() {
-        return SMALL_LOG_PILES.stream();
-    }
+	public static Stream<SmallLogPileBlock> stream() {
+		return SMALL_LOG_PILES.stream();
+	}
 
-    public WoodType getWoodType() {
-        return this.woodType;
-    }
+	public WoodType getWoodType() {
+		return this.woodType;
+	}
 
-    /* Shapes */
+	/* Shapes */
 
-    @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return switch (state.get(TYPE)) {
-            case BOTTOM -> BOTTOM_SHAPE;
-            case TOP -> TOP_SHAPE;
-            case DOUBLE -> VoxelShapes.fullCube();
-        };
-    }
+	@Override
+	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return switch (state.get(TYPE)) {
+			case BOTTOM -> BOTTOM_SHAPE;
+			case TOP -> TOP_SHAPE;
+			case DOUBLE -> VoxelShapes.fullCube();
+		};
+	}
 
-    /* Placement */
+	/* Placement */
 
-    @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        var world = ctx.getWorld();
-        var pos = ctx.getBlockPos();
-        var placedState = world.getBlockState(pos);
+	@Override
+	public BlockState getPlacementState(ItemPlacementContext ctx) {
+		var world = ctx.getWorld();
+		var pos = ctx.getBlockPos();
+		var placedState = world.getBlockState(pos);
 
-        if (placedState.isOf(this)) {
-            return placedState.with(TYPE, PartType.DOUBLE);
-        } else {
-            var fluid = world.getFluidState(pos);
-            var state = this.getDefaultState().with(WATERLOGGED, fluid.getFluid() == Fluids.WATER);
+		if (placedState.isOf(this)) {
+			return placedState.with(TYPE, PartType.DOUBLE);
+		} else {
+			var fluid = world.getFluidState(pos);
+			var state = this.getDefaultState().with(WATERLOGGED, fluid.getFluid() == Fluids.WATER);
 
-            var side = ctx.getSide();
-            if (side == Direction.DOWN) {
-                state = state.with(TYPE, PartType.TOP);
-            } else if (side == Direction.UP) {
-                state = state.with(TYPE, PartType.BOTTOM);
-            } else {
-                if (AuroraUtil.posMod(ctx.getHitPos().getY(), 1) > 0.5)
-                    state = state.with(TYPE, PartType.TOP);
-                else
-                    state = state.with(TYPE, PartType.BOTTOM);
-            }
+			var side = ctx.getSide();
+			if (side == Direction.DOWN) {
+				state = state.with(TYPE, PartType.TOP);
+			} else if (side == Direction.UP) {
+				state = state.with(TYPE, PartType.BOTTOM);
+			} else {
+				if (AuroraUtil.posMod(ctx.getHitPos().getY(), 1) > 0.5)
+					state = state.with(TYPE, PartType.TOP);
+				else
+					state = state.with(TYPE, PartType.BOTTOM);
+			}
 
-            return state.with(FACING, ctx.getPlayerFacing());
-        }
-    }
+			return state.with(FACING, ctx.getPlayerFacing());
+		}
+	}
 
-    @Override
-    public boolean canReplace(BlockState state, ItemPlacementContext context) {
-        var stack = context.getStack();
-        var type = state.get(TYPE);
-        if (type != PartType.DOUBLE && stack.isOf(this.asItem())) {
-            return !context.shouldCancelInteraction()
-                    && this.canPlaceAt(state.with(TYPE, PartType.DOUBLE), context.getWorld(), context.getBlockPos());
-        }
-        return false;
-    }
+	@Override
+	public boolean canReplace(BlockState state, ItemPlacementContext context) {
+		var stack = context.getStack();
+		var type = state.get(TYPE);
+		if (type != PartType.DOUBLE && stack.isOf(this.asItem())) {
+			return !context.shouldCancelInteraction()
+					&& this.canPlaceAt(state.with(TYPE, PartType.DOUBLE), context.getWorld(), context.getBlockPos());
+		}
+		return false;
+	}
 
-    @Override
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(FACING, rotation.rotate(state.get(FACING)));
-    }
+	@Override
+	public BlockState rotate(BlockState state, BlockRotation rotation) {
+		return state.with(FACING, rotation.rotate(state.get(FACING)));
+	}
 
-    @Override
-    public BlockState mirror(BlockState state, BlockMirror mirror) {
-        return state.rotate(mirror.getRotation(state.get(FACING)));
-    }
+	@Override
+	public BlockState mirror(BlockState state, BlockMirror mirror) {
+		return state.rotate(mirror.getRotation(state.get(FACING)));
+	}
 
-    /* Updates */
+	/* Updates */
 
-    @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState,
-                                                WorldAccess world, BlockPos pos, BlockPos posFrom) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
+	@Override
+	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState,
+	                                            WorldAccess world, BlockPos pos, BlockPos posFrom) {
+		if (state.get(WATERLOGGED)) {
+			world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+		}
 
-        return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
-    }
+		return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
+	}
 
-    /* Fluid */
+	/* Fluid */
 
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
-    }
+	@Override
+	public FluidState getFluidState(BlockState state) {
+		return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+	}
 
-    private static Settings settings(WoodType woodType) {
-        var log = woodType.getComponent(WoodType.ComponentType.LOG);
-        return FabricBlockSettings.of(log.material(), log.mapColor())
-                .sounds(log.blockSoundGroup())
-                .strength(2.f)
-                .nonOpaque();
-    }
+	private static Settings settings(WoodType woodType) {
+		var log = woodType.getComponent(WoodType.ComponentType.LOG);
+		return FabricBlockSettings.of(log.material(), log.mapColor())
+				.sounds(log.blockSoundGroup())
+				.strength(2.f)
+				.nonOpaque();
+	}
 }

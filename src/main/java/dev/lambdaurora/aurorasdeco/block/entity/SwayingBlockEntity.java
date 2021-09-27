@@ -25,24 +25,24 @@ import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
 public class SwayingBlockEntity extends BlockEntity {
-    protected boolean naturalSway = false;
+	protected boolean naturalSway = false;
 
-    public SwayingBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
-    }
+	public SwayingBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
+	}
 
-    /**
-     * Returns whether this block entity can naturally sway.
-     *
-     * @return {@code true} if this block entity can naturally sway, else {@code false}
-     */
-    public boolean canNaturallySway() {
-        return this.naturalSway;
-    }
+	/**
+	 * Returns whether this block entity can naturally sway.
+	 *
+	 * @return {@code true} if this block entity can naturally sway, else {@code false}
+	 */
+	public boolean canNaturallySway() {
+		return this.naturalSway;
+	}
 
-    /* Ticking */
+	/* Ticking */
 
-    protected void tickClient(World world) {
-        this.naturalSway = world.getLightLevel(LightType.SKY, this.pos) >= 12;
-    }
+	protected void tickClient(World world) {
+		this.naturalSway = world.getLightLevel(LightType.SKY, this.pos) >= 12;
+	}
 }

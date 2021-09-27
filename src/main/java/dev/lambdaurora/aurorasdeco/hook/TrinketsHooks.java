@@ -44,41 +44,41 @@ import net.minecraft.item.ItemStack;
  */
 @Environment(EnvType.CLIENT)
 public final class TrinketsHooks {
-    private static final boolean HAS_TRINKETS = FabricLoader.getInstance().isModLoaded("trinkets");
+	private static final boolean HAS_TRINKETS = FabricLoader.getInstance().isModLoaded("trinkets");
 
-    private TrinketsHooks() {
-        throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");
-    }
+	private TrinketsHooks() {
+		throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");
+	}
 
-    public static void init(Item... blackboards) {
-        if (!HAS_TRINKETS)
-            return;
+	public static void init(Item... blackboards) {
+		if (!HAS_TRINKETS)
+			return;
 
-        for (var item : blackboards)
-            TrinketRendererRegistry.registerRenderer(item, TrinketsHooks::renderBlackboardInTrinketSlot);
-    }
+		for (var item : blackboards)
+			TrinketRendererRegistry.registerRenderer(item, TrinketsHooks::renderBlackboardInTrinketSlot);
+	}
 
-    private static void renderBlackboardInTrinketSlot(ItemStack stack, SlotReference slotReference,
-                                                      EntityModel<? extends LivingEntity> contextModel,
-                                                      MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light,
-                                                      LivingEntity entity,
-                                                      float limbAngle, float limbDistance, float tickDelta, float animationProgress,
-                                                      float headYaw, float headPitch) {
-        if (!slotReference.inventory().getSlotType().getGroup().equals("head"))
-            return;
+	private static void renderBlackboardInTrinketSlot(ItemStack stack, SlotReference slotReference,
+	                                                  EntityModel<? extends LivingEntity> contextModel,
+	                                                  MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light,
+	                                                  LivingEntity entity,
+	                                                  float limbAngle, float limbDistance, float tickDelta, float animationProgress,
+	                                                  float headYaw, float headPitch) {
+		if (!slotReference.inventory().getSlotType().getGroup().equals("head"))
+			return;
 
-        boolean villager = entity instanceof VillagerEntity || entity instanceof ZombieVillagerEntity;
-        if (entity.isBaby() && !(entity instanceof VillagerEntity)) {
-            matrices.translate(0.0, 0.03125, 0.0);
-            matrices.scale(.7f, .7f, .7f);
-            matrices.translate(0.0, 1.0, 0.0);
-        }
-        if (contextModel instanceof ModelWithHead withHead)
-            withHead.getHead().rotate(matrices);
+		boolean villager = entity instanceof VillagerEntity || entity instanceof ZombieVillagerEntity;
+		if (entity.isBaby() && !(entity instanceof VillagerEntity)) {
+			matrices.translate(0.0, 0.03125, 0.0);
+			matrices.scale(.7f, .7f, .7f);
+			matrices.translate(0.0, 1.0, 0.0);
+		}
+		if (contextModel instanceof ModelWithHead withHead)
+			withHead.getHead().rotate(matrices);
 
-        HeadFeatureRenderer.translate(matrices, villager);
-        MinecraftClient.getInstance().getHeldItemRenderer().renderItem(entity, stack, ModelTransformation.Mode.HEAD,
-                false,
-                matrices, vertexConsumers, light);
-    }
+		HeadFeatureRenderer.translate(matrices, villager);
+		MinecraftClient.getInstance().getHeldItemRenderer().renderItem(entity, stack, ModelTransformation.Mode.HEAD,
+				false,
+				matrices, vertexConsumers, light);
+	}
 }

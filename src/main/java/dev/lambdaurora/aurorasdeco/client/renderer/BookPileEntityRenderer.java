@@ -37,57 +37,57 @@ import java.util.Random;
  * @since 1.0.0
  */
 public class BookPileEntityRenderer implements BlockEntityRenderer<BookPileBlockEntity> {
-    public BookPileEntityRenderer(BlockEntityRendererFactory.Context ctx) {
-    }
+	public BookPileEntityRenderer(BlockEntityRendererFactory.Context ctx) {
+	}
 
-    @Override
-    public void render(BookPileBlockEntity bookPile, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
-                       int light, int overlay) {
-        long seed = bookPile.getPos().asLong();
+	@Override
+	public void render(BookPileBlockEntity bookPile, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
+	                   int light, int overlay) {
+		long seed = bookPile.getPos().asLong();
 
-        var random = new Random(seed);
+		var random = new Random(seed);
 
-        var renderer = MinecraftClient.getInstance().getItemRenderer();
+		var renderer = MinecraftClient.getInstance().getItemRenderer();
 
-        matrices.push();
-        int i = 0;
-        for (var stack : bookPile.getBooks()) {
-            if (stack.isEmpty())
-                continue;
+		matrices.push();
+		int i = 0;
+		for (var stack : bookPile.getBooks()) {
+			if (stack.isEmpty())
+				continue;
 
-            var model = RenderRule.getModel(stack, bookPile.getCachedState(), bookPile.getWorld(), seed + i * 20L);
-            matrices.push();
+			var model = RenderRule.getModel(stack, bookPile.getCachedState(), bookPile.getWorld(), seed + i * 20L);
+			matrices.push();
 
-            // Do the random rotation first on the Y axis.
-            {
-                matrices.translate(.5, 0, .5);
-                int angle = random.nextInt(360);
-                matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(angle));
-                matrices.translate(-.5, 0, -.5);
-            }
+			// Do the random rotation first on the Y axis.
+			{
+				matrices.translate(.5, 0, .5);
+				int angle = random.nextInt(360);
+				matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(angle));
+				matrices.translate(-.5, 0, -.5);
+			}
 
-            // Makes the book lay on the floor.
-            matrices.translate(.5, .025, .5);
-            matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(90));
-            matrices.translate(3 / 16.f - .15, 0, 0);
-            matrices.scale(.45f, .45f, .45f);
+			// Makes the book lay on the floor.
+			matrices.translate(.5, .025, .5);
+			matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(90));
+			matrices.translate(3 / 16.f - .15, 0, 0);
+			matrices.scale(.45f, .45f, .45f);
 
-            if (model.hasDepth()) {
-                matrices.translate(0, -0.2, 0);
-            }
+			if (model.hasDepth()) {
+				matrices.translate(0, -0.2, 0);
+			}
 
-            renderer.renderItem(stack,
-                    ModelTransformation.Mode.FIXED, false,
-                    matrices, vertexConsumers,
-                    light, overlay,
-                    model);
-            matrices.pop();
+			renderer.renderItem(stack,
+					ModelTransformation.Mode.FIXED, false,
+					matrices, vertexConsumers,
+					light, overlay,
+					model);
+			matrices.pop();
 
-            // Translation for new book.
-            matrices.translate(0, 0.12, 0);
+			// Translation for new book.
+			matrices.translate(0, 0.12, 0);
 
-            i++;
-        }
-        matrices.pop();
-    }
+			i++;
+		}
+		matrices.pop();
+	}
 }

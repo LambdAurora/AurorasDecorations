@@ -30,25 +30,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(SitGoal.class)
 public class SitGoalMixin {
-    @Shadow
-    @Final
-    private TameableEntity tameable;
+	@Shadow
+	@Final
+	private TameableEntity tameable;
 
-    @Inject(method = "start", at = @At("RETURN"))
-    private void onStart(CallbackInfo ci) {
-        if (this.tameable instanceof CatEntity) {
-            var state = this.tameable.getEntityWorld().getBlockState(this.tameable.getBlockPos());
-            if (state.isIn(AurorasDecoTags.PET_BEDS)) {
-                this.tameable.setInSittingPose(false);
-                ((CatEntity) this.tameable).setInSleepingPose(true);
-            }
-        }
-    }
+	@Inject(method = "start", at = @At("RETURN"))
+	private void onStart(CallbackInfo ci) {
+		if (this.tameable instanceof CatEntity) {
+			var state = this.tameable.getEntityWorld().getBlockState(this.tameable.getBlockPos());
+			if (state.isIn(AurorasDecoTags.PET_BEDS)) {
+				this.tameable.setInSittingPose(false);
+				((CatEntity) this.tameable).setInSleepingPose(true);
+			}
+		}
+	}
 
-    @Inject(method = "stop", at = @At("RETURN"))
-    private void onStop(CallbackInfo ci) {
-        if (this.tameable instanceof CatEntity) {
-            ((CatEntity) this.tameable).setInSleepingPose(false);
-        }
-    }
+	@Inject(method = "stop", at = @At("RETURN"))
+	private void onStop(CallbackInfo ci) {
+		if (this.tameable instanceof CatEntity) {
+			((CatEntity) this.tameable).setInSleepingPose(false);
+		}
+	}
 }

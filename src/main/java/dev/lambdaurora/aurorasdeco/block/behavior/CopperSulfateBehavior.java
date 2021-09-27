@@ -38,28 +38,28 @@ import java.util.Random;
  * @since 1.0.0
  */
 public final class CopperSulfateBehavior {
-    private CopperSulfateBehavior() {
-        throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");
-    }
+	private CopperSulfateBehavior() {
+		throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");
+	}
 
-    public static void attemptToDecompose(BlockState state, ServerWorld world, BlockPos pos, Random random, int radius) {
-        var currentPos = pos.mutableCopy();
-        for (int y = 0; y < radius; y++) {
-            currentPos.move(0, 1, 0);
+	public static void attemptToDecompose(BlockState state, ServerWorld world, BlockPos pos, Random random, int radius) {
+		var currentPos = pos.mutableCopy();
+		for (int y = 0; y < radius; y++) {
+			currentPos.move(0, 1, 0);
 
-            var currentState = world.getBlockState(currentPos);
-            if (currentState.isIn(AurorasDecoTags.COPPER_SULFATE_DECOMPOSABLE)) {
-                if (currentState.isIn(BlockTags.LEAVES))
-                    Block.dropStacks(currentState, world, currentPos, world.getBlockEntity(pos));
-                else {
-                    var virtualTool = new ItemStack(Items.NETHERITE_PICKAXE);
-                    virtualTool.addEnchantment(Enchantments.SILK_TOUCH, 1);
-                    Block.dropStacks(currentState, world, currentPos, world.getBlockEntity(pos), null, virtualTool);
-                }
+			var currentState = world.getBlockState(currentPos);
+			if (currentState.isIn(AurorasDecoTags.COPPER_SULFATE_DECOMPOSABLE)) {
+				if (currentState.isIn(BlockTags.LEAVES))
+					Block.dropStacks(currentState, world, currentPos, world.getBlockEntity(pos));
+				else {
+					var virtualTool = new ItemStack(Items.NETHERITE_PICKAXE);
+					virtualTool.addEnchantment(Enchantments.SILK_TOUCH, 1);
+					Block.dropStacks(currentState, world, currentPos, world.getBlockEntity(pos), null, virtualTool);
+				}
 
-                world.setBlockState(currentPos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.SKIP_DROPS);
-                break;
-            }
-        }
-    }
+				world.setBlockState(currentPos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.SKIP_DROPS);
+				break;
+			}
+		}
+	}
 }

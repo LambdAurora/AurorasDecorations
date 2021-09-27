@@ -39,120 +39,120 @@ import net.minecraft.world.World;
  * @since 1.0.0
  */
 public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
-    private static final Ingredient INPUT = Ingredient.ofItems(
-            AurorasDecoRegistry.BLACKBOARD_BLOCK,
-            AurorasDecoRegistry.CHALKBOARD_BLOCK,
-            AurorasDecoRegistry.WAXED_BLACKBOARD_BLOCK,
-            AurorasDecoRegistry.WAXED_CHALKBOARD_BLOCK
-    );
-    private static final Ingredient OUTPUT = Ingredient.ofItems(
-            AurorasDecoRegistry.BLACKBOARD_BLOCK,
-            AurorasDecoRegistry.CHALKBOARD_BLOCK
-    );
+	private static final Ingredient INPUT = Ingredient.ofItems(
+			AurorasDecoRegistry.BLACKBOARD_BLOCK,
+			AurorasDecoRegistry.CHALKBOARD_BLOCK,
+			AurorasDecoRegistry.WAXED_BLACKBOARD_BLOCK,
+			AurorasDecoRegistry.WAXED_CHALKBOARD_BLOCK
+	);
+	private static final Ingredient OUTPUT = Ingredient.ofItems(
+			AurorasDecoRegistry.BLACKBOARD_BLOCK,
+			AurorasDecoRegistry.CHALKBOARD_BLOCK
+	);
 
-    public BlackboardCloneRecipe(Identifier id) {
-        super(id);
-    }
+	public BlackboardCloneRecipe(Identifier id) {
+		super(id);
+	}
 
-    @Override
-    public boolean matches(CraftingInventory inv, World world) {
-        boolean hasInput = false, hasOutput = false;
-        int count = 0;
+	@Override
+	public boolean matches(CraftingInventory inv, World world) {
+		boolean hasInput = false, hasOutput = false;
+		int count = 0;
 
-        for (int slot = 0; slot < inv.size(); ++slot) {
-            var stack = inv.getStack(slot);
+		for (int slot = 0; slot < inv.size(); ++slot) {
+			var stack = inv.getStack(slot);
 
-            if (INPUT.test(stack)) {
-                if (OUTPUT.test(stack) && !this.isInput(stack))
-                    hasOutput = true;
-                else if (this.isInput(stack))
-                    hasInput = true;
-                count++;
-            }
-        }
-        return hasInput && hasOutput && count == 2;
-    }
+			if (INPUT.test(stack)) {
+				if (OUTPUT.test(stack) && !this.isInput(stack))
+					hasOutput = true;
+				else if (this.isInput(stack))
+					hasInput = true;
+				count++;
+			}
+		}
+		return hasInput && hasOutput && count == 2;
+	}
 
-    @Override
-    public ItemStack craft(CraftingInventory inv) {
-        Blackboard blackboard = null;
-        ItemStack output = null;
-        Text customName = null;
+	@Override
+	public ItemStack craft(CraftingInventory inv) {
+		Blackboard blackboard = null;
+		ItemStack output = null;
+		Text customName = null;
 
-        for (int slot = 0; slot < inv.size(); ++slot) {
-            var craftStack = inv.getStack(slot);
-            if (!craftStack.isEmpty()) {
-                if (OUTPUT.test(craftStack) && !this.isInput(craftStack)) {
-                    output = craftStack;
-                } else if (this.isInput(craftStack)) {
-                    var nbt = craftStack.getSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
-                    blackboard = Blackboard.fromNbt(nbt);
-                    if (craftStack.hasCustomName())
-                        customName = craftStack.getName();
-                }
-            }
-        }
-
-
-        var out = output.copy();
-        out.setCount(1);
-        var nbt = out.getOrCreateSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
-        blackboard.writeNbt(nbt);
-
-        if (customName != null)
-            out.setCustomName(customName);
-
-        return out;
-    }
-
-    private boolean isInput(ItemStack stack) {
-        var nbt = stack.getSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
-        if (nbt != null) {
-            if (nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
-                byte[] pixels = nbt.getByteArray("pixels");
-                for (byte pixel : pixels) {
-                    if (pixel != 0) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public DefaultedList<ItemStack> getRemainder(CraftingInventory craftingInventory) {
-        DefaultedList<ItemStack> defaultedList = DefaultedList.ofSize(craftingInventory.size(), ItemStack.EMPTY);
-
-        for (int i = 0; i < defaultedList.size(); ++i) {
-            ItemStack invStack = craftingInventory.getStack(i);
-            if (!invStack.isEmpty()) {
-                if (invStack.getItem().hasRecipeRemainder()) {
-                    defaultedList.set(i, new ItemStack(invStack.getItem().getRecipeRemainder()));
-                } else if (this.isInput(invStack)) {
-                    ItemStack remainder = invStack.copy();
-                    remainder.setCount(1);
-                    defaultedList.set(i, remainder);
-                }
-            }
-        }
-
-        return defaultedList;
-    }
+		for (int slot = 0; slot < inv.size(); ++slot) {
+			var craftStack = inv.getStack(slot);
+			if (!craftStack.isEmpty()) {
+				if (OUTPUT.test(craftStack) && !this.isInput(craftStack)) {
+					output = craftStack;
+				} else if (this.isInput(craftStack)) {
+					var nbt = craftStack.getSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
+					blackboard = Blackboard.fromNbt(nbt);
+					if (craftStack.hasCustomName())
+						customName = craftStack.getName();
+				}
+			}
+		}
 
 
-    @Override
-    public boolean fits(int width, int height) {
-        return width * height >= 2;
-    }
+		var out = output.copy();
+		out.setCount(1);
+		var nbt = out.getOrCreateSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
+		blackboard.writeNbt(nbt);
 
-    @Override
-    public RecipeSerializer<?> getSerializer() {
-        return AurorasDecoRegistry.BLACKBOARD_CLONE_RECIPE_SERIALIZER;
-    }
+		if (customName != null)
+			out.setCustomName(customName);
 
-    @Override
-    public ItemStack getOutput() {
-        return super.getOutput();
-    }
+		return out;
+	}
+
+	private boolean isInput(ItemStack stack) {
+		var nbt = stack.getSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
+		if (nbt != null) {
+			if (nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
+				byte[] pixels = nbt.getByteArray("pixels");
+				for (byte pixel : pixels) {
+					if (pixel != 0) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public DefaultedList<ItemStack> getRemainder(CraftingInventory craftingInventory) {
+		DefaultedList<ItemStack> defaultedList = DefaultedList.ofSize(craftingInventory.size(), ItemStack.EMPTY);
+
+		for (int i = 0; i < defaultedList.size(); ++i) {
+			ItemStack invStack = craftingInventory.getStack(i);
+			if (!invStack.isEmpty()) {
+				if (invStack.getItem().hasRecipeRemainder()) {
+					defaultedList.set(i, new ItemStack(invStack.getItem().getRecipeRemainder()));
+				} else if (this.isInput(invStack)) {
+					ItemStack remainder = invStack.copy();
+					remainder.setCount(1);
+					defaultedList.set(i, remainder);
+				}
+			}
+		}
+
+		return defaultedList;
+	}
+
+
+	@Override
+	public boolean fits(int width, int height) {
+		return width * height >= 2;
+	}
+
+	@Override
+	public RecipeSerializer<?> getSerializer() {
+		return AurorasDecoRegistry.BLACKBOARD_CLONE_RECIPE_SERIALIZER;
+	}
+
+	@Override
+	public ItemStack getOutput() {
+		return super.getOutput();
+	}
 }

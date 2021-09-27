@@ -59,173 +59,173 @@ import java.util.Random;
  */
 @SuppressWarnings("deprecation")
 public class BrazierBlock extends Block implements Waterloggable {
-    public static final BooleanProperty LIT = Properties.LIT;
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+	public static final BooleanProperty LIT = Properties.LIT;
+	public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
-    private static final VoxelShape COLLISION_SHAPE = VoxelShapes.union(
-            createCuboidShape(2, 0, 2, 14, 6, 14),
-            createCuboidShape(7, 0, 0, 9, 1, 2),
-            createCuboidShape(7, 0, 14, 9, 1, 16),
-            createCuboidShape(0, 0, 7, 2, 1, 9),
-            createCuboidShape(14, 0, 7, 16, 1, 9)
-    );
-    private static final VoxelShape FLAME_SHAPE = createCuboidShape(2, 6, 2, 14, 16, 14);
-    private static final VoxelShape OUTLINE_SHAPE = VoxelShapes.union(
-            COLLISION_SHAPE,
-            FLAME_SHAPE
-    );
-    private static final Box FLAME_BOX = FLAME_SHAPE.getBoundingBox();
+	private static final VoxelShape COLLISION_SHAPE = VoxelShapes.union(
+			createCuboidShape(2, 0, 2, 14, 6, 14),
+			createCuboidShape(7, 0, 0, 9, 1, 2),
+			createCuboidShape(7, 0, 14, 9, 1, 16),
+			createCuboidShape(0, 0, 7, 2, 1, 9),
+			createCuboidShape(14, 0, 7, 16, 1, 9)
+	);
+	private static final VoxelShape FLAME_SHAPE = createCuboidShape(2, 6, 2, 14, 16, 14);
+	private static final VoxelShape OUTLINE_SHAPE = VoxelShapes.union(
+			COLLISION_SHAPE,
+			FLAME_SHAPE
+	);
+	private static final Box FLAME_BOX = FLAME_SHAPE.getBoundingBox();
 
-    private final ParticleEffect particle;
-    private final int fireDamage;
+	private final ParticleEffect particle;
+	private final int fireDamage;
 
-    public BrazierBlock(MapColor color, int fireDamage, int luminance, ParticleEffect particle) {
-        this(FabricBlockSettings.of(Material.DECORATION, color)
-                        .strength(2.f)
-                        .nonOpaque()
-                        .luminance(state -> state.get(LIT) ? luminance : 0)
-                        .sounds(BlockSoundGroup.METAL),
-                fireDamage, particle);
-    }
+	public BrazierBlock(MapColor color, int fireDamage, int luminance, ParticleEffect particle) {
+		this(FabricBlockSettings.of(Material.DECORATION, color)
+						.strength(2.f)
+						.nonOpaque()
+						.luminance(state -> state.get(LIT) ? luminance : 0)
+						.sounds(BlockSoundGroup.METAL),
+				fireDamage, particle);
+	}
 
-    public BrazierBlock(FabricBlockSettings settings, int fireDamage, ParticleEffect particle) {
-        super(settings);
+	public BrazierBlock(FabricBlockSettings settings, int fireDamage, ParticleEffect particle) {
+		super(settings);
 
-        this.fireDamage = fireDamage;
-        this.particle = particle;
+		this.fireDamage = fireDamage;
+		this.particle = particle;
 
-        this.setDefaultState(this.getDefaultState().with(LIT, false).with(WATERLOGGED, false));
-    }
+		this.setDefaultState(this.getDefaultState().with(LIT, false).with(WATERLOGGED, false));
+	}
 
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(LIT, WATERLOGGED);
-    }
+	@Override
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+		builder.add(LIT, WATERLOGGED);
+	}
 
-    /* Shapes */
+	/* Shapes */
 
-    @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return COLLISION_SHAPE;
-    }
+	@Override
+	public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return COLLISION_SHAPE;
+	}
 
-    @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return OUTLINE_SHAPE;
-    }
+	@Override
+	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return OUTLINE_SHAPE;
+	}
 
-    /* Placement */
+	/* Placement */
 
-    @Override
-    public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        var world = ctx.getWorld();
-        var blockPos = ctx.getBlockPos();
-        boolean water = world.getFluidState(blockPos).getFluid() == Fluids.WATER;
+	@Override
+	public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
+		var world = ctx.getWorld();
+		var blockPos = ctx.getBlockPos();
+		boolean water = world.getFluidState(blockPos).getFluid() == Fluids.WATER;
 
-        return this.getDefaultState().with(WATERLOGGED, water).with(LIT, !water);
-    }
+		return this.getDefaultState().with(WATERLOGGED, water).with(LIT, !water);
+	}
 
-    /* Interaction */
+	/* Interaction */
 
-    @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        var box = FLAME_BOX.offset(pos);
-        if (box.intersects(entity.getBoundingBox()) && !entity.isFireImmune() && state.get(LIT)
-                && entity instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entity)) {
-            entity.damage(DamageSource.IN_FIRE, (float) this.fireDamage);
-        }
+	@Override
+	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+		var box = FLAME_BOX.offset(pos);
+		if (box.intersects(entity.getBoundingBox()) && !entity.isFireImmune() && state.get(LIT)
+				&& entity instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entity)) {
+			entity.damage(DamageSource.IN_FIRE, (float) this.fireDamage);
+		}
 
-        super.onEntityCollision(state, world, pos, entity);
-    }
+		super.onEntityCollision(state, world, pos, entity);
+	}
 
-    /* Updates */
+	/* Updates */
 
-    @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState,
-                                                WorldAccess world, BlockPos pos, BlockPos posFrom) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
+	@Override
+	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState,
+	                                            WorldAccess world, BlockPos pos, BlockPos posFrom) {
+		if (state.get(WATERLOGGED)) {
+			world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+		}
 
-        return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
-    }
+		return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
+	}
 
-    /* Entity Stuff */
+	/* Entity Stuff */
 
-    @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
-        return false;
-    }
+	@Override
+	public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+		return false;
+	}
 
-    /* Fluid */
+	/* Fluid */
 
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
-    }
+	@Override
+	public FluidState getFluidState(BlockState state) {
+		return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+	}
 
-    @Override
-    public boolean tryFillWithFluid(WorldAccess world, BlockPos pos, BlockState state, FluidState fluidState) {
-        if (!state.get(Properties.WATERLOGGED) && fluidState.getFluid() == Fluids.WATER) {
-            boolean lit = state.get(LIT);
-            if (lit) {
-                extinguish(null, world, pos, state);
-            }
+	@Override
+	public boolean tryFillWithFluid(WorldAccess world, BlockPos pos, BlockState state, FluidState fluidState) {
+		if (!state.get(Properties.WATERLOGGED) && fluidState.getFluid() == Fluids.WATER) {
+			boolean lit = state.get(LIT);
+			if (lit) {
+				extinguish(null, world, pos, state);
+			}
 
-            world.setBlockState(pos, state.with(WATERLOGGED, true).with(LIT, false), Block.NOTIFY_ALL);
-            world.getFluidTickScheduler().schedule(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
-            return true;
-        } else {
-            return false;
-        }
-    }
+			world.setBlockState(pos, state.with(WATERLOGGED, true).with(LIT, false), Block.NOTIFY_ALL);
+			world.getFluidTickScheduler().schedule(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-    /* Client */
+	/* Client */
 
-    @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        if (state.get(LIT)) {
-            if (random.nextInt(10) == 0) {
-                world.playSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                        AurorasDecoSounds.BRAZIER_CRACKLE_SOUND_EVENT, SoundCategory.BLOCKS,
-                        .5f + random.nextFloat(), random.nextFloat() * .7f + .6f, false);
-            }
+	@Override
+	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+		if (state.get(LIT)) {
+			if (random.nextInt(10) == 0) {
+				world.playSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+						AurorasDecoSounds.BRAZIER_CRACKLE_SOUND_EVENT, SoundCategory.BLOCKS,
+						.5f + random.nextFloat(), random.nextFloat() * .7f + .6f, false);
+			}
 
-            world.addParticle(this.particle,
-                    pos.getX() + random.nextDouble() * 0.625 + 0.1875,
-                    pos.getY() + 0.375 + random.nextDouble() * 0.4,
-                    pos.getZ() + random.nextDouble() * 0.625 + 0.1875,
-                    0, 0, 0);
-        }
-    }
+			world.addParticle(this.particle,
+					pos.getX() + random.nextDouble() * 0.625 + 0.1875,
+					pos.getY() + 0.375 + random.nextDouble() * 0.4,
+					pos.getZ() + random.nextDouble() * 0.625 + 0.1875,
+					0, 0, 0);
+		}
+	}
 
-    public static void extinguish(@Nullable Entity entity, WorldAccess world, BlockPos pos, BlockState state) {
-        if (!world.isClient()) {
-            world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS,
-                    1.f, 1.f);
-        } else {
-            for (int i = 0; i < 20; ++i) {
-                spawnSmokeParticle((World) world, pos);
-            }
-        }
+	public static void extinguish(@Nullable Entity entity, WorldAccess world, BlockPos pos, BlockState state) {
+		if (!world.isClient()) {
+			world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS,
+					1.f, 1.f);
+		} else {
+			for (int i = 0; i < 20; ++i) {
+				spawnSmokeParticle((World) world, pos);
+			}
+		}
 
-        world.emitGameEvent(entity, GameEvent.BLOCK_CHANGE, pos);
-    }
+		world.emitGameEvent(entity, GameEvent.BLOCK_CHANGE, pos);
+	}
 
-    public static void spawnSmokeParticle(World world, BlockPos pos) {
-        var random = world.getRandom();
-        world.addImportantParticle(ParticleTypes.SMOKE, true,
-                pos.getX() + 0.5 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
-                pos.getY() + random.nextDouble() + random.nextDouble(),
-                pos.getZ() + 0.5 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
-                0.0, 0.07, 0.0);
-    }
+	public static void spawnSmokeParticle(World world, BlockPos pos) {
+		var random = world.getRandom();
+		world.addImportantParticle(ParticleTypes.SMOKE, true,
+				pos.getX() + 0.5 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
+				pos.getY() + random.nextDouble() + random.nextDouble(),
+				pos.getZ() + 0.5 + random.nextDouble() / 3.0 * (random.nextBoolean() ? 1 : -1),
+				0.0, 0.07, 0.0);
+	}
 
-    public static boolean canBeLit(BlockState state) {
-        return state.isIn(AurorasDecoTags.BRAZIERS, s -> s.contains(LIT) && !state.get(LIT));
-    }
+	public static boolean canBeLit(BlockState state) {
+		return state.isIn(AurorasDecoTags.BRAZIERS, s -> s.contains(LIT) && !state.get(LIT));
+	}
 
-    public static boolean canBeUnlit(BlockState state) {
-        return state.isIn(AurorasDecoTags.BRAZIERS, s -> s.contains(LIT) && state.get(LIT));
-    }
+	public static boolean canBeUnlit(BlockState state) {
+		return state.isIn(AurorasDecoTags.BRAZIERS, s -> s.contains(LIT) && state.get(LIT));
+	}
 }

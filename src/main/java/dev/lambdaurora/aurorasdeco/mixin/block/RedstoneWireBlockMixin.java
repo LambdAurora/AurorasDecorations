@@ -29,10 +29,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RedstoneWireBlock.class)
 public class RedstoneWireBlockMixin {
-    @Inject(method = "canRunOnTop", at = @At("RETURN"), cancellable = true)
-    private void onCanRunOnTop(BlockView world, BlockPos pos, BlockState floor, CallbackInfoReturnable<Boolean> cir) {
-        if (!cir.getReturnValue() && floor.isIn(AurorasDecoTags.HOPPERS)) {
-            cir.setReturnValue(true);
-        }
-    }
+	@Inject(method = "canRunOnTop", at = @At("RETURN"), cancellable = true)
+	private void onCanRunOnTop(BlockView world, BlockPos pos, BlockState floor, CallbackInfoReturnable<Boolean> cir) {
+		if (!cir.getReturnValue() && floor.isIn(AurorasDecoTags.HOPPERS)) {
+			cir.setReturnValue(true);
+		}
+	}
 }

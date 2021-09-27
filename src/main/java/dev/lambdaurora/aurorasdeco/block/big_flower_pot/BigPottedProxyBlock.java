@@ -46,69 +46,69 @@ import java.util.function.Consumer;
  */
 @SuppressWarnings("deprecation")
 public class BigPottedProxyBlock extends BigFlowerPotBlock {
-    private final Map<BlockState, VoxelShape> shapeCache = new Object2ObjectOpenHashMap<>();
+	private final Map<BlockState, VoxelShape> shapeCache = new Object2ObjectOpenHashMap<>();
 
-    public BigPottedProxyBlock(PottedPlantType type) {
-        super(type);
+	public BigPottedProxyBlock(PottedPlantType type) {
+		super(type);
 
-        var builder = new StateManager.Builder<Block, BlockState>(this);
-        this.appendProperties(builder);
-        ((BlockAccessor) this.getPlant()).aurorasdeco$appendProperties(builder);
-        ((BlockAccessor) this).setStateManager(builder.build(Block::getDefaultState, BlockState::new));
+		var builder = new StateManager.Builder<Block, BlockState>(this);
+		this.appendProperties(builder);
+		((BlockAccessor) this.getPlant()).aurorasdeco$appendProperties(builder);
+		((BlockAccessor) this).setStateManager(builder.build(Block::getDefaultState, BlockState::new));
 
-        this.setDefaultState(AuroraUtil.remapBlockState(type.getPlant().getDefaultState(), this.stateManager.getDefaultState()));
-    }
+		this.setDefaultState(AuroraUtil.remapBlockState(type.getPlant().getDefaultState(), this.stateManager.getDefaultState()));
+	}
 
-    @Override
-    public BlockState getPlantState(BlockState potState) {
-        return AuroraUtil.remapBlockState(potState, super.getPlantState(potState));
-    }
+	@Override
+	public BlockState getPlantState(BlockState potState) {
+		return AuroraUtil.remapBlockState(potState, super.getPlantState(potState));
+	}
 
-    /* Shapes */
+	/* Shapes */
 
-    @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return this.shapeCache.computeIfAbsent(state, s -> this.shape(s, world, pos));
-    }
+	@Override
+	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return this.shapeCache.computeIfAbsent(state, s -> this.shape(s, world, pos));
+	}
 
-    private VoxelShape shape(BlockState state, BlockView world, BlockPos pos) {
-        var plantShape = this.getPlant().getOutlineShape(state, world, pos, ShapeContext.absent());
-        float ratio = .65f;
-        float offset = (1.f - ratio) / 2.f;
-        return VoxelShapes.union(BIG_FLOWER_POT_SHAPE, AuroraUtil.resizeVoxelShape(plantShape, ratio).offset(offset, .8f, offset));
-    }
+	private VoxelShape shape(BlockState state, BlockView world, BlockPos pos) {
+		var plantShape = this.getPlant().getOutlineShape(state, world, pos, ShapeContext.absent());
+		float ratio = .65f;
+		float offset = (1.f - ratio) / 2.f;
+		return VoxelShapes.union(BIG_FLOWER_POT_SHAPE, AuroraUtil.resizeVoxelShape(plantShape, ratio).offset(offset, .8f, offset));
+	}
 
-    /* Ticking */
+	/* Ticking */
 
-    @Override
-    public boolean hasRandomTicks(BlockState state) {
-        return this.getPlant().hasRandomTicks(state);
-    }
+	@Override
+	public boolean hasRandomTicks(BlockState state) {
+		return this.getPlant().hasRandomTicks(state);
+	}
 
-    @Override
-    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        this.getPlant().randomTick(state, world, pos, random);
-    }
+	@Override
+	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+		this.getPlant().randomTick(state, world, pos, random);
+	}
 
-    /* Placement */
+	/* Placement */
 
-    @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        var state = super.getPlacementState(ctx);
-        if (state == null) return null;
-        var plantState = this.type.getPlant().getPlacementState(ctx);
-        if (plantState != null)
-            return AuroraUtil.remapBlockState(plantState, state);
-        return state;
-    }
+	@Override
+	public BlockState getPlacementState(ItemPlacementContext ctx) {
+		var state = super.getPlacementState(ctx);
+		if (state == null) return null;
+		var plantState = this.type.getPlant().getPlacementState(ctx);
+		if (plantState != null)
+			return AuroraUtil.remapBlockState(plantState, state);
+		return state;
+	}
 
-    /* Loot table */
+	/* Loot table */
 
-    @Override
-    protected void acceptPlantDrops(BlockState state, LootContext.Builder builder, Consumer<ItemStack> consumer) {
-        var stacks = this.getPlantState(state).getDroppedStacks(builder);
-        for (var stack : stacks) {
-            consumer.accept(stack);
-        }
-    }
+	@Override
+	protected void acceptPlantDrops(BlockState state, LootContext.Builder builder, Consumer<ItemStack> consumer) {
+		var stacks = this.getPlantState(state).getDroppedStacks(builder);
+		for (var stack : stacks) {
+			consumer.accept(stack);
+		}
+	}
 }

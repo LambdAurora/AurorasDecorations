@@ -44,62 +44,62 @@ import java.util.Random;
  */
 @SuppressWarnings("deprecation")
 public class BigPottedSweetBerryBushBlock extends BigPottedProxyBlock implements Fertilizable {
-    private static final Box SWEET_BERRY_BUSH_BOX;
+	private static final Box SWEET_BERRY_BUSH_BOX;
 
-    public BigPottedSweetBerryBushBlock(PottedPlantType type) {
-        super(type);
-    }
+	public BigPottedSweetBerryBushBlock(PottedPlantType type) {
+		super(type);
+	}
 
-    /* Shapes */
+	/* Shapes */
 
-    @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return BIG_FLOWER_POT_SHAPE;
-    }
+	@Override
+	public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return BIG_FLOWER_POT_SHAPE;
+	}
 
-    /* Interaction */
+	/* Interaction */
 
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        var result = this.getPlant().onUse(state, world, pos, player, hand, hit);
-        if (result.isAccepted())
-            return result;
-        else if (player.getStackInHand(hand).isOf(Items.BONE_MEAL))
-            return ActionResult.PASS;
-        else
-            return super.onUse(state, world, pos, player, hand, hit);
-    }
+	@Override
+	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+		var result = this.getPlant().onUse(state, world, pos, player, hand, hit);
+		if (result.isAccepted())
+			return result;
+		else if (player.getStackInHand(hand).isOf(Items.BONE_MEAL))
+			return ActionResult.PASS;
+		else
+			return super.onUse(state, world, pos, player, hand, hit);
+	}
 
-    @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        var selfBox = SWEET_BERRY_BUSH_BOX.offset(pos);
-        if (selfBox.intersects(entity.getBoundingBox())) {
-            this.getPlant().onEntityCollision(state, world, pos, entity);
-        }
-    }
+	@Override
+	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+		var selfBox = SWEET_BERRY_BUSH_BOX.offset(pos);
+		if (selfBox.intersects(entity.getBoundingBox())) {
+			this.getPlant().onEntityCollision(state, world, pos, entity);
+		}
+	}
 
-    /* Fertilizable stuff */
+	/* Fertilizable stuff */
 
-    @Override
-    public boolean isFertilizable(BlockView world, BlockPos pos, BlockState state, boolean isClient) {
-        return ((Fertilizable) this.getPlant()).isFertilizable(world, pos, state, isClient);
-    }
+	@Override
+	public boolean isFertilizable(BlockView world, BlockPos pos, BlockState state, boolean isClient) {
+		return ((Fertilizable) this.getPlant()).isFertilizable(world, pos, state, isClient);
+	}
 
-    @Override
-    public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) {
-        return ((Fertilizable) this.getPlant()).canGrow(world, random, pos, state);
-    }
+	@Override
+	public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) {
+		return ((Fertilizable) this.getPlant()).canGrow(world, random, pos, state);
+	}
 
-    @Override
-    public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
-        ((Fertilizable) this.getPlant()).grow(world, random, pos, state);
-    }
+	@Override
+	public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
+		((Fertilizable) this.getPlant()).grow(world, random, pos, state);
+	}
 
-    static {
-        VoxelShape largeSweetBerryBushShape = createCuboidShape(
-                3.f, 14.f, 3.f,
-                13.f, 23.5f, 13.f
-        );
-        SWEET_BERRY_BUSH_BOX = largeSweetBerryBushShape.getBoundingBox();
-    }
+	static {
+		VoxelShape largeSweetBerryBushShape = createCuboidShape(
+				3.f, 14.f, 3.f,
+				13.f, 23.5f, 13.f
+		);
+		SWEET_BERRY_BUSH_BOX = largeSweetBerryBushShape.getBoundingBox();
+	}
 }

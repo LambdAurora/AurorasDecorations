@@ -20,16 +20,16 @@ package dev.lambdaurora.aurorasdeco.entity.goal;
 import net.minecraft.entity.passive.TameableEntity;
 
 public class TameableSleepInPetBedGoal extends SleepInPetBedGoal {
-    private final TameableEntity tameable;
+	private final TameableEntity tameable;
 
-    public TameableSleepInPetBedGoal(TameableEntity tameable, double speed) {
-        super(tameable, speed);
+	public TameableSleepInPetBedGoal(TameableEntity tameable, double speed) {
+		super(tameable, speed);
 
-        this.tameable = tameable;
-    }
+		this.tameable = tameable;
+	}
 
-    @Override
-    public void setInSleepingPosition(boolean value) {
-        this.tameable.setInSittingPose(value || this.tameable.isSitting());
-    }
+	@Override
+	public void setInSleepingPosition(boolean value) {
+		this.tameable.setInSittingPose(value || this.tameable.isSitting());
+	}
 }

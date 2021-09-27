@@ -36,54 +36,54 @@ import java.util.function.Function;
  * @since 1.0.0
  */
 public final class MapUtil {
-    private MapUtil() {
-        throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
-    }
+	private MapUtil() {
+		throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
+	}
 
-    public static <K, I, O> Map<K, O> map(Map<K, I> map, Function<I, O> mapper) {
-        var out = new Object2ObjectOpenHashMap<K, O>();
-        map.forEach((key, input) -> out.put(key, mapper.apply(input)));
-        return out;
-    }
+	public static <K, I, O> Map<K, O> map(Map<K, I> map, Function<I, O> mapper) {
+		var out = new Object2ObjectOpenHashMap<K, O>();
+		map.forEach((key, input) -> out.put(key, mapper.apply(input)));
+		return out;
+	}
 
-    public static <K, I, O> Map<K, O> mapWithKey(Map<K, I> map, BiFunction<K, I, O> mapper) {
-        var out = new Object2ObjectOpenHashMap<K, O>();
-        map.forEach((key, input) -> out.put(key, mapper.apply(key, input)));
-        return out;
-    }
+	public static <K, I, O> Map<K, O> mapWithKey(Map<K, I> map, BiFunction<K, I, O> mapper) {
+		var out = new Object2ObjectOpenHashMap<K, O>();
+		map.forEach((key, input) -> out.put(key, mapper.apply(key, input)));
+		return out;
+	}
 
-    public static <K, I> Map<K, I> filterWithKey(Map<K, I> map, BiPredicate<K, I> filter) {
-        var out = new Object2ObjectOpenHashMap<K, I>();
-        map.forEach((key, input) -> {
-            if (filter.test(key, input))
-                out.put(key, input);
-        });
-        return out;
-    }
+	public static <K, I> Map<K, I> filterWithKey(Map<K, I> map, BiPredicate<K, I> filter) {
+		var out = new Object2ObjectOpenHashMap<K, I>();
+		map.forEach((key, input) -> {
+			if (filter.test(key, input))
+				out.put(key, input);
+		});
+		return out;
+	}
 
-    public static <K extends Enum<K>, I, O> Map<K, O> mapWithEnumKey(Map<K, I> map, BiFunction<K, I, O> mapper) {
-        var out = new ImmutableMap.Builder<K, O>();
-        map.forEach((key, input) -> out.put(key, mapper.apply(key, input)));
-        return Maps.newEnumMap(out.build());
-    }
+	public static <K extends Enum<K>, I, O> Map<K, O> mapWithEnumKey(Map<K, I> map, BiFunction<K, I, O> mapper) {
+		var out = new ImmutableMap.Builder<K, O>();
+		map.forEach((key, input) -> out.put(key, mapper.apply(key, input)));
+		return Maps.newEnumMap(out.build());
+	}
 
-    public static <I, O> Int2ObjectMap<O> map(Int2ObjectMap<I> map, Function<I, O> mapper) {
-        var out = new Int2ObjectOpenHashMap<O>();
-        map.int2ObjectEntrySet().forEach(entry -> out.put(entry.getIntKey(), mapper.apply(entry.getValue())));
-        return out;
-    }
+	public static <I, O> Int2ObjectMap<O> map(Int2ObjectMap<I> map, Function<I, O> mapper) {
+		var out = new Int2ObjectOpenHashMap<O>();
+		map.int2ObjectEntrySet().forEach(entry -> out.put(entry.getIntKey(), mapper.apply(entry.getValue())));
+		return out;
+	}
 
-    public static <I, O> Int2ObjectMap<O> mapWithKey(Int2ObjectMap<I> map, FunctionWithIntKey<I, O> mapper) {
-        var out = new Int2ObjectOpenHashMap<O>();
-        map.int2ObjectEntrySet().forEach(entry ->
-                out.put(entry.getIntKey(),
-                        mapper.apply(entry.getIntKey(), entry.getValue()))
-        );
-        return out;
-    }
+	public static <I, O> Int2ObjectMap<O> mapWithKey(Int2ObjectMap<I> map, FunctionWithIntKey<I, O> mapper) {
+		var out = new Int2ObjectOpenHashMap<O>();
+		map.int2ObjectEntrySet().forEach(entry ->
+				out.put(entry.getIntKey(),
+						mapper.apply(entry.getIntKey(), entry.getValue()))
+		);
+		return out;
+	}
 
-    @FunctionalInterface
-    public interface FunctionWithIntKey<I, O> {
-        O apply(int key, I input);
-    }
+	@FunctionalInterface
+	public interface FunctionWithIntKey<I, O> {
+		O apply(int key, I input);
+	}
 }

@@ -30,6 +30,6 @@ import net.minecraft.client.item.TooltipData;
  * @since 1.0.0
  */
 public interface ConvertibleTooltipData extends TooltipData {
-    @Environment(EnvType.CLIENT)
-    TooltipComponent toComponent();
+	@Environment(EnvType.CLIENT)
+	TooltipComponent toComponent();
 }

@@ -28,7 +28,7 @@ import net.minecraft.particle.ParticleEffect;
  * @since 1.0.0
  */
 public class AuroraWallTorchBlock extends WallTorchBlock {
-    public AuroraWallTorchBlock(Settings settings, ParticleEffect particle) {
-        super(settings, particle);
-    }
+	public AuroraWallTorchBlock(Settings settings, ParticleEffect particle) {
+		super(settings, particle);
+	}
 }

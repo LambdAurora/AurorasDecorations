@@ -41,28 +41,28 @@ import java.util.function.Supplier;
  */
 @Environment(EnvType.CLIENT)
 public class BakedBenchModel extends ForwardingBakedModel {
-    private final RestModelManager restModelManager;
+	private final RestModelManager restModelManager;
 
-    public BakedBenchModel(BakedModel baseModel, RestModelManager restModelManager) {
-        this.restModelManager = restModelManager;
-        this.wrapped = baseModel;
-    }
+	public BakedBenchModel(BakedModel baseModel, RestModelManager restModelManager) {
+		this.restModelManager = restModelManager;
+		this.wrapped = baseModel;
+	}
 
-    @Override
-    public boolean isVanillaAdapter() {
-        return false;
-    }
+	@Override
+	public boolean isVanillaAdapter() {
+		return false;
+	}
 
-    @Override
-    public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
-        super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+	@Override
+	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+		super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 
-        var attachment = ((RenderAttachedBlockView) blockView).getBlockEntityRenderAttachment(pos);
-        if (attachment instanceof SeatRestItem seatRestItem) {
-            var entry = this.restModelManager.get(seatRestItem.getWoodType());
-            if (entry != null && entry.getBakedBenchRest() instanceof FabricBakedModel restModel) {
-                restModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
-            }
-        }
-    }
+		var attachment = ((RenderAttachedBlockView) blockView).getBlockEntityRenderAttachment(pos);
+		if (attachment instanceof SeatRestItem seatRestItem) {
+			var entry = this.restModelManager.get(seatRestItem.getWoodType());
+			if (entry != null && entry.getBakedBenchRest() instanceof FabricBakedModel restModel) {
+				restModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+			}
+		}
+	}
 }

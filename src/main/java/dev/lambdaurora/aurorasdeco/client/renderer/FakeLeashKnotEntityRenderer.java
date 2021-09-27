@@ -32,46 +32,46 @@ import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class FakeLeashKnotEntityRenderer
-        extends MobEntityRenderer<FakeLeashKnotEntity, LeashKnotEntityModel<FakeLeashKnotEntity>> {
-    private static final Identifier TEXTURE = new Identifier("textures/entity/lead_knot.png");
+		extends MobEntityRenderer<FakeLeashKnotEntity, LeashKnotEntityModel<FakeLeashKnotEntity>> {
+	private static final Identifier TEXTURE = new Identifier("textures/entity/lead_knot.png");
 
-    public FakeLeashKnotEntityRenderer(EntityRendererFactory.Context context) {
-        super(context, new LeashKnotEntityModel<>(context.getPart(EntityModelLayers.LEASH_KNOT)), 1.f);
-        this.shadowRadius = 0.f;
-    }
+	public FakeLeashKnotEntityRenderer(EntityRendererFactory.Context context) {
+		super(context, new LeashKnotEntityModel<>(context.getPart(EntityModelLayers.LEASH_KNOT)), 1.f);
+		this.shadowRadius = 0.f;
+	}
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public void render(FakeLeashKnotEntity fakeLeashKnot, float f, float tickDelta, MatrixStack matrices,
-                       VertexConsumerProvider vertexConsumers, int light) {
-        matrices.push();
-        matrices.scale(-1.f, -1.f, 1.f);
+	@SuppressWarnings("unchecked")
+	@Override
+	public void render(FakeLeashKnotEntity fakeLeashKnot, float f, float tickDelta, MatrixStack matrices,
+	                   VertexConsumerProvider vertexConsumers, int light) {
+		matrices.push();
+		matrices.scale(-1.f, -1.f, 1.f);
 
-        this.scale(fakeLeashKnot, matrices, tickDelta);
+		this.scale(fakeLeashKnot, matrices, tickDelta);
 
-        var client = MinecraftClient.getInstance();
-        boolean visible = this.isVisible(fakeLeashKnot);
-        boolean translucent = !visible && !fakeLeashKnot.isInvisibleTo(client.player);
-        boolean outline = client.hasOutline(fakeLeashKnot);
-        var renderLayer = this.getRenderLayer(fakeLeashKnot, visible, translucent, outline);
-        if (renderLayer != null) {
-            var vertices = vertexConsumers.getBuffer(renderLayer);
-            int overlay = getOverlay(fakeLeashKnot, this.getAnimationCounter(fakeLeashKnot, tickDelta));
-            this.model.render(matrices, vertices, light, overlay, 1.f, 1.f, 1.f, translucent ? .15f : 1.f);
-        }
+		var client = MinecraftClient.getInstance();
+		boolean visible = this.isVisible(fakeLeashKnot);
+		boolean translucent = !visible && !fakeLeashKnot.isInvisibleTo(client.player);
+		boolean outline = client.hasOutline(fakeLeashKnot);
+		var renderLayer = this.getRenderLayer(fakeLeashKnot, visible, translucent, outline);
+		if (renderLayer != null) {
+			var vertices = vertexConsumers.getBuffer(renderLayer);
+			int overlay = getOverlay(fakeLeashKnot, this.getAnimationCounter(fakeLeashKnot, tickDelta));
+			this.model.render(matrices, vertices, light, overlay, 1.f, 1.f, 1.f, translucent ? .15f : 1.f);
+		}
 
-        matrices.pop();
+		matrices.pop();
 
-        var holding = fakeLeashKnot.getHoldingEntity();
-        if (holding != null) {
-            ((MobEntityRendererAccessor<FakeLeashKnotEntity>) this).aurorasdeco$renderLeash(
-                    fakeLeashKnot, tickDelta, matrices, vertexConsumers, holding
-            );
-        }
-    }
+		var holding = fakeLeashKnot.getHoldingEntity();
+		if (holding != null) {
+			((MobEntityRendererAccessor<FakeLeashKnotEntity>) this).aurorasdeco$renderLeash(
+					fakeLeashKnot, tickDelta, matrices, vertexConsumers, holding
+			);
+		}
+	}
 
-    @Override
-    public Identifier getTexture(FakeLeashKnotEntity entity) {
-        return TEXTURE;
-    }
+	@Override
+	public Identifier getTexture(FakeLeashKnotEntity entity) {
+		return TEXTURE;
+	}
 }

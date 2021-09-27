@@ -37,59 +37,59 @@ import net.minecraft.util.math.Vec3f;
  * @since 1.0.0
  */
 public class ShelfBlockEntityRenderer implements BlockEntityRenderer<ShelfBlockEntity> {
-    public ShelfBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
-    }
+	public ShelfBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
+	}
 
-    @Override
-    public void render(ShelfBlockEntity shelf, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
-                       int light, int overlay) {
-        var facing = shelf.getCachedState().get(ShelfBlock.FACING);
+	@Override
+	public void render(ShelfBlockEntity shelf, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
+	                   int light, int overlay) {
+		var facing = shelf.getCachedState().get(ShelfBlock.FACING);
 
-        matrices.push();
-        matrices.translate(0.5, 0.8, 0.5);
-        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(facing.asRotation()));
+		matrices.push();
+		matrices.translate(0.5, 0.8, 0.5);
+		matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(facing.asRotation()));
 
-        if (facing.getAxis() == Direction.Axis.Z) {
-            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180));
-        }
-        matrices.translate(0.35, 0, 0.38);
+		if (facing.getAxis() == Direction.Axis.Z) {
+			matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180));
+		}
+		matrices.translate(0.35, 0, 0.38);
 
-        matrices.scale(.24f, .24f, .24f);
+		matrices.scale(.24f, .24f, .24f);
 
-        var renderer = MinecraftClient.getInstance().getItemRenderer();
+		var renderer = MinecraftClient.getInstance().getItemRenderer();
 
-        for (int y = 0; y < 2; y++) {
-            if (y != 0) {
-                matrices.translate(0, -.5 / .24, 0);
-            }
+		for (int y = 0; y < 2; y++) {
+			if (y != 0) {
+				matrices.translate(0, -.5 / .24, 0);
+			}
 
-            matrices.push();
-            for (int x = 0; x < 4; x++) {
-                if (x != 0) {
-                    matrices.translate(-1.f, 0.f, 0.f);
-                }
+			matrices.push();
+			for (int x = 0; x < 4; x++) {
+				if (x != 0) {
+					matrices.translate(-1.f, 0.f, 0.f);
+				}
 
-                var stack = shelf.getStack(x + y * 4);
-                if (stack.isEmpty())
-                    continue;
+				var stack = shelf.getStack(x + y * 4);
+				if (stack.isEmpty())
+					continue;
 
-                var model = RenderRule.getModel(stack, shelf.getCachedState(), shelf.getWorld(), 0);
+				var model = RenderRule.getModel(stack, shelf.getCachedState(), shelf.getWorld(), 0);
 
-                matrices.push();
-                if (model.hasDepth()) {
-                    matrices.translate(0, -0.2, 0);
-                }
+				matrices.push();
+				if (model.hasDepth()) {
+					matrices.translate(0, -0.2, 0);
+				}
 
-                renderer.renderItem(stack,
-                        ModelTransformation.Mode.FIXED, false,
-                        matrices, vertexConsumers,
-                        light, overlay,
-                        model);
-                matrices.pop();
-            }
-            matrices.pop();
-        }
+				renderer.renderItem(stack,
+						ModelTransformation.Mode.FIXED, false,
+						matrices, vertexConsumers,
+						light, overlay,
+						model);
+				matrices.pop();
+			}
+			matrices.pop();
+		}
 
-        matrices.pop();
-    }
+		matrices.pop();
+	}
 }

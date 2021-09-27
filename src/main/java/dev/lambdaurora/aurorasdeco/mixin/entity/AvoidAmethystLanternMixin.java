@@ -30,11 +30,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin({GiantEntity.class, HostileEntity.class, PillagerEntity.class})
 public class AvoidAmethystLanternMixin {
-    @Inject(method = "getPathfindingFavor", at = @At("RETURN"), cancellable = true)
-    private void onGetPathfindingFavor(BlockPos pos, WorldView world, CallbackInfoReturnable<Float> cir) {
-        var state = world.getBlockState(pos);
-        if (state.isOf(AurorasDecoRegistry.AMETHYST_LANTERN_BLOCK) || state.isOf(AurorasDecoRegistry.AMETHYST_WALL_LANTERN_BLOCK)) {
-            cir.setReturnValue(-30.f);
-        }
-    }
+	@Inject(method = "getPathfindingFavor", at = @At("RETURN"), cancellable = true)
+	private void onGetPathfindingFavor(BlockPos pos, WorldView world, CallbackInfoReturnable<Float> cir) {
+		var state = world.getBlockState(pos);
+		if (state.isOf(AurorasDecoRegistry.AMETHYST_LANTERN_BLOCK) || state.isOf(AurorasDecoRegistry.AMETHYST_WALL_LANTERN_BLOCK)) {
+			cir.setReturnValue(-30.f);
+		}
+	}
 }

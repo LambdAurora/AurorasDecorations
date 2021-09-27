@@ -27,12 +27,12 @@ import net.minecraft.block.Block;
  * @since 1.0.0
  */
 public interface ItemExtensions {
-    /**
-     * Makes this item placeable as the specified block.
-     * <p>
-     * Replaces {@link net.minecraft.item.BlockItem} in the case of an already existing item.
-     *
-     * @param block the block
-     */
-    void makePlaceable(Block block);
+	/**
+	 * Makes this item placeable as the specified block.
+	 * <p>
+	 * Replaces {@link net.minecraft.item.BlockItem} in the case of an already existing item.
+	 *
+	 * @param block the block
+	 */
+	void makePlaceable(Block block);
 }

@@ -36,31 +36,31 @@ import org.jetbrains.annotations.Nullable;
  * @since 1.0.0
  */
 public class DirectionalFlowerPotBlock extends FlowerPotBlock {
-    public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+	public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
-    public DirectionalFlowerPotBlock(Block content, Settings settings) {
-        super(content, settings);
+	public DirectionalFlowerPotBlock(Block content, Settings settings) {
+		super(content, settings);
 
-        if (!content.getStateManager().getProperties().contains(FACING))
-            throw new IllegalArgumentException("Content of a DirectionalFlowerPotBlock needs to contain the facing property from Properties.");
+		if (!content.getStateManager().getProperties().contains(FACING))
+			throw new IllegalArgumentException("Content of a DirectionalFlowerPotBlock needs to contain the facing property from Properties.");
 
-        this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
-    }
+		this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
+	}
 
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
-    }
+	@Override
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+		builder.add(FACING);
+	}
 
-    /* Placement */
+	/* Placement */
 
-    @Override
-    public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        var state = super.getPlacementState(ctx);
-        if (state == null) return null;
-        var plantState = this.getContent().getPlacementState(ctx);
-        if (plantState != null)
-            return AuroraUtil.remapBlockState(plantState, state);
-        return state;
-    }
+	@Override
+	public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
+		var state = super.getPlacementState(ctx);
+		if (state == null) return null;
+		var plantState = this.getContent().getPlacementState(ctx);
+		if (plantState != null)
+			return AuroraUtil.remapBlockState(plantState, state);
+		return state;
+	}
 }

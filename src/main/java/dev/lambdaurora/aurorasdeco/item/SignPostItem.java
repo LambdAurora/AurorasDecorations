@@ -47,107 +47,107 @@ import static dev.lambdaurora.aurorasdeco.AurorasDeco.id;
  * @since 1.0.0
  */
 public class SignPostItem extends Item {
-    public static final Identifier SIGN_POST_MODEL = AurorasDeco.id("block/template/sign_post");
-    public static final Identifier ABSOLUTE_OAK_SIGN_POST_TEXTURE = id("textures/special/sign_post/oak.png");
+	public static final Identifier SIGN_POST_MODEL = AurorasDeco.id("block/template/sign_post");
+	public static final Identifier ABSOLUTE_OAK_SIGN_POST_TEXTURE = id("textures/special/sign_post/oak.png");
 
-    private static final KindSearcher<ItemStack, Item> SIGN_POST_KIND_SEARCHER
-            = KindSearcher.assignableSearcher(SignPostItem.class, ItemStack::getItem).build();
-    private static final List<SignPostItem> SIGN_POSTS = new ArrayList<>();
+	private static final KindSearcher<ItemStack, Item> SIGN_POST_KIND_SEARCHER
+			= KindSearcher.assignableSearcher(SignPostItem.class, ItemStack::getItem).build();
+	private static final List<SignPostItem> SIGN_POSTS = new ArrayList<>();
 
-    private final WoodType woodType;
+	private final WoodType woodType;
 
-    public SignPostItem(WoodType woodType, Settings settings) {
-        super(settings);
-        this.woodType = woodType;
+	public SignPostItem(WoodType woodType, Settings settings) {
+		super(settings);
+		this.woodType = woodType;
 
-        SIGN_POSTS.add(this);
-    }
+		SIGN_POSTS.add(this);
+	}
 
-    public static SignPostItem fromWoodType(WoodType woodType) {
-        for (var item : SIGN_POSTS) {
-            if (item.getWoodType().equals(woodType))
-                return item;
-        }
+	public static SignPostItem fromWoodType(WoodType woodType) {
+		for (var item : SIGN_POSTS) {
+			if (item.getWoodType().equals(woodType))
+				return item;
+		}
 
-        return SIGN_POSTS.get(0);
-    }
+		return SIGN_POSTS.get(0);
+	}
 
-    public static Stream<SignPostItem> stream() {
-        return SIGN_POSTS.stream();
-    }
+	public static Stream<SignPostItem> stream() {
+		return SIGN_POSTS.stream();
+	}
 
-    /**
-     * Gets the wood type of this rest item.
-     *
-     * @return the wood type
-     */
-    public WoodType getWoodType() {
-        return this.woodType;
-    }
+	/**
+	 * Gets the wood type of this rest item.
+	 *
+	 * @return the wood type
+	 */
+	public WoodType getWoodType() {
+		return this.woodType;
+	}
 
-    @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
-        if (this.isIn(group)) {
-            stacks.add(SIGN_POST_KIND_SEARCHER.findLastOfGroup(stacks), new ItemStack(this));
-        }
-    }
+	@Override
+	public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
+		if (this.isIn(group)) {
+			stacks.add(SIGN_POST_KIND_SEARCHER.findLastOfGroup(stacks), new ItemStack(this));
+		}
+	}
 
-    @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        var player = context.getPlayer();
-        if (player == null)
-            return ActionResult.PASS;
+	@Override
+	public ActionResult useOnBlock(ItemUsageContext context) {
+		var player = context.getPlayer();
+		if (player == null)
+			return ActionResult.PASS;
 
-        var world = context.getWorld();
-        var pos = context.getBlockPos();
-        var stack = context.getStack();
+		var world = context.getWorld();
+		var pos = context.getBlockPos();
+		var stack = context.getStack();
 
-        var state = world.getBlockState(pos);
-        boolean signPost = state.getBlock() instanceof SignPostBlock;
+		var state = world.getBlockState(pos);
+		boolean signPost = state.getBlock() instanceof SignPostBlock;
 
-        if (state.getBlock() instanceof FenceBlock || signPost) {
-            if (!signPost) {
-                var signPostState = SignPostBlock.byFence((FenceBlock) state.getBlock())
-                        .getPlacementState(new ItemPlacementContext(context));
-                if (signPostState == null)
-                    return ActionResult.FAIL;
+		if (state.getBlock() instanceof FenceBlock || signPost) {
+			if (!signPost) {
+				var signPostState = SignPostBlock.byFence((FenceBlock) state.getBlock())
+						.getPlacementState(new ItemPlacementContext(context));
+				if (signPostState == null)
+					return ActionResult.FAIL;
 
-                world.setBlockState(pos, signPostState, Block.NOTIFY_ALL);
-            }
+				world.setBlockState(pos, signPostState, Block.NOTIFY_ALL);
+			}
 
-            boolean success = false;
+			boolean success = false;
 
-            var blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof SignPostBlockEntity signPostBlockEntity) {
-                int r = MathHelper.floor((double) ((180.f + context.getPlayerYaw()) * 16.f / 360.f) + 0.5) & 15;
+			var blockEntity = world.getBlockEntity(pos);
+			if (blockEntity instanceof SignPostBlockEntity signPostBlockEntity) {
+				int r = MathHelper.floor((double) ((180.f + context.getPlayerYaw()) * 16.f / 360.f) + 0.5) & 15;
 
-                double y = context.getHitPos().getY();
-                boolean up = y % ((int) y) > 0.5;
+				double y = context.getHitPos().getY();
+				boolean up = y % ((int) y) > 0.5;
 
-                var text = stack.hasCustomName()
-                        ? Text.Serializer.fromJson(stack.getSubNbt(ItemStack.DISPLAY_KEY).getString(ItemStack.NAME_KEY))
-                        : LiteralText.EMPTY;
-                if (up) {
-                    if (signPostBlockEntity.getUp() == null) {
-                        signPostBlockEntity.putSignUp(this, text, 90 + r * -22.5f);
-                        success = true;
-                    }
-                } else if (signPostBlockEntity.getDown() == null) {
-                    signPostBlockEntity.putSignDown(this, text, 90 + r * -22.5f);
-                    success = true;
-                }
-            }
+				var text = stack.hasCustomName()
+						? Text.Serializer.fromJson(stack.getSubNbt(ItemStack.DISPLAY_KEY).getString(ItemStack.NAME_KEY))
+						: LiteralText.EMPTY;
+				if (up) {
+					if (signPostBlockEntity.getUp() == null) {
+						signPostBlockEntity.putSignUp(this, text, 90 + r * -22.5f);
+						success = true;
+					}
+				} else if (signPostBlockEntity.getDown() == null) {
+					signPostBlockEntity.putSignDown(this, text, 90 + r * -22.5f);
+					success = true;
+				}
+			}
 
-            if (success) {
-                if (world.isClient()) {
-                    var soundGroup = this.getWoodType().getComponent(WoodType.ComponentType.PLANKS).blockSoundGroup();
-                    world.playSound(player, pos, soundGroup.getPlaceSound(), SoundCategory.BLOCKS,
-                            (soundGroup.getVolume() + 1.f) / 2.f, soundGroup.getPitch() * 0.8f);
-                }
-                if (!context.getPlayer().isCreative()) stack.decrement(1);
-                return ActionResult.success(world.isClient());
-            }
-        }
-        return super.useOnBlock(context);
-    }
+			if (success) {
+				if (world.isClient()) {
+					var soundGroup = this.getWoodType().getComponent(WoodType.ComponentType.PLANKS).blockSoundGroup();
+					world.playSound(player, pos, soundGroup.getPlaceSound(), SoundCategory.BLOCKS,
+							(soundGroup.getVolume() + 1.f) / 2.f, soundGroup.getPitch() * 0.8f);
+				}
+				if (!context.getPlayer().isCreative()) stack.decrement(1);
+				return ActionResult.success(world.isClient());
+			}
+		}
+		return super.useOnBlock(context);
+	}
 }

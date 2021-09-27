@@ -41,43 +41,43 @@ import java.util.stream.IntStream;
  * @since 1.0.0
  */
 public abstract class FilteredHopperBlockEntity extends HopperBlockEntity implements SidedInventory {
-    private static final int[] AVAILABLE_SLOTS = IntStream.range(0, HopperScreenHandler.SLOT_COUNT).toArray();
+	private static final int[] AVAILABLE_SLOTS = IntStream.range(0, HopperScreenHandler.SLOT_COUNT).toArray();
 
-    public FilteredHopperBlockEntity(BlockPos pos, BlockState state) {
-        super(pos, state);
-    }
+	public FilteredHopperBlockEntity(BlockPos pos, BlockState state) {
+		super(pos, state);
+	}
 
-    public abstract boolean testItem(ItemStack stack);
+	public abstract boolean testItem(ItemStack stack);
 
-    public boolean isAcceptedByFilter(ItemStack stack) {
-        if (stack == null || stack.isEmpty()) return true;
+	public boolean isAcceptedByFilter(ItemStack stack) {
+		if (stack == null || stack.isEmpty()) return true;
 
-        return this.testItem(stack);
-    }
+		return this.testItem(stack);
+	}
 
-    @Override
-    public int[] getAvailableSlots(Direction side) {
-        return AVAILABLE_SLOTS;
-    }
+	@Override
+	public int[] getAvailableSlots(Direction side) {
+		return AVAILABLE_SLOTS;
+	}
 
-    @Override
-    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
-        return this.isAcceptedByFilter(stack);
-    }
+	@Override
+	public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
+		return this.isAcceptedByFilter(stack);
+	}
 
-    @Override
-    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        return true;
-    }
+	@Override
+	public boolean canExtract(int slot, ItemStack stack, Direction dir) {
+		return true;
+	}
 
-    @Override
-    protected Text getContainerName() {
-        return new TranslatableText(this.getCachedState().getBlock().getTranslationKey());
-    }
+	@Override
+	protected Text getContainerName() {
+		return new TranslatableText(this.getCachedState().getBlock().getTranslationKey());
+	}
 
-    @Override
-    public abstract BlockEntityType<?> getType();
+	@Override
+	public abstract BlockEntityType<?> getType();
 
-    @Override
-    protected abstract ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory);
+	@Override
+	protected abstract ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory);
 }

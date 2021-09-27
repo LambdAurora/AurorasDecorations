@@ -35,64 +35,64 @@ import net.minecraft.util.math.BlockPos;
  * @since 1.0.0
  */
 public class BookPileBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
-    private final DefaultedList<ItemStack> books = DefaultedList.ofSize(5, ItemStack.EMPTY);
+	private final DefaultedList<ItemStack> books = DefaultedList.ofSize(5, ItemStack.EMPTY);
 
-    public BookPileBlockEntity(BlockPos pos, BlockState state) {
-        super(AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE, pos, state);
-    }
+	public BookPileBlockEntity(BlockPos pos, BlockState state) {
+		super(AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE, pos, state);
+	}
 
-    public DefaultedList<ItemStack> getBooks() {
-        return this.books;
-    }
+	public DefaultedList<ItemStack> getBooks() {
+		return this.books;
+	}
 
-    public boolean isFull() {
-        return this.books.stream().noneMatch(ItemStack::isEmpty);
-    }
+	public boolean isFull() {
+		return this.books.stream().noneMatch(ItemStack::isEmpty);
+	}
 
-    public void insertBook(ItemStack stack) {
-        for (int i = 0; i < this.books.size(); i++) {
-            if (this.books.get(i).isEmpty()) {
-                var copy = stack.copy();
-                copy.setCount(1);
-                this.books.set(i, copy);
+	public void insertBook(ItemStack stack) {
+		for (int i = 0; i < this.books.size(); i++) {
+			if (this.books.get(i).isEmpty()) {
+				var copy = stack.copy();
+				copy.setCount(1);
+				this.books.set(i, copy);
 
-                this.markDirty();
-                return;
-            }
-        }
-    }
+				this.markDirty();
+				return;
+			}
+		}
+	}
 
-    public ItemStack removeBook(int slot) {
-        var stack = this.books.get(slot);
-        var copy = stack.copy();
-        if (!stack.isEmpty()) {
-            stack.setCount(0);
-            this.markDirty();
-        }
-        return copy;
-    }
+	public ItemStack removeBook(int slot) {
+		var stack = this.books.get(slot);
+		var copy = stack.copy();
+		if (!stack.isEmpty()) {
+			stack.setCount(0);
+			this.markDirty();
+		}
+		return copy;
+	}
 
-    /* Serialization */
+	/* Serialization */
 
-    @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        this.fromClientTag(nbt);
-    }
+	@Override
+	public void readNbt(NbtCompound nbt) {
+		super.readNbt(nbt);
+		this.fromClientTag(nbt);
+	}
 
-    @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
-        return this.toClientTag(super.writeNbt(nbt));
-    }
+	@Override
+	public NbtCompound writeNbt(NbtCompound nbt) {
+		return this.toClientTag(super.writeNbt(nbt));
+	}
 
-    @Override
-    public void fromClientTag(NbtCompound nbt) {
-        Inventories.readNbt(nbt, this.books);
-    }
+	@Override
+	public void fromClientTag(NbtCompound nbt) {
+		Inventories.readNbt(nbt, this.books);
+	}
 
-    @Override
-    public NbtCompound toClientTag(NbtCompound nbt) {
-        Inventories.writeNbt(nbt, this.books);
-        return nbt;
-    }
+	@Override
+	public NbtCompound toClientTag(NbtCompound nbt) {
+		Inventories.writeNbt(nbt, this.books);
+		return nbt;
+	}
 }

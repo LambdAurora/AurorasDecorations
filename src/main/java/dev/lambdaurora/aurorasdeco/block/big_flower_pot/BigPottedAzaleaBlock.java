@@ -32,20 +32,20 @@ import net.minecraft.world.BlockView;
  * @since 1.0.0
  */
 public final class BigPottedAzaleaBlock extends BigFlowerPotBlock {
-    public static final VoxelShape AZALEA_SHAPE = createCuboidShape(
-            2.8f, 14.f, 2.8f,
-            13.2f, 23.2f, 13.2f
-    );
-    public static final VoxelShape POTTED_AZALEA_SHAPE = VoxelShapes.union(BIG_FLOWER_POT_SHAPE, AZALEA_SHAPE);
+	public static final VoxelShape AZALEA_SHAPE = createCuboidShape(
+			2.8f, 14.f, 2.8f,
+			13.2f, 23.2f, 13.2f
+	);
+	public static final VoxelShape POTTED_AZALEA_SHAPE = VoxelShapes.union(BIG_FLOWER_POT_SHAPE, AZALEA_SHAPE);
 
-    public BigPottedAzaleaBlock(PottedPlantType type) {
-        super(type);
-    }
+	public BigPottedAzaleaBlock(PottedPlantType type) {
+		super(type);
+	}
 
-    /* Shapes */
+	/* Shapes */
 
-    @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return POTTED_AZALEA_SHAPE;
-    }
+	@Override
+	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return POTTED_AZALEA_SHAPE;
+	}
 }

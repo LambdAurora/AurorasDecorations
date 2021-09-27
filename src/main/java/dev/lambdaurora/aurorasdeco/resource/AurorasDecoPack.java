@@ -55,249 +55,249 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class AurorasDecoPack implements ModResourcePack {
-    private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 
-    private final Set<String> namespaces = new HashSet<>();
-    private final Map<String, byte[]> resources = new Object2ObjectOpenHashMap<>();
-    private final ResourceType type;
+	private final Set<String> namespaces = new HashSet<>();
+	private final Map<String, byte[]> resources = new Object2ObjectOpenHashMap<>();
+	private final ResourceType type;
 
-    private boolean hasRegisteredOneTimeResources = false;
+	private boolean hasRegisteredOneTimeResources = false;
 
-    public AurorasDecoPack(ResourceType type) {
-        this.type = type;
-    }
+	public AurorasDecoPack(ResourceType type) {
+		this.type = type;
+	}
 
-    public AurorasDecoPack rebuild(ResourceType type, @Nullable ResourceManager resourceManager) {
-        return type == ResourceType.CLIENT_RESOURCES ? this.rebuildClient(resourceManager) : this.rebuildData();
-    }
+	public AurorasDecoPack rebuild(ResourceType type, @Nullable ResourceManager resourceManager) {
+		return type == ResourceType.CLIENT_RESOURCES ? this.rebuildClient(resourceManager) : this.rebuildData();
+	}
 
-    public AurorasDecoPack rebuildClient(ResourceManager resourceManager) {
-        var langBuilder = new LangBuilder();
-        langBuilder.load();
+	public AurorasDecoPack rebuildClient(ResourceManager resourceManager) {
+		var langBuilder = new LangBuilder();
+		langBuilder.load();
 
-        this.namespaces.add("aurorasdeco");
+		this.namespaces.add("aurorasdeco");
 
-        Datagen.generateClientData(resourceManager, langBuilder);
+		Datagen.generateClientData(resourceManager, langBuilder);
 
-        langBuilder.write(this);
+		langBuilder.write(this);
 
-        return this;
-    }
+		return this;
+	}
 
-    private void registerTag(String[] types, Identifier id, Stream<Identifier> entries) {
-        var root = new JsonObject();
-        root.addProperty("replace", false);
-        var values = new JsonArray();
+	private void registerTag(String[] types, Identifier id, Stream<Identifier> entries) {
+		var root = new JsonObject();
+		root.addProperty("replace", false);
+		var values = new JsonArray();
 
-        entries.forEach(value -> values.add(value.toString()));
+		entries.forEach(value -> values.add(value.toString()));
 
-        root.add("values", values);
+		root.add("values", values);
 
-        for (var type : types) {
-            this.putJson("data/" + id.getNamespace() + "/tags/" + type + "/" + id.getPath() + ".json",
-                    root);
-        }
-    }
+		for (var type : types) {
+			this.putJson("data/" + id.getNamespace() + "/tags/" + type + "/" + id.getPath() + ".json",
+					root);
+		}
+	}
 
-    public AurorasDecoPack rebuildData() {
-        this.resources.clear();
-        this.namespaces.clear();
+	public AurorasDecoPack rebuildData() {
+		this.resources.clear();
+		this.namespaces.clear();
 
-        if (!this.hasRegisteredOneTimeResources) {
-            Datagen.registerDefaultRecipes();
-            Datagen.registerDefaultWoodcuttingRecipes();
-            this.hasRegisteredOneTimeResources = true;
-        }
+		if (!this.hasRegisteredOneTimeResources) {
+			Datagen.registerDefaultRecipes();
+			Datagen.registerDefaultWoodcuttingRecipes();
+			this.hasRegisteredOneTimeResources = true;
+		}
 
-        BenchBlock.streamBenches().forEach(Datagen::registerBenchBlockLootTable);
-        ExtendedCandleBlock.stream().forEach(Datagen::registerCandleLikeBlockLootTable);
-        ShelfBlock.streamShelves().forEach(Datagen::registerDoubleBlockLootTable);
-        SmallLogPileBlock.stream().forEach(Datagen::registerDoubleBlockLootTable);
-        StumpBlock.streamLogStumps().forEach(Datagen::dropsSelf);
+		BenchBlock.streamBenches().forEach(Datagen::registerBenchBlockLootTable);
+		ExtendedCandleBlock.stream().forEach(Datagen::registerCandleLikeBlockLootTable);
+		ShelfBlock.streamShelves().forEach(Datagen::registerDoubleBlockLootTable);
+		SmallLogPileBlock.stream().forEach(Datagen::registerDoubleBlockLootTable);
+		StumpBlock.streamLogStumps().forEach(Datagen::dropsSelf);
 
-        this.registerTag(new String[]{"blocks"}, new Identifier("flower_pots"), HangingFlowerPotBlock.stream()
-                .map(Registry.BLOCK::getId));
+		this.registerTag(new String[]{"blocks"}, new Identifier("flower_pots"), HangingFlowerPotBlock.stream()
+				.map(Registry.BLOCK::getId));
 
-        this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("benches"), BenchBlock.streamBenches()
-                .map(Registry.BLOCK::getId));
-        this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("shelves"), ShelfBlock.streamShelves()
-                .map(Registry.BLOCK::getId));
-        this.registerTag(new String[]{"blocks"}, new Identifier("mineable/axe"), SignPostBlock.stream()
-                .filter(block -> block.getDefaultState().getMaterial() == Material.WOOD
-                        || block.getDefaultState().getMaterial() == Material.NETHER_WOOD)
-                .map(Registry.BLOCK::getId));
-        this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("small_log_piles"), SmallLogPileBlock.stream()
-                .map(Registry.BLOCK::getId));
-        this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("stumps"), StumpBlock.streamLogStumps()
-                .map(Registry.BLOCK::getId));
-        this.registerTag(new String[]{"blocks"}, AurorasDeco.id("wall_lanterns"), LanternRegistry.streamIds());
+		this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("benches"), BenchBlock.streamBenches()
+				.map(Registry.BLOCK::getId));
+		this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("shelves"), ShelfBlock.streamShelves()
+				.map(Registry.BLOCK::getId));
+		this.registerTag(new String[]{"blocks"}, new Identifier("mineable/axe"), SignPostBlock.stream()
+				.filter(block -> block.getDefaultState().getMaterial() == Material.WOOD
+						|| block.getDefaultState().getMaterial() == Material.NETHER_WOOD)
+				.map(Registry.BLOCK::getId));
+		this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("small_log_piles"), SmallLogPileBlock.stream()
+				.map(Registry.BLOCK::getId));
+		this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("stumps"), StumpBlock.streamLogStumps()
+				.map(Registry.BLOCK::getId));
+		this.registerTag(new String[]{"blocks"}, AurorasDeco.id("wall_lanterns"), LanternRegistry.streamIds());
 
-        LOGGER.info("Registered " + this.resources.size() + " resources.");
+		LOGGER.info("Registered " + this.resources.size() + " resources.");
 
-        return this;
-    }
+		return this;
+	}
 
-    public void putResource(String resource, byte[] data) {
-        this.resources.put(resource, data);
+	public void putResource(String resource, byte[] data) {
+		this.resources.put(resource, data);
 
-        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-            try {
-                var path = Paths.get("debug", "aurorasdeco").resolve(resource);
-                Files.createDirectories(path.getParent());
-                Files.write(path, data, StandardOpenOption.CREATE, StandardOpenOption.WRITE,
-                        StandardOpenOption.TRUNCATE_EXISTING);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+		if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+			try {
+				var path = Paths.get("debug", "aurorasdeco").resolve(resource);
+				Files.createDirectories(path.getParent());
+				Files.write(path, data, StandardOpenOption.CREATE, StandardOpenOption.WRITE,
+						StandardOpenOption.TRUNCATE_EXISTING);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
-    public void putJsonText(ResourceType type, Identifier id, String json) {
-        this.namespaces.add(id.getNamespace());
+	public void putJsonText(ResourceType type, Identifier id, String json) {
+		this.namespaces.add(id.getNamespace());
 
-        String path = Datagen.toPath(id, type) + ".json";
-        this.putText(path, json);
-    }
+		String path = Datagen.toPath(id, type) + ".json";
+		this.putText(path, json);
+	}
 
-    public void putText(String resource, String text) {
-        this.putResource(resource, text.getBytes(StandardCharsets.UTF_8));
-    }
+	public void putText(String resource, String text) {
+		this.putResource(resource, text.getBytes(StandardCharsets.UTF_8));
+	}
 
-    public void putJson(ResourceType type, Identifier id, JsonObject json) {
-        this.namespaces.add(id.getNamespace());
+	public void putJson(ResourceType type, Identifier id, JsonObject json) {
+		this.namespaces.add(id.getNamespace());
 
-        String path = Datagen.toPath(id, type) + ".json";
-        this.putJson(path, json);
-    }
+		String path = Datagen.toPath(id, type) + ".json";
+		this.putJson(path, json);
+	}
 
-    public void putJson(String resource, JsonObject json) {
-        var stringWriter = new StringWriter();
-        var jsonWriter = new JsonWriter(stringWriter);
-        jsonWriter.setLenient(true);
-        jsonWriter.setIndent("  ");
-        try {
-            Streams.write(json, jsonWriter);
-        } catch (IOException e) {
-            LOGGER.error("Failed to write JSON at {}.", resource, e);
-        }
-        this.putText(resource, stringWriter.toString());
-    }
+	public void putJson(String resource, JsonObject json) {
+		var stringWriter = new StringWriter();
+		var jsonWriter = new JsonWriter(stringWriter);
+		jsonWriter.setLenient(true);
+		jsonWriter.setIndent("  ");
+		try {
+			Streams.write(json, jsonWriter);
+		} catch (IOException e) {
+			LOGGER.error("Failed to write JSON at {}.", resource, e);
+		}
+		this.putText(resource, stringWriter.toString());
+	}
 
-    public void putImage(Identifier id, NativeImage image) {
-        this.namespaces.add(id.getNamespace());
+	public void putImage(Identifier id, NativeImage image) {
+		this.namespaces.add(id.getNamespace());
 
-        String path = Datagen.toPath(id, ResourceType.CLIENT_RESOURCES, "textures/") + ".png";
-        this.putImage(path, image);
-    }
+		String path = Datagen.toPath(id, ResourceType.CLIENT_RESOURCES, "textures/") + ".png";
+		this.putImage(path, image);
+	}
 
-    public void putImage(String location, NativeImage image) {
-        var byteOut = new ByteArrayOutputStream();
-        var out = Channels.newChannel(byteOut);
-        // Please forgive me
-        ((NativeImageAccessor) (Object) image).aurorasdeco$write(out);
+	public void putImage(String location, NativeImage image) {
+		var byteOut = new ByteArrayOutputStream();
+		var out = Channels.newChannel(byteOut);
+		// Please forgive me
+		((NativeImageAccessor) (Object) image).aurorasdeco$write(out);
 
-        this.putResource(location, byteOut.toByteArray());
-        try {
-            out.close();
-        } catch (IOException e) {
-            LOGGER.warn("Could not close output channel for texture " + location + ".", e);
-        }
-    }
+		this.putResource(location, byteOut.toByteArray());
+		try {
+			out.close();
+		} catch (IOException e) {
+			LOGGER.warn("Could not close output channel for texture " + location + ".", e);
+		}
+	}
 
-    @Override
-    public ModMetadata getFabricModMetadata() {
-        return FabricLoader.getInstance().getModContainer(AurorasDeco.NAMESPACE).get().getMetadata();
-    }
+	@Override
+	public ModMetadata getFabricModMetadata() {
+		return FabricLoader.getInstance().getModContainer(AurorasDeco.NAMESPACE).get().getMetadata();
+	}
 
-    @Override
-    public @Nullable InputStream openRoot(String fileName) throws IOException {
-        if (ModResourcePackUtil.containsDefault(this.getFabricModMetadata(), fileName)) {
-            return ModResourcePackUtil.openDefault(this.getFabricModMetadata(),
-                    this.type,
-                    fileName);
-        }
+	@Override
+	public @Nullable InputStream openRoot(String fileName) throws IOException {
+		if (ModResourcePackUtil.containsDefault(this.getFabricModMetadata(), fileName)) {
+			return ModResourcePackUtil.openDefault(this.getFabricModMetadata(),
+					this.type,
+					fileName);
+		}
 
-        byte[] data;
-        if ((data = this.resources.get(fileName)) != null) {
-            return new ByteArrayInputStream(data);
-        }
-        throw new IOException("Generated resources pack has no data or alias for " + fileName);
-    }
+		byte[] data;
+		if ((data = this.resources.get(fileName)) != null) {
+			return new ByteArrayInputStream(data);
+		}
+		throw new IOException("Generated resources pack has no data or alias for " + fileName);
+	}
 
-    @Override
-    public InputStream open(ResourceType type, Identifier id) throws IOException {
-        if (type != this.type)
-            throw new IOException("Reading data from the wrong resource pack.");
-        return this.openRoot(type.getDirectory() + "/" + id.getNamespace() + "/" + id.getPath());
-    }
+	@Override
+	public InputStream open(ResourceType type, Identifier id) throws IOException {
+		if (type != this.type)
+			throw new IOException("Reading data from the wrong resource pack.");
+		return this.openRoot(type.getDirectory() + "/" + id.getNamespace() + "/" + id.getPath());
+	}
 
-    @Override
-    public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix, int maxDepth,
-                                                Predicate<String> pathFilter) {
-        if (type != this.type) return Collections.emptyList();
-        var start = type.getDirectory() + "/" + namespace + "/" + prefix;
-        return this.resources.keySet().stream()
-                .filter(s -> s.startsWith(start) && pathFilter.test(s))
-                .map(AurorasDecoPack::fromPath)
-                .collect(Collectors.toList());
-    }
+	@Override
+	public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix, int maxDepth,
+	                                            Predicate<String> pathFilter) {
+		if (type != this.type) return Collections.emptyList();
+		var start = type.getDirectory() + "/" + namespace + "/" + prefix;
+		return this.resources.keySet().stream()
+				.filter(s -> s.startsWith(start) && pathFilter.test(s))
+				.map(AurorasDecoPack::fromPath)
+				.collect(Collectors.toList());
+	}
 
-    @Override
-    public boolean contains(ResourceType type, Identifier id) {
-        var path = type.getDirectory() + "/" + id.getNamespace() + "/" + id.getPath();
-        return this.resources.containsKey(path);
-    }
+	@Override
+	public boolean contains(ResourceType type, Identifier id) {
+		var path = type.getDirectory() + "/" + id.getNamespace() + "/" + id.getPath();
+		return this.resources.containsKey(path);
+	}
 
-    @Override
-    public Set<String> getNamespaces(ResourceType type) {
-        return this.namespaces;
-    }
+	@Override
+	public Set<String> getNamespaces(ResourceType type) {
+		return this.namespaces;
+	}
 
-    @Nullable
-    @Override
-    public <T> T parseMetadata(ResourceMetadataReader<T> metaReader) throws IOException {
-        InputStream inputStream = this.openRoot("pack.mcmeta");
-        Throwable error = null;
+	@Nullable
+	@Override
+	public <T> T parseMetadata(ResourceMetadataReader<T> metaReader) throws IOException {
+		InputStream inputStream = this.openRoot("pack.mcmeta");
+		Throwable error = null;
 
-        T metadata;
-        try {
-            metadata = AbstractFileResourcePack.parseMetadata(metaReader, inputStream);
-        } catch (Throwable e) {
-            error = e;
-            throw e;
-        } finally {
-            if (inputStream != null) {
-                if (error != null) {
-                    try {
-                        inputStream.close();
-                    } catch (Throwable e) {
-                        error.addSuppressed(e);
-                    }
-                } else {
-                    inputStream.close();
-                }
-            }
-        }
+		T metadata;
+		try {
+			metadata = AbstractFileResourcePack.parseMetadata(metaReader, inputStream);
+		} catch (Throwable e) {
+			error = e;
+			throw e;
+		} finally {
+			if (inputStream != null) {
+				if (error != null) {
+					try {
+						inputStream.close();
+					} catch (Throwable e) {
+						error.addSuppressed(e);
+					}
+				} else {
+					inputStream.close();
+				}
+			}
+		}
 
-        return metadata;
-    }
+		return metadata;
+	}
 
-    @Override
-    public String getName() {
-        return "Aurora's Decorations Virtual Pack";
-    }
+	@Override
+	public String getName() {
+		return "Aurora's Decorations Virtual Pack";
+	}
 
-    @Override
-    public void close() {
-        if (this.type == ResourceType.CLIENT_RESOURCES) {
-            this.resources.clear();
-            this.namespaces.clear();
-        }
-    }
+	@Override
+	public void close() {
+		if (this.type == ResourceType.CLIENT_RESOURCES) {
+			this.resources.clear();
+			this.namespaces.clear();
+		}
+	}
 
-    private static Identifier fromPath(String path) {
-        String[] split = path.replaceAll("((assets)|(data))/", "").split("/", 2);
+	private static Identifier fromPath(String path) {
+		String[] split = path.replaceAll("((assets)|(data))/", "").split("/", 2);
 
-        return new Identifier(split[0], split[1]);
-    }
+		return new Identifier(split[0], split[1]);
+	}
 }

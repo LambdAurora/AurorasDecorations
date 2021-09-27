@@ -25,9 +25,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(MobEntity.class)
 public interface MobEntityAccessor {
-    @Accessor
-    @Nullable NbtCompound getLeashNbt();
+	@Accessor
+	@Nullable NbtCompound getLeashNbt();
 
-    @Accessor
-    void setLeashNbt(@Nullable NbtCompound nbt);
+	@Accessor
+	void setLeashNbt(@Nullable NbtCompound nbt);
 }

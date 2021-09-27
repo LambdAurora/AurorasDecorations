@@ -26,6 +26,6 @@ import java.util.function.ToIntFunction;
 
 @Mixin(AbstractBlock.Settings.class)
 public interface BlockSettingsAccessor {
-    @Accessor
-    ToIntFunction<BlockState> getLuminance();
+	@Accessor
+	ToIntFunction<BlockState> getLuminance();
 }

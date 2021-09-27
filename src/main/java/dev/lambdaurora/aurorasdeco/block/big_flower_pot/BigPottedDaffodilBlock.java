@@ -31,20 +31,20 @@ import net.minecraft.world.BlockView;
  * @since 1.0.0
  */
 public final class BigPottedDaffodilBlock extends BigPottedProxyBlock {
-    public BigPottedDaffodilBlock(PottedPlantType type) {
-        super(type);
-    }
+	public BigPottedDaffodilBlock(PottedPlantType type) {
+		super(type);
+	}
 
-    @Override
-    public float getScale() {
-        return .8f;
-    }
+	@Override
+	public float getScale() {
+		return .8f;
+	}
 
-    /* Shapes */
+	/* Shapes */
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return BIG_FLOWER_POT_SHAPE;
-    }
+	@SuppressWarnings("deprecation")
+	@Override
+	public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return BIG_FLOWER_POT_SHAPE;
+	}
 }

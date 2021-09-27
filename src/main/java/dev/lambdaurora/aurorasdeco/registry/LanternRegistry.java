@@ -39,77 +39,77 @@ import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 public final class LanternRegistry {
-    private static final Map<Identifier, WallLanternBlock> WALL_LANTERNS = new Object2ObjectOpenHashMap<>();
-    private static final Map<LanternBlock, WallLanternBlock> WALL_LANTERN_BLOCK_MAP = new Object2ObjectOpenHashMap<>();
+	private static final Map<Identifier, WallLanternBlock> WALL_LANTERNS = new Object2ObjectOpenHashMap<>();
+	private static final Map<LanternBlock, WallLanternBlock> WALL_LANTERN_BLOCK_MAP = new Object2ObjectOpenHashMap<>();
 
-    public static Stream<Identifier> streamIds() {
-        return WALL_LANTERNS.keySet().stream();
-    }
+	public static Stream<Identifier> streamIds() {
+		return WALL_LANTERNS.keySet().stream();
+	}
 
-    public static void forEach(BiConsumer<Identifier, WallLanternBlock> consumer) {
-        WALL_LANTERNS.forEach(consumer);
-    }
+	public static void forEach(BiConsumer<Identifier, WallLanternBlock> consumer) {
+		WALL_LANTERNS.forEach(consumer);
+	}
 
-    /**
-     * Registers a wall lantern for the given lantern block.
-     *
-     * @param block the lantern block
-     * @param lanternId the lantern block id
-     * @return the wall lantern block
-     */
-    public static WallLanternBlock registerWallLantern(LanternBlock block, Identifier lanternId) {
-        var wallLanternId = getWallLanternId(lanternId);
+	/**
+	 * Registers a wall lantern for the given lantern block.
+	 *
+	 * @param block the lantern block
+	 * @param lanternId the lantern block id
+	 * @return the wall lantern block
+	 */
+	public static WallLanternBlock registerWallLantern(LanternBlock block, Identifier lanternId) {
+		var wallLanternId = getWallLanternId(lanternId);
 
-        WallLanternBlock wallLanternBlock;
-        if (WALL_LANTERNS.containsKey(wallLanternId))
-            return WALL_LANTERNS.get(wallLanternId);
-        else if (block == Blocks.LANTERN || block == Blocks.SOUL_LANTERN) {
-            wallLanternBlock = (WallLanternBlock) Registry.BLOCK.get(wallLanternId);
-        } else {
-            wallLanternBlock = Registry.register(Registry.BLOCK, wallLanternId, new WallLanternBlock(block));
-            ((BlockEntityTypeAccessor) AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE)
-                    .aurorasdeco$addSupportedBlock(wallLanternBlock);
-        }
+		WallLanternBlock wallLanternBlock;
+		if (WALL_LANTERNS.containsKey(wallLanternId))
+			return WALL_LANTERNS.get(wallLanternId);
+		else if (block == Blocks.LANTERN || block == Blocks.SOUL_LANTERN) {
+			wallLanternBlock = (WallLanternBlock) Registry.BLOCK.get(wallLanternId);
+		} else {
+			wallLanternBlock = Registry.register(Registry.BLOCK, wallLanternId, new WallLanternBlock(block));
+			((BlockEntityTypeAccessor) AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE)
+					.aurorasdeco$addSupportedBlock(wallLanternBlock);
+		}
 
-        WALL_LANTERNS.put(wallLanternId, wallLanternBlock);
-        WALL_LANTERN_BLOCK_MAP.put(block, wallLanternBlock);
+		WALL_LANTERNS.put(wallLanternId, wallLanternBlock);
+		WALL_LANTERN_BLOCK_MAP.put(block, wallLanternBlock);
 
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            BlockRenderLayerMap.INSTANCE.putBlock(wallLanternBlock, RenderLayer.getCutout());
-        }
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+			BlockRenderLayerMap.INSTANCE.putBlock(wallLanternBlock, RenderLayer.getCutout());
+		}
 
-        return wallLanternBlock;
-    }
+		return wallLanternBlock;
+	}
 
-    public static WallLanternBlock registerWallLantern(LanternBlock block) {
-        return registerWallLantern(block, Registry.BLOCK.getId(block));
-    }
+	public static WallLanternBlock registerWallLantern(LanternBlock block) {
+		return registerWallLantern(block, Registry.BLOCK.getId(block));
+	}
 
-    public static void tryRegisterWallLantern(Block block, Identifier id) {
-        if (block instanceof LanternBlock)
-            registerWallLantern((LanternBlock) block, id);
-    }
+	public static void tryRegisterWallLantern(Block block, Identifier id) {
+		if (block instanceof LanternBlock)
+			registerWallLantern((LanternBlock) block, id);
+	}
 
-    private static Identifier getWallLanternId(Identifier lanternId) {
-        var namespace = lanternId.getNamespace();
-        var path = lanternId.getPath();
-        var wallLanternPath = "wall_lantern";
+	private static Identifier getWallLanternId(Identifier lanternId) {
+		var namespace = lanternId.getNamespace();
+		var path = lanternId.getPath();
+		var wallLanternPath = "wall_lantern";
 
-        if (!namespace.equals("minecraft") && !namespace.equals("aurorasdeco"))
-            wallLanternPath += '/' + namespace + '/' + path.replace("_lantern_block", "")
-                    .replace("_lantern", "");
-        else {
-            if (!path.equals("lantern"))
-                wallLanternPath += '/' + path.replace("_lantern", "");
-        }
+		if (!namespace.equals("minecraft") && !namespace.equals("aurorasdeco"))
+			wallLanternPath += '/' + namespace + '/' + path.replace("_lantern_block", "")
+					.replace("_lantern", "");
+		else {
+			if (!path.equals("lantern"))
+				wallLanternPath += '/' + path.replace("_lantern", "");
+		}
 
-        return AurorasDeco.id(wallLanternPath);
-    }
+		return AurorasDeco.id(wallLanternPath);
+	}
 
-    public static @Nullable WallLanternBlock fromItem(Item item) {
-        if (item instanceof BlockItem blockItem && blockItem.getBlock() instanceof LanternBlock lanternBlock) {
-            return WALL_LANTERN_BLOCK_MAP.get(lanternBlock);
-        }
-        return null;
-    }
+	public static @Nullable WallLanternBlock fromItem(Item item) {
+		if (item instanceof BlockItem blockItem && blockItem.getBlock() instanceof LanternBlock lanternBlock) {
+			return WALL_LANTERN_BLOCK_MAP.get(lanternBlock);
+		}
+		return null;
+	}
 }

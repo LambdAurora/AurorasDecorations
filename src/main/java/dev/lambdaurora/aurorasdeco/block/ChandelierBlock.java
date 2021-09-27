@@ -47,86 +47,86 @@ import java.util.List;
  * @since 1.0.0
  */
 public class ChandelierBlock extends ExtendedCandleBlock {
-    public static final VoxelShape ONE_CANDLE_SHAPE;
-    public static final VoxelShape TWO_CANDLE_SHAPE;
-    public static final VoxelShape THREE_CANDLE_SHAPE;
+	public static final VoxelShape ONE_CANDLE_SHAPE;
+	public static final VoxelShape TWO_CANDLE_SHAPE;
+	public static final VoxelShape THREE_CANDLE_SHAPE;
 
-    private static final Int2ObjectMap<List<Vec3d>> CANDLES_TO_PARTICLE_OFFSETS;
+	private static final Int2ObjectMap<List<Vec3d>> CANDLES_TO_PARTICLE_OFFSETS;
 
-    private static final VoxelShape HOLDER_SHAPE = createCuboidShape(6.0, 0.0, 6.0, 10.0, 1.0, 10.0);
+	private static final VoxelShape HOLDER_SHAPE = createCuboidShape(6.0, 0.0, 6.0, 10.0, 1.0, 10.0);
 
-    public ChandelierBlock(CandleBlock candleBlock) {
-        super(candleBlock);
+	public ChandelierBlock(CandleBlock candleBlock) {
+		super(candleBlock);
 
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            BlockRenderLayerMap.INSTANCE.putBlock(this, RenderLayer.getCutout());
-        }
-    }
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+			BlockRenderLayerMap.INSTANCE.putBlock(this, RenderLayer.getCutout());
+		}
+	}
 
-    /* Shapes */
+	/* Shapes */
 
-    @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return switch (state.get(CANDLES)) {
-            case 1 -> ONE_CANDLE_SHAPE;
-            case 2 -> TWO_CANDLE_SHAPE;
-            case 3, 4 -> THREE_CANDLE_SHAPE;
-            default -> super.getOutlineShape(state, world, pos, context);
-        };
-    }
+	@Override
+	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return switch (state.get(CANDLES)) {
+			case 1 -> ONE_CANDLE_SHAPE;
+			case 2 -> TWO_CANDLE_SHAPE;
+			case 3, 4 -> THREE_CANDLE_SHAPE;
+			default -> super.getOutlineShape(state, world, pos, context);
+		};
+	}
 
-    /* Placement */
+	/* Placement */
 
-    @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        var upPos = pos.up();
-        var upState = world.getBlockState(upPos);
+	@Override
+	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+		var upPos = pos.up();
+		var upState = world.getBlockState(upPos);
 
-        if (upState.getBlock() instanceof ChainBlock && upState.get(ChainBlock.AXIS) == Direction.Axis.Y)
-            return true;
+		if (upState.getBlock() instanceof ChainBlock && upState.get(ChainBlock.AXIS) == Direction.Axis.Y)
+			return true;
 
-        return !VoxelShapes.matchesAnywhere(upState.getSidesShape(world, upPos).getFace(Direction.DOWN),
-                HOLDER_SHAPE, BooleanBiFunction.ONLY_SECOND);
-    }
+		return !VoxelShapes.matchesAnywhere(upState.getSidesShape(world, upPos).getFace(Direction.DOWN),
+				HOLDER_SHAPE, BooleanBiFunction.ONLY_SECOND);
+	}
 
-    /* Updates */
+	/* Updates */
 
-    @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world,
-                                                BlockPos pos, BlockPos posFrom) {
-        state = super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
-        return direction == Direction.UP && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : state;
-    }
+	@Override
+	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world,
+	                                            BlockPos pos, BlockPos posFrom) {
+		state = super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
+		return direction == Direction.UP && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : state;
+	}
 
-    /* Client */
+	/* Client */
 
-    protected Iterable<Vec3d> getParticleOffsets(BlockState state) {
-        return CANDLES_TO_PARTICLE_OFFSETS.get(state.get(CANDLES).intValue());
-    }
+	protected Iterable<Vec3d> getParticleOffsets(BlockState state) {
+		return CANDLES_TO_PARTICLE_OFFSETS.get(state.get(CANDLES).intValue());
+	}
 
-    static {
-        ONE_CANDLE_SHAPE = createCuboidShape(5.0, 3.0, 5.0, 11.0, 13.0, 11.0);
-        TWO_CANDLE_SHAPE = createCuboidShape(2.0, 3.0, 6.0, 14.0, 12.0, 10.0);
-        THREE_CANDLE_SHAPE = createCuboidShape(2.0, 3.0, 2.0, 14.0, 12.0, 14.0);
+	static {
+		ONE_CANDLE_SHAPE = createCuboidShape(5.0, 3.0, 5.0, 11.0, 13.0, 11.0);
+		TWO_CANDLE_SHAPE = createCuboidShape(2.0, 3.0, 6.0, 14.0, 12.0, 10.0);
+		THREE_CANDLE_SHAPE = createCuboidShape(2.0, 3.0, 2.0, 14.0, 12.0, 14.0);
 
-        CANDLES_TO_PARTICLE_OFFSETS = Util.make(() -> {
-            Int2ObjectMap<List<Vec3d>> map = new Int2ObjectOpenHashMap<>();
-            map.defaultReturnValue(ImmutableList.of());
+		CANDLES_TO_PARTICLE_OFFSETS = Util.make(() -> {
+			Int2ObjectMap<List<Vec3d>> map = new Int2ObjectOpenHashMap<>();
+			map.defaultReturnValue(ImmutableList.of());
 
-            double highestPoint = 0.875;
-            double second = 0.8125;
-            double third = 0.6875;
+			double highestPoint = 0.875;
+			double second = 0.8125;
+			double third = 0.6875;
 
-            map.put(1, ImmutableList.of(new Vec3d(0.5, 0.6875, 0.5)));
-            map.put(2, ImmutableList.of(new Vec3d(0.25, highestPoint, 0.5), new Vec3d(0.75, second, 0.5)));
-            map.put(3, ImmutableList.of(new Vec3d(0.5, highestPoint, 0.25),
-                    new Vec3d(0.25, second, 0.75),
-                    new Vec3d(0.75, third, 0.75)));
-            map.put(4, ImmutableList.of(new Vec3d(0.75, highestPoint, 0.25),
-                    new Vec3d(0.25, second, 0.25),
-                    new Vec3d(0.25, third, 0.75),
-                    new Vec3d(0.75, second, 0.75)));
-            return Int2ObjectMaps.unmodifiable(map);
-        });
-    }
+			map.put(1, ImmutableList.of(new Vec3d(0.5, 0.6875, 0.5)));
+			map.put(2, ImmutableList.of(new Vec3d(0.25, highestPoint, 0.5), new Vec3d(0.75, second, 0.5)));
+			map.put(3, ImmutableList.of(new Vec3d(0.5, highestPoint, 0.25),
+					new Vec3d(0.25, second, 0.75),
+					new Vec3d(0.75, third, 0.75)));
+			map.put(4, ImmutableList.of(new Vec3d(0.75, highestPoint, 0.25),
+					new Vec3d(0.25, second, 0.25),
+					new Vec3d(0.25, third, 0.75),
+					new Vec3d(0.75, second, 0.75)));
+			return Int2ObjectMaps.unmodifiable(map);
+		});
+	}
 }

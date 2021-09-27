@@ -36,25 +36,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Item.class)
 public class ItemMixin implements ItemExtensions {
-    @Shadow
-    @Final
-    @Nullable
-    private FoodComponent foodComponent;
+	@Shadow
+	@Final
+	@Nullable
+	private FoodComponent foodComponent;
 
-    @Unique
-    private BlockItem aurorasdeco$placeable;
+	@Unique
+	private BlockItem aurorasdeco$placeable;
 
-    @Override
-    public void makePlaceable(Block block) {
-        this.aurorasdeco$placeable = new BlockItem(block, new FabricItemSettings()
-                .food(this.foodComponent));
-    }
+	@Override
+	public void makePlaceable(Block block) {
+		this.aurorasdeco$placeable = new BlockItem(block, new FabricItemSettings()
+				.food(this.foodComponent));
+	}
 
-    @Inject(method = "useOnBlock", at = @At("HEAD"), cancellable = true)
-    private void onUseOnBlock(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir) {
-        if (this.aurorasdeco$placeable != null) {
-            // This item is placeable despite it not being an actual BlockItem.
-            cir.setReturnValue(this.aurorasdeco$placeable.useOnBlock(context));
-        }
-    }
+	@Inject(method = "useOnBlock", at = @At("HEAD"), cancellable = true)
+	private void onUseOnBlock(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir) {
+		if (this.aurorasdeco$placeable != null) {
+			// This item is placeable despite it not being an actual BlockItem.
+			cir.setReturnValue(this.aurorasdeco$placeable.useOnBlock(context));
+		}
+	}
 }

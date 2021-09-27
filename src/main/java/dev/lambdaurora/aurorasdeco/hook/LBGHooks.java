@@ -33,48 +33,48 @@ import java.lang.invoke.MethodType;
  */
 @Environment(EnvType.CLIENT)
 public final class LBGHooks {
-    private LBGHooks() {
-        throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");
-    }
+	private LBGHooks() {
+		throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");
+	}
 
-    private static final MethodHandle PUSH_DISABLE_BETTER_LAYER_METHOD;
-    private static final MethodHandle POP_DISABLE_BETTER_LAYER_METHOD;
+	private static final MethodHandle PUSH_DISABLE_BETTER_LAYER_METHOD;
+	private static final MethodHandle POP_DISABLE_BETTER_LAYER_METHOD;
 
-    /**
-     * Pushes the force-disable of the better layer feature.
-     */
-    public static void pushDisableBetterLayer() {
-        if (PUSH_DISABLE_BETTER_LAYER_METHOD != null) {
-            try {
-                PUSH_DISABLE_BETTER_LAYER_METHOD.invoke();
-            } catch (Throwable ignored) {
-            }
-        }
-    }
+	/**
+	 * Pushes the force-disable of the better layer feature.
+	 */
+	public static void pushDisableBetterLayer() {
+		if (PUSH_DISABLE_BETTER_LAYER_METHOD != null) {
+			try {
+				PUSH_DISABLE_BETTER_LAYER_METHOD.invoke();
+			} catch (Throwable ignored) {
+			}
+		}
+	}
 
-    /**
-     * Pops the force-disable of the better layer feature.
-     */
-    public static void popDisableBetterLayer() {
-        if (POP_DISABLE_BETTER_LAYER_METHOD != null) {
-            try {
-                POP_DISABLE_BETTER_LAYER_METHOD.invoke();
-            } catch (Throwable ignored) {
-            }
-        }
-    }
+	/**
+	 * Pops the force-disable of the better layer feature.
+	 */
+	public static void popDisableBetterLayer() {
+		if (POP_DISABLE_BETTER_LAYER_METHOD != null) {
+			try {
+				POP_DISABLE_BETTER_LAYER_METHOD.invoke();
+			} catch (Throwable ignored) {
+			}
+		}
+	}
 
-    static {
-        MethodHandle push = null, pop = null;
+	static {
+		MethodHandle push = null, pop = null;
 
-        try {
-            var lbgClass = Class.forName("dev.lambdaurora.lambdabettergrass.LambdaBetterGrass");
-            push = MethodHandles.lookup().findStatic(lbgClass, "pushDisableBetterLayer", MethodType.methodType(void.class));
-            pop = MethodHandles.lookup().findStatic(lbgClass, "popDisableBetterLayer", MethodType.methodType(void.class));
-        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException ignored) {
-        }
+		try {
+			var lbgClass = Class.forName("dev.lambdaurora.lambdabettergrass.LambdaBetterGrass");
+			push = MethodHandles.lookup().findStatic(lbgClass, "pushDisableBetterLayer", MethodType.methodType(void.class));
+			pop = MethodHandles.lookup().findStatic(lbgClass, "popDisableBetterLayer", MethodType.methodType(void.class));
+		} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException ignored) {
+		}
 
-        PUSH_DISABLE_BETTER_LAYER_METHOD = push;
-        POP_DISABLE_BETTER_LAYER_METHOD = pop;
-    }
+		PUSH_DISABLE_BETTER_LAYER_METHOD = push;
+		POP_DISABLE_BETTER_LAYER_METHOD = pop;
+	}
 }

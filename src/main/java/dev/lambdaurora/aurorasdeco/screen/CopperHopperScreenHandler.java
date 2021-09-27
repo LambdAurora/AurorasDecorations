@@ -36,101 +36,101 @@ import net.minecraft.screen.slot.Slot;
  * @since 1.0.0
  */
 public class CopperHopperScreenHandler extends ScreenHandler {
-    private final Inventory inventory;
-    private final Inventory filterInventory;
-    private final Slot filterSlot;
+	private final Inventory inventory;
+	private final Inventory filterInventory;
+	private final Slot filterSlot;
 
-    public CopperHopperScreenHandler(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory, new SimpleInventory(HopperScreenHandler.SLOT_COUNT), new SimpleInventory(1));
-    }
+	public CopperHopperScreenHandler(int syncId, PlayerInventory playerInventory) {
+		this(syncId, playerInventory, new SimpleInventory(HopperScreenHandler.SLOT_COUNT), new SimpleInventory(1));
+	}
 
-    public CopperHopperScreenHandler(int syncId, PlayerInventory playerInventory,
-                                     Inventory hopperInventory, Inventory filterInventory) {
-        super(AurorasDecoRegistry.COPPER_HOPPER_SCREEN_HANDLER_TYPE, syncId);
+	public CopperHopperScreenHandler(int syncId, PlayerInventory playerInventory,
+	                                 Inventory hopperInventory, Inventory filterInventory) {
+		super(AurorasDecoRegistry.COPPER_HOPPER_SCREEN_HANDLER_TYPE, syncId);
 
-        checkSize(hopperInventory, HopperScreenHandler.SLOT_COUNT);
-        checkSize(filterInventory, 1);
+		checkSize(hopperInventory, HopperScreenHandler.SLOT_COUNT);
+		checkSize(filterInventory, 1);
 
-        // Hopper inventory
-        this.inventory = hopperInventory;
-        for (int slot = 0; slot < HopperScreenHandler.SLOT_COUNT; slot++) {
-            this.addSlot(new FilteredSlot(this.inventory, slot, slot * 18 + 26, 20));
-        }
-        this.inventory.onOpen(playerInventory.player);
+		// Hopper inventory
+		this.inventory = hopperInventory;
+		for (int slot = 0; slot < HopperScreenHandler.SLOT_COUNT; slot++) {
+			this.addSlot(new FilteredSlot(this.inventory, slot, slot * 18 + 26, 20));
+		}
+		this.inventory.onOpen(playerInventory.player);
 
-        // Filter
-        this.filterInventory = filterInventory;
-        this.filterSlot = this.addSlot(new Slot(this.filterInventory, 0, 134, 20) {
-            @Override
-            public int getMaxItemCount() {
-                return 1;
-            }
-        });
-        this.filterInventory.onOpen(playerInventory.player);
+		// Filter
+		this.filterInventory = filterInventory;
+		this.filterSlot = this.addSlot(new Slot(this.filterInventory, 0, 134, 20) {
+			@Override
+			public int getMaxItemCount() {
+				return 1;
+			}
+		});
+		this.filterInventory.onOpen(playerInventory.player);
 
-        // Player inventory
-        for (int row = 0; row < 3; row++) {
-            for (int column = 0; column < 9; column++) {
-                this.addSlot(new Slot(playerInventory, column + row * 9 + 9, column * 18 + 8, row * 18 + 51));
-            }
-        }
+		// Player inventory
+		for (int row = 0; row < 3; row++) {
+			for (int column = 0; column < 9; column++) {
+				this.addSlot(new Slot(playerInventory, column + row * 9 + 9, column * 18 + 8, row * 18 + 51));
+			}
+		}
 
-        for (int column = 0; column < 9; column++) {
-            this.addSlot(new Slot(playerInventory, column, column * 18 + 8, 109));
-        }
-    }
+		for (int column = 0; column < 9; column++) {
+			this.addSlot(new Slot(playerInventory, column, column * 18 + 8, 109));
+		}
+	}
 
-    public Slot getFilterSlot() {
-        return this.filterSlot;
-    }
+	public Slot getFilterSlot() {
+		return this.filterSlot;
+	}
 
-    @Override
-    public boolean canUse(PlayerEntity player) {
-        return this.inventory.canPlayerUse(player);
-    }
+	@Override
+	public boolean canUse(PlayerEntity player) {
+		return this.inventory.canPlayerUse(player);
+	}
 
-    @Override
-    public ItemStack transferSlot(PlayerEntity player, int index) {
-        var slot = this.slots.get(index);
-        if (!slot.hasStack()) return ItemStack.EMPTY;
+	@Override
+	public ItemStack transferSlot(PlayerEntity player, int index) {
+		var slot = this.slots.get(index);
+		if (!slot.hasStack()) return ItemStack.EMPTY;
 
-        var currentStack = slot.getStack();
-        var stack = currentStack.copy();
+		var currentStack = slot.getStack();
+		var stack = currentStack.copy();
 
-        // From hopper to player.
-        if (index <= this.inventory.size()) {
-            if (!this.insertItem(currentStack, this.inventory.size() + 1, this.slots.size(), true)) {
-                return ItemStack.EMPTY;
-            }
-        } else if (!this.insertItem(currentStack, 0, this.inventory.size(), false)) { // From player to inventory.
-            return ItemStack.EMPTY;
-        }
+		// From hopper to player.
+		if (index <= this.inventory.size()) {
+			if (!this.insertItem(currentStack, this.inventory.size() + 1, this.slots.size(), true)) {
+				return ItemStack.EMPTY;
+			}
+		} else if (!this.insertItem(currentStack, 0, this.inventory.size(), false)) { // From player to inventory.
+			return ItemStack.EMPTY;
+		}
 
-        if (currentStack.isEmpty()) {
-            slot.setStack(ItemStack.EMPTY);
-        } else {
-            slot.markDirty();
-        }
+		if (currentStack.isEmpty()) {
+			slot.setStack(ItemStack.EMPTY);
+		} else {
+			slot.markDirty();
+		}
 
-        return stack;
-    }
+		return stack;
+	}
 
-    @Override
-    public void close(PlayerEntity player) {
-        super.close(player);
+	@Override
+	public void close(PlayerEntity player) {
+		super.close(player);
 
-        this.inventory.onClose(player);
-        this.filterInventory.onClose(player);
-    }
+		this.inventory.onClose(player);
+		this.filterInventory.onClose(player);
+	}
 
-    private class FilteredSlot extends Slot {
-        public FilteredSlot(Inventory inventory, int index, int x, int y) {
-            super(inventory, index, x, y);
-        }
+	private class FilteredSlot extends Slot {
+		public FilteredSlot(Inventory inventory, int index, int x, int y) {
+			super(inventory, index, x, y);
+		}
 
-        @Override
-        public boolean canInsert(ItemStack stack) {
-            return CopperHopperBlockEntity.isItemAcceptedByFilter(stack, CopperHopperScreenHandler.this.getFilterSlot().getStack());
-        }
-    }
+		@Override
+		public boolean canInsert(ItemStack stack) {
+			return CopperHopperBlockEntity.isItemAcceptedByFilter(stack, CopperHopperScreenHandler.this.getFilterSlot().getStack());
+		}
+	}
 }

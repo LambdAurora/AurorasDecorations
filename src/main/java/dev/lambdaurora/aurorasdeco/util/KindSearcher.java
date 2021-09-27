@@ -37,152 +37,152 @@ import java.util.function.ToIntFunction;
  * @param <O> the tested type
  */
 public class KindSearcher<I, O> {
-    private final Predicate<O> tester;
-    private final Function<I, O> mapper;
-    private final ToIntFunction<List<I>> after;
+	private final Predicate<O> tester;
+	private final Function<I, O> mapper;
+	private final ToIntFunction<List<I>> after;
 
-    public KindSearcher(Predicate<O> tester, Function<I, O> mapper, ToIntFunction<List<I>> after) {
-        this.tester = tester;
-        this.mapper = mapper;
-        this.after = after;
-    }
+	public KindSearcher(Predicate<O> tester, Function<I, O> mapper, ToIntFunction<List<I>> after) {
+		this.tester = tester;
+		this.mapper = mapper;
+		this.after = after;
+	}
 
-    public int findLastOfGroup(List<I> list) {
-        int appendIndex = list.size();
+	public int findLastOfGroup(List<I> list) {
+		int appendIndex = list.size();
 
-        boolean found = false;
-        for (int i = 0; i < list.size(); i++) {
-            var obj = this.mapper.apply(list.get(i));
+		boolean found = false;
+		for (int i = 0; i < list.size(); i++) {
+			var obj = this.mapper.apply(list.get(i));
 
-            if (this.tester.test(obj)) {
-                found = true;
-            } else if (found) {
-                appendIndex = i;
-                break;
-            }
-        }
+			if (this.tester.test(obj)) {
+				found = true;
+			} else if (found) {
+				appendIndex = i;
+				break;
+			}
+		}
 
-        return appendIndex;
-    }
+		return appendIndex;
+	}
 
-    public int findLast(List<I> list) {
-        int appendIndex = list.size();
+	public int findLast(List<I> list) {
+		int appendIndex = list.size();
 
-        for (int i = 0; i < list.size(); i++) {
-            var obj = this.mapper.apply(list.get(i));
+		for (int i = 0; i < list.size(); i++) {
+			var obj = this.mapper.apply(list.get(i));
 
-            if (this.tester.test(obj))
-                appendIndex = i + 1;
-        }
+			if (this.tester.test(obj))
+				appendIndex = i + 1;
+		}
 
-        return appendIndex;
-    }
+		return appendIndex;
+	}
 
-    public int findAfter(List<I> list) {
-        int start = this.after.applyAsInt(list);
-        if (start == -1) return list.size();
+	public int findAfter(List<I> list) {
+		int start = this.after.applyAsInt(list);
+		if (start == -1) return list.size();
 
-        for (int i = start; i < list.size(); i++) {
-            var obj = this.mapper.apply(list.get(i));
+		for (int i = start; i < list.size(); i++) {
+			var obj = this.mapper.apply(list.get(i));
 
-            if (this.tester.test(obj))
-                start = i + 1;
-        }
+			if (this.tester.test(obj))
+				start = i + 1;
+		}
 
-        return start;
-    }
+		return start;
+	}
 
-    public static <I> Builder<I, I> identitySearcher(Predicate<I> tester) {
-        return new Builder<>(tester, Function.identity());
-    }
+	public static <I> Builder<I, I> identitySearcher(Predicate<I> tester) {
+		return new Builder<>(tester, Function.identity());
+	}
 
-    public static <I, O, B extends O> Builder<I, O> assignableSearcher(Class<B> baseClass, Function<I, O> mapper) {
-        return new Builder<>(o -> baseClass.isAssignableFrom(o.getClass()), mapper);
-    }
+	public static <I, O, B extends O> Builder<I, O> assignableSearcher(Class<B> baseClass, Function<I, O> mapper) {
+		return new Builder<>(o -> baseClass.isAssignableFrom(o.getClass()), mapper);
+	}
 
-    public static Builder<ItemStack, StackEntry> itemIdentifierSearcher(Predicate<StackEntry> tester) {
-        return new Builder<>(tester, stack -> new StackEntry(stack, Registry.ITEM.getId(stack.getItem())));
-    }
+	public static Builder<ItemStack, StackEntry> itemIdentifierSearcher(Predicate<StackEntry> tester) {
+		return new Builder<>(tester, stack -> new StackEntry(stack, Registry.ITEM.getId(stack.getItem())));
+	}
 
-    public static KindSearcher<ItemStack, StackEntry> strictlyAfter(Item item) {
-        return KindSearcher.itemIdentifierSearcher(entry -> entry.stack().isOf(item))
-                .afterMapped(item, ItemStack::getItem)
-                .build();
-    }
+	public static KindSearcher<ItemStack, StackEntry> strictlyAfter(Item item) {
+		return KindSearcher.itemIdentifierSearcher(entry -> entry.stack().isOf(item))
+				.afterMapped(item, ItemStack::getItem)
+				.build();
+	}
 
-    public record StackEntry(ItemStack stack, Identifier id) {
-    }
+	public record StackEntry(ItemStack stack, Identifier id) {
+	}
 
-    public static class Builder<I, O> {
-        private final Predicate<O> tester;
-        private final Function<I, O> mapper;
-        private ToIntFunction<List<I>> after = o -> 0;
+	public static class Builder<I, O> {
+		private final Predicate<O> tester;
+		private final Function<I, O> mapper;
+		private ToIntFunction<List<I>> after = o -> 0;
 
-        public Builder(Predicate<O> tester, Function<I, O> mapper) {
-            this.tester = tester;
-            this.mapper = mapper;
-        }
+		public Builder(Predicate<O> tester, Function<I, O> mapper) {
+			this.tester = tester;
+			this.mapper = mapper;
+		}
 
-        public Builder<I, O> after(ToIntFunction<List<I>> after) {
-            this.after = after;
-            return this;
-        }
+		public Builder<I, O> after(ToIntFunction<List<I>> after) {
+			this.after = after;
+			return this;
+		}
 
-        public Builder<I, O> after(I after) {
-            this.after = list -> list.indexOf(after);
-            return this;
-        }
+		public Builder<I, O> after(I after) {
+			this.after = list -> list.indexOf(after);
+			return this;
+		}
 
-        public <T> Builder<I, O> afterMapped(T after, Function<I, T> mapper) {
-            this.after = list -> {
-                for (int i = 0; i < list.size(); i++) {
-                    var obj = mapper.apply(list.get(i));
+		public <T> Builder<I, O> afterMapped(T after, Function<I, T> mapper) {
+			this.after = list -> {
+				for (int i = 0; i < list.size(); i++) {
+					var obj = mapper.apply(list.get(i));
 
-                    if (after.equals(obj))
-                        return i + 1;
-                }
-                return list.size();
-            };
-            return this;
-        }
+					if (after.equals(obj))
+						return i + 1;
+				}
+				return list.size();
+			};
+			return this;
+		}
 
-        public KindSearcher<I, O> build() {
-            return new KindSearcher<>(
-                    this.tester,
-                    this.mapper,
-                    this.after
-            );
-        }
-    }
+		public KindSearcher<I, O> build() {
+			return new KindSearcher<>(
+					this.tester,
+					this.mapper,
+					this.after
+			);
+		}
+	}
 
-    public static final KindSearcher<ItemStack, StackEntry> CAMPFIRE_SEARCHER = itemIdentifierSearcher(
-            entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof CampfireBlock
-    )
-            .afterMapped(Items.SOUL_CAMPFIRE, ItemStack::getItem)
-            .build();
-    public static final KindSearcher<ItemStack, StackEntry> FLOWER_SEARCHER = itemIdentifierSearcher(
-            entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof FlowerBlock
-    )
-            .afterMapped(Items.WITHER_ROSE, ItemStack::getItem)
-            .build();
-    public static final KindSearcher<ItemStack, StackEntry> HOPPER_SEARCHER = itemIdentifierSearcher(
-            entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof HopperBlock
-    )
-            .afterMapped(Items.HOPPER, ItemStack::getItem)
-            .build();
-    public static final KindSearcher<ItemStack, StackEntry> LANTERN_SEARCHER = itemIdentifierSearcher(
-            entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof LanternBlock
-    )
-            .afterMapped(Items.SOUL_LANTERN, ItemStack::getItem)
-            .build();
-    public static final KindSearcher<ItemStack, StackEntry> TORCH_SEARCHER = itemIdentifierSearcher(
-            entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof TorchBlock
-    )
-            .afterMapped(Items.SOUL_TORCH, ItemStack::getItem)
-            .build();
-    public static final KindSearcher<ItemStack, StackEntry> WALL_SEARCHER = itemIdentifierSearcher(
-            entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof WallBlock
-    )
-            .afterMapped(Items.COBBLESTONE_WALL, ItemStack::getItem)
-            .build();
+	public static final KindSearcher<ItemStack, StackEntry> CAMPFIRE_SEARCHER = itemIdentifierSearcher(
+			entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof CampfireBlock
+	)
+			.afterMapped(Items.SOUL_CAMPFIRE, ItemStack::getItem)
+			.build();
+	public static final KindSearcher<ItemStack, StackEntry> FLOWER_SEARCHER = itemIdentifierSearcher(
+			entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof FlowerBlock
+	)
+			.afterMapped(Items.WITHER_ROSE, ItemStack::getItem)
+			.build();
+	public static final KindSearcher<ItemStack, StackEntry> HOPPER_SEARCHER = itemIdentifierSearcher(
+			entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof HopperBlock
+	)
+			.afterMapped(Items.HOPPER, ItemStack::getItem)
+			.build();
+	public static final KindSearcher<ItemStack, StackEntry> LANTERN_SEARCHER = itemIdentifierSearcher(
+			entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof LanternBlock
+	)
+			.afterMapped(Items.SOUL_LANTERN, ItemStack::getItem)
+			.build();
+	public static final KindSearcher<ItemStack, StackEntry> TORCH_SEARCHER = itemIdentifierSearcher(
+			entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof TorchBlock
+	)
+			.afterMapped(Items.SOUL_TORCH, ItemStack::getItem)
+			.build();
+	public static final KindSearcher<ItemStack, StackEntry> WALL_SEARCHER = itemIdentifierSearcher(
+			entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof WallBlock
+	)
+			.afterMapped(Items.COBBLESTONE_WALL, ItemStack::getItem)
+			.build();
 }

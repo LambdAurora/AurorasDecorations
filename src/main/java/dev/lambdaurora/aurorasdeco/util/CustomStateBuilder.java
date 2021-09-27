@@ -28,43 +28,43 @@ import java.util.List;
 import java.util.function.Function;
 
 public class CustomStateBuilder<O, S extends State<O, S>> extends StateManager.Builder<O, S> {
-    private final StateManager.Builder<O, S> parent;
-    private final List<String> excludes = new ArrayList<>();
+	private final StateManager.Builder<O, S> parent;
+	private final List<String> excludes = new ArrayList<>();
 
-    @SuppressWarnings("unchecked")
-    public CustomStateBuilder(StateManager.Builder<O, S> parent) {
-        super(((StateManagerBuilderAccessor<O, S>) parent).getOwner());
-        this.parent = parent;
-    }
+	@SuppressWarnings("unchecked")
+	public CustomStateBuilder(StateManager.Builder<O, S> parent) {
+		super(((StateManagerBuilderAccessor<O, S>) parent).getOwner());
+		this.parent = parent;
+	}
 
-    public CustomStateBuilder<O, S> exclude(String... excludes) {
-        Collections.addAll(this.excludes, excludes);
-        return this;
-    }
+	public CustomStateBuilder<O, S> exclude(String... excludes) {
+		Collections.addAll(this.excludes, excludes);
+		return this;
+	}
 
-    @Override
-    public CustomStateBuilder<O, S> add(Property<?>... properties) {
-        for (var property : properties) {
-            if (this.excludes.contains(property.getName()))
-                continue;
-            this.parent.add(property);
-        }
-        return this;
-    }
+	@Override
+	public CustomStateBuilder<O, S> add(Property<?>... properties) {
+		for (var property : properties) {
+			if (this.excludes.contains(property.getName()))
+				continue;
+			this.parent.add(property);
+		}
+		return this;
+	}
 
-    @SuppressWarnings("unchecked")
-    public CustomStateBuilder<O, S> safeAdd(Property<?>... properties) {
-        for (var property : properties) {
-            if (this.excludes.contains(property.getName())
-                    || ((StateManagerBuilderAccessor<O, S>) this.parent).getNamedProperties().containsKey(property.getName()))
-                continue;
-            this.parent.add(property);
-        }
-        return this;
-    }
+	@SuppressWarnings("unchecked")
+	public CustomStateBuilder<O, S> safeAdd(Property<?>... properties) {
+		for (var property : properties) {
+			if (this.excludes.contains(property.getName())
+					|| ((StateManagerBuilderAccessor<O, S>) this.parent).getNamedProperties().containsKey(property.getName()))
+				continue;
+			this.parent.add(property);
+		}
+		return this;
+	}
 
-    @Override
-    public StateManager<O, S> build(Function<O, S> ownerToStateFunction, StateManager.Factory<O, S> factory) {
-        return this.parent.build(ownerToStateFunction, factory);
-    }
+	@Override
+	public StateManager<O, S> build(Function<O, S> ownerToStateFunction, StateManager.Factory<O, S> factory) {
+		return this.parent.build(ownerToStateFunction, factory);
+	}
 }

@@ -30,20 +30,20 @@ import static dev.lambdaurora.aurorasdeco.AurorasDeco.id;
  * @since 1.0.0
  */
 public final class AurorasDecoSounds {
-    private AurorasDecoSounds() {
-        throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
-    }
+	private AurorasDecoSounds() {
+		throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
+	}
 
-    public static final SoundEvent BRAZIER_CRACKLE_SOUND_EVENT = register("block.brazier.crackle");
-    public static final SoundEvent LANTERN_SWING_SOUND_EVENT = register("block.lantern.swing");
-    public static final SoundEvent ARMOR_STAND_HIDE_BASE_PLATE_SOUND_EVENT = register("entity.armor_stand.hide_base_plate");
-    public static final SoundEvent ITEM_FRAME_HIDE_BACKGROUND_SOUND_EVENT = register("entity.item_frame.hide_background");
+	public static final SoundEvent BRAZIER_CRACKLE_SOUND_EVENT = register("block.brazier.crackle");
+	public static final SoundEvent LANTERN_SWING_SOUND_EVENT = register("block.lantern.swing");
+	public static final SoundEvent ARMOR_STAND_HIDE_BASE_PLATE_SOUND_EVENT = register("entity.armor_stand.hide_base_plate");
+	public static final SoundEvent ITEM_FRAME_HIDE_BACKGROUND_SOUND_EVENT = register("entity.item_frame.hide_background");
 
-    private static SoundEvent register(String path) {
-        var id = id(path);
-        return Registry.register(Registry.SOUND_EVENT, id, new SoundEvent(id));
-    }
+	private static SoundEvent register(String path) {
+		var id = id(path);
+		return Registry.register(Registry.SOUND_EVENT, id, new SoundEvent(id));
+	}
 
-    static void init() {
-    }
+	static void init() {
+	}
 }

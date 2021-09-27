@@ -38,13 +38,13 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
  */
 @Mixin(LanternBlock.class)
 public abstract class LanternBlockMixin {
-    @Inject(method = "canPlaceAt", at = @At("RETURN"), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
-    public void canPlaceAt(BlockState state, WorldView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir, Direction direction) {
-        if (direction == Direction.DOWN) {
-            var downState = world.getBlockState(pos.offset(direction));
-            if (downState.isIn(BlockTags.LEAVES)) {
-                cir.setReturnValue(true);
-            }
-        }
-    }
+	@Inject(method = "canPlaceAt", at = @At("RETURN"), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
+	public void canPlaceAt(BlockState state, WorldView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir, Direction direction) {
+		if (direction == Direction.DOWN) {
+			var downState = world.getBlockState(pos.offset(direction));
+			if (downState.isIn(BlockTags.LEAVES)) {
+				cir.setReturnValue(true);
+			}
+		}
+	}
 }

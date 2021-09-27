@@ -33,11 +33,11 @@ import java.util.Optional;
 
 @Mixin(SleepTask.class)
 public class SleepTaskMixin {
-    @Inject(method = "shouldKeepRunning", at = @At(value = "RETURN", ordinal = 1), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
-    private void onShouldKeepRunning(ServerWorld world, LivingEntity entity, long time, CallbackInfoReturnable<Boolean> cir,
-                                     Optional<GlobalPos> homePos, BlockPos pos) {
-        if (!(entity.getY() > pos.getY() + 0.4) && entity.getBrain().hasActivity(Activity.REST)) {
-            cir.setReturnValue(entity.getY() > pos.getY() + 0.2 && pos.isWithinDistance(entity.getPos(), 1.14));
-        }
-    }
+	@Inject(method = "shouldKeepRunning", at = @At(value = "RETURN", ordinal = 1), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
+	private void onShouldKeepRunning(ServerWorld world, LivingEntity entity, long time, CallbackInfoReturnable<Boolean> cir,
+	                                 Optional<GlobalPos> homePos, BlockPos pos) {
+		if (!(entity.getY() > pos.getY() + 0.4) && entity.getBrain().hasActivity(Activity.REST)) {
+			cir.setReturnValue(entity.getY() > pos.getY() + 0.2 && pos.isWithinDistance(entity.getPos(), 1.14));
+		}
+	}
 }

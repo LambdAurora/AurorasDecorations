@@ -31,8 +31,8 @@ import net.minecraft.client.gui.tooltip.TooltipComponent;
  * @since 1.0.0
  */
 public record BlackboardTooltipData(String background, Blackboard blackboard, boolean locked) implements ConvertibleTooltipData {
-    @Environment(EnvType.CLIENT)
-    public TooltipComponent toComponent() {
-        return new BlackboardTooltipComponent(this.background(), this.blackboard(), this.locked());
-    }
+	@Environment(EnvType.CLIENT)
+	public TooltipComponent toComponent() {
+		return new BlackboardTooltipComponent(this.background(), this.blackboard(), this.locked());
+	}
 }

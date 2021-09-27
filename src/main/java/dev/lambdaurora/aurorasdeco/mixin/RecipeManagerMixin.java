@@ -36,13 +36,13 @@ import java.util.Map;
 
 @Mixin(RecipeManager.class)
 public class RecipeManagerMixin {
-    @Inject(
-            method = "apply",
-            at = @At(value = "INVOKE", target = "Ljava/util/Map;entrySet()Ljava/util/Set;", ordinal = 1),
-            locals = LocalCapture.CAPTURE_FAILHARD
-    )
-    private void onReload(Map<Identifier, JsonElement> map, ResourceManager resourceManager, Profiler profiler,
-                          CallbackInfo ci, Map<RecipeType<?>, ImmutableMap.Builder<Identifier, Recipe<?>>> builderMap) {
-        Datagen.applyRecipes(map, builderMap);
-    }
+	@Inject(
+			method = "apply",
+			at = @At(value = "INVOKE", target = "Ljava/util/Map;entrySet()Ljava/util/Set;", ordinal = 1),
+			locals = LocalCapture.CAPTURE_FAILHARD
+	)
+	private void onReload(Map<Identifier, JsonElement> map, ResourceManager resourceManager, Profiler profiler,
+	                      CallbackInfo ci, Map<RecipeType<?>, ImmutableMap.Builder<Identifier, Recipe<?>>> builderMap) {
+		Datagen.applyRecipes(map, builderMap);
+	}
 }

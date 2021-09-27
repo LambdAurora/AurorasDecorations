@@ -46,106 +46,106 @@ import java.util.Map;
  */
 @SuppressWarnings("deprecation")
 public class PetBedBlock extends Block {
-    private static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+	private static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
-    private static final Map<Direction, VoxelShape> COLLISION_SHAPES;
-    private static final Map<Direction, VoxelShape> OUTLINE_SHAPES;
+	private static final Map<Direction, VoxelShape> COLLISION_SHAPES;
+	private static final Map<Direction, VoxelShape> OUTLINE_SHAPES;
 
-    public PetBedBlock(Settings settings) {
-        super(settings);
+	public PetBedBlock(Settings settings) {
+		super(settings);
 
-        this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
-    }
+		this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
+	}
 
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
-    }
+	@Override
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+		builder.add(FACING);
+	}
 
-    @Override
-    public boolean hasSidedTransparency(BlockState state) {
-        return true;
-    }
+	@Override
+	public boolean hasSidedTransparency(BlockState state) {
+		return true;
+	}
 
-    /* Shapes */
+	/* Shapes */
 
-    @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return COLLISION_SHAPES.get(state.get(FACING));
-    }
+	@Override
+	public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return COLLISION_SHAPES.get(state.get(FACING));
+	}
 
-    @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return OUTLINE_SHAPES.get(state.get(FACING));
-    }
+	@Override
+	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return OUTLINE_SHAPES.get(state.get(FACING));
+	}
 
-    /* Placement */
+	/* Placement */
 
-    @Override
-    public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        var direction = ctx.getPlayerFacing();
-        return this.getDefaultState().with(FACING, direction.getOpposite());
-    }
+	@Override
+	public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
+		var direction = ctx.getPlayerFacing();
+		return this.getDefaultState().with(FACING, direction.getOpposite());
+	}
 
-    @Override
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(FACING, rotation.rotate(state.get(FACING)));
-    }
+	@Override
+	public BlockState rotate(BlockState state, BlockRotation rotation) {
+		return state.with(FACING, rotation.rotate(state.get(FACING)));
+	}
 
-    @Override
-    public BlockState mirror(BlockState state, BlockMirror mirror) {
-        return state.rotate(mirror.getRotation(state.get(FACING)));
-    }
+	@Override
+	public BlockState mirror(BlockState state, BlockMirror mirror) {
+		return state.rotate(mirror.getRotation(state.get(FACING)));
+	}
 
-    static {
-        var base = createCuboidShape(0.0, 0.0, 0.0, 16.0, 2.0, 16.0);
+	static {
+		var base = createCuboidShape(0.0, 0.0, 0.0, 16.0, 2.0, 16.0);
 
-        var shapes = ImmutableMap.<Direction, VoxelShape>builder();
+		var shapes = ImmutableMap.<Direction, VoxelShape>builder();
 
-        shapes.put(Direction.NORTH, VoxelShapes.union(base,
-                createCuboidShape(0.0, 2.0, 1.0, 16.0, 4.0, 16.0)
-        ));
-        shapes.put(Direction.SOUTH, VoxelShapes.union(base,
-                createCuboidShape(0.0, 2.0, 0.0, 16.0, 4.0, 15.0)
-        ));
-        shapes.put(Direction.EAST, VoxelShapes.union(base,
-                createCuboidShape(0.0, 2.0, 0.0, 15.0, 4.0, 16.0)
-        ));
-        shapes.put(Direction.WEST, VoxelShapes.union(base,
-                createCuboidShape(1.0, 2.0, 0.0, 16.0, 4.0, 16.0)
-        ));
+		shapes.put(Direction.NORTH, VoxelShapes.union(base,
+				createCuboidShape(0.0, 2.0, 1.0, 16.0, 4.0, 16.0)
+		));
+		shapes.put(Direction.SOUTH, VoxelShapes.union(base,
+				createCuboidShape(0.0, 2.0, 0.0, 16.0, 4.0, 15.0)
+		));
+		shapes.put(Direction.EAST, VoxelShapes.union(base,
+				createCuboidShape(0.0, 2.0, 0.0, 15.0, 4.0, 16.0)
+		));
+		shapes.put(Direction.WEST, VoxelShapes.union(base,
+				createCuboidShape(1.0, 2.0, 0.0, 16.0, 4.0, 16.0)
+		));
 
-        COLLISION_SHAPES = new EnumMap<>(shapes.build());
+		COLLISION_SHAPES = new EnumMap<>(shapes.build());
 
-        base = VoxelShapes.union(
-                base,
-                createCuboidShape(1.0, 2.0, 1.0, 15.0, 4.0, 15.0)
-        );
+		base = VoxelShapes.union(
+				base,
+				createCuboidShape(1.0, 2.0, 1.0, 15.0, 4.0, 15.0)
+		);
 
-        shapes = ImmutableMap.builder();
+		shapes = ImmutableMap.builder();
 
-        var sidesX = VoxelShapes.union(
-                createCuboidShape(1.0, 2.0, 0.0, 15.0, 8.0, 1.0),
-                createCuboidShape(1.0, 2.0, 15.0, 15.0, 8.0, 16.0)
-        );
-        var sidesZ = VoxelShapes.union(
-                createCuboidShape(0.0, 2.0, 1.0, 1.0, 8.0, 15.0),
-                createCuboidShape(15.0, 2.0, 1.0, 16.0, 8.0, 15.0)
-        );
+		var sidesX = VoxelShapes.union(
+				createCuboidShape(1.0, 2.0, 0.0, 15.0, 8.0, 1.0),
+				createCuboidShape(1.0, 2.0, 15.0, 15.0, 8.0, 16.0)
+		);
+		var sidesZ = VoxelShapes.union(
+				createCuboidShape(0.0, 2.0, 1.0, 1.0, 8.0, 15.0),
+				createCuboidShape(15.0, 2.0, 1.0, 16.0, 8.0, 15.0)
+		);
 
-        shapes.put(Direction.NORTH, VoxelShapes.union(base, sidesZ,
-                createCuboidShape(0.0, 2.0, 15.0, 16.0, 8.0, 16.0)
-        ));
-        shapes.put(Direction.SOUTH, VoxelShapes.union(base, sidesZ,
-                createCuboidShape(0.0, 2.0, 0.0, 16.0, 8.0, 1.0)
-        ));
-        shapes.put(Direction.EAST, VoxelShapes.union(base, sidesX,
-                createCuboidShape(0.0, 2.0, 0.0, 1.0, 8.0, 16.0)
-        ));
-        shapes.put(Direction.WEST, VoxelShapes.union(base, sidesX,
-                createCuboidShape(15.0, 2.0, 0.0, 16.0, 8.0, 16.0)
-        ));
+		shapes.put(Direction.NORTH, VoxelShapes.union(base, sidesZ,
+				createCuboidShape(0.0, 2.0, 15.0, 16.0, 8.0, 16.0)
+		));
+		shapes.put(Direction.SOUTH, VoxelShapes.union(base, sidesZ,
+				createCuboidShape(0.0, 2.0, 0.0, 16.0, 8.0, 1.0)
+		));
+		shapes.put(Direction.EAST, VoxelShapes.union(base, sidesX,
+				createCuboidShape(0.0, 2.0, 0.0, 1.0, 8.0, 16.0)
+		));
+		shapes.put(Direction.WEST, VoxelShapes.union(base, sidesX,
+				createCuboidShape(15.0, 2.0, 0.0, 16.0, 8.0, 16.0)
+		));
 
-        OUTLINE_SHAPES = new EnumMap<>(shapes.build());
-    }
+		OUTLINE_SHAPES = new EnumMap<>(shapes.build());
+	}
 }

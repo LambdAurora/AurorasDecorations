@@ -49,40 +49,40 @@ import java.util.function.Supplier;
  */
 @Environment(EnvType.CLIENT)
 public class BakedSignPostModel extends ForwardingBakedModel {
-    public BakedSignPostModel(BakedModel fenceModel) {
-        this.wrapped = fenceModel;
-    }
+	public BakedSignPostModel(BakedModel fenceModel) {
+		this.wrapped = fenceModel;
+	}
 
-    @Override
-    public boolean isVanillaAdapter() {
-        return false;
-    }
+	@Override
+	public boolean isVanillaAdapter() {
+		return false;
+	}
 
-    @Override
-    public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier,
-                               RenderContext context) {
-        if (state.getBlock() instanceof SignPostBlock signPostBlock) {
-            ((FabricBakedModel) this.wrapped).emitBlockQuads(blockView, signPostBlock.getFenceState(state), pos, randomSupplier, context);
-        }
-    }
+	@Override
+	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier,
+	                           RenderContext context) {
+		if (state.getBlock() instanceof SignPostBlock signPostBlock) {
+			((FabricBakedModel) this.wrapped).emitBlockQuads(blockView, signPostBlock.getFenceState(state), pos, randomSupplier, context);
+		}
+	}
 
-    public static class Provider implements ModelVariantProvider {
-        @Override
-        public @Nullable UnbakedModel loadModelVariant(ModelIdentifier modelId, ModelProviderContext context) {
-            if (modelId.getNamespace().equals(AurorasDeco.NAMESPACE) && modelId.getPath().startsWith("sign_post/") &&
-                    !modelId.getVariant().equals("inventory")) {
-                if (Registry.BLOCK.get(new Identifier(modelId.getNamespace(), modelId.getPath())) instanceof SignPostBlock signPostBlock) {
-                    var states = signPostBlock.getStateManager().getStates();
-                    for (var state : states) {
-                        if (modelId.equals(BlockModels.getModelId(state))) {
-                            var fenceState = signPostBlock.getFenceState(state);
-                            var fenceModel = context.loadModel(BlockModels.getModelId(fenceState));
-                            return new UnbakedForwardingModel(fenceModel, BakedSignPostModel::new);
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-    }
+	public static class Provider implements ModelVariantProvider {
+		@Override
+		public @Nullable UnbakedModel loadModelVariant(ModelIdentifier modelId, ModelProviderContext context) {
+			if (modelId.getNamespace().equals(AurorasDeco.NAMESPACE) && modelId.getPath().startsWith("sign_post/") &&
+					!modelId.getVariant().equals("inventory")) {
+				if (Registry.BLOCK.get(new Identifier(modelId.getNamespace(), modelId.getPath())) instanceof SignPostBlock signPostBlock) {
+					var states = signPostBlock.getStateManager().getStates();
+					for (var state : states) {
+						if (modelId.equals(BlockModels.getModelId(state))) {
+							var fenceState = signPostBlock.getFenceState(state);
+							var fenceModel = context.loadModel(BlockModels.getModelId(fenceState));
+							return new UnbakedForwardingModel(fenceModel, BakedSignPostModel::new);
+						}
+					}
+				}
+			}
+			return null;
+		}
+	}
 }

@@ -24,9 +24,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(AbstractBlock.class)
 public interface AbstractBlockAccessor {
-    @Accessor
-    Material getMaterial();
+	@Accessor
+	Material getMaterial();
 
-    @Accessor
-    AbstractBlock.Settings getSettings();
+	@Accessor
+	AbstractBlock.Settings getSettings();
 }

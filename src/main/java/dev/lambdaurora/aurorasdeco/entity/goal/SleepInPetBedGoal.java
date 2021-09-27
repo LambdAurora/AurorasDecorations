@@ -36,83 +36,83 @@ import net.minecraft.world.WorldView;
  * @since 1.0.0
  */
 public abstract class SleepInPetBedGoal extends MoveToTargetPosGoal {
-    public SleepInPetBedGoal(PathAwareEntity mob, double speed) {
-        super(mob, speed, 8);
-    }
+	public SleepInPetBedGoal(PathAwareEntity mob, double speed) {
+		super(mob, speed, 8);
+	}
 
-    /**
-     * Sets the entity in sleeping position.
-     *
-     * @param value {@code true} if the entity is in sleeping position, else {@code false}
-     */
-    public abstract void setInSleepingPosition(boolean value);
+	/**
+	 * Sets the entity in sleeping position.
+	 *
+	 * @param value {@code true} if the entity is in sleeping position, else {@code false}
+	 */
+	public abstract void setInSleepingPosition(boolean value);
 
-    @Override
-    public boolean canStart() {
-        if (this.mob instanceof AnimalEntity animal) {
-            if (animal.isInLove())
-                return false;
-        }
-        if (this.mob instanceof TameableEntity tameable) {
-            if (!tameable.isTamed())
-                return false;
-            if (tameable.isSitting())
-                return false;
-        }
+	@Override
+	public boolean canStart() {
+		if (this.mob instanceof AnimalEntity animal) {
+			if (animal.isInLove())
+				return false;
+		}
+		if (this.mob instanceof TameableEntity tameable) {
+			if (!tameable.isTamed())
+				return false;
+			if (tameable.isSitting())
+				return false;
+		}
 
-        boolean result = super.canStart();
-        if (result) {
-            if (!this.mob.getEntityWorld().getOtherEntities(this.mob, new Box(this.getTargetPos())).isEmpty())
-                result = false;
-        }
+		boolean result = super.canStart();
+		if (result) {
+			if (!this.mob.getEntityWorld().getOtherEntities(this.mob, new Box(this.getTargetPos())).isEmpty())
+				result = false;
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    @Override
-    public void start() {
-        super.start();
-        this.setInSleepingPosition(false);
-    }
+	@Override
+	public void start() {
+		super.start();
+		this.setInSleepingPosition(false);
+	}
 
-    @Override
-    public void stop() {
-        super.stop();
-        this.setInSleepingPosition(false);
-    }
+	@Override
+	public void stop() {
+		super.stop();
+		this.setInSleepingPosition(false);
+	}
 
-    @Override
-    public void tick() {
-        boolean reached;
-        var targetPos = this.getTargetPos().down();
-        if (!targetPos.isWithinDistance(this.mob.getPos(), this.getDesiredSquaredDistanceToTarget())) {
-            reached = false;
-            ++this.tryingTime;
-            if (this.shouldResetPath()) {
-                this.mob.getNavigation().startMovingTo(
-                        targetPos.getX() + 0.5,
-                        targetPos.getY() + 0.25,
-                        targetPos.getZ() + 0.5,
-                        this.speed
-                );
-            }
-        } else {
-            reached = true;
-            --this.tryingTime;
+	@Override
+	public void tick() {
+		boolean reached;
+		var targetPos = this.getTargetPos().down();
+		if (!targetPos.isWithinDistance(this.mob.getPos(), this.getDesiredSquaredDistanceToTarget())) {
+			reached = false;
+			++this.tryingTime;
+			if (this.shouldResetPath()) {
+				this.mob.getNavigation().startMovingTo(
+						targetPos.getX() + 0.5,
+						targetPos.getY() + 0.25,
+						targetPos.getZ() + 0.5,
+						this.speed
+				);
+			}
+		} else {
+			reached = true;
+			--this.tryingTime;
 
-            AurorasDecoRegistry.PET_USE_PET_BED_CRITERION.trigger(this.mob, (ServerWorld) this.mob.getEntityWorld(), targetPos);
-        }
+			AurorasDecoRegistry.PET_USE_PET_BED_CRITERION.trigger(this.mob, (ServerWorld) this.mob.getEntityWorld(), targetPos);
+		}
 
-        this.setInSleepingPosition(reached);
-    }
+		this.setInSleepingPosition(reached);
+	}
 
-    @Override
-    protected boolean isTargetPos(WorldView world, BlockPos pos) {
-        if (!world.isAir(pos.up())) {
-            return false;
-        }
+	@Override
+	protected boolean isTargetPos(WorldView world, BlockPos pos) {
+		if (!world.isAir(pos.up())) {
+			return false;
+		}
 
-        var state = world.getBlockState(pos);
-        return state.isIn(AurorasDecoTags.PET_BEDS);
-    }
+		var state = world.getBlockState(pos);
+		return state.isIn(AurorasDecoTags.PET_BEDS);
+	}
 }

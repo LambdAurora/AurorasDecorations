@@ -42,87 +42,87 @@ import net.minecraft.util.math.Matrix4f;
  */
 @Environment(EnvType.CLIENT)
 public class BlackboardTooltipComponent implements TooltipComponent {
-    private static final Identifier LOCK_ICON_TEXTURE = new Identifier("textures/gui/container/cartography_table.png");
-    private static final Identifier GLOW_TEXTURE = AurorasDeco.id("textures/gui/glowing_sprite.png");
+	private static final Identifier LOCK_ICON_TEXTURE = new Identifier("textures/gui/container/cartography_table.png");
+	private static final Identifier GLOW_TEXTURE = AurorasDeco.id("textures/gui/glowing_sprite.png");
 
-    private final MinecraftClient client = MinecraftClient.getInstance();
-    private final BlackboardTexture texture;
-    private final RenderLayer background;
-    private final Blackboard blackboard;
-    private final boolean locked;
+	private final MinecraftClient client = MinecraftClient.getInstance();
+	private final BlackboardTexture texture;
+	private final RenderLayer background;
+	private final Blackboard blackboard;
+	private final boolean locked;
 
-    public BlackboardTooltipComponent(String background, Blackboard blackboard, boolean locked) {
-        this.background = RenderLayer.getText(AurorasDeco.id("textures/block/" + background + ".png"));
-        this.blackboard = blackboard;
-        this.locked = locked;
-        this.texture = BlackboardTexture.fromBlackboard(blackboard);
-    }
+	public BlackboardTooltipComponent(String background, Blackboard blackboard, boolean locked) {
+		this.background = RenderLayer.getText(AurorasDeco.id("textures/block/" + background + ".png"));
+		this.blackboard = blackboard;
+		this.locked = locked;
+		this.texture = BlackboardTexture.fromBlackboard(blackboard);
+	}
 
-    @Override
-    public int getHeight() {
-        return 128 + 2;
-    }
+	@Override
+	public int getHeight() {
+		return 128 + 2;
+	}
 
-    @Override
-    public int getWidth(TextRenderer textRenderer) {
-        return 128;
-    }
+	@Override
+	public int getWidth(TextRenderer textRenderer) {
+		return 128;
+	}
 
-    @Override
-    public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices,
-                          ItemRenderer itemRenderer, int z, TextureManager textureManager) {
-        var vertexConsumers = this.client.getBufferBuilders().getEntityVertexConsumers();
-        matrices.push();
-        matrices.translate(x, y, z);
-        matrices.scale(128.f, 128.f, 1);
+	@Override
+	public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices,
+	                      ItemRenderer itemRenderer, int z, TextureManager textureManager) {
+		var vertexConsumers = this.client.getBufferBuilders().getEntityVertexConsumers();
+		matrices.push();
+		matrices.translate(x, y, z);
+		matrices.scale(128.f, 128.f, 1);
 
-        int light = 15728880;
-        var model = matrices.peek().getModel();
+		int light = 15728880;
+		var model = matrices.peek().getModel();
 
-        this.quad(this.background, 0.f, 0.f, 1.f, 1.f, model, vertexConsumers, light);
+		this.quad(this.background, 0.f, 0.f, 1.f, 1.f, model, vertexConsumers, light);
 
-        this.texture.render(model, vertexConsumers, light);
+		this.texture.render(model, vertexConsumers, light);
 
-        if (this.blackboard.isLit()) {
-            matrices.push();
-            matrices.translate(0, 0, 1);
-            model = matrices.peek().getModel();
+		if (this.blackboard.isLit()) {
+			matrices.push();
+			matrices.translate(0, 0, 1);
+			model = matrices.peek().getModel();
 
-            var glow = RenderLayer.getText(GLOW_TEXTURE);
+			var glow = RenderLayer.getText(GLOW_TEXTURE);
 
-            float speed = 600.f;
-            float offset = ((System.currentTimeMillis() % (int) speed) / speed);
+			float speed = 600.f;
+			float offset = ((System.currentTimeMillis() % (int) speed) / speed);
 
-            offset *= 4.f;
-            offset = (float) (Math.floor(offset) / 4.f);
+			offset *= 4.f;
+			offset = (float) (Math.floor(offset) / 4.f);
 
-            this.quad(glow, 0.f, offset, 1.f, offset + (0.25f), model, vertexConsumers, light);
+			this.quad(glow, 0.f, offset, 1.f, offset + (0.25f), model, vertexConsumers, light);
 
-            matrices.pop();
-        }
+			matrices.pop();
+		}
 
-        if (this.locked) {
-            matrices.translate(.5f, .5f, 1);
-            matrices.scale(.5f, .5f, 1.f);
-            model = matrices.peek().getModel();
-            RenderLayer locked = RenderLayer.getText(LOCK_ICON_TEXTURE);
-            this.quad(locked, 0.f, .6484375f, .2421875f, .890625f, model, vertexConsumers, light);
-        }
+		if (this.locked) {
+			matrices.translate(.5f, .5f, 1);
+			matrices.scale(.5f, .5f, 1.f);
+			model = matrices.peek().getModel();
+			RenderLayer locked = RenderLayer.getText(LOCK_ICON_TEXTURE);
+			this.quad(locked, 0.f, .6484375f, .2421875f, .890625f, model, vertexConsumers, light);
+		}
 
-        vertexConsumers.draw();
-        matrices.pop();
-    }
+		vertexConsumers.draw();
+		matrices.pop();
+	}
 
-    private void quad(RenderLayer renderLayer, float uMin, float vMin, float uMax, float vMax,
-                      Matrix4f model, VertexConsumerProvider vertexConsumers, int light) {
-        var vertices = vertexConsumers.getBuffer(renderLayer);
-        vertices.vertex(model, 0.f, 1.f, 0.f).color(255, 255, 255, 255)
-                .texture(uMin, vMax).light(light).next();
-        vertices.vertex(model, 1.f, 1.f, 0.f).color(255, 255, 255, 255)
-                .texture(uMax, vMax).light(light).next();
-        vertices.vertex(model, 1.f, 0.f, 0.f).color(255, 255, 255, 255)
-                .texture(uMax, vMin).light(light).next();
-        vertices.vertex(model, 0.f, 0.f, 0.f).color(255, 255, 255, 255)
-                .texture(uMin, vMin).light(light).next();
-    }
+	private void quad(RenderLayer renderLayer, float uMin, float vMin, float uMax, float vMax,
+	                  Matrix4f model, VertexConsumerProvider vertexConsumers, int light) {
+		var vertices = vertexConsumers.getBuffer(renderLayer);
+		vertices.vertex(model, 0.f, 1.f, 0.f).color(255, 255, 255, 255)
+				.texture(uMin, vMax).light(light).next();
+		vertices.vertex(model, 1.f, 1.f, 0.f).color(255, 255, 255, 255)
+				.texture(uMax, vMax).light(light).next();
+		vertices.vertex(model, 1.f, 0.f, 0.f).color(255, 255, 255, 255)
+				.texture(uMax, vMin).light(light).next();
+		vertices.vertex(model, 0.f, 0.f, 0.f).color(255, 255, 255, 255)
+				.texture(uMin, vMin).light(light).next();
+	}
 }

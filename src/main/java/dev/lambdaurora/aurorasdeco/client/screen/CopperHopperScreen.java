@@ -35,40 +35,40 @@ import net.minecraft.util.Identifier;
  * @since 1.0.0
  */
 public class CopperHopperScreen extends HandledScreen<CopperHopperScreenHandler> {
-    private static final Identifier TEXTURE = AurorasDeco.id("textures/gui/container/copper_hopper.png");
+	private static final Identifier TEXTURE = AurorasDeco.id("textures/gui/container/copper_hopper.png");
 
-    public CopperHopperScreen(CopperHopperScreenHandler handler, PlayerInventory inventory, Text title) {
-        super(handler, inventory, title);
-        this.passEvents = false;
+	public CopperHopperScreen(CopperHopperScreenHandler handler, PlayerInventory inventory, Text title) {
+		super(handler, inventory, title);
+		this.passEvents = false;
 
-        this.backgroundHeight = 133;
-        this.playerInventoryTitleY = this.backgroundHeight - 94;
-    }
+		this.backgroundHeight = 133;
+		this.playerInventoryTitleY = this.backgroundHeight - 94;
+	}
 
-    /* Rendering */
+	/* Rendering */
 
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
-        super.render(matrices, mouseX, mouseY, delta);
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
-    }
+	@Override
+	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+		this.renderBackground(matrices);
+		super.render(matrices, mouseX, mouseY, delta);
+		this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+	}
 
-    @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
-        RenderSystem.setShaderTexture(0, TEXTURE);
+	@Override
+	protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
+		RenderSystem.setShaderTexture(0, TEXTURE);
 
-        int x = (this.width - this.backgroundWidth) / 2;
-        int y = (this.height - this.backgroundHeight) / 2;
+		int x = (this.width - this.backgroundWidth) / 2;
+		int y = (this.height - this.backgroundHeight) / 2;
 
-        this.drawTexture(matrices, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+		this.drawTexture(matrices, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
-        var filterSlot = this.getScreenHandler().getFilterSlot();
-        if (!filterSlot.hasStack()) {
-            this.drawTexture(matrices, this.x + filterSlot.x, this.y + filterSlot.y,
-                    1, this.backgroundHeight + 1, 16, 16);
-        }
-    }
+		var filterSlot = this.getScreenHandler().getFilterSlot();
+		if (!filterSlot.hasStack()) {
+			this.drawTexture(matrices, this.x + filterSlot.x, this.y + filterSlot.y,
+					1, this.backgroundHeight + 1, 16, 16);
+		}
+	}
 }

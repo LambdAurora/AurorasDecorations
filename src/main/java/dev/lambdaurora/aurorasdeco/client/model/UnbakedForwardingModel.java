@@ -43,19 +43,19 @@ import java.util.function.Function;
 @Environment(EnvType.CLIENT)
 public record UnbakedForwardingModel(UnbakedModel baseModel,
                                      Function<BakedModel, BakedModel> factory) implements AuroraUnbakedModel {
-    @Override
-    public Collection<Identifier> getModelDependencies() {
-        return this.baseModel.getModelDependencies();
-    }
+	@Override
+	public Collection<Identifier> getModelDependencies() {
+		return this.baseModel.getModelDependencies();
+	}
 
-    @Override
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
-        return this.baseModel.getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences);
-    }
+	@Override
+	public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
+		return this.baseModel.getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences);
+	}
 
-    @Nullable
-    @Override
-    public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
-        return this.factory.apply(this.baseModel.bake(loader, textureGetter, rotationContainer, modelId));
-    }
+	@Nullable
+	@Override
+	public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+		return this.factory.apply(this.baseModel.bake(loader, textureGetter, rotationContainer, modelId));
+	}
 }

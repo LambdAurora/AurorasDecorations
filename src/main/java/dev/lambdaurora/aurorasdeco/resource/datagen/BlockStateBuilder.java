@@ -29,41 +29,41 @@ import net.minecraft.util.registry.Registry;
 import java.util.Map;
 
 public class BlockStateBuilder {
-    private final JsonObject json = new JsonObject();
-    private final Identifier id;
-    private final JsonObject variantsJson = new JsonObject();
-    private final Map<String, JsonArray> variants = new Object2ObjectOpenHashMap<>();
+	private final JsonObject json = new JsonObject();
+	private final Identifier id;
+	private final JsonObject variantsJson = new JsonObject();
+	private final Map<String, JsonArray> variants = new Object2ObjectOpenHashMap<>();
 
-    public BlockStateBuilder(Block block) {
-        var id = Registry.BLOCK.getId(block);
-        this.id = new Identifier(id.getNamespace(), "blockstates/" + id.getPath());
+	public BlockStateBuilder(Block block) {
+		var id = Registry.BLOCK.getId(block);
+		this.id = new Identifier(id.getNamespace(), "blockstates/" + id.getPath());
 
-        this.json.add("variants", variantsJson);
-    }
+		this.json.add("variants", variantsJson);
+	}
 
-    public BlockStateBuilder addToVariant(String variant, Identifier modelId) {
-        return this.addToVariant(variant, modelId, 0);
-    }
+	public BlockStateBuilder addToVariant(String variant, Identifier modelId) {
+		return this.addToVariant(variant, modelId, 0);
+	}
 
-    public BlockStateBuilder addToVariant(String variant, Identifier modelId, int y) {
-        return this.addToVariant(variant, new StateModel(modelId, y));
-    }
+	public BlockStateBuilder addToVariant(String variant, Identifier modelId, int y) {
+		return this.addToVariant(variant, new StateModel(modelId, y));
+	}
 
-    public BlockStateBuilder addToVariant(String variant, StateModel model) {
-        this.variants.computeIfAbsent(variant, v -> {
-            var array = new JsonArray();
-            this.variantsJson.add(v, array);
-            return array;
-        }).add(model.toJson());
+	public BlockStateBuilder addToVariant(String variant, StateModel model) {
+		this.variants.computeIfAbsent(variant, v -> {
+			var array = new JsonArray();
+			this.variantsJson.add(v, array);
+			return array;
+		}).add(model.toJson());
 
-        return this;
-    }
+		return this;
+	}
 
-    public JsonObject toJson() {
-        return this.json;
-    }
+	public JsonObject toJson() {
+		return this.json;
+	}
 
-    public void register() {
-        AurorasDecoClient.RESOURCE_PACK.putJson(ResourceType.CLIENT_RESOURCES, this.id, this.toJson());
-    }
+	public void register() {
+		AurorasDecoClient.RESOURCE_PACK.putJson(ResourceType.CLIENT_RESOURCES, this.id, this.toJson());
+	}
 }

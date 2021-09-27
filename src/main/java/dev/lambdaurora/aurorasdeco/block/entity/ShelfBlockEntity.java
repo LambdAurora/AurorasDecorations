@@ -44,93 +44,93 @@ import net.minecraft.util.math.BlockPos;
  * @since 1.0.0
  */
 public class ShelfBlockEntity extends LootableContainerBlockEntity
-        implements BlockEntityClientSerializable, ExtendedScreenHandlerFactory {
-    private DefaultedList<ItemStack> inventory;
+		implements BlockEntityClientSerializable, ExtendedScreenHandlerFactory {
+	private DefaultedList<ItemStack> inventory;
 
-    public ShelfBlockEntity(BlockPos pos, BlockState state) {
-        super(AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE, pos, state);
-        this.inventory = DefaultedList.ofSize(8, ItemStack.EMPTY);
-    }
+	public ShelfBlockEntity(BlockPos pos, BlockState state) {
+		super(AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE, pos, state);
+		this.inventory = DefaultedList.ofSize(8, ItemStack.EMPTY);
+	}
 
-    @Override
-    protected Text getContainerName() {
-        return new TranslatableText(this.getCachedState().getBlock().getTranslationKey());
-    }
+	@Override
+	protected Text getContainerName() {
+		return new TranslatableText(this.getCachedState().getBlock().getTranslationKey());
+	}
 
-    @Override
-    protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        return new ShelfScreenHandler(syncId, playerInventory, this, this.getCachedState().get(ShelfBlock.TYPE));
-    }
+	@Override
+	protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
+		return new ShelfScreenHandler(syncId, playerInventory, this, this.getCachedState().get(ShelfBlock.TYPE));
+	}
 
-    /* Serialization */
+	/* Serialization */
 
-    @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        if (!this.deserializeLootTable(nbt)) {
-            Inventories.readNbt(nbt, this.inventory);
-        }
-    }
+	@Override
+	public void readNbt(NbtCompound nbt) {
+		super.readNbt(nbt);
+		this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
+		if (!this.deserializeLootTable(nbt)) {
+			Inventories.readNbt(nbt, this.inventory);
+		}
+	}
 
-    @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        if (!this.serializeLootTable(nbt)) {
-            Inventories.writeNbt(nbt, this.inventory);
-        }
+	@Override
+	public NbtCompound writeNbt(NbtCompound nbt) {
+		super.writeNbt(nbt);
+		if (!this.serializeLootTable(nbt)) {
+			Inventories.writeNbt(nbt, this.inventory);
+		}
 
-        return nbt;
-    }
+		return nbt;
+	}
 
-    @Override
-    public void fromClientTag(NbtCompound nbt) {
-        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        if (!this.deserializeLootTable(nbt)) {
-            Inventories.readNbt(nbt, this.inventory);
-        }
-    }
+	@Override
+	public void fromClientTag(NbtCompound nbt) {
+		this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
+		if (!this.deserializeLootTable(nbt)) {
+			Inventories.readNbt(nbt, this.inventory);
+		}
+	}
 
-    @Override
-    public NbtCompound toClientTag(NbtCompound nbt) {
-        if (!this.serializeLootTable(nbt)) {
-            Inventories.writeNbt(nbt, this.inventory);
-        }
-        return nbt;
-    }
+	@Override
+	public NbtCompound toClientTag(NbtCompound nbt) {
+		if (!this.serializeLootTable(nbt)) {
+			Inventories.writeNbt(nbt, this.inventory);
+		}
+		return nbt;
+	}
 
-    /* Inventory */
+	/* Inventory */
 
-    @Override
-    public int size() {
-        return 8;
-    }
+	@Override
+	public int size() {
+		return 8;
+	}
 
-    @Override
-    public void setStack(int slot, ItemStack stack) {
-        super.setStack(slot, stack);
+	@Override
+	public void setStack(int slot, ItemStack stack) {
+		super.setStack(slot, stack);
 
-        if (this.world != null && !this.world.isClient())
-            this.sync();
-    }
+		if (this.world != null && !this.world.isClient())
+			this.sync();
+	}
 
-    @Override
-    protected DefaultedList<ItemStack> getInvStackList() {
-        return this.inventory;
-    }
+	@Override
+	protected DefaultedList<ItemStack> getInvStackList() {
+		return this.inventory;
+	}
 
-    @Override
-    protected void setInvStackList(DefaultedList<ItemStack> list) {
-        this.inventory = list;
-    }
+	@Override
+	protected void setInvStackList(DefaultedList<ItemStack> list) {
+		this.inventory = list;
+	}
 
-    @Override
-    public boolean isValid(int slot, ItemStack stack) {
-        return false;
-    }
+	@Override
+	public boolean isValid(int slot, ItemStack stack) {
+		return false;
+	}
 
-    @Override
-    public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-        buf.writeEnumConstant(this.getCachedState().get(ShelfBlock.TYPE));
-    }
+	@Override
+	public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
+		buf.writeEnumConstant(this.getCachedState().get(ShelfBlock.TYPE));
+	}
 }

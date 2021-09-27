@@ -26,6 +26,6 @@ import java.util.UUID;
 
 @Mixin(FoxEntity.class)
 public interface FoxEntityAccessor {
-    @Invoker("getTrustedUuids")
-    List<UUID> aurorasdeco$getTrustedUuids();
+	@Invoker("getTrustedUuids")
+	List<UUID> aurorasdeco$getTrustedUuids();
 }

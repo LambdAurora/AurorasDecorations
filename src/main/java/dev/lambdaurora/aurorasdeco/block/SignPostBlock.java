@@ -72,289 +72,289 @@ import java.util.stream.Stream;
  */
 @SuppressWarnings("deprecation")
 public class SignPostBlock extends BlockWithEntity {
-    private static final List<SignPostBlock> SIGN_POSTS = new ArrayList<>();
+	private static final List<SignPostBlock> SIGN_POSTS = new ArrayList<>();
 
-    private final FenceBlock fenceBlock;
+	private final FenceBlock fenceBlock;
 
-    public SignPostBlock(FenceBlock fenceBlock) {
-        super(settings(fenceBlock));
+	public SignPostBlock(FenceBlock fenceBlock) {
+		super(settings(fenceBlock));
 
-        this.fenceBlock = fenceBlock;
+		this.fenceBlock = fenceBlock;
 
-        var builder = new StateManager.Builder<Block, BlockState>(this);
-        this.appendProperties(builder);
-        var customBuilder = new CustomStateBuilder<>(builder);
-        customBuilder.exclude("north", "east", "south", "west");
-        ((BlockAccessor) this.fenceBlock).aurorasdeco$appendProperties(customBuilder);
-        ((BlockAccessor) this).setStateManager(builder.build(Block::getDefaultState, getStateFactory())); // This is super cursed.
+		var builder = new StateManager.Builder<Block, BlockState>(this);
+		this.appendProperties(builder);
+		var customBuilder = new CustomStateBuilder<>(builder);
+		customBuilder.exclude("north", "east", "south", "west");
+		((BlockAccessor) this.fenceBlock).aurorasdeco$appendProperties(customBuilder);
+		((BlockAccessor) this).setStateManager(builder.build(Block::getDefaultState, getStateFactory())); // This is super cursed.
 
-        this.setDefaultState(AuroraUtil.remapBlockState(this.fenceBlock.getDefaultState(), this.stateManager.getDefaultState()));
+		this.setDefaultState(AuroraUtil.remapBlockState(this.fenceBlock.getDefaultState(), this.stateManager.getDefaultState()));
 
-        SIGN_POSTS.add(this);
-    }
+		SIGN_POSTS.add(this);
+	}
 
-    public static SignPostBlock byFence(FenceBlock fenceBlock) {
-        for (var block : SIGN_POSTS) {
-            if (block.getFenceBlock().equals(fenceBlock)) {
-                return block;
-            }
-        }
-        return SIGN_POSTS.get(0);
-    }
+	public static SignPostBlock byFence(FenceBlock fenceBlock) {
+		for (var block : SIGN_POSTS) {
+			if (block.getFenceBlock().equals(fenceBlock)) {
+				return block;
+			}
+		}
+		return SIGN_POSTS.get(0);
+	}
 
-    public static Stream<SignPostBlock> stream() {
-        return SIGN_POSTS.stream();
-    }
+	public static Stream<SignPostBlock> stream() {
+		return SIGN_POSTS.stream();
+	}
 
-    public FenceBlock getFenceBlock() {
-        return this.fenceBlock;
-    }
+	public FenceBlock getFenceBlock() {
+		return this.fenceBlock;
+	}
 
-    public BlockState getFenceState(BlockState signPostState) {
-        return AuroraUtil.remapBlockState(signPostState, this.getFenceBlock().getDefaultState());
-    }
+	public BlockState getFenceState(BlockState signPostState) {
+		return AuroraUtil.remapBlockState(signPostState, this.getFenceBlock().getDefaultState());
+	}
 
-    /* Shapes */
+	/* Shapes */
 
-    @Override
-    public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
-        return this.getFenceState(state).getCullingShape(world, pos);
-    }
+	@Override
+	public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
+		return this.getFenceState(state).getCullingShape(world, pos);
+	}
 
-    @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return this.getFenceState(state).getOutlineShape(world, pos, context);
-    }
+	@Override
+	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return this.getFenceState(state).getOutlineShape(world, pos, context);
+	}
 
-    @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return this.getFenceState(state).getCollisionShape(world, pos, context);
-    }
+	@Override
+	public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return this.getFenceState(state).getCollisionShape(world, pos, context);
+	}
 
-    @Override
-    public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return this.getFenceState(state).getCameraCollisionShape(world, pos, context);
-    }
+	@Override
+	public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		return this.getFenceState(state).getCameraCollisionShape(world, pos, context);
+	}
 
-    /* Placement */
+	/* Placement */
 
-    @Override
-    public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        var fenceState = this.getFenceBlock().getPlacementState(ctx);
-        if (fenceState != null) return AuroraUtil.remapBlockState(fenceState, this.getDefaultState());
-        else return null;
-    }
+	@Override
+	public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
+		var fenceState = this.getFenceBlock().getPlacementState(ctx);
+		if (fenceState != null) return AuroraUtil.remapBlockState(fenceState, this.getDefaultState());
+		else return null;
+	}
 
-    /* Interaction */
+	/* Interaction */
 
-    @Override
-    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-        return this.getFenceBlock().getPickStack(world, pos, this.getFenceState(state));
-    }
+	@Override
+	public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+		return this.getFenceBlock().getPickStack(world, pos, this.getFenceState(state));
+	}
 
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (hit.getSide().getAxis() == Direction.Axis.Y) return ActionResult.PASS;
+	@Override
+	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+		if (hit.getSide().getAxis() == Direction.Axis.Y) return ActionResult.PASS;
 
-        var signPost = AurorasDecoRegistry.SIGN_POST_BLOCK_ENTITY_TYPE.get(world, pos);
-        if (signPost == null) return ActionResult.PASS;
+		var signPost = AurorasDecoRegistry.SIGN_POST_BLOCK_ENTITY_TYPE.get(world, pos);
+		if (signPost == null) return ActionResult.PASS;
 
-        var stack = player.getStackInHand(hand);
+		var stack = player.getStackInHand(hand);
 
-        if (stack.getItem() instanceof SignPostItem)
-            return ActionResult.PASS; // Let the item handle it.
+		if (stack.getItem() instanceof SignPostItem)
+			return ActionResult.PASS; // Let the item handle it.
 
-        boolean handEmpty = stack.isEmpty();
-        boolean dye = stack.getItem() instanceof DyeItem;
-        boolean glowInkSac = stack.isOf(Items.GLOW_INK_SAC);
-        boolean inkSac = stack.isOf(Items.INK_SAC);
-        boolean compass = stack.isOf(Items.COMPASS);
-        boolean canFlipSign = !dye && !glowInkSac && !inkSac && !compass && player.getMainHandStack().isEmpty()
-                && player.shouldCancelInteraction();
-        boolean success = (handEmpty || dye || glowInkSac || inkSac || compass || canFlipSign) && player.getAbilities().allowModifyWorld;
-        if (world.isClient()) {
-            return success ? ActionResult.SUCCESS : ActionResult.CONSUME;
-        }
+		boolean handEmpty = stack.isEmpty();
+		boolean dye = stack.getItem() instanceof DyeItem;
+		boolean glowInkSac = stack.isOf(Items.GLOW_INK_SAC);
+		boolean inkSac = stack.isOf(Items.INK_SAC);
+		boolean compass = stack.isOf(Items.COMPASS);
+		boolean canFlipSign = !dye && !glowInkSac && !inkSac && !compass && player.getMainHandStack().isEmpty()
+				&& player.shouldCancelInteraction();
+		boolean success = (handEmpty || dye || glowInkSac || inkSac || compass || canFlipSign) && player.getAbilities().allowModifyWorld;
+		if (world.isClient()) {
+			return success ? ActionResult.SUCCESS : ActionResult.CONSUME;
+		}
 
-        double y = hit.getPos().getY();
-        boolean up = y % ((int) y) > 0.5d;
+		double y = hit.getPos().getY();
+		boolean up = y % ((int) y) > 0.5d;
 
-        var sign = signPost.getSign(up);
+		var sign = signPost.getSign(up);
 
-        if ((sign == null || !player.getAbilities().allowModifyWorld) && !(handEmpty && !canFlipSign))
-            return ActionResult.SUCCESS;
+		if ((sign == null || !player.getAbilities().allowModifyWorld) && !(handEmpty && !canFlipSign))
+			return ActionResult.SUCCESS;
 
-        if (canFlipSign) {
-            sign.setLeft(!sign.isLeft());
-        } else if (handEmpty && !signPost.hasEditor() && player instanceof ServerPlayerEntity serverPlayerEntity &&
-                (signPost.getUp() != null || signPost.getDown() != null)) {
-            signPost.startEdit(serverPlayerEntity);
-        } else if (dye || glowInkSac || inkSac) {
-            boolean shouldConsume;
-            if (dye) {
-                shouldConsume = sign.setColor(((DyeItem) stack.getItem()).getColor());
-                world.playSound(null, pos, SoundEvents.ITEM_DYE_USE, SoundCategory.BLOCKS, 1.f, 1.f);
-            } else if (glowInkSac) {
-                world.playSound(null, pos, SoundEvents.ITEM_GLOW_INK_SAC_USE, SoundCategory.BLOCKS, 1.f, 1.f);
-                shouldConsume = sign.setGlowing(true);
-                if (shouldConsume && player instanceof ServerPlayerEntity serverPlayerEntity) {
-                    Criteria.ITEM_USED_ON_BLOCK.trigger(serverPlayerEntity, pos, stack);
-                }
-            } else {
-                world.playSound(null, pos, SoundEvents.ITEM_INK_SAC_USE, SoundCategory.BLOCKS, 1.f, 1.f);
-                shouldConsume = sign.setGlowing(false);
-            }
+		if (canFlipSign) {
+			sign.setLeft(!sign.isLeft());
+		} else if (handEmpty && !signPost.hasEditor() && player instanceof ServerPlayerEntity serverPlayerEntity &&
+				(signPost.getUp() != null || signPost.getDown() != null)) {
+			signPost.startEdit(serverPlayerEntity);
+		} else if (dye || glowInkSac || inkSac) {
+			boolean shouldConsume;
+			if (dye) {
+				shouldConsume = sign.setColor(((DyeItem) stack.getItem()).getColor());
+				world.playSound(null, pos, SoundEvents.ITEM_DYE_USE, SoundCategory.BLOCKS, 1.f, 1.f);
+			} else if (glowInkSac) {
+				world.playSound(null, pos, SoundEvents.ITEM_GLOW_INK_SAC_USE, SoundCategory.BLOCKS, 1.f, 1.f);
+				shouldConsume = sign.setGlowing(true);
+				if (shouldConsume && player instanceof ServerPlayerEntity serverPlayerEntity) {
+					Criteria.ITEM_USED_ON_BLOCK.trigger(serverPlayerEntity, pos, stack);
+				}
+			} else {
+				world.playSound(null, pos, SoundEvents.ITEM_INK_SAC_USE, SoundCategory.BLOCKS, 1.f, 1.f);
+				shouldConsume = sign.setGlowing(false);
+			}
 
-            if (shouldConsume) {
-                if (!player.isCreative()) {
-                    stack.decrement(1);
-                }
+			if (shouldConsume) {
+				if (!player.isCreative()) {
+					stack.decrement(1);
+				}
 
-                player.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
-            }
-        } else if (compass) {
-            var pointingPos = CompassItem.hasLodestone(stack)
-                    ? this.getLodestonePos(world, stack.getOrCreateNbt())
-                    : this.getWorldSpawnPos(world);
+				player.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
+			}
+		} else if (compass) {
+			var pointingPos = CompassItem.hasLodestone(stack)
+					? this.getLodestonePos(world, stack.getOrCreateNbt())
+					: this.getWorldSpawnPos(world);
 
-            if (pointingPos != null) {
-                if (sign.pointToward(pointingPos))
-                    player.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
-            }
-        }
+			if (pointingPos != null) {
+				if (sign.pointToward(pointingPos))
+					player.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
+			}
+		}
 
-        return ActionResult.success(world.isClient());
-    }
+		return ActionResult.success(world.isClient());
+	}
 
-    private @Nullable BlockPos getLodestonePos(World world, NbtCompound nbt) {
-        boolean hasLodestonePos = nbt.contains(CompassItem.LODESTONE_POS_KEY);
-        boolean hasLodestoneDimension = nbt.contains(CompassItem.LODESTONE_DIMENSION_KEY);
-        if (hasLodestonePos && hasLodestoneDimension) {
-            var lodestoneDimension = CompassItem.getLodestoneDimension(nbt);
-            if (lodestoneDimension.isPresent() && world.getRegistryKey() == lodestoneDimension.get()) {
-                return NbtHelper.toBlockPos(nbt.getCompound(CompassItem.LODESTONE_POS_KEY));
-            }
-        }
-        return null;
-    }
+	private @Nullable BlockPos getLodestonePos(World world, NbtCompound nbt) {
+		boolean hasLodestonePos = nbt.contains(CompassItem.LODESTONE_POS_KEY);
+		boolean hasLodestoneDimension = nbt.contains(CompassItem.LODESTONE_DIMENSION_KEY);
+		if (hasLodestonePos && hasLodestoneDimension) {
+			var lodestoneDimension = CompassItem.getLodestoneDimension(nbt);
+			if (lodestoneDimension.isPresent() && world.getRegistryKey() == lodestoneDimension.get()) {
+				return NbtHelper.toBlockPos(nbt.getCompound(CompassItem.LODESTONE_POS_KEY));
+			}
+		}
+		return null;
+	}
 
-    private @Nullable BlockPos getWorldSpawnPos(World world) {
-        var properties = world.getLevelProperties();
-        return world.getDimension().isNatural()
-                ? new BlockPos(properties.getSpawnX(), properties.getSpawnY(), properties.getSpawnZ())
-                : null;
-    }
+	private @Nullable BlockPos getWorldSpawnPos(World world) {
+		var properties = world.getLevelProperties();
+		return world.getDimension().isNatural()
+				? new BlockPos(properties.getSpawnX(), properties.getSpawnY(), properties.getSpawnZ())
+				: null;
+	}
 
-    /* Block Entity Stuff */
+	/* Block Entity Stuff */
 
-    @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
-    }
+	@Override
+	public BlockRenderType getRenderType(BlockState state) {
+		return BlockRenderType.MODEL;
+	}
 
-    @Override
-    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return AurorasDecoRegistry.SIGN_POST_BLOCK_ENTITY_TYPE.instantiate(pos, state);
-    }
+	@Override
+	public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+		return AurorasDecoRegistry.SIGN_POST_BLOCK_ENTITY_TYPE.instantiate(pos, state);
+	}
 
 
-    /* Loot table */
+	/* Loot table */
 
-    @Override
-    public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
-        var stacks = new ArrayList<>(this.getFenceState(state).getDroppedStacks(builder));
+	@Override
+	public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
+		var stacks = new ArrayList<>(this.getFenceState(state).getDroppedStacks(builder));
 
-        var blockEntity = builder.get(LootContextParameters.BLOCK_ENTITY);
-        if (blockEntity instanceof SignPostBlockEntity signPost) {
-            var upSign = signPost.getUp();
-            var downSign = signPost.getDown();
+		var blockEntity = builder.get(LootContextParameters.BLOCK_ENTITY);
+		if (blockEntity instanceof SignPostBlockEntity signPost) {
+			var upSign = signPost.getUp();
+			var downSign = signPost.getDown();
 
-            if (upSign != null) {
-                var stack = new ItemStack(upSign.getSign());
-                var text = upSign.getText();
-                if (!text.getString().isEmpty())
-                    stack.setCustomName(text);
-                stacks.add(stack);
-            }
+			if (upSign != null) {
+				var stack = new ItemStack(upSign.getSign());
+				var text = upSign.getText();
+				if (!text.getString().isEmpty())
+					stack.setCustomName(text);
+				stacks.add(stack);
+			}
 
-            if (downSign != null) {
-                var stack = new ItemStack(downSign.getSign());
-                var text = downSign.getText();
-                if (!text.getString().isEmpty())
-                    stack.setCustomName(text);
-                stacks.add(stack);
-            }
-        }
+			if (downSign != null) {
+				var stack = new ItemStack(downSign.getSign());
+				var text = downSign.getText();
+				if (!text.getString().isEmpty())
+					stack.setCustomName(text);
+				stacks.add(stack);
+			}
+		}
 
-        return stacks;
-    }
+		return stacks;
+	}
 
-    /* Piston */
+	/* Piston */
 
-    @Override
-    public PistonBehavior getPistonBehavior(BlockState state) {
-        return PistonBehavior.BLOCK;
-    }
+	@Override
+	public PistonBehavior getPistonBehavior(BlockState state) {
+		return PistonBehavior.BLOCK;
+	}
 
-    /* Entity Stuff */
+	/* Entity Stuff */
 
-    @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
-        return false;
-    }
+	@Override
+	public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+		return false;
+	}
 
-    /* Fluid */
+	/* Fluid */
 
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return AuroraUtil.isWaterLogged(state) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
-    }
+	@Override
+	public FluidState getFluidState(BlockState state) {
+		return AuroraUtil.isWaterLogged(state) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+	}
 
-    private static FabricBlockSettings settings(FenceBlock fenceBlock) {
-        return FabricBlockSettings.copyOf(fenceBlock);
-    }
+	private static FabricBlockSettings settings(FenceBlock fenceBlock) {
+		return FabricBlockSettings.copyOf(fenceBlock);
+	}
 
-    private static StateManager.Factory<Block, BlockState> getStateFactory() {
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            return State::new;
-        }
-        return BlockState::new;
-    }
+	private static StateManager.Factory<Block, BlockState> getStateFactory() {
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+			return State::new;
+		}
+		return BlockState::new;
+	}
 
-    static {
-        UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
-            var offStack = player.getStackInHand(Hand.OFF_HAND);
-            // Trigger the sign post block interaction to flip a sign.
-            // But why is this necessary?
-            // Because when you have an item in your offhand, it will try to interact with that one instead
-            // and refuse to trigger the block. Which can be very annoying for players usually holding something
-            // in their offhand.
-            if (!(offStack.getItem() instanceof ShieldItem) && player.shouldCancelInteraction() && player.getMainHandStack().isEmpty()) {
-                var state = world.getBlockState(hitResult.getBlockPos());
-                if (state.getBlock() instanceof SignPostBlock) {
-                    return state.onUse(world, player, hand, hitResult);
-                }
-            }
-            return ActionResult.PASS;
-        });
-    }
+	static {
+		UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
+			var offStack = player.getStackInHand(Hand.OFF_HAND);
+			// Trigger the sign post block interaction to flip a sign.
+			// But why is this necessary?
+			// Because when you have an item in your offhand, it will try to interact with that one instead
+			// and refuse to trigger the block. Which can be very annoying for players usually holding something
+			// in their offhand.
+			if (!(offStack.getItem() instanceof ShieldItem) && player.shouldCancelInteraction() && player.getMainHandStack().isEmpty()) {
+				var state = world.getBlockState(hitResult.getBlockPos());
+				if (state.getBlock() instanceof SignPostBlock) {
+					return state.onUse(world, player, hand, hitResult);
+				}
+			}
+			return ActionResult.PASS;
+		});
+	}
 
-    /**
-     * A block state derivative made for the sign post block.
-     * <p>
-     * It allows to emit the block quads of a fence post block without a crash.
-     */
-    @Environment(EnvType.CLIENT)
-    public static class State extends BlockState {
-        public State(Block block, ImmutableMap<Property<?>, Comparable<?>> immutableMap, MapCodec<BlockState> mapCodec) {
-            super(block, immutableMap, mapCodec);
-        }
+	/**
+	 * A block state derivative made for the sign post block.
+	 * <p>
+	 * It allows to emit the block quads of a fence post block without a crash.
+	 */
+	@Environment(EnvType.CLIENT)
+	public static class State extends BlockState {
+		public State(Block block, ImmutableMap<Property<?>, Comparable<?>> immutableMap, MapCodec<BlockState> mapCodec) {
+			super(block, immutableMap, mapCodec);
+		}
 
-        @Override
-        public <T extends Comparable<T>> T get(Property<T> property) {
-            if (!this.getProperties().contains(property) && this.getBlock() instanceof SignPostBlock signPost) {
-                return signPost.getFenceState(this).get(property);
-            } else return super.get(property);
-        }
-    }
+		@Override
+		public <T extends Comparable<T>> T get(Property<T> property) {
+			if (!this.getProperties().contains(property) && this.getBlock() instanceof SignPostBlock signPost) {
+				return signPost.getFenceState(this).get(property);
+			} else return super.get(property);
+		}
+	}
 }

@@ -40,41 +40,41 @@ import org.apache.logging.log4j.Logger;
  * @since 1.0.0
  */
 public class AurorasDeco implements ModInitializer {
-    public static final String NAMESPACE = "aurorasdeco";
-    public static final Logger LOGGER = LogManager.getLogger();
-    public static final AurorasDecoPack RESOURCE_PACK = new AurorasDecoPack(ResourceType.SERVER_DATA);
+	public static final String NAMESPACE = "aurorasdeco";
+	public static final Logger LOGGER = LogManager.getLogger();
+	public static final AurorasDecoPack RESOURCE_PACK = new AurorasDecoPack(ResourceType.SERVER_DATA);
 
-    @Override
-    public void onInitialize() {
-        AurorasDecoRegistry.init();
+	@Override
+	public void onInitialize() {
+		AurorasDecoRegistry.init();
 
-        RegistryEntryAddedCallback.event(Registry.ITEM).register((rawId, id, object) -> {
-            if (id.toString().equals("pockettools:pocket_cactus")) {
-                Registry.register(Registry.BLOCK, id("big_flower_pot/pocket_cactus"),
-                        PottedPlantType.register("pocket_cactus", Blocks.POTTED_CACTUS, object,
-                                type -> new BigPottedCactusBlock(type, BigPottedCactusBlock.POCKET_CACTUS_SHAPE)));
-            } else if (PottedPlantType.isValidPlant(object)) {
-                var potBlock = PottedPlantType.registerFromItem(object);
-                if (potBlock != null)
-                    Registry.register(Registry.BLOCK, id("big_flower_pot/" + potBlock.getPlantType().getId()), potBlock);
-            }
+		RegistryEntryAddedCallback.event(Registry.ITEM).register((rawId, id, object) -> {
+			if (id.toString().equals("pockettools:pocket_cactus")) {
+				Registry.register(Registry.BLOCK, id("big_flower_pot/pocket_cactus"),
+						PottedPlantType.register("pocket_cactus", Blocks.POTTED_CACTUS, object,
+								type -> new BigPottedCactusBlock(type, BigPottedCactusBlock.POCKET_CACTUS_SHAPE)));
+			} else if (PottedPlantType.isValidPlant(object)) {
+				var potBlock = PottedPlantType.registerFromItem(object);
+				if (potBlock != null)
+					Registry.register(Registry.BLOCK, id("big_flower_pot/" + potBlock.getPlantType().getId()), potBlock);
+			}
 
-            Blackboard.Color.tryRegisterColorFromItem(id, object);
-        });
+			Blackboard.Color.tryRegisterColorFromItem(id, object);
+		});
 
-        ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_OPEN_GUI_FAIL, AurorasDecoPackets::handleSignPostOpenGuiFailPacket);
-        ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_SET_TEXT, AurorasDecoPackets::handleSignPostSetTextPacket);
-    }
+		ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_OPEN_GUI_FAIL, AurorasDecoPackets::handleSignPostOpenGuiFailPacket);
+		ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_SET_TEXT, AurorasDecoPackets::handleSignPostSetTextPacket);
+	}
 
-    public static void log(String message) {
-        LOGGER.info("[AurorasDeco] " + message);
-    }
+	public static void log(String message) {
+		LOGGER.info("[AurorasDeco] " + message);
+	}
 
-    public static void warn(String message, Object... params) {
-        LOGGER.warn("[AurorasDeco] " + message, params);
-    }
+	public static void warn(String message, Object... params) {
+		LOGGER.warn("[AurorasDeco] " + message, params);
+	}
 
-    public static Identifier id(String path) {
-        return new Identifier(NAMESPACE, path);
-    }
+	public static Identifier id(String path) {
+		return new Identifier(NAMESPACE, path);
+	}
 }

@@ -67,126 +67,126 @@ import static dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry.*;
  */
 @Environment(EnvType.CLIENT)
 public class AurorasDecoClient implements ClientModInitializer {
-    public static final AurorasDecoPack RESOURCE_PACK = new AurorasDecoPack(ResourceType.CLIENT_RESOURCES);
-    public static final ModelIdentifier BLACKBOARD_MASK = new ModelIdentifier(AurorasDeco.id("blackboard_mask"),
-            "inventory");
+	public static final AurorasDecoPack RESOURCE_PACK = new AurorasDecoPack(ResourceType.CLIENT_RESOURCES);
+	public static final ModelIdentifier BLACKBOARD_MASK = new ModelIdentifier(AurorasDeco.id("blackboard_mask"),
+			"inventory");
 
-    @Override
-    public void onInitializeClient() {
-        BlockEntityRendererRegistry.register(AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE,
-                BookPileEntityRenderer::new);
-        BlockEntityRendererRegistry.register(AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE,
-                ShelfBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.register(SIGN_POST_BLOCK_ENTITY_TYPE,
-                SignPostBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.register(AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE,
-                LanternBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.register(AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE,
-                WindChimeBlockEntityRenderer::new);
+	@Override
+	public void onInitializeClient() {
+		BlockEntityRendererRegistry.register(AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE,
+				BookPileEntityRenderer::new);
+		BlockEntityRendererRegistry.register(AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE,
+				ShelfBlockEntityRenderer::new);
+		BlockEntityRendererRegistry.register(SIGN_POST_BLOCK_ENTITY_TYPE,
+				SignPostBlockEntityRenderer::new);
+		BlockEntityRendererRegistry.register(AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE,
+				LanternBlockEntityRenderer::new);
+		BlockEntityRendererRegistry.register(AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE,
+				WindChimeBlockEntityRenderer::new);
 
-        EntityRendererRegistry.register(AurorasDecoRegistry.FAKE_LEASH_KNOT_ENTITY_TYPE,
-                FakeLeashKnotEntityRenderer::new);
-        EntityRendererRegistry.register(AurorasDecoRegistry.SEAT_ENTITY_TYPE,
-                SeatEntityRenderer::new);
+		EntityRendererRegistry.register(AurorasDecoRegistry.FAKE_LEASH_KNOT_ENTITY_TYPE,
+				FakeLeashKnotEntityRenderer::new);
+		EntityRendererRegistry.register(AurorasDecoRegistry.SEAT_ENTITY_TYPE,
+				SeatEntityRenderer::new);
 
-        BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutoutMipped(),
-                BURNT_VINE_BLOCK);
-        BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(),
-                AMETHYST_LANTERN_BLOCK,
-                BRAZIER_BLOCK,
-                COPPER_SULFATE_BRAZIER_BLOCK,
-                COPPER_SULFATE_CAMPFIRE_BLOCK,
-                COPPER_SULFATE_LANTERN_BLOCK,
-                COPPER_SULFATE_TORCH_BLOCK,
-                COPPER_SULFATE_WALL_TORCH_BLOCK,
-                DAFFODIL,
-                POTTED_DAFFODIL,
-                SAWMILL_BLOCK,
-                SOUL_BRAZIER_BLOCK,
-                WIND_CHIME_BLOCK
-        );
+		BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutoutMipped(),
+				BURNT_VINE_BLOCK);
+		BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(),
+				AMETHYST_LANTERN_BLOCK,
+				BRAZIER_BLOCK,
+				COPPER_SULFATE_BRAZIER_BLOCK,
+				COPPER_SULFATE_CAMPFIRE_BLOCK,
+				COPPER_SULFATE_LANTERN_BLOCK,
+				COPPER_SULFATE_TORCH_BLOCK,
+				COPPER_SULFATE_WALL_TORCH_BLOCK,
+				DAFFODIL,
+				POTTED_DAFFODIL,
+				SAWMILL_BLOCK,
+				SOUL_BRAZIER_BLOCK,
+				WIND_CHIME_BLOCK
+		);
 
-        ParticleFactoryRegistry.getInstance().register(AurorasDecoParticles.AMETHYST_GLINT, AmethystGlintParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(AurorasDecoParticles.COPPER_SULFATE_FLAME, FlameParticle.Factory::new);
-        ParticleFactoryRegistry.getInstance().register(AurorasDecoParticles.COPPER_SULFATE_LAVA, LavaEmberParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(AurorasDecoParticles.AMETHYST_GLINT, AmethystGlintParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(AurorasDecoParticles.COPPER_SULFATE_FLAME, FlameParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(AurorasDecoParticles.COPPER_SULFATE_LAVA, LavaEmberParticle.Factory::new);
 
-        StumpBlock.streamLogStumps()
-                .forEach(block -> BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout()));
+		StumpBlock.streamLogStumps()
+				.forEach(block -> BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout()));
 
-        ClientPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_OPEN_GUI, AurorasDecoPackets.Client::handleSignPostOpenGuiPacket);
+		ClientPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_OPEN_GUI, AurorasDecoPackets.Client::handleSignPostOpenGuiPacket);
 
-        ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
-            PottedPlantType.stream()
-                    .forEach(plantType -> {
-                        if (plantType.isEmpty()) return;
+		ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
+			PottedPlantType.stream()
+					.forEach(plantType -> {
+						if (plantType.isEmpty()) return;
 
-                        BlockRenderLayerMap.INSTANCE.putBlock(plantType.getPot(), RenderLayer.getCutoutMipped());
+						BlockRenderLayerMap.INSTANCE.putBlock(plantType.getPot(), RenderLayer.getCutoutMipped());
 
-                        if (plantType.getPlant() instanceof TallPlantBlock) {
-                            ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) ->
-                                            world != null && pos != null ? BiomeColors.getGrassColor(world, pos)
-                                                    : GrassColors.getColor(0.5D, 1.0D),
-                                    plantType.getPot());
-                        } else {
-                            var originalColorProvider = ColorProviderRegistry.BLOCK.get(plantType.getPlant());
-                            if (originalColorProvider != null)
-                                ColorProviderRegistry.BLOCK.register(originalColorProvider, plantType.getPot());
-                        }
-                    });
-            HangingFlowerPotBlock.stream().forEach(block -> {
-                BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout());
-                var colorProvider = ColorProviderRegistry.BLOCK.get(block.getFlowerPot());
-                if (colorProvider != null)
-                    ColorProviderRegistry.BLOCK.register(colorProvider, block);
-            });
-            StumpBlock.streamLogStumps()
-                    .forEach(block -> {
-                        var leavesComponent = block.getWoodType().getComponent(WoodType.ComponentType.LEAVES);
-                        if (leavesComponent == null) return;
+						if (plantType.getPlant() instanceof TallPlantBlock) {
+							ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) ->
+											world != null && pos != null ? BiomeColors.getGrassColor(world, pos)
+													: GrassColors.getColor(0.5D, 1.0D),
+									plantType.getPot());
+						} else {
+							var originalColorProvider = ColorProviderRegistry.BLOCK.get(plantType.getPlant());
+							if (originalColorProvider != null)
+								ColorProviderRegistry.BLOCK.register(originalColorProvider, plantType.getPot());
+						}
+					});
+			HangingFlowerPotBlock.stream().forEach(block -> {
+				BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout());
+				var colorProvider = ColorProviderRegistry.BLOCK.get(block.getFlowerPot());
+				if (colorProvider != null)
+					ColorProviderRegistry.BLOCK.register(colorProvider, block);
+			});
+			StumpBlock.streamLogStumps()
+					.forEach(block -> {
+						var leavesComponent = block.getWoodType().getComponent(WoodType.ComponentType.LEAVES);
+						if (leavesComponent == null) return;
 
-                        var blockColorProvider = leavesComponent.getBlockColorProvider();
-                        if (blockColorProvider != null) {
-                            ColorProviderRegistry.BLOCK.register(blockColorProvider, block);
-                        }
-                        var itemColorProvider = leavesComponent.getItemColorProvider();
-                        if (itemColorProvider != null) {
-                            ColorProviderRegistry.ITEM.register(itemColorProvider, block);
-                        }
-                    });
-        });
+						var blockColorProvider = leavesComponent.getBlockColorProvider();
+						if (blockColorProvider != null) {
+							ColorProviderRegistry.BLOCK.register(blockColorProvider, block);
+						}
+						var itemColorProvider = leavesComponent.getItemColorProvider();
+						if (itemColorProvider != null) {
+							ColorProviderRegistry.ITEM.register(itemColorProvider, block);
+						}
+					});
+		});
 
-        this.registerBlackboardItemRenderer(BLACKBOARD_BLOCK);
-        this.registerBlackboardItemRenderer(CHALKBOARD_BLOCK);
-        this.registerBlackboardItemRenderer(WAXED_BLACKBOARD_BLOCK);
-        this.registerBlackboardItemRenderer(WAXED_CHALKBOARD_BLOCK);
+		this.registerBlackboardItemRenderer(BLACKBOARD_BLOCK);
+		this.registerBlackboardItemRenderer(CHALKBOARD_BLOCK);
+		this.registerBlackboardItemRenderer(WAXED_BLACKBOARD_BLOCK);
+		this.registerBlackboardItemRenderer(WAXED_CHALKBOARD_BLOCK);
 
-        ScreenRegistry.register(COPPER_HOPPER_SCREEN_HANDLER_TYPE, CopperHopperScreen::new);
-        ScreenRegistry.register(SAWMILL_SCREEN_HANDLER_TYPE, SawmillScreen::new);
-        ScreenRegistry.register(SHELF_SCREEN_HANDLER_TYPE, ShelfScreen::new);
+		ScreenRegistry.register(COPPER_HOPPER_SCREEN_HANDLER_TYPE, CopperHopperScreen::new);
+		ScreenRegistry.register(SAWMILL_SCREEN_HANDLER_TYPE, SawmillScreen::new);
+		ScreenRegistry.register(SHELF_SCREEN_HANDLER_TYPE, ShelfScreen::new);
 
-        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) ->
-                        world != null && pos != null
-                                ? BiomeColors.getFoliageColor(world, pos) : FoliageColors.getDefaultColor(),
-                BURNT_VINE_BLOCK);
+		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) ->
+						world != null && pos != null
+								? BiomeColors.getFoliageColor(world, pos) : FoliageColors.getDefaultColor(),
+				BURNT_VINE_BLOCK);
 
-        EntityModelLayerRegistry.registerModelLayer(WindChimeBlockEntityRenderer.WIND_CHIME_MODEL_LAYER,
-                WindChimeBlockEntityRenderer::getTexturedModelData);
+		EntityModelLayerRegistry.registerModelLayer(WindChimeBlockEntityRenderer.WIND_CHIME_MODEL_LAYER,
+				WindChimeBlockEntityRenderer::getTexturedModelData);
 
-        ModelLoadingRegistry.INSTANCE.registerModelProvider(RenderRule::reload);
-        ModelLoadingRegistry.INSTANCE.registerVariantProvider(resourceManager -> new BakedSignPostModel.Provider());
+		ModelLoadingRegistry.INSTANCE.registerModelProvider(RenderRule::reload);
+		ModelLoadingRegistry.INSTANCE.registerVariantProvider(resourceManager -> new BakedSignPostModel.Provider());
 
-        TrinketsHooks.init(BLACKBOARD_BLOCK.asItem(), WAXED_BLACKBOARD_BLOCK.asItem(),
-                CHALKBOARD_BLOCK.asItem(), WAXED_CHALKBOARD_BLOCK.asItem());
-    }
+		TrinketsHooks.init(BLACKBOARD_BLOCK.asItem(), WAXED_BLACKBOARD_BLOCK.asItem(),
+				CHALKBOARD_BLOCK.asItem(), WAXED_CHALKBOARD_BLOCK.asItem());
+	}
 
-    private void registerBlackboardItemRenderer(BlackboardBlock blackboard) {
-        var id = Registry.BLOCK.getId(blackboard);
-        var modelId = new ModelIdentifier(new Identifier(id.getNamespace(), id.getPath() + "_base"),
-                "inventory");
-        BuiltinItemRendererRegistry.INSTANCE.register(blackboard, new BlackboardItemRenderer(modelId));
-        ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> {
-            out.accept(modelId);
-            out.accept(BLACKBOARD_MASK);
-        });
-    }
+	private void registerBlackboardItemRenderer(BlackboardBlock blackboard) {
+		var id = Registry.BLOCK.getId(blackboard);
+		var modelId = new ModelIdentifier(new Identifier(id.getNamespace(), id.getPath() + "_base"),
+				"inventory");
+		BuiltinItemRendererRegistry.INSTANCE.register(blackboard, new BlackboardItemRenderer(modelId));
+		ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> {
+			out.accept(modelId);
+			out.accept(BLACKBOARD_MASK);
+		});
+	}
 }

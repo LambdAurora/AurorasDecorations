@@ -32,18 +32,18 @@ import static dev.lambdaurora.aurorasdeco.AurorasDeco.id;
  * @since 1.0.0
  */
 public final class AurorasDecoTags {
-    private AurorasDecoTags() {
-        throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
-    }
+	private AurorasDecoTags() {
+		throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
+	}
 
-    public static final Tag<Item> BLACKBOARD_ITEMS = TagFactory.ITEM.create(id("blackboards"));
+	public static final Tag<Item> BLACKBOARD_ITEMS = TagFactory.ITEM.create(id("blackboards"));
 
-    public static final Tag<Block> BLACKBOARD_BLOCKS = TagFactory.BLOCK.create(id("blackboards"));
-    public static final Tag<Block> BRAZIERS = TagFactory.BLOCK.create(id("braziers"));
-    public static final Tag<Block> COPPER_SULFATE_DECOMPOSABLE = TagFactory.BLOCK.create(id("copper_sulfate_decomposable"));
-    public static final Tag<Block> HOPPERS = TagFactory.BLOCK.create(id("hoppers"));
-    public static final Tag<Block> PET_BEDS = TagFactory.BLOCK.create(id("pet_beds"));
-    public static final Tag<Block> SHELVES = TagFactory.BLOCK.create(id("shelves"));
-    public static final Tag<Block> SMALL_LOG_PILES = TagFactory.BLOCK.create(id("small_log_piles"));
-    public static final Tag<Block> STUMPS = TagFactory.BLOCK.create(id("stumps"));
+	public static final Tag<Block> BLACKBOARD_BLOCKS = TagFactory.BLOCK.create(id("blackboards"));
+	public static final Tag<Block> BRAZIERS = TagFactory.BLOCK.create(id("braziers"));
+	public static final Tag<Block> COPPER_SULFATE_DECOMPOSABLE = TagFactory.BLOCK.create(id("copper_sulfate_decomposable"));
+	public static final Tag<Block> HOPPERS = TagFactory.BLOCK.create(id("hoppers"));
+	public static final Tag<Block> PET_BEDS = TagFactory.BLOCK.create(id("pet_beds"));
+	public static final Tag<Block> SHELVES = TagFactory.BLOCK.create(id("shelves"));
+	public static final Tag<Block> SMALL_LOG_PILES = TagFactory.BLOCK.create(id("small_log_piles"));
+	public static final Tag<Block> STUMPS = TagFactory.BLOCK.create(id("stumps"));
 }

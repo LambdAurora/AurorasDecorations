@@ -29,19 +29,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(WolfEntity.class)
 public abstract class WolfEntityMixin extends TameableEntity {
-    protected WolfEntityMixin(EntityType<? extends TameableEntity> entityType, World world) {
-        super(entityType, world);
-    }
+	protected WolfEntityMixin(EntityType<? extends TameableEntity> entityType, World world) {
+		super(entityType, world);
+	}
 
-    @Inject(
-            method = "initGoals",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/entity/ai/goal/GoalSelector;add(ILnet/minecraft/entity/ai/goal/Goal;)V",
-                    ordinal = 4
-            )
-    )
-    private void onInitGoals(CallbackInfo ci) {
-        this.goalSelector.add(3, new TameableSleepInPetBedGoal(this, 0.8));
-    }
+	@Inject(
+			method = "initGoals",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/entity/ai/goal/GoalSelector;add(ILnet/minecraft/entity/ai/goal/Goal;)V",
+					ordinal = 4
+			)
+	)
+	private void onInitGoals(CallbackInfo ci) {
+		this.goalSelector.add(3, new TameableSleepInPetBedGoal(this, 0.8));
+	}
 }

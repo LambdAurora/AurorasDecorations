@@ -28,16 +28,16 @@ import net.minecraft.util.Identifier;
  * @since 1.0.0
  */
 public record StateModel(Identifier id, int y) {
-    public StateModel(Identifier id) {
-        this(id, 0);
-    }
+	public StateModel(Identifier id) {
+		this(id, 0);
+	}
 
-    public JsonObject toJson() {
-        var model = new JsonObject();
-        model.addProperty("model", this.id().toString());
-        if (this.y() != 0)
-            model.addProperty("y", this.y());
+	public JsonObject toJson() {
+		var model = new JsonObject();
+		model.addProperty("model", this.id().toString());
+		if (this.y() != 0)
+			model.addProperty("y", this.y());
 
-        return model;
-    }
+		return model;
+	}
 }

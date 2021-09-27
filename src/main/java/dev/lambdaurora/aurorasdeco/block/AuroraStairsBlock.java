@@ -28,7 +28,7 @@ import net.minecraft.block.StairsBlock;
  * @since 1.0.0
  */
 public class AuroraStairsBlock extends StairsBlock {
-    public AuroraStairsBlock(BlockState baseBlockState, Settings settings) {
-        super(baseBlockState, settings);
-    }
+	public AuroraStairsBlock(BlockState baseBlockState, Settings settings) {
+		super(baseBlockState, settings);
+	}
 }

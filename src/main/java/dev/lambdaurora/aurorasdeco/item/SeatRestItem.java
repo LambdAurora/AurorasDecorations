@@ -36,36 +36,36 @@ import java.util.stream.Stream;
  * @since 1.0.0
  */
 public class SeatRestItem extends Item {
-    private static final KindSearcher<ItemStack, Item> SEAT_REST_KIND_SEARCHER
-            = KindSearcher.assignableSearcher(SeatRestItem.class, ItemStack::getItem).build();
-    private static final List<SeatRestItem> SEAT_RESTS = new ArrayList<>();
+	private static final KindSearcher<ItemStack, Item> SEAT_REST_KIND_SEARCHER
+			= KindSearcher.assignableSearcher(SeatRestItem.class, ItemStack::getItem).build();
+	private static final List<SeatRestItem> SEAT_RESTS = new ArrayList<>();
 
-    private final WoodType woodType;
+	private final WoodType woodType;
 
-    public SeatRestItem(WoodType woodType, Settings settings) {
-        super(settings);
-        this.woodType = woodType;
+	public SeatRestItem(WoodType woodType, Settings settings) {
+		super(settings);
+		this.woodType = woodType;
 
-        SEAT_RESTS.add(this);
-    }
+		SEAT_RESTS.add(this);
+	}
 
-    public static Stream<SeatRestItem> streamSeatRests() {
-        return SEAT_RESTS.stream();
-    }
+	public static Stream<SeatRestItem> streamSeatRests() {
+		return SEAT_RESTS.stream();
+	}
 
-    /**
-     * Gets the wood type of this rest item.
-     *
-     * @return the wood type
-     */
-    public WoodType getWoodType() {
-        return this.woodType;
-    }
+	/**
+	 * Gets the wood type of this rest item.
+	 *
+	 * @return the wood type
+	 */
+	public WoodType getWoodType() {
+		return this.woodType;
+	}
 
-    @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
-        if (this.isIn(group)) {
-            stacks.add(SEAT_REST_KIND_SEARCHER.findLastOfGroup(stacks), new ItemStack(this));
-        }
-    }
+	@Override
+	public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
+		if (this.isIn(group)) {
+			stacks.add(SEAT_REST_KIND_SEARCHER.findLastOfGroup(stacks), new ItemStack(this));
+		}
+	}
 }

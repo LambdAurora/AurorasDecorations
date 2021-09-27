@@ -32,12 +32,12 @@ import java.util.List;
 
 @Mixin(Screen.class)
 public class ScreenMixin {
-    @Dynamic
-    @Inject(method = "method_32635", at = @At("HEAD"), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD, remap = false)
-    private static void onComponentConstruct(List<TooltipComponent> list, TooltipData data, CallbackInfo info) {
-        if (data instanceof ConvertibleTooltipData convertibleTooltipData) {
-            list.add(convertibleTooltipData.toComponent());
-            info.cancel();
-        }
-    }
+	@Dynamic
+	@Inject(method = "method_32635", at = @At("HEAD"), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD, remap = false)
+	private static void onComponentConstruct(List<TooltipComponent> list, TooltipData data, CallbackInfo info) {
+		if (data instanceof ConvertibleTooltipData convertibleTooltipData) {
+			list.add(convertibleTooltipData.toComponent());
+			info.cancel();
+		}
+	}
 }

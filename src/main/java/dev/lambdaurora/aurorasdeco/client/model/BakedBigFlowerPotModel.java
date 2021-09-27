@@ -41,86 +41,86 @@ import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public class BakedBigFlowerPotModel extends ForwardingBakedModel {
-    private final MinecraftClient client = MinecraftClient.getInstance();
+	private final MinecraftClient client = MinecraftClient.getInstance();
 
-    public BakedBigFlowerPotModel(BakedModel baseModel) {
-        this.wrapped = baseModel;
-    }
+	public BakedBigFlowerPotModel(BakedModel baseModel) {
+		this.wrapped = baseModel;
+	}
 
-    @Override
-    public boolean isVanillaAdapter() {
-        return false;
-    }
+	@Override
+	public boolean isVanillaAdapter() {
+		return false;
+	}
 
-    @Override
-    public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier,
-                               RenderContext context) {
-        super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+	@Override
+	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier,
+	                           RenderContext context) {
+		super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 
-        if (!(state.getBlock() instanceof BigFlowerPotBlock potBlock))
-            return;
+		if (!(state.getBlock() instanceof BigFlowerPotBlock potBlock))
+			return;
 
-        var plantState = potBlock.getPlantState(state);
-        if (!plantState.isAir()) {
-            float ratio = potBlock.getScale();
-            float offset = (1.f - ratio) / 2.f;
+		var plantState = potBlock.getPlantState(state);
+		if (!plantState.isAir()) {
+			float ratio = potBlock.getScale();
+			float offset = (1.f - ratio) / 2.f;
 
-            if (!(potBlock instanceof BigPottedProxyBlock))
-                for (var property : plantState.getProperties()) {
-                    if (property instanceof IntProperty ageProperty && property.getName().equals("age")) {
-                        var max = ageProperty.getValues().stream().max(Integer::compareTo);
-                        if (max.isPresent()) {
-                            plantState = plantState.with(ageProperty, max.get());
-                        }
-                        break;
-                    }
-                }
+			if (!(potBlock instanceof BigPottedProxyBlock))
+				for (var property : plantState.getProperties()) {
+					if (property instanceof IntProperty ageProperty && property.getName().equals("age")) {
+						var max = ageProperty.getValues().stream().max(Integer::compareTo);
+						if (max.isPresent()) {
+							plantState = plantState.with(ageProperty, max.get());
+						}
+						break;
+					}
+				}
 
-            var model = client.getBakedModelManager().getBlockModels().getModel(plantState);
-            if (model instanceof FabricBakedModel fabricBakedModel) {
-                context.pushTransform(quad -> {
-                    Vec3f vec = null;
-                    for (int i = 0; i < 4; i++) {
-                        vec = quad.copyPos(i, vec);
-                        vec.multiplyComponentwise(ratio, ratio, ratio);
-                        vec.add(offset, .8f, offset);
-                        quad.pos(i, vec);
-                    }
-                    quad.material(RendererAccess.INSTANCE.getRenderer().materialFinder()
-                            .disableAo(0, !model.useAmbientOcclusion()).find());
-                    return true;
-                });
-                fabricBakedModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
-                context.popTransform();
-            }
+			var model = client.getBakedModelManager().getBlockModels().getModel(plantState);
+			if (model instanceof FabricBakedModel fabricBakedModel) {
+				context.pushTransform(quad -> {
+					Vec3f vec = null;
+					for (int i = 0; i < 4; i++) {
+						vec = quad.copyPos(i, vec);
+						vec.multiplyComponentwise(ratio, ratio, ratio);
+						vec.add(offset, .8f, offset);
+						quad.pos(i, vec);
+					}
+					quad.material(RendererAccess.INSTANCE.getRenderer().materialFinder()
+							.disableAo(0, !model.useAmbientOcclusion()).find());
+					return true;
+				});
+				fabricBakedModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+				context.popTransform();
+			}
 
-            if (potBlock.getPlantType().isTall()) {
-                var upPlantState = plantState.with(TallPlantBlock.HALF, DoubleBlockHalf.UPPER);
-                final var upModel = client.getBakedModelManager().getBlockModels().getModel(upPlantState);
-                if (upModel instanceof FabricBakedModel) {
-                    context.pushTransform(quad -> {
-                        Vec3f vec = null;
-                        for (int i = 0; i < 4; i++) {
-                            vec = quad.copyPos(i, vec);
-                            vec.multiplyComponentwise(ratio, ratio, ratio);
-                            vec.add(offset, .8f + ratio, offset);
-                            quad.pos(i, vec);
-                        }
-                        quad.material(
-                                RendererAccess.INSTANCE.getRenderer().materialFinder()
-                                        .disableAo(0, !upModel.useAmbientOcclusion())
-                                        .find()
-                        );
-                        return true;
-                    });
-                    ((FabricBakedModel) upModel).emitBlockQuads(blockView, state, pos.up(), randomSupplier, context);
-                    context.popTransform();
-                }
-            }
-        }
-    }
+			if (potBlock.getPlantType().isTall()) {
+				var upPlantState = plantState.with(TallPlantBlock.HALF, DoubleBlockHalf.UPPER);
+				final var upModel = client.getBakedModelManager().getBlockModels().getModel(upPlantState);
+				if (upModel instanceof FabricBakedModel) {
+					context.pushTransform(quad -> {
+						Vec3f vec = null;
+						for (int i = 0; i < 4; i++) {
+							vec = quad.copyPos(i, vec);
+							vec.multiplyComponentwise(ratio, ratio, ratio);
+							vec.add(offset, .8f + ratio, offset);
+							quad.pos(i, vec);
+						}
+						quad.material(
+								RendererAccess.INSTANCE.getRenderer().materialFinder()
+										.disableAo(0, !upModel.useAmbientOcclusion())
+										.find()
+						);
+						return true;
+					});
+					((FabricBakedModel) upModel).emitBlockQuads(blockView, state, pos.up(), randomSupplier, context);
+					context.popTransform();
+				}
+			}
+		}
+	}
 
-    @Override
-    public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-    }
+	@Override
+	public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+	}
 }

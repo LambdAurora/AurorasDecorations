@@ -30,24 +30,24 @@ import java.util.List;
  * @since 1.0.0
  */
 public enum PartType implements StringIdentifiable {
-    BOTTOM("bottom"),
-    TOP("top"),
-    DOUBLE("double");
+	BOTTOM("bottom"),
+	TOP("top"),
+	DOUBLE("double");
 
-    private static final List<PartType> VALUES = ImmutableList.copyOf(values());
+	private static final List<PartType> VALUES = ImmutableList.copyOf(values());
 
-    private final String name;
+	private final String name;
 
-    PartType(String name) {
-        this.name = name;
-    }
+	PartType(String name) {
+		this.name = name;
+	}
 
-    @Override
-    public String asString() {
-        return this.name;
-    }
+	@Override
+	public String asString() {
+		return this.name;
+	}
 
-    public static List<PartType> getValues() {
-        return VALUES;
-    }
+	public static List<PartType> getValues() {
+		return VALUES;
+	}
 }

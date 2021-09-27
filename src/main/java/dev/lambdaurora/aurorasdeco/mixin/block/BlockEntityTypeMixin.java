@@ -31,20 +31,20 @@ import java.util.Set;
 
 @Mixin(BlockEntityType.class)
 public class BlockEntityTypeMixin implements BlockEntityTypeAccessor {
-    @Mutable
-    @Shadow
-    @Final
-    private Set<Block> blocks;
+	@Mutable
+	@Shadow
+	@Final
+	private Set<Block> blocks;
 
-    @Override
-    public Set<Block> aurorasdeco$getMutableSupportedBlocks() {
-        if (this.blocks instanceof ImmutableSet)
-            this.blocks = new HashSet<>(this.blocks);
-        return this.blocks;
-    }
+	@Override
+	public Set<Block> aurorasdeco$getMutableSupportedBlocks() {
+		if (this.blocks instanceof ImmutableSet)
+			this.blocks = new HashSet<>(this.blocks);
+		return this.blocks;
+	}
 
-    @Override
-    public void aurorasdeco$addSupportedBlock(Block block) {
-        this.aurorasdeco$getMutableSupportedBlocks().add(block);
-    }
+	@Override
+	public void aurorasdeco$addSupportedBlock(Block block) {
+		this.aurorasdeco$getMutableSupportedBlocks().add(block);
+	}
 }

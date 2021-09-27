@@ -48,103 +48,103 @@ import java.util.Random;
  * @since 1.0.0
  */
 public final class BurntVineBlock extends VineBlock {
-    public BurntVineBlock() {
-        super(
-                FabricBlockSettings.of(Material.REPLACEABLE_PLANT)
-                        .noCollision()
-                        .strength(.2f)
-                        .sounds(BlockSoundGroup.VINE)
-        );
+	public BurntVineBlock() {
+		super(
+				FabricBlockSettings.of(Material.REPLACEABLE_PLANT)
+						.noCollision()
+						.strength(.2f)
+						.sounds(BlockSoundGroup.VINE)
+		);
 
-        FlammableBlockRegistry.getDefaultInstance().add(this, 15, 100);
-        Item.BLOCK_ITEMS.put(this, Items.VINE);
-    }
+		FlammableBlockRegistry.getDefaultInstance().add(this, 15, 100);
+		Item.BLOCK_ITEMS.put(this, Items.VINE);
+	}
 
-    public static BlockState fromVine(BlockState state) {
-        BlockState self = AurorasDecoRegistry.BURNT_VINE_BLOCK.getDefaultState();
+	public static BlockState fromVine(BlockState state) {
+		BlockState self = AurorasDecoRegistry.BURNT_VINE_BLOCK.getDefaultState();
 
-        return self.with(UP, state.get(UP))
-                .with(NORTH, state.get(NORTH))
-                .with(EAST, state.get(EAST))
-                .with(SOUTH, state.get(SOUTH))
-                .with(WEST, state.get(WEST));
-    }
+		return self.with(UP, state.get(UP))
+				.with(NORTH, state.get(NORTH))
+				.with(EAST, state.get(EAST))
+				.with(SOUTH, state.get(SOUTH))
+				.with(WEST, state.get(WEST));
+	}
 
-    /* Ticking */
+	/* Ticking */
 
-    @Override
-    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        // No random tick.
-    }
+	@Override
+	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+		// No random tick.
+	}
 
-    /* Placement */
+	/* Placement */
 
-    @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return ((VineBlockAccessor) (Object) this).aurorasdeco$hasAdjacentBlocks(this.getPlacementShape(state, world, pos));
-    }
+	@Override
+	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+		return ((VineBlockAccessor) (Object) this).aurorasdeco$hasAdjacentBlocks(this.getPlacementShape(state, world, pos));
+	}
 
-    private boolean shouldHaveSide(BlockView world, BlockPos pos, Direction side) {
-        if (side == Direction.DOWN) {
-            return false;
-        } else {
-            var sidePos = pos.offset(side);
-            if (shouldConnectTo(world, sidePos, side)) {
-                return true;
-            } else if (side.getAxis() == Direction.Axis.Y) {
-                return false;
-            } else {
-                var facing = FACING_PROPERTIES.get(side);
-                var upState = world.getBlockState(pos.up());
-                return upState.isOf(Blocks.VINE) && upState.get(facing);
-            }
-        }
-    }
+	private boolean shouldHaveSide(BlockView world, BlockPos pos, Direction side) {
+		if (side == Direction.DOWN) {
+			return false;
+		} else {
+			var sidePos = pos.offset(side);
+			if (shouldConnectTo(world, sidePos, side)) {
+				return true;
+			} else if (side.getAxis() == Direction.Axis.Y) {
+				return false;
+			} else {
+				var facing = FACING_PROPERTIES.get(side);
+				var upState = world.getBlockState(pos.up());
+				return upState.isOf(Blocks.VINE) && upState.get(facing);
+			}
+		}
+	}
 
-    private BlockState getPlacementShape(BlockState state, BlockView world, BlockPos pos) {
-        var upPos = pos.up();
-        if (state.get(UP)) {
-            state = state.with(UP, shouldConnectTo(world, upPos, Direction.DOWN));
-        }
+	private BlockState getPlacementShape(BlockState state, BlockView world, BlockPos pos) {
+		var upPos = pos.up();
+		if (state.get(UP)) {
+			state = state.with(UP, shouldConnectTo(world, upPos, Direction.DOWN));
+		}
 
-        BlockState blockState = null;
-        var it = Direction.Type.HORIZONTAL.iterator();
+		BlockState blockState = null;
+		var it = Direction.Type.HORIZONTAL.iterator();
 
-        while (true) {
-            Direction facing;
-            BooleanProperty facingProperty;
-            do {
-                if (!it.hasNext()) {
-                    return state;
-                }
+		while (true) {
+			Direction facing;
+			BooleanProperty facingProperty;
+			do {
+				if (!it.hasNext()) {
+					return state;
+				}
 
-                facing = it.next();
-                facingProperty = getFacingProperty(facing);
-            } while (!state.get(facingProperty));
+				facing = it.next();
+				facingProperty = getFacingProperty(facing);
+			} while (!state.get(facingProperty));
 
-            boolean shouldHaveSide = this.shouldHaveSide(world, pos, facing);
-            if (!shouldHaveSide) {
-                if (blockState == null) {
-                    blockState = world.getBlockState(upPos);
-                }
+			boolean shouldHaveSide = this.shouldHaveSide(world, pos, facing);
+			if (!shouldHaveSide) {
+				if (blockState == null) {
+					blockState = world.getBlockState(upPos);
+				}
 
-                shouldHaveSide = blockState.isOf(Blocks.VINE) && blockState.get(facingProperty);
-            }
+				shouldHaveSide = blockState.isOf(Blocks.VINE) && blockState.get(facingProperty);
+			}
 
-            state = state.with(facingProperty, shouldHaveSide);
-        }
-    }
+			state = state.with(facingProperty, shouldHaveSide);
+		}
+	}
 
-    /* Updates */
+	/* Updates */
 
-    @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
-        if (direction == Direction.DOWN) {
-            return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
-        } else {
-            var placementShape = this.getPlacementShape(state, world, pos);
-            return !((VineBlockAccessor) (Object) this).aurorasdeco$hasAdjacentBlocks(placementShape) ?
-                    Blocks.AIR.getDefaultState() : placementShape;
-        }
-    }
+	@Override
+	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
+		if (direction == Direction.DOWN) {
+			return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
+		} else {
+			var placementShape = this.getPlacementShape(state, world, pos);
+			return !((VineBlockAccessor) (Object) this).aurorasdeco$hasAdjacentBlocks(placementShape) ?
+					Blocks.AIR.getDefaultState() : placementShape;
+		}
+	}
 }

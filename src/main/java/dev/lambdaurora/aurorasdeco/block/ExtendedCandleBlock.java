@@ -25,26 +25,26 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class ExtendedCandleBlock extends CandleBlock {
-    private static final List<ExtendedCandleBlock> EXTENDED_CANDLE_BLOCKS = new ArrayList<>();
+	private static final List<ExtendedCandleBlock> EXTENDED_CANDLE_BLOCKS = new ArrayList<>();
 
-    protected final CandleBlock parent;
+	protected final CandleBlock parent;
 
-    public ExtendedCandleBlock(CandleBlock candleBlock) {
-        super(FabricBlockSettings.copyOf(candleBlock)
-                // Bump up a little bit the luminance,
-                // especially since the candles extending this are not on the floor.
-                .luminance((state) -> CandleBlock.STATE_TO_LUMINANCE.applyAsInt(state) + 2)
-        );
-        this.parent = candleBlock;
+	public ExtendedCandleBlock(CandleBlock candleBlock) {
+		super(FabricBlockSettings.copyOf(candleBlock)
+				// Bump up a little bit the luminance,
+				// especially since the candles extending this are not on the floor.
+				.luminance((state) -> CandleBlock.STATE_TO_LUMINANCE.applyAsInt(state) + 2)
+		);
+		this.parent = candleBlock;
 
-        EXTENDED_CANDLE_BLOCKS.add(this);
-    }
+		EXTENDED_CANDLE_BLOCKS.add(this);
+	}
 
-    public static Stream<ExtendedCandleBlock> stream() {
-        return EXTENDED_CANDLE_BLOCKS.stream();
-    }
+	public static Stream<ExtendedCandleBlock> stream() {
+		return EXTENDED_CANDLE_BLOCKS.stream();
+	}
 
-    public CandleBlock getParent() {
-        return parent;
-    }
+	public CandleBlock getParent() {
+		return parent;
+	}
 }

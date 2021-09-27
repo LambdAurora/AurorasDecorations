@@ -25,6 +25,6 @@ import java.nio.channels.WritableByteChannel;
 
 @Mixin(NativeImage.class)
 public interface NativeImageAccessor {
-    @Invoker("write")
-    boolean aurorasdeco$write(WritableByteChannel writableByteChannel);
+	@Invoker("write")
+	boolean aurorasdeco$write(WritableByteChannel writableByteChannel);
 }

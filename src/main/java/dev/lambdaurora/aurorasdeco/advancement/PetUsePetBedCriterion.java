@@ -25,7 +25,6 @@ import net.minecraft.advancement.criterion.AbstractCriterionConditions;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.predicate.BlockPredicate;
 import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
 import net.minecraft.predicate.entity.AdvancementEntityPredicateSerializer;
@@ -39,55 +38,54 @@ import java.util.List;
 import java.util.UUID;
 
 public class PetUsePetBedCriterion extends AbstractCriterion<PetUsePetBedCriterion.Conditions> {
-    private static final Identifier ID = AurorasDeco.id("pet_use_pet_bed");
+	private static final Identifier ID = AurorasDeco.id("pet_use_pet_bed");
 
-    @Override
-    public Identifier getId() {
-        return ID;
-    }
+	@Override
+	public Identifier getId() {
+		return ID;
+	}
 
-    @Override
-    protected Conditions conditionsFromJson(JsonObject obj, EntityPredicate.Extended playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
-        BlockPredicate blockPredicate = BlockPredicate.fromJson(obj.get("block"));
-        return new Conditions(playerPredicate, blockPredicate);
-    }
+	@Override
+	protected Conditions conditionsFromJson(JsonObject obj, EntityPredicate.Extended playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
+		return new Conditions(playerPredicate, BlockPredicate.fromJson(obj.get("block")));
+	}
 
-    public void trigger(PathAwareEntity entity, ServerWorld world, BlockPos pos) {
-        if (entity instanceof TameableEntity tameable) {
-            LivingEntity player = tameable.getOwner();
-            if (player != null)
-                this.trigger((ServerPlayerEntity) player, world, pos);
-        } else if (entity instanceof FoxEntityAccessor fox) { // Foxes <3
-            List<UUID> trusted = fox.aurorasdeco$getTrustedUuids();
-            if (!trusted.isEmpty()) {
-                PlayerEntity player = world.getPlayerByUuid(trusted.get(0));
-                if (player != null)
-                    this.trigger((ServerPlayerEntity) player, world, pos);
-            }
-        }
-    }
+	public void trigger(PathAwareEntity entity, ServerWorld world, BlockPos pos) {
+		if (entity instanceof TameableEntity tameable) {
+			LivingEntity player = tameable.getOwner();
+			if (player != null)
+				this.trigger((ServerPlayerEntity) player, world, pos);
+		} else if (entity instanceof FoxEntityAccessor fox) { // Foxes <3
+			List<UUID> trusted = fox.aurorasdeco$getTrustedUuids();
+			if (!trusted.isEmpty()) {
+				var player = world.getPlayerByUuid(trusted.get(0));
+				if (player != null)
+					this.trigger((ServerPlayerEntity) player, world, pos);
+			}
+		}
+	}
 
-    public void trigger(ServerPlayerEntity player, ServerWorld world, BlockPos pos) {
-        this.trigger(player, conditions -> conditions.matches(world, pos));
-    }
+	public void trigger(ServerPlayerEntity player, ServerWorld world, BlockPos pos) {
+		this.trigger(player, conditions -> conditions.matches(world, pos));
+	}
 
-    public static class Conditions extends AbstractCriterionConditions {
-        private final BlockPredicate blockPredicate;
+	public static class Conditions extends AbstractCriterionConditions {
+		private final BlockPredicate blockPredicate;
 
-        public Conditions(EntityPredicate.Extended playerPredicate, BlockPredicate blockPredicate) {
-            super(ID, playerPredicate);
-            this.blockPredicate = blockPredicate;
-        }
+		public Conditions(EntityPredicate.Extended playerPredicate, BlockPredicate blockPredicate) {
+			super(ID, playerPredicate);
+			this.blockPredicate = blockPredicate;
+		}
 
-        public boolean matches(ServerWorld world, BlockPos pos) {
-            return this.blockPredicate.test(world, pos);
-        }
+		public boolean matches(ServerWorld world, BlockPos pos) {
+			return this.blockPredicate.test(world, pos);
+		}
 
-        @Override
-        public JsonObject toJson(AdvancementEntityPredicateSerializer predicateSerializer) {
-            JsonObject jsonObject = super.toJson(predicateSerializer);
-            jsonObject.add("block", this.blockPredicate.toJson());
-            return jsonObject;
-        }
-    }
+		@Override
+		public JsonObject toJson(AdvancementEntityPredicateSerializer predicateSerializer) {
+			var jsonObject = super.toJson(predicateSerializer);
+			jsonObject.add("block", this.blockPredicate.toJson());
+			return jsonObject;
+		}
+	}
 }

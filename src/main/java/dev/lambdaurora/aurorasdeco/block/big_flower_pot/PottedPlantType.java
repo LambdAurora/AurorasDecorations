@@ -43,205 +43,205 @@ import java.util.stream.Stream;
  * @since 1.0.0
  */
 public final class PottedPlantType {
-    private static final Map<String, PottedPlantType> TYPES = new Object2ObjectOpenHashMap<>();
-    private static final Map<Item, BigFlowerPotBlock> ITEM_TO_FLOWER_POT = new Object2ObjectOpenHashMap<>();
-    private final String id;
-    private final Block plant;
-    private final Item item;
-    private final Category category;
-    private BigFlowerPotBlock pot;
+	private static final Map<String, PottedPlantType> TYPES = new Object2ObjectOpenHashMap<>();
+	private static final Map<Item, BigFlowerPotBlock> ITEM_TO_FLOWER_POT = new Object2ObjectOpenHashMap<>();
+	private final String id;
+	private final Block plant;
+	private final Item item;
+	private final Category category;
+	private BigFlowerPotBlock pot;
 
-    private PottedPlantType(String id, Block plant, Item item) {
-        this.id = id;
-        this.plant = plant;
-        this.item = item;
+	private PottedPlantType(String id, Block plant, Item item) {
+		this.id = id;
+		this.plant = plant;
+		this.item = item;
 
-        this.category = Arrays.stream(Category.values())
-                .filter(category -> category.filter(id, plant, item))
-                .findFirst().orElse(Category.UNKNOWN);
-    }
+		this.category = Arrays.stream(Category.values())
+				.filter(category -> category.filter(id, plant, item))
+				.findFirst().orElse(Category.UNKNOWN);
+	}
 
-    public static PottedPlantType fromId(String id) {
-        return TYPES.getOrDefault(id, AurorasDecoRegistry.BIG_FLOWER_POT_BLOCK.getPlantType());
-    }
+	public static PottedPlantType fromId(String id) {
+		return TYPES.getOrDefault(id, AurorasDecoRegistry.BIG_FLOWER_POT_BLOCK.getPlantType());
+	}
 
-    public static @Nullable BigFlowerPotBlock registerFromItem(Item item) {
-        if (item instanceof BlockItem blockItem)
-            return registerFromBlock(blockItem.getBlock());
-        return null;
-    }
+	public static @Nullable BigFlowerPotBlock registerFromItem(Item item) {
+		if (item instanceof BlockItem blockItem)
+			return registerFromBlock(blockItem.getBlock());
+		return null;
+	}
 
-    public static @Nullable BigFlowerPotBlock registerFromBlock(Block plant) {
-        return registerFromBlock(Registry.BLOCK.getId(plant), plant);
-    }
+	public static @Nullable BigFlowerPotBlock registerFromBlock(Block plant) {
+		return registerFromBlock(Registry.BLOCK.getId(plant), plant);
+	}
 
-    public static @Nullable BigFlowerPotBlock registerFromBlock(Identifier plantId, Block plant) {
-        var id = plantId.toString();
-        if (id.startsWith("minecraft:")) {
-            id = id.substring("minecraft:".length());
-        } else if (id.startsWith(AurorasDeco.NAMESPACE + ':')) {
-            id = id.substring(AurorasDeco.NAMESPACE.length() + 1);
-        } else {
-            id = id.replace(':', '/');
-        }
+	public static @Nullable BigFlowerPotBlock registerFromBlock(Identifier plantId, Block plant) {
+		var id = plantId.toString();
+		if (id.startsWith("minecraft:")) {
+			id = id.substring("minecraft:".length());
+		} else if (id.startsWith(AurorasDeco.NAMESPACE + ':')) {
+			id = id.substring(AurorasDeco.NAMESPACE.length() + 1);
+		} else {
+			id = id.replace(':', '/');
+		}
 
-        if (TYPES.containsKey(id))
-            return null;
+		if (TYPES.containsKey(id))
+			return null;
 
-        return register(id, plant, plant.asItem());
-    }
+		return register(id, plant, plant.asItem());
+	}
 
-    public static BigFlowerPotBlock register(String id, Block plant, Item item) {
-        if (id.equals("ecotones/blueberry_bush") || plant instanceof SweetBerryBushBlock) // Love ecotones <3
-            return register(id, plant, item, BigPottedSweetBerryBushBlock::new);
-        else if (plant instanceof NetherWartBlock)
-            return register(id, plant, item, BigPottedNetherWartBlock::new);
-        else if (plant instanceof DaffodilBlock)
-            return register(id, plant, item, BigPottedDaffodilBlock::new);
-        //else if (plant instanceof SeaPickleBlock)
-        //    return register(id, plant, item, BigPottedSeaPickleBlock::new);
-        return register(id, plant, item, BigFlowerPotBlock::new);
-    }
+	public static BigFlowerPotBlock register(String id, Block plant, Item item) {
+		if (id.equals("ecotones/blueberry_bush") || plant instanceof SweetBerryBushBlock) // Love ecotones <3
+			return register(id, plant, item, BigPottedSweetBerryBushBlock::new);
+		else if (plant instanceof NetherWartBlock)
+			return register(id, plant, item, BigPottedNetherWartBlock::new);
+		else if (plant instanceof DaffodilBlock)
+			return register(id, plant, item, BigPottedDaffodilBlock::new);
+		//else if (plant instanceof SeaPickleBlock)
+		//    return register(id, plant, item, BigPottedSeaPickleBlock::new);
+		return register(id, plant, item, BigFlowerPotBlock::new);
+	}
 
-    public static <T extends BigFlowerPotBlock> T register(String id, Block plant, Item item,
-                                                           Function<PottedPlantType, T> flowerPotBlockFactory) {
-        var type = new PottedPlantType(id, plant, item);
-        TYPES.put(id, type);
-        var potBlock = flowerPotBlockFactory.apply(type);
-        type.pot = potBlock;
-        if (item != Items.AIR || type.isEmpty()) {
-            ITEM_TO_FLOWER_POT.put(item, potBlock);
-        }
-        return potBlock;
-    }
+	public static <T extends BigFlowerPotBlock> T register(String id, Block plant, Item item,
+	                                                       Function<PottedPlantType, T> flowerPotBlockFactory) {
+		var type = new PottedPlantType(id, plant, item);
+		TYPES.put(id, type);
+		var potBlock = flowerPotBlockFactory.apply(type);
+		type.pot = potBlock;
+		if (item != Items.AIR || type.isEmpty()) {
+			ITEM_TO_FLOWER_POT.put(item, potBlock);
+		}
+		return potBlock;
+	}
 
-    public static BigFlowerPotBlock getFlowerPotFromItem(Item item) {
-        return ITEM_TO_FLOWER_POT.getOrDefault(item, AurorasDecoRegistry.BIG_FLOWER_POT_BLOCK);
-    }
+	public static BigFlowerPotBlock getFlowerPotFromItem(Item item) {
+		return ITEM_TO_FLOWER_POT.getOrDefault(item, AurorasDecoRegistry.BIG_FLOWER_POT_BLOCK);
+	}
 
-    public static Stream<PottedPlantType> stream() {
-        return TYPES.values().stream();
-    }
+	public static Stream<PottedPlantType> stream() {
+		return TYPES.values().stream();
+	}
 
-    public String getId() {
-        return this.id;
-    }
+	public String getId() {
+		return this.id;
+	}
 
-    public Block getPlant() {
-        return this.plant;
-    }
+	public Block getPlant() {
+		return this.plant;
+	}
 
-    public Item getItem() {
-        return this.item;
-    }
+	public Item getItem() {
+		return this.item;
+	}
 
-    /**
-     * Returns the category of this plant type.
-     *
-     * @return the category
-     */
-    public Category getCategory() {
-        return this.category;
-    }
+	/**
+	 * Returns the category of this plant type.
+	 *
+	 * @return the category
+	 */
+	public Category getCategory() {
+		return this.category;
+	}
 
-    /**
-     * Returns whether this plant type is tall or not.
-     *
-     * @return {@code true} if this plant is tall, else {@code false}
-     */
-    public boolean isTall() {
-        return this.getPlant() instanceof TallPlantBlock;
-    }
+	/**
+	 * Returns whether this plant type is tall or not.
+	 *
+	 * @return {@code true} if this plant is tall, else {@code false}
+	 */
+	public boolean isTall() {
+		return this.getPlant() instanceof TallPlantBlock;
+	}
 
-    /**
-     * Returns the big flower pot block associated with this plant type.
-     *
-     * @return the big flower pot block
-     */
-    public BigFlowerPotBlock getPot() {
-        return this.pot;
-    }
+	/**
+	 * Returns the big flower pot block associated with this plant type.
+	 *
+	 * @return the big flower pot block
+	 */
+	public BigFlowerPotBlock getPot() {
+		return this.pot;
+	}
 
-    /**
-     * Returns whether this plant type is empty or not.
-     *
-     * @return {@code true} if empty, else {@code false}
-     */
-    public boolean isEmpty() {
-        return this.plant == Blocks.AIR && this.item == Items.AIR;
-    }
+	/**
+	 * Returns whether this plant type is empty or not.
+	 *
+	 * @return {@code true} if empty, else {@code false}
+	 */
+	public boolean isEmpty() {
+		return this.plant == Blocks.AIR && this.item == Items.AIR;
+	}
 
-    public static boolean isValidPlant(Block block) {
-        if (block instanceof PlantBlock
-                && !(block instanceof CropBlock)
-                && !(block instanceof LilyPadBlock)
-                && !(block instanceof StemBlock)
-                && !(block instanceof AttachedStemBlock)) {
-            return true;
-        } else return block instanceof CactusBlock;
-    }
+	public static boolean isValidPlant(Block block) {
+		if (block instanceof PlantBlock
+				&& !(block instanceof CropBlock)
+				&& !(block instanceof LilyPadBlock)
+				&& !(block instanceof StemBlock)
+				&& !(block instanceof AttachedStemBlock)) {
+			return true;
+		} else return block instanceof CactusBlock;
+	}
 
-    public static boolean isValidPlant(Item item) {
-        if (item instanceof BlockItem) {
-            return isValidPlant(((BlockItem) item).getBlock());
-        }
-        return false;
-    }
+	public static boolean isValidPlant(Item item) {
+		if (item instanceof BlockItem) {
+			return isValidPlant(((BlockItem) item).getBlock());
+		}
+		return false;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || this.getClass() != o.getClass()) return false;
-        var that = (PottedPlantType) o;
-        return this.getId().equals(that.getId()) && this.getPlant().equals(that.getPlant()) && Objects.equals(this.getItem(), that.getItem());
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || this.getClass() != o.getClass()) return false;
+		var that = (PottedPlantType) o;
+		return this.getId().equals(that.getId()) && this.getPlant().equals(that.getPlant()) && Objects.equals(this.getItem(), that.getItem());
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.getId(), this.getPlant(), this.getItem());
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.getId(), this.getPlant(), this.getItem());
+	}
 
-    /**
-     * Represents a plant category.
-     *
-     * @version 1.0.0
-     * @since 1.0.0
-     */
-    public enum Category {
-        AZALEA((id, plant, item) -> plant instanceof AzaleaBlock, false),
-        BAMBOO((id, plant, item) -> item == Items.BAMBOO, false),
-        CACTUS((id, plant, item) -> plant instanceof CactusBlock || id.equals("pocket_cactus"), false),
-        FLOWER((id, plant, item) -> plant instanceof FlowerBlock, true),
-        MASCOT((id, plant, item) -> item == Items.POTATO || item == Items.PUMPKIN, false),
-        MUSHROOM((id, plant, item) -> plant instanceof MushroomPlantBlock || plant instanceof FungusBlock, true),
-        SAPLING((id, plant, item) -> plant instanceof SaplingBlock, true),
-        SWEET_BERRY_BUSH((id, plant, item) -> plant instanceof SweetBerryBushBlock || id.equals("ecotones/blueberry_bush"), false),
-        UNKNOWN((id, plant, item) -> true, true);
+	/**
+	 * Represents a plant category.
+	 *
+	 * @version 1.0.0
+	 * @since 1.0.0
+	 */
+	public enum Category {
+		AZALEA((id, plant, item) -> plant instanceof AzaleaBlock, false),
+		BAMBOO((id, plant, item) -> item == Items.BAMBOO, false),
+		CACTUS((id, plant, item) -> plant instanceof CactusBlock || id.equals("pocket_cactus"), false),
+		FLOWER((id, plant, item) -> plant instanceof FlowerBlock, true),
+		MASCOT((id, plant, item) -> item == Items.POTATO || item == Items.PUMPKIN, false),
+		MUSHROOM((id, plant, item) -> plant instanceof MushroomPlantBlock || plant instanceof FungusBlock, true),
+		SAPLING((id, plant, item) -> plant instanceof SaplingBlock, true),
+		SWEET_BERRY_BUSH((id, plant, item) -> plant instanceof SweetBerryBushBlock || id.equals("ecotones/blueberry_bush"), false),
+		UNKNOWN((id, plant, item) -> true, true);
 
-        private final CategoryFilter filter;
-        private final boolean allowBlocksOnTop;
+		private final CategoryFilter filter;
+		private final boolean allowBlocksOnTop;
 
-        Category(CategoryFilter filter, boolean allowBlocksOnTop) {
-            this.filter = filter;
-            this.allowBlocksOnTop = allowBlocksOnTop;
-        }
+		Category(CategoryFilter filter, boolean allowBlocksOnTop) {
+			this.filter = filter;
+			this.allowBlocksOnTop = allowBlocksOnTop;
+		}
 
-        public boolean allowBlocksOnTop() {
-            return this.allowBlocksOnTop;
-        }
+		public boolean allowBlocksOnTop() {
+			return this.allowBlocksOnTop;
+		}
 
-        private boolean filter(String id, Block plant, Item item) {
-            return this.filter.filter(id, plant, item);
-        }
-    }
+		private boolean filter(String id, Block plant, Item item) {
+			return this.filter.filter(id, plant, item);
+		}
+	}
 
-    /**
-     * Represents a category filter.
-     *
-     * @version 1.0.0
-     * @since 1.0.0
-     */
-    private interface CategoryFilter {
-        boolean filter(String id, Block plant, Item item);
-    }
+	/**
+	 * Represents a category filter.
+	 *
+	 * @version 1.0.0
+	 * @since 1.0.0
+	 */
+	private interface CategoryFilter {
+		boolean filter(String id, Block plant, Item item);
+	}
 }

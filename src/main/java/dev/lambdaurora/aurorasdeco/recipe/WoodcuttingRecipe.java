@@ -37,70 +37,70 @@ import net.minecraft.world.World;
  * @since 1.0.0
  */
 public final class WoodcuttingRecipe extends CuttingRecipe {
-    public static final Serializer SERIALIZER = new Serializer();
+	public static final Serializer SERIALIZER = new Serializer();
 
-    public WoodcuttingRecipe(Identifier id, String group, Ingredient input, ItemStack output) {
-        super(AurorasDecoRegistry.WOODCUTTING_RECIPE_TYPE, AurorasDecoRegistry.WOODCUTTING_RECIPE_SERIALIZER,
-                id, group, input, output);
-    }
+	public WoodcuttingRecipe(Identifier id, String group, Ingredient input, ItemStack output) {
+		super(AurorasDecoRegistry.WOODCUTTING_RECIPE_TYPE, AurorasDecoRegistry.WOODCUTTING_RECIPE_SERIALIZER,
+				id, group, input, output);
+	}
 
-    @Override
-    public boolean matches(Inventory inv, World world) {
-        return this.input.test(inv.getStack(0));
-    }
+	@Override
+	public boolean matches(Inventory inv, World world) {
+		return this.input.test(inv.getStack(0));
+	}
 
-    @Override
-    public ItemStack createIcon() {
-        return new ItemStack(AurorasDecoRegistry.SAWMILL_BLOCK);
-    }
+	@Override
+	public ItemStack createIcon() {
+		return new ItemStack(AurorasDecoRegistry.SAWMILL_BLOCK);
+	}
 
-    public static class Serializer implements RecipeSerializerExtended<WoodcuttingRecipe> {
-        private Serializer() {
-        }
+	public static class Serializer implements RecipeSerializerExtended<WoodcuttingRecipe> {
+		private Serializer() {
+		}
 
-        @Override
-        public WoodcuttingRecipe read(Identifier identifier, JsonObject json) {
-            var group = JsonHelper.getString(json, "group", "");
-            Ingredient ingredient;
-            if (JsonHelper.hasArray(json, "ingredient")) {
-                ingredient = Ingredient.fromJson(JsonHelper.getArray(json, "ingredient"));
-            } else {
-                ingredient = Ingredient.fromJson(JsonHelper.getObject(json, "ingredient"));
-            }
+		@Override
+		public WoodcuttingRecipe read(Identifier identifier, JsonObject json) {
+			var group = JsonHelper.getString(json, "group", "");
+			Ingredient ingredient;
+			if (JsonHelper.hasArray(json, "ingredient")) {
+				ingredient = Ingredient.fromJson(JsonHelper.getArray(json, "ingredient"));
+			} else {
+				ingredient = Ingredient.fromJson(JsonHelper.getObject(json, "ingredient"));
+			}
 
-            var resultId = JsonHelper.getString(json, "result");
-            int count = JsonHelper.getInt(json, "count");
-            var itemStack = new ItemStack(Registry.ITEM.get(new Identifier(resultId)), count);
-            return new WoodcuttingRecipe(identifier, group, ingredient, itemStack);
-        }
+			var resultId = JsonHelper.getString(json, "result");
+			int count = JsonHelper.getInt(json, "count");
+			var itemStack = new ItemStack(Registry.ITEM.get(new Identifier(resultId)), count);
+			return new WoodcuttingRecipe(identifier, group, ingredient, itemStack);
+		}
 
-        @Override
-        public WoodcuttingRecipe read(Identifier identifier, PacketByteBuf buf) {
-            var string = buf.readString(32767);
-            var ingredient = Ingredient.fromPacket(buf);
-            var itemStack = buf.readItemStack();
-            return new WoodcuttingRecipe(identifier, string, ingredient, itemStack);
-        }
+		@Override
+		public WoodcuttingRecipe read(Identifier identifier, PacketByteBuf buf) {
+			var string = buf.readString(32767);
+			var ingredient = Ingredient.fromPacket(buf);
+			var itemStack = buf.readItemStack();
+			return new WoodcuttingRecipe(identifier, string, ingredient, itemStack);
+		}
 
-        @Override
-        public void write(PacketByteBuf buf, WoodcuttingRecipe recipe) {
-            buf.writeString(recipe.group);
-            recipe.input.write(buf);
-            buf.writeItemStack(recipe.getOutput());
-        }
+		@Override
+		public void write(PacketByteBuf buf, WoodcuttingRecipe recipe) {
+			buf.writeString(recipe.group);
+			recipe.input.write(buf);
+			buf.writeItemStack(recipe.getOutput());
+		}
 
-        @Override
-        public JsonObject toJson(WoodcuttingRecipe recipe) {
-            var root = new JsonObject();
-            root.addProperty("type", AurorasDecoRegistry.WOODCUTTING_RECIPE_ID.toString());
-            if (!recipe.group.isEmpty())
-                root.addProperty("group", recipe.group);
+		@Override
+		public JsonObject toJson(WoodcuttingRecipe recipe) {
+			var root = new JsonObject();
+			root.addProperty("type", AurorasDecoRegistry.WOODCUTTING_RECIPE_ID.toString());
+			if (!recipe.group.isEmpty())
+				root.addProperty("group", recipe.group);
 
-            root.add("ingredient", recipe.input.toJson());
-            root.addProperty("result", Registry.ITEM.getId(recipe.getOutput().getItem()).toString());
-            root.addProperty("count", recipe.getOutput().getCount());
+			root.add("ingredient", recipe.input.toJson());
+			root.addProperty("result", Registry.ITEM.getId(recipe.getOutput().getItem()).toString());
+			root.addProperty("count", recipe.getOutput().getCount());
 
-            return root;
-        }
-    }
+			return root;
+		}
+	}
 }
