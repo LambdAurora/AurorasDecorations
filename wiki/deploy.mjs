@@ -335,8 +335,8 @@ function build_navigation(pages, current_page) {
 				build_navigational_tree(subtree, item);
 			tree.append_child(
 				html.create_element("li").with_attr("class", "wiki_nav_directory")
-				.with_child(entry.raw_title)
-				.with_child(subtree)
+					.with_child(entry.raw_title)
+					.with_child(subtree)
 			);
 		} else {
 			for (const h1 of entry.nav) {
