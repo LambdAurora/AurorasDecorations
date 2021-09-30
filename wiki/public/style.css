@@ -2,16 +2,21 @@
 
 .wiki_page {
 	display: flex;
+	flex-direction: row;
 	flex: 1 0 auto;
 	position: relative;
 }
 
+.wiki_page > .wiki_content {
+	flex: 1 1 auto;
+	overflow-y: auto;
+}
+
 .wiki_page > aside {
-	position: absolute;
+	position: sticky;
 	background-color: var(--ls_theme_background_accentuated);
 	min-width: 15%;
 	max-width: 20%;
-	height: 100%;
 	overflow-y: auto;
 }
 
@@ -58,7 +63,6 @@ li.wiki_nav_directory[open] > ul {
 @media(max-width: 900px) {
 	.wiki_page > aside {
 		display: none;
-		position: absolute;
 	}
 
 	.wiki_page > aside.opened {

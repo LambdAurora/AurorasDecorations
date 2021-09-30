@@ -160,25 +160,25 @@ async function deploy_markdown(markdown_pages, page_data) {
 		<!--Let browser know website is optimized for mobile-->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	</head>
-	<body>
-		<div class="wiki_page">
-			<aside>
-				${build_navigation(markdown_pages, page_data).html()}
-			</aside>
+	<body class="wiki_page">
+		<aside>
+			${build_navigation(markdown_pages, page_data).html()}
+		</aside>
+		<div class="wiki_content">
 			<main>
 				${page_data.main.inner_html()}
 			</main>
+			<footer class="ls_app_footer">
+				<div class="ls_app_footer_license">
+					<span>
+						Hosted on <a href="https://pages.github.com">GitHub Pages</a>.
+					</span>
+					<span>
+						Except where otherwise noted, content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">CC-BY 4.0 International License</a>.
+					</span>
+				</div>
+			</footer>
 		</div>
-		<footer class="ls_app_footer">
-			<div class="ls_app_footer_license">
-				<span>
-					Hosted on <a href="https://pages.github.com">GitHub Pages</a>.
-				</span>
-				<span>
-					Except where otherwise noted, content on this site is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">CC-BY 4.0 International License</a>.
-				</span>
-			</div>
-		</footer>
 
 		<script src="${relativize_from_root(page_data.path)}script.js"></script>
 	</body>
