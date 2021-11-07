@@ -9,4 +9,8 @@ and is licensed under the [Creative Commons CC0 license][cc0].
 
 Made by [Patbox](https://github.com/Patbox).
 
+## `textures/item/copper_sulfate.png`
+
+Made by [Kat](https://kat.blue).
+
 [cc0]: https://creativecommons.org/publicdomain/zero/1.0/
