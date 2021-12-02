@@ -278,11 +278,12 @@ public class BlackboardBlockEntity extends BlockEntity implements Nameable,
 		}
 	}
 
-	public void writeBlackBoardNbt(NbtCompound nbt) {
+	public NbtCompound writeBlackBoardNbt(NbtCompound nbt) {
 		this.blackboard.writeNbt(nbt);
 		if (this.customName != null) {
 			nbt.putString("custom_name", Text.Serializer.toJson(this.customName));
 		}
+		return nbt;
 	}
 
 	@Override

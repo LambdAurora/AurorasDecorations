@@ -350,8 +350,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 		if (blackboard != null) {
 			if (!world.isClient() && playerEntity.isCreative()) {
 				var stack = new ItemStack(this);
-				var nbt = new NbtCompound();
-				blackboard.writeBlackBoardNbt(nbt);
+				var nbt = blackboard.writeBlackBoardNbt(new NbtCompound());
 				nbt.remove("custom_name");
 				BlockItem.setBlockEntityNbt(stack, AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE, nbt);
 
@@ -374,8 +373,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 		var stack = super.getPickStack(world, pos, state);
 		var blackboard = this.getBlackboardEntity(world, pos);
 		if (blackboard != null) {
-			var nbt = new NbtCompound();
-			blackboard.writeBlackBoardNbt(nbt);
+			var nbt = blackboard.writeBlackBoardNbt(new NbtCompound());
 			nbt.remove("custom_name");
 			BlockItem.setBlockEntityNbt(stack, AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE, nbt);
 		}
