@@ -22,7 +22,6 @@ import dev.lambdaurora.aurorasdeco.item.SignPostItem;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPackets;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
@@ -30,6 +29,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -48,7 +48,7 @@ import java.util.UUID;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class SignPostBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
+public class SignPostBlockEntity extends BlockEntity implements BlockEntityHelper {
 	private Sign up;
 	private Sign down;
 	@Nullable
@@ -152,8 +152,19 @@ public class SignPostBlockEntity extends BlockEntity implements BlockEntityClien
 	}
 
 	@Override
-	public NbtCompound writeNbt(NbtCompound nbt) {
-		return super.writeNbt(this.writeSignPostNbt(nbt));
+	public void writeNbt(NbtCompound nbt) {
+		super.writeNbt(nbt);
+		this.writeSignPostNbt(nbt);
+	}
+
+	@Override
+	public NbtCompound toInitialChunkDataNbt() {
+		return this.createNbt();
+	}
+
+	@Override
+	public BlockEntityUpdateS2CPacket toUpdatePacket() {
+		return BlockEntityUpdateS2CPacket.create(this);
 	}
 
 	private void readSignPostNbt(NbtCompound nbt) {
@@ -173,16 +184,6 @@ public class SignPostBlockEntity extends BlockEntity implements BlockEntityClien
 			nbt.put("down_sign", this.down.toNbt());
 
 		return nbt;
-	}
-
-	@Override
-	public void fromClientTag(NbtCompound nbt) {
-		this.readSignPostNbt(nbt);
-	}
-
-	@Override
-	public NbtCompound toClientTag(NbtCompound nbt) {
-		return this.writeSignPostNbt(nbt);
 	}
 
 	private static Text unparsedTextFromJson(String json) {

@@ -3,8 +3,7 @@
   "package": "dev.lambdaurora.aurorasdeco.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "ForestFlowerBlockStateProviderAccessor",
-    "ForestFlowerBlockStateProviderMixin",
+    "ForestFlowerBlockListMixin",
     "ModResourcePackCreatorMixin",
     "PointOfInterestTypeMixin",
     "RecipeManagerMixin",

@@ -109,9 +109,9 @@ public class SignPostBlockEntityRenderer implements BlockEntityRenderer<SignPost
 			var text = list.isEmpty() ? OrderedText.EMPTY : list.get(0);
 			float x = -this.textRenderer.getWidth(text) / 2.f;
 			if (shouldRenderGlow) {
-				this.textRenderer.drawWithOutline(text, x, 0, color, backgroundColor, matrices.peek().getModel(), vertexConsumers, textLight);
+				this.textRenderer.drawWithOutline(text, x, 0, color, backgroundColor, matrices.peek().getPositionMatrix(), vertexConsumers, textLight);
 			} else {
-				this.textRenderer.draw(text, x, 0, color, false, matrices.peek().getModel(), vertexConsumers,
+				this.textRenderer.draw(text, x, 0, color, false, matrices.peek().getPositionMatrix(), vertexConsumers,
 						false, 0, textLight);
 			}
 		}
@@ -128,7 +128,7 @@ public class SignPostBlockEntityRenderer implements BlockEntityRenderer<SignPost
 		int blue = (int) (NativeImage.getBlue(signColor) * d);
 		return signColor == DyeColor.BLACK.getSignColor() && sign.isGlowing()
 				? GLOWING_BLACK_COLOR
-				: NativeImage.getAbgrColor(0, blue, green, red);
+				: NativeImage.packColor(0, blue, green, red);
 	}
 
 	private boolean shouldRender(SignPostBlockEntity sign, int signColor) {

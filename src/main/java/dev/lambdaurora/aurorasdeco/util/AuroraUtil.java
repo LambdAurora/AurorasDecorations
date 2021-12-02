@@ -21,6 +21,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
@@ -83,6 +87,21 @@ public final class AuroraUtil {
 		if (!id.getNamespace().equals("minecraft") && !id.getNamespace().equals("aurorasdeco"))
 			path = id.getNamespace() + '/' + path;
 		return AurorasDeco.id(prefix + '/' + path);
+	}
+
+	public static NbtCompound getOrCreateBlockEntityNbt(ItemStack stack, BlockEntityType<?> type) {
+		var nbt = BlockItem.getBlockEntityNbt(stack);
+		if (nbt == null) {
+			// setBlockEntityNbt only actually sets the nbt tag if it isn't empty.
+			// So we put in a dummy tag, because we actually want to *create* a new empty nbt tag.
+			var nbt2 = new NbtCompound();
+			nbt2.putBoolean("aurorasdeco_dummy", true);
+			BlockItem.setBlockEntityNbt(stack, type, nbt2);
+			nbt2.remove("aurorasdeco_dummy");
+			return nbt2;
+		} else {
+			return nbt;
+		}
 	}
 
 	/* State Utils */

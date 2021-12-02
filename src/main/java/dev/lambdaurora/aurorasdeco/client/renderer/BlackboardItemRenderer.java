@@ -66,7 +66,7 @@ public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.Dynam
 					false, matrices, vertexConsumers, light, overlay, maskModel);
 		}
 
-		var nbt = stack.getSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
+		var nbt = BlockItem.getBlockEntityNbt(stack);
 		if (nbt != null && nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
 			float z = .933f;
 			if (mode == Mode.HEAD) {
@@ -92,7 +92,7 @@ public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.Dynam
 
 			var blackboard = Blackboard.fromNbt(nbt);
 			BlackboardTexture.fromBlackboard(blackboard)
-					.render(matrices.peek().getModel(), vertexConsumers, blackboard.isLit() ? LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE : light);
+					.render(matrices.peek().getPositionMatrix(), vertexConsumers, blackboard.isLit() ? LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE : light);
 		}
 
 		matrices.pop();

@@ -91,7 +91,7 @@ public class BlackboardTexture {
 	public void update(Blackboard blackboard) {
 		for (int y = 0; y < 16; y++) {
 			for (int x = 0; x < 16; x++) {
-				this.texture.getImage().setPixelColor(x, y, blackboard.getColor(x, y));
+				this.texture.getImage().setColor(x, y, blackboard.getColor(x, y));
 			}
 		}
 		this.texture.upload();

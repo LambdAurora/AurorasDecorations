@@ -19,7 +19,9 @@ package dev.lambdaurora.aurorasdeco.item;
 
 import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.tooltip.BlackboardTooltipData;
+import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipData;
@@ -61,7 +63,7 @@ public class BlackboardItem extends BlockItem {
 		if (clickType == ClickType.RIGHT) {
 			if (otherStack.isOf(Items.WATER_BUCKET)
 					|| (otherStack.isOf(Items.POTION) && PotionUtil.getPotion(otherStack) == Potions.WATER)) {
-				var nbt = self.getOrCreateSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
+				var nbt = AuroraUtil.getOrCreateBlockEntityNbt(self, AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE);
 				var blackboard = Blackboard.fromNbt(nbt);
 				if (blackboard.isEmpty())
 					return false;
@@ -106,8 +108,8 @@ public class BlackboardItem extends BlockItem {
 	}
 
 	private ItemStack ensureValidStack(ItemStack stack) {
-		if (stack.getSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY) == null) {
-			var nbt = stack.getOrCreateSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
+		if (BlockItem.getBlockEntityNbt(stack) == null) {
+			var nbt = AuroraUtil.getOrCreateBlockEntityNbt(stack, AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE);
 			var blackboard = new Blackboard();
 			blackboard.writeNbt(nbt);
 		}
@@ -117,7 +119,7 @@ public class BlackboardItem extends BlockItem {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public Optional<TooltipData> getTooltipData(ItemStack stack) {
-		var nbt = stack.getSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
+		var nbt = BlockItem.getBlockEntityNbt(stack);
 		if (nbt != null && nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
 			var blackboard = Blackboard.fromNbt(nbt);
 			return Optional.of(new BlackboardTooltipData(

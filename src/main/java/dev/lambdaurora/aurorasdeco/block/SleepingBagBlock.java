@@ -174,7 +174,7 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
 				}
 			}
 
-			if (!BedBlock.isOverworld(world)) {
+			if (!BedBlock.isBedWorking(world)) {
 				var random = world.getRandom();
 				for (int i = 0; i < 4; i++) {
 					double x = pos.getX() + random.nextFloat();
@@ -194,7 +194,7 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
 			} else {
 				player.trySleep(pos).ifLeft((sleepFailureReason) -> {
 					if (sleepFailureReason != null) {
-						player.sendMessage(sleepFailureReason.toText(), true);
+						player.sendMessage(sleepFailureReason.getMessage(), true);
 					}
 
 				});

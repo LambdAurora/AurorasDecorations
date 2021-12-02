@@ -28,7 +28,6 @@ import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix4f;
@@ -70,14 +69,14 @@ public class BlackboardTooltipComponent implements TooltipComponent {
 
 	@Override
 	public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices,
-	                      ItemRenderer itemRenderer, int z, TextureManager textureManager) {
+	                      ItemRenderer itemRenderer, int z) {
 		var vertexConsumers = this.client.getBufferBuilders().getEntityVertexConsumers();
 		matrices.push();
 		matrices.translate(x, y, z);
 		matrices.scale(128.f, 128.f, 1);
 
 		int light = 15728880;
-		var model = matrices.peek().getModel();
+		var model = matrices.peek().getPositionMatrix();
 
 		this.quad(this.background, 0.f, 0.f, 1.f, 1.f, model, vertexConsumers, light);
 
@@ -86,7 +85,7 @@ public class BlackboardTooltipComponent implements TooltipComponent {
 		if (this.blackboard.isLit()) {
 			matrices.push();
 			matrices.translate(0, 0, 1);
-			model = matrices.peek().getModel();
+			model = matrices.peek().getPositionMatrix();
 
 			var glow = RenderLayer.getText(GLOW_TEXTURE);
 
@@ -104,7 +103,7 @@ public class BlackboardTooltipComponent implements TooltipComponent {
 		if (this.locked) {
 			matrices.translate(.5f, .5f, 1);
 			matrices.scale(.5f, .5f, 1.f);
-			model = matrices.peek().getModel();
+			model = matrices.peek().getPositionMatrix();
 			RenderLayer locked = RenderLayer.getText(LOCK_ICON_TEXTURE);
 			this.quad(locked, 0.f, .6484375f, .2421875f, .890625f, model, vertexConsumers, light);
 		}

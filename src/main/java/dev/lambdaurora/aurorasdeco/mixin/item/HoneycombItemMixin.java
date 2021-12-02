@@ -56,7 +56,9 @@ public class HoneycombItemMixin {
 		if (state.getBlock() instanceof BlackboardBlock) {
 			var blockEntity = AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE.get(world, pos);
 			if (blockEntity != null && !(blockEntity.isEmpty() && !blockEntity.hasCustomName())) {
-				aurorasdeco$blockEntityData.set(blockEntity.writeBlackBoardNbt(new NbtCompound()));
+				var nbt = new NbtCompound();
+				blockEntity.writeBlackBoardNbt(nbt);
+				aurorasdeco$blockEntityData.set(nbt);
 			}
 		}
 	}

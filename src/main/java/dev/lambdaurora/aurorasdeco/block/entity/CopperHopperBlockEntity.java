@@ -87,11 +87,11 @@ public class CopperHopperBlockEntity extends FilteredHopperBlockEntity {
 	}
 
 	@Override
-	public NbtCompound writeNbt(NbtCompound nbt) {
+	public void writeNbt(NbtCompound nbt) {
+		super.writeNbt(nbt);
 		var filter = this.getFilter();
 		if (!filter.isEmpty())
 			nbt.put("filter", filter.writeNbt(new NbtCompound()));
-		return super.writeNbt(nbt);
 	}
 
 	public interface Filter {

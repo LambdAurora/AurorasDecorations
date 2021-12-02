@@ -62,7 +62,7 @@ public class BakedBlackboardModel extends ForwardingBakedModel {
 	public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
 		super.emitItemQuads(stack, randomSupplier, context);
 
-		var nbt = stack.getSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
+		var nbt = BlockItem.getBlockEntityNbt(stack);
 		if (nbt != null && nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
 			var blackboard = Blackboard.fromNbt(nbt);
 			context.meshConsumer().accept(blackboard.buildMesh(Direction.NORTH, blackboard.isLit() ? LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE : 0));
