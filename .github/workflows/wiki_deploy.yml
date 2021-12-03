@@ -1,6 +1,6 @@
 name: 'Wiki Deploy'
 
-on: [push]
+on: [ push ]
 
 jobs:
   build:
