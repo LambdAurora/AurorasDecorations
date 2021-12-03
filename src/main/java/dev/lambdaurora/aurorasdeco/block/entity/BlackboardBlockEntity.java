@@ -254,14 +254,18 @@ public class BlackboardBlockEntity extends BlockEntity implements Nameable,
 		super.readNbt(nbt);
 		this.readBlackBoardNbt(nbt);
 		this.lastUser = null;
-		this.rebuildMesh();
 		if (this.world != null && this.world instanceof ClientWorld) {
-			((ClientWorld) this.world).scheduleBlockRenders(
-					ChunkSectionPos.getSectionCoord(this.getPos().getX()),
-					ChunkSectionPos.getSectionCoord(this.getPos().getY()),
-					ChunkSectionPos.getSectionCoord(this.getPos().getZ())
-			);
+			this.refreshRendering();
 		}
+	}
+
+	public void refreshRendering() {
+		this.rebuildMesh();
+		((ClientWorld) this.world).scheduleBlockRenders(
+				ChunkSectionPos.getSectionCoord(this.getPos().getX()),
+				ChunkSectionPos.getSectionCoord(this.getPos().getY()),
+				ChunkSectionPos.getSectionCoord(this.getPos().getZ())
+		);
 	}
 
 	@Override
