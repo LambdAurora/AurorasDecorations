@@ -102,7 +102,7 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
 
 	public SleepingBagBlock(DyeColor color) {
 		super(FabricBlockSettings.of(Material.WOOL, color.getMapColor())
-				.strength(.5f).breakByTool(FabricToolTags.SHEARS)
+				.strength(.5f)
 				.sounds(BlockSoundGroup.WOOL));
 
 		this.color = color;
