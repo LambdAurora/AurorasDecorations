@@ -173,7 +173,8 @@ public final class ColorUtil {
 	public static IntList getPaletteFromImage(NativeImage image) {
 		var colors = getColorsFromImage(image);
 
-		return new IntArrayList(colors.stream().sorted((color0, color1) -> {
+		// convert the IntStream into a generic stream using `boxed` to be able to supply a custom ordering
+		return new IntArrayList(colors.intStream().boxed().sorted((color0, color1) -> {
 			var lum0 = luminance(color0);
 			var lum1 = luminance(color1);
 

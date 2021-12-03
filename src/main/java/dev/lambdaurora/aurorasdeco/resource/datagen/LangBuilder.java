@@ -117,8 +117,7 @@ public class LangBuilder {
 		}
 
 		public static LangManifest from(String langCode, InputStream stream) {
-			var parser = new JsonParser();
-			var json = parser.parse(new InputStreamReader(stream)).getAsJsonObject();
+			var json = JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject();
 			var manifest = new LangManifest(langCode);
 			json.entrySet().forEach(entry -> {
 				if (entry.getValue().isJsonPrimitive())

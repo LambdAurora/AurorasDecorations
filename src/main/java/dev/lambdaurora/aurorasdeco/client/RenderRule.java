@@ -60,7 +60,6 @@ public record RenderRule(List<Model> models) {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final Map<Identifier, RenderRule> ITEM_RULES = new Object2ObjectOpenHashMap<>();
 	private static final Map<Tag<Item>, RenderRule> TAG_RULES = new Object2ObjectOpenHashMap<>();
-	private static final JsonParser PARSER = new JsonParser();
 
 	public @Nullable Model getModelId(ItemStack stack, BlockState state, long seed) {
 		if (this.models.size() == 1) {
@@ -126,7 +125,7 @@ public record RenderRule(List<Model> models) {
 		manager.findResources("aurorasdeco_render_rules", path -> path.endsWith(".json")).forEach(id -> {
 			try {
 				var resource = manager.getResource(id);
-				var element = PARSER.parse(new InputStreamReader(resource.getInputStream()));
+				var element = JsonParser.parseReader(new InputStreamReader(resource.getInputStream()));
 				if (element.isJsonObject()) {
 					var root = element.getAsJsonObject();
 
