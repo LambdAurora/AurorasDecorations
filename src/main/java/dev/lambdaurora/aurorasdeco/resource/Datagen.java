@@ -801,14 +801,14 @@ public final class Datagen {
 
 				for (int y = 0; y < defaultTexture.getHeight(); y++) {
 					for (int x = 0; x < defaultTexture.getWidth(); x++) {
-						var paletteIndex = defaultPalette.indexOf(defaultTexture.getPixelColor(x, y));
+						var paletteIndex = defaultPalette.indexOf(defaultTexture.getColor(x, y));
 
 						if (paletteIndex < 0)
 							continue;
 						else if (paletteIndex >= woodPalette.size())
 							paletteIndex = woodPalette.size() - 1;
 
-						outputImage.setPixelColor(x, y, woodPalette.getInt(paletteIndex));
+						outputImage.setColor(x, y, woodPalette.getInt(paletteIndex));
 					}
 				}
 

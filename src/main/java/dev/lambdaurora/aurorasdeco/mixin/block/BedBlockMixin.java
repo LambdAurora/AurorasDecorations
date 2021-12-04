@@ -28,7 +28,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BedBlock.class)
 public class BedBlockMixin {
-	@Inject(method = "isBed", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "isBedBelow", at = @At("HEAD"), cancellable = true)
 	private static void onIsBed(BlockView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
 		if (world.getBlockState(pos).getBlock() instanceof SleepingBagBlock)
 			cir.setReturnValue(true);

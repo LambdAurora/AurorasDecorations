@@ -32,10 +32,10 @@
     "aurorasdeco.mixins.json"
   ],
   "depends": {
-    "minecraft": ">=1.17",
-    "fabricloader": ">=0.11.3",
-    "fabric": ">=0.40.0",
-    "java": ">=16"
+    "minecraft": ">=1.18",
+    "fabricloader": ">=0.12.8",
+    "fabric": ">=0.43.1",
+    "java": ">=17"
   },
   "suggests": {
     "trinkets": ">=3.0.2"

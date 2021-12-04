@@ -228,9 +228,9 @@ public class SignPostEditScreen extends Screen {
 			var text = OrderedText.styledForwardsVisitedString(rowText, Style.EMPTY);
 			float x = -this.textRenderer.getWidth(text) / 2.f;
 			if (glowing) {
-				this.textRenderer.drawWithOutline(text, x, 0, color, backgroundColor, matrices.peek().getModel(), vertexConsumers, light);
+				this.textRenderer.drawWithOutline(text, x, 0, color, backgroundColor, matrices.peek().getPositionMatrix(), vertexConsumers, light);
 			} else {
-				this.textRenderer.draw(text, x, 0, color, false, matrices.peek().getModel(), vertexConsumers,
+				this.textRenderer.draw(text, x, 0, color, false, matrices.peek().getPositionMatrix(), vertexConsumers,
 						false, 0, light);
 			}
 
@@ -246,9 +246,9 @@ public class SignPostEditScreen extends Screen {
 					int cursorX = o + (int) x;
 					if (selectionStart >= rowText.length()) {
 						if (glowing) {
-							this.textRenderer.drawWithOutline(END_CURSOR, cursorX, 0, color, backgroundColor, matrices.peek().getModel(), vertexConsumers, light);
+							this.textRenderer.drawWithOutline(END_CURSOR, cursorX, 0, color, backgroundColor, matrices.peek().getPositionMatrix(), vertexConsumers, light);
 						} else {
-							this.textRenderer.draw(END_CURSOR, cursorX, 0, color, false, matrices.peek().getModel(), vertexConsumers,
+							this.textRenderer.draw(END_CURSOR, cursorX, 0, color, false, matrices.peek().getPositionMatrix(), vertexConsumers,
 									false, 0, light);
 						}
 						vertexConsumers.draw();
@@ -261,7 +261,7 @@ public class SignPostEditScreen extends Screen {
 				}
 
 				if (selectionStart != selectionEnd) {
-					var model = matrices.peek().getModel();
+					var model = matrices.peek().getPositionMatrix();
 
 					int start = Math.min(selectionStart, selectionEnd);
 					int end = Math.max(selectionStart, selectionEnd);

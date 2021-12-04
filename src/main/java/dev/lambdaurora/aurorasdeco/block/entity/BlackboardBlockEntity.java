@@ -24,7 +24,6 @@ import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 import net.fabricmc.fabric.api.util.NbtType;
@@ -34,6 +33,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -51,8 +51,8 @@ import java.util.Set;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class BlackboardBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Nameable,
-		RenderAttachmentBlockEntity, BlackboardHandler {
+public class BlackboardBlockEntity extends BlockEntity implements Nameable,
+		RenderAttachmentBlockEntity, BlackboardHandler, BlockEntityHelper {
 	@Environment(EnvType.CLIENT)
 	private static final Set<BlackboardBlockEntity> ACTIVE_BLACKBOARDS = new ObjectOpenHashSet<>();
 	private final Blackboard blackboard = new AssignedBlackboard();
@@ -254,11 +254,24 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
 		super.readNbt(nbt);
 		this.readBlackBoardNbt(nbt);
 		this.lastUser = null;
+		if (this.world != null && this.world instanceof ClientWorld) {
+			this.refreshRendering();
+		}
+	}
+
+	public void refreshRendering() {
+		this.rebuildMesh();
+		((ClientWorld) this.world).scheduleBlockRenders(
+				ChunkSectionPos.getSectionCoord(this.getPos().getX()),
+				ChunkSectionPos.getSectionCoord(this.getPos().getY()),
+				ChunkSectionPos.getSectionCoord(this.getPos().getZ())
+		);
 	}
 
 	@Override
-	public NbtCompound writeNbt(NbtCompound nbt) {
-		return this.writeBlackBoardNbt(super.writeNbt(nbt));
+	public void writeNbt(NbtCompound nbt) {
+		super.writeNbt(nbt);
+		this.writeBlackBoardNbt(nbt);
 	}
 
 	public void readBlackBoardNbt(NbtCompound nbt) {
@@ -278,20 +291,13 @@ public class BlackboardBlockEntity extends BlockEntity implements BlockEntityCli
 	}
 
 	@Override
-	public void fromClientTag(NbtCompound nbt) {
-		this.readBlackBoardNbt(nbt);
-
-		this.rebuildMesh();
-		((ClientWorld) this.world).scheduleBlockRenders(
-				ChunkSectionPos.getSectionCoord(this.getPos().getX()),
-				ChunkSectionPos.getSectionCoord(this.getPos().getY()),
-				ChunkSectionPos.getSectionCoord(this.getPos().getZ())
-		);
+	public BlockEntityUpdateS2CPacket toUpdatePacket() {
+		return BlockEntityUpdateS2CPacket.create(this);
 	}
 
 	@Override
-	public NbtCompound toClientTag(NbtCompound nbt) {
-		return this.writeBlackBoardNbt(nbt);
+	public NbtCompound toInitialChunkDataNbt() {
+		return this.createNbt();
 	}
 
 	private class AssignedBlackboard extends Blackboard {

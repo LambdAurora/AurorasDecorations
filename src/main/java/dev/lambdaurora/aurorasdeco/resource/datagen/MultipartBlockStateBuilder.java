@@ -55,7 +55,7 @@ public class MultipartBlockStateBuilder {
 		block.add("when", whenBlock);
 
 		for (var val : when) {
-			whenBlock.addProperty(val.getProperty().getName(), val.toString().split("=")[1]);
+			whenBlock.addProperty(val.property().getName(), val.toString().split("=")[1]);
 		}
 
 		this.multipartJson.add(block);
@@ -75,7 +75,7 @@ public class MultipartBlockStateBuilder {
 			var conditionBlock = new JsonObject();
 			or.add(conditionBlock);
 			for (var val : condition.when()) {
-				conditionBlock.addProperty(val.getProperty().getName(), val.toString().split("=")[1]);
+				conditionBlock.addProperty(val.property().getName(), val.toString().split("=")[1]);
 			}
 		}
 

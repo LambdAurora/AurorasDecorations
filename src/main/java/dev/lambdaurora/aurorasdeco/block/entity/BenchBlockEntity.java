@@ -20,7 +20,6 @@ package dev.lambdaurora.aurorasdeco.block.entity;
 import dev.lambdaurora.aurorasdeco.block.BenchBlock;
 import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -28,6 +27,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class BenchBlockEntity extends BlockEntity implements BlockEntityClientSerializable, RenderAttachmentBlockEntity {
+public class BenchBlockEntity extends BlockEntity implements RenderAttachmentBlockEntity {
 	private SeatRestItem rest;
 
 	public BenchBlockEntity(BlockPos pos, BlockState state) {
@@ -121,8 +121,9 @@ public class BenchBlockEntity extends BlockEntity implements BlockEntityClientSe
 	}
 
 	@Override
-	public NbtCompound writeNbt(NbtCompound nbt) {
-		return super.writeNbt(this.writeBenchNbt(nbt));
+	public void writeNbt(NbtCompound nbt) {
+		super.writeNbt(nbt);
+		this.writeBenchNbt(nbt);
 	}
 
 	private void readBenchNbt(NbtCompound nbt) {
@@ -142,25 +143,18 @@ public class BenchBlockEntity extends BlockEntity implements BlockEntityClientSe
 		}
 	}
 
-	private NbtCompound writeBenchNbt(NbtCompound nbt) {
+	private void writeBenchNbt(NbtCompound nbt) {
 		if (this.rest != null)
 			nbt.putString("rest", Registry.ITEM.getId(this.rest).toString());
-		return nbt;
 	}
 
 	@Override
-	public void fromClientTag(NbtCompound nbt) {
-		this.readBenchNbt(nbt);
-
-		((ClientWorld) this.world).scheduleBlockRenders(
-				ChunkSectionPos.getSectionCoord(this.getPos().getX()),
-				ChunkSectionPos.getSectionCoord(this.getPos().getY()),
-				ChunkSectionPos.getSectionCoord(this.getPos().getZ())
-		);
+	public NbtCompound toInitialChunkDataNbt() {
+		return this.createNbt();
 	}
 
 	@Override
-	public NbtCompound toClientTag(NbtCompound nbt) {
-		return this.writeBenchNbt(nbt);
+	public BlockEntityUpdateS2CPacket toUpdatePacket() {
+		return BlockEntityUpdateS2CPacket.create(this);
 	}
 }

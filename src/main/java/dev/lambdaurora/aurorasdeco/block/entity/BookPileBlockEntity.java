@@ -18,12 +18,12 @@
 package dev.lambdaurora.aurorasdeco.block.entity;
 
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 
@@ -34,7 +34,7 @@ import net.minecraft.util.math.BlockPos;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class BookPileBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
+public class BookPileBlockEntity extends BlockEntity {
 	private final DefaultedList<ItemStack> books = DefaultedList.ofSize(5, ItemStack.EMPTY);
 
 	public BookPileBlockEntity(BlockPos pos, BlockState state) {
@@ -77,22 +77,22 @@ public class BookPileBlockEntity extends BlockEntity implements BlockEntityClien
 	@Override
 	public void readNbt(NbtCompound nbt) {
 		super.readNbt(nbt);
-		this.fromClientTag(nbt);
-	}
-
-	@Override
-	public NbtCompound writeNbt(NbtCompound nbt) {
-		return this.toClientTag(super.writeNbt(nbt));
-	}
-
-	@Override
-	public void fromClientTag(NbtCompound nbt) {
 		Inventories.readNbt(nbt, this.books);
 	}
 
 	@Override
-	public NbtCompound toClientTag(NbtCompound nbt) {
+	public void writeNbt(NbtCompound nbt) {
+		super.writeNbt(nbt);
 		Inventories.writeNbt(nbt, this.books);
-		return nbt;
+	}
+
+	@Override
+	public NbtCompound toInitialChunkDataNbt() {
+		return this.createNbt();
+	}
+
+	@Override
+	public BlockEntityUpdateS2CPacket toUpdatePacket() {
+		return BlockEntityUpdateS2CPacket.create(this);
 	}
 }

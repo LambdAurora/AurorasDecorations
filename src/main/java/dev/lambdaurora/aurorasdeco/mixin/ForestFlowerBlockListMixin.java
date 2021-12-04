@@ -17,22 +17,21 @@
 
 package dev.lambdaurora.aurorasdeco.mixin;
 
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.minecraft.block.BlockState;
-import net.minecraft.world.gen.stateprovider.ForestFlowerBlockStateProvider;
+import net.minecraft.world.gen.feature.VegetationConfiguredFeatures;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Mixin(ForestFlowerBlockStateProvider.class)
-public interface ForestFlowerBlockStateProviderAccessor {
-	@Accessor("FLOWERS")
-	static BlockState[] getFlowers() {
-		throw new UnsupportedOperationException("Mixin injection failed.");
-	}
+import java.util.Arrays;
 
-	@Mutable
-	@Accessor("FLOWERS")
-	static void setFlowers(BlockState[] flowers) {
-		throw new UnsupportedOperationException("Mixin injection failed.");
-	}
+@Mixin(VegetationConfiguredFeatures.class)
+public class ForestFlowerBlockListMixin {
+    @ModifyArg(method = "method_39726", at = @At(value = "INVOKE", target = "Ljava/util/List;of([Ljava/lang/Object;)Ljava/util/List;"), remap = false)
+    private static Object[] addAurorasDecoFlowers(Object[] states) {
+        var newStates = Arrays.copyOf((BlockState[]) states, states.length+1);
+        newStates[states.length] = AurorasDecoRegistry.DAFFODIL.getDefaultState();
+        return newStates;
+    }
 }

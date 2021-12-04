@@ -20,7 +20,6 @@ package dev.lambdaurora.aurorasdeco.block.entity;
 import dev.lambdaurora.aurorasdeco.block.ShelfBlock;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.screen.ShelfScreenHandler;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
@@ -29,6 +28,7 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -44,7 +44,7 @@ import net.minecraft.util.math.BlockPos;
  * @since 1.0.0
  */
 public class ShelfBlockEntity extends LootableContainerBlockEntity
-		implements BlockEntityClientSerializable, ExtendedScreenHandlerFactory {
+		implements ExtendedScreenHandlerFactory, BlockEntityHelper {
 	private DefaultedList<ItemStack> inventory;
 
 	public ShelfBlockEntity(BlockPos pos, BlockState state) {
@@ -74,29 +74,21 @@ public class ShelfBlockEntity extends LootableContainerBlockEntity
 	}
 
 	@Override
-	public NbtCompound writeNbt(NbtCompound nbt) {
+	public void writeNbt(NbtCompound nbt) {
 		super.writeNbt(nbt);
 		if (!this.serializeLootTable(nbt)) {
 			Inventories.writeNbt(nbt, this.inventory);
 		}
-
-		return nbt;
 	}
 
 	@Override
-	public void fromClientTag(NbtCompound nbt) {
-		this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-		if (!this.deserializeLootTable(nbt)) {
-			Inventories.readNbt(nbt, this.inventory);
-		}
+	public NbtCompound toInitialChunkDataNbt() {
+		return this.createNbt();
 	}
 
 	@Override
-	public NbtCompound toClientTag(NbtCompound nbt) {
-		if (!this.serializeLootTable(nbt)) {
-			Inventories.writeNbt(nbt, this.inventory);
-		}
-		return nbt;
+	public BlockEntityUpdateS2CPacket toUpdatePacket() {
+		return BlockEntityUpdateS2CPacket.create(this);
 	}
 
 	/* Inventory */

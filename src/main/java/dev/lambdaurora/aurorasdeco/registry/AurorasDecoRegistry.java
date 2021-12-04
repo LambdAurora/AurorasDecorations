@@ -31,7 +31,6 @@ import dev.lambdaurora.aurorasdeco.item.BlackboardItem;
 import dev.lambdaurora.aurorasdeco.item.DerivedBlockItem;
 import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
 import dev.lambdaurora.aurorasdeco.item.SignPostItem;
-import dev.lambdaurora.aurorasdeco.mixin.ForestFlowerBlockStateProviderAccessor;
 import dev.lambdaurora.aurorasdeco.mixin.SimpleRegistryAccessor;
 import dev.lambdaurora.aurorasdeco.recipe.BlackboardCloneRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.ExplodingRecipe;
@@ -72,7 +71,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
 
-import java.util.Arrays;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -316,12 +314,6 @@ public final class AurorasDecoRegistry {
 
 	public static final DaffodilBlock DAFFODIL = Registrar.register("daffodil", new DaffodilBlock())
 			.withItem(new FabricItemSettings().group(ItemGroup.DECORATIONS), DerivedBlockItem::flower)
-			.then(block -> {
-				int aurorasDecoStart = ForestFlowerBlockStateProviderAccessor.getFlowers().length;
-				var flowers = Arrays.copyOf(ForestFlowerBlockStateProviderAccessor.getFlowers(), aurorasDecoStart + 1);
-				flowers[aurorasDecoStart] = block.getDefaultState();
-				ForestFlowerBlockStateProviderAccessor.setFlowers(flowers);
-			})
 			.finish();
 
 	/* Potted Plants */

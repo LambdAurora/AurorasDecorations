@@ -129,7 +129,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 		var pos = ctx.getBlockPos();
 		var directions = ctx.getPlacementDirections();
 
-		var nbt = ctx.getStack().getSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
+		var nbt = BlockItem.getBlockEntityNbt(ctx.getStack());
 		if (nbt != null && nbt.contains("lit")) {
 			state = state.with(LIT, nbt.getBoolean("lit"));
 		}
@@ -165,7 +165,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 				blackboard.setCustomName(stack.getName());
 			}
 
-			var nbt = stack.getSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY);
+			var nbt = BlockItem.getBlockEntityNbt(stack);;
 			if (state.get(WATERLOGGED) && !this.isLocked())
 				return;
 
@@ -183,7 +183,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState,
 	                                            WorldAccess world, BlockPos pos, BlockPos posFrom) {
 		if (state.get(WATERLOGGED)) {
-			world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+			world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
 		}
 
 		if (direction.getOpposite() == state.get(FACING) && !state.canPlaceAt(world, pos))
@@ -352,7 +352,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 				var stack = new ItemStack(this);
 				var nbt = blackboard.writeBlackBoardNbt(new NbtCompound());
 				nbt.remove("custom_name");
-				stack.setSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY, nbt);
+				BlockItem.setBlockEntityNbt(stack, AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE, nbt);
 
 				if (blackboard.hasCustomName()) {
 					stack.setCustomName(blackboard.getCustomName());
@@ -375,7 +375,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 		if (blackboard != null) {
 			var nbt = blackboard.writeBlackBoardNbt(new NbtCompound());
 			nbt.remove("custom_name");
-			stack.setSubNbt(BlockItem.BLOCK_ENTITY_TAG_KEY, nbt);
+			BlockItem.setBlockEntityNbt(stack, AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE, nbt);
 		}
 
 		return stack;
@@ -421,7 +421,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 
 			if (!world.isClient()) {
 				world.setBlockState(pos, state.with(Properties.WATERLOGGED, true), Block.NOTIFY_ALL);
-				world.getFluidTickScheduler().schedule(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
+				world.createAndScheduleFluidTick(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
 
 				var blackboard = this.getBlackboardEntity(world, pos);
 				if (blackboard != null && !this.isLocked()) {

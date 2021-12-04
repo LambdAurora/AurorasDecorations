@@ -159,7 +159,7 @@ public final class ColorUtil {
 
 		for (int y = 0; y < image.getHeight(); y++) {
 			for (int x = 0; x < image.getWidth(); x++) {
-				int color = image.getPixelColor(x, y);
+				int color = image.getColor(x, y);
 
 				if (argbUnpackAlpha(color) == 255) {
 					colors.add(color);
@@ -173,7 +173,8 @@ public final class ColorUtil {
 	public static IntList getPaletteFromImage(NativeImage image) {
 		var colors = getColorsFromImage(image);
 
-		return new IntArrayList(colors.stream().sorted((color0, color1) -> {
+		// convert the IntStream into a generic stream using `boxed` to be able to supply a custom ordering
+		return new IntArrayList(colors.intStream().boxed().sorted((color0, color1) -> {
 			var lum0 = luminance(color0);
 			var lum1 = luminance(color1);
 
