@@ -92,8 +92,11 @@ public final class AuroraUtil {
 	public static NbtCompound getOrCreateBlockEntityNbt(ItemStack stack, BlockEntityType<?> type) {
 		var nbt = BlockItem.getBlockEntityNbt(stack);
 		if (nbt == null) {
-			// setBlockEntityNbt only actually sets the nbt tag if it isn't empty.
-			// So we put in a dummy tag, because we actually want to *create* a new empty nbt tag.
+			/* setBlockEntityNbt only actually sets the nbt tag if it isn't empty.
+			   We want to hit the code path to set the nbt tag. So we add a dummy boolean to our tag,
+			    call the method to add it (which actually adds it because it's not empty),
+			    and then remove the dummy boolean again.
+			 */
 			var nbt2 = new NbtCompound();
 			nbt2.putBoolean("aurorasdeco_dummy", true);
 			BlockItem.setBlockEntityNbt(stack, type, nbt2);
