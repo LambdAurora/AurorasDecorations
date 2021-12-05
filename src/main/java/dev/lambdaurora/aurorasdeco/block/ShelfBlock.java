@@ -21,7 +21,6 @@ import com.google.common.collect.ImmutableMap;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
@@ -49,6 +48,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.*;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -365,10 +365,10 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
 		return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));
 	}
 
-	private static FabricBlockSettings settings(WoodType woodType) {
+	private static QuiltBlockSettings settings(WoodType woodType) {
 		var planks = woodType.getComponent(WoodType.ComponentType.PLANKS);
 		if (planks == null) throw new IllegalStateException("ShelfBlock attempted to be created while the wood type is invalid.");
-		return FabricBlockSettings.copyOf(planks.block())
+		return QuiltBlockSettings.copyOf(planks.block())
 				.collidable(true)
 				.nonOpaque();
 	}

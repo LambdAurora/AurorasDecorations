@@ -21,8 +21,6 @@ import com.google.common.collect.ImmutableMap;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.accessor.PointOfInterestTypeAccessor;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.entity.Entity;
@@ -53,6 +51,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.poi.PointOfInterestType;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -101,7 +100,7 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
 	private final DyeColor color;
 
 	public SleepingBagBlock(DyeColor color) {
-		super(FabricBlockSettings.of(Material.WOOL, color.getMapColor())
+		super(QuiltBlockSettings.of(Material.WOOL, color.getMapColor())
 				.strength(.5f)
 				.sounds(BlockSoundGroup.WOOL));
 

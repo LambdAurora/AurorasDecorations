@@ -18,11 +18,11 @@
 package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.block.behavior.CopperSulfateBehavior;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.BlockState;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.Random;
 
@@ -34,7 +34,7 @@ import java.util.Random;
  * @since 1.0.0
  */
 public class CopperSulfateBrazierBlock extends BrazierBlock {
-	public CopperSulfateBrazierBlock(FabricBlockSettings settings, int fireDamage, ParticleEffect particle) {
+	public CopperSulfateBrazierBlock(QuiltBlockSettings settings, int fireDamage, ParticleEffect particle) {
 		super(settings.ticksRandomly(), fireDamage, particle);
 	}
 

@@ -19,7 +19,6 @@ package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoSounds;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoTags;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -47,6 +46,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.Random;
 
@@ -80,7 +80,7 @@ public class BrazierBlock extends Block implements Waterloggable {
 	private final int fireDamage;
 
 	public BrazierBlock(MapColor color, int fireDamage, int luminance, ParticleEffect particle) {
-		this(FabricBlockSettings.of(Material.DECORATION, color)
+		this(QuiltBlockSettings.of(Material.DECORATION, color)
 						.strength(2.f)
 						.nonOpaque()
 						.luminance(state -> state.get(LIT) ? luminance : 0)
@@ -88,7 +88,7 @@ public class BrazierBlock extends Block implements Waterloggable {
 				fireDamage, particle);
 	}
 
-	public BrazierBlock(FabricBlockSettings settings, int fireDamage, ParticleEffect particle) {
+	public BrazierBlock(QuiltBlockSettings settings, int fireDamage, ParticleEffect particle) {
 		super(settings);
 
 		this.fireDamage = fireDamage;

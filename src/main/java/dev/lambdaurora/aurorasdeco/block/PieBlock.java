@@ -18,7 +18,6 @@
 package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.accessor.ItemExtensions;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -39,6 +38,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.event.GameEvent;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 /**
  * Represents a pie block.
@@ -64,7 +64,7 @@ public class PieBlock extends Block {
 	private final FoodComponent foodComponent;
 
 	public PieBlock(FoodComponent foodComponent) {
-		this(FabricBlockSettings.of(Material.CAKE).strength(0.5f).sounds(BlockSoundGroup.WOOL), foodComponent);
+		this(QuiltBlockSettings.of(Material.CAKE).strength(0.5f).sounds(BlockSoundGroup.WOOL), foodComponent);
 	}
 
 	public PieBlock(Settings settings, FoodComponent foodComponent) {

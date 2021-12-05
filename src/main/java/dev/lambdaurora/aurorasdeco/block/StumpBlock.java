@@ -19,7 +19,6 @@ package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -43,6 +42,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,10 +139,10 @@ public class StumpBlock extends Block implements SeatBlock, Waterloggable {
 		return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
 	}
 
-	private static FabricBlockSettings settings(WoodType woodType) {
+	private static QuiltBlockSettings settings(WoodType woodType) {
 		var log = woodType.getComponent(WoodType.ComponentType.LOG);
 		if (log == null) throw new IllegalStateException("StumpBlock attempted to be created while the wood type is invalid.");
-		return FabricBlockSettings.copyOf(log.block())
+		return QuiltBlockSettings.copyOf(log.block())
 				.mapColor(log.mapColor())
 				.nonOpaque();
 	}

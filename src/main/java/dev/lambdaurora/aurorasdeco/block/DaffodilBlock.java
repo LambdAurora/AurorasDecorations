@@ -17,7 +17,6 @@
 
 package dev.lambdaurora.aurorasdeco.block;
 
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FlowerBlock;
@@ -36,6 +35,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ public final class DaffodilBlock extends FlowerBlock {
 
 	public DaffodilBlock() {
 		super(StatusEffects.NAUSEA, 8,
-				FabricBlockSettings.of(Material.PLANT)
+				QuiltBlockSettings.of(Material.PLANT)
 						.noCollision()
 						.breakInstantly()
 						.sounds(BlockSoundGroup.GRASS)

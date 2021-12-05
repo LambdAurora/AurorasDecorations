@@ -19,7 +19,6 @@ package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.mixin.block.VineBlockAccessor;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -35,6 +34,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.Random;
 
@@ -50,7 +50,7 @@ import java.util.Random;
 public final class BurntVineBlock extends VineBlock {
 	public BurntVineBlock() {
 		super(
-				FabricBlockSettings.of(Material.REPLACEABLE_PLANT)
+				QuiltBlockSettings.of(Material.REPLACEABLE_PLANT)
 						.noCollision()
 						.strength(.2f)
 						.sounds(BlockSoundGroup.VINE)

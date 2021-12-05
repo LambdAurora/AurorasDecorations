@@ -21,7 +21,6 @@ import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.mixin.block.BlockAccessor;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -45,6 +44,7 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +71,7 @@ public class HangingFlowerPotBlock extends Block {
 	private final FlowerPotBlock flowerPot;
 
 	public HangingFlowerPotBlock(FlowerPotBlock flowerPot) {
-		super(FabricBlockSettings.copyOf(flowerPot).dropsLike(flowerPot));
+		super(QuiltBlockSettings.copyOf(flowerPot).dropsLike(flowerPot));
 		this.flowerPot = flowerPot;
 		CONTENT_TO_POTTED.put(flowerPot.getContent(), this);
 		HANGING_FLOWER_POT_BLOCKS.add(this);

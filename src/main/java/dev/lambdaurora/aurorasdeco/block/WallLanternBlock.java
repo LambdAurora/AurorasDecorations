@@ -27,7 +27,6 @@ import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoSounds;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.util.CustomStateBuilder;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -62,6 +61,7 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.Map;
 import java.util.Random;
@@ -386,7 +386,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
 	private static Settings settings(LanternBlock lanternBlock) {
 		ASSOCIATED_LANTERN_INIT.set(lanternBlock);
-		return FabricBlockSettings.copyOf(lanternBlock).dropsLike(lanternBlock);
+		return QuiltBlockSettings.copyOf(lanternBlock).dropsLike(lanternBlock);
 	}
 
 	static {

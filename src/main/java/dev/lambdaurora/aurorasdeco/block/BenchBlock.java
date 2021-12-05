@@ -22,7 +22,6 @@ import dev.lambdaurora.aurorasdeco.block.entity.BenchBlockEntity;
 import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -47,6 +46,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -278,10 +278,10 @@ public class BenchBlock extends Block implements BlockEntityProvider, SeatBlock,
 		return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
 	}
 
-	private static FabricBlockSettings settings(WoodType woodType) {
+	private static QuiltBlockSettings settings(WoodType woodType) {
 		var planks = woodType.getComponent(WoodType.ComponentType.PLANKS);
 		if (planks == null) throw new IllegalStateException("BenchBlock attempted to be created while the wood type is invalid.");
-		return FabricBlockSettings.copyOf(planks.block())
+		return QuiltBlockSettings.copyOf(planks.block())
 				.collidable(true)
 				.nonOpaque();
 	}

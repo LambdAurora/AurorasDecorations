@@ -37,13 +37,13 @@ import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
+import net.minecraft.block.Block;
 import net.minecraft.block.TallPlantBlock;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.color.world.FoliageColors;
@@ -55,6 +55,7 @@ import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.quiltmc.qsl.block.extensions.api.client.BlockRenderLayerMap;
 
 import static dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry.*;
 
@@ -89,9 +90,9 @@ public class AurorasDecoClient implements ClientModInitializer {
 		EntityRendererRegistry.register(AurorasDecoRegistry.SEAT_ENTITY_TYPE,
 				SeatEntityRenderer::new);
 
-		BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutoutMipped(),
+		BlockRenderLayerMap.put(RenderLayer.getCutoutMipped(),
 				BURNT_VINE_BLOCK);
-		BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(),
+		BlockRenderLayerMap.put(RenderLayer.getCutout(),
 				AMETHYST_LANTERN_BLOCK,
 				BRAZIER_BLOCK,
 				COPPER_SULFATE_BRAZIER_BLOCK,
@@ -110,8 +111,7 @@ public class AurorasDecoClient implements ClientModInitializer {
 		ParticleFactoryRegistry.getInstance().register(AurorasDecoParticles.COPPER_SULFATE_FLAME, FlameParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(AurorasDecoParticles.COPPER_SULFATE_LAVA, LavaEmberParticle.Factory::new);
 
-		StumpBlock.streamLogStumps()
-				.forEach(block -> BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout()));
+		BlockRenderLayerMap.put(RenderLayer.getCutout(), StumpBlock.streamLogStumps().toArray(Block[]::new));
 
 		ClientPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_OPEN_GUI, AurorasDecoPackets.Client::handleSignPostOpenGuiPacket);
 
@@ -120,7 +120,7 @@ public class AurorasDecoClient implements ClientModInitializer {
 					.forEach(plantType -> {
 						if (plantType.isEmpty()) return;
 
-						BlockRenderLayerMap.INSTANCE.putBlock(plantType.getPot(), RenderLayer.getCutoutMipped());
+						BlockRenderLayerMap.put(RenderLayer.getCutoutMipped(), plantType.getPot());
 
 						if (plantType.getPlant() instanceof TallPlantBlock) {
 							ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) ->
@@ -134,7 +134,7 @@ public class AurorasDecoClient implements ClientModInitializer {
 						}
 					});
 			HangingFlowerPotBlock.stream().forEach(block -> {
-				BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout());
+				BlockRenderLayerMap.put(RenderLayer.getCutout(), block);
 				var colorProvider = ColorProviderRegistry.BLOCK.get(block.getFlowerPot());
 				if (colorProvider != null)
 					ColorProviderRegistry.BLOCK.register(colorProvider, block);

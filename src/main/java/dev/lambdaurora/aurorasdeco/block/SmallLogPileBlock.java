@@ -20,7 +20,6 @@ package dev.lambdaurora.aurorasdeco.block;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -42,6 +41,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -182,7 +182,7 @@ public class SmallLogPileBlock extends Block implements Waterloggable {
 
 	private static Settings settings(WoodType woodType) {
 		var log = woodType.getComponent(WoodType.ComponentType.LOG);
-		return FabricBlockSettings.of(log.material(), log.mapColor())
+		return QuiltBlockSettings.of(log.material(), log.mapColor())
 				.sounds(log.blockSoundGroup())
 				.strength(2.f)
 				.nonOpaque();

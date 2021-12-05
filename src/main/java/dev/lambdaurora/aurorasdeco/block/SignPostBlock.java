@@ -28,7 +28,6 @@ import dev.lambdaurora.aurorasdeco.util.CustomStateBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.*;
@@ -58,6 +57,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -310,8 +310,8 @@ public class SignPostBlock extends BlockWithEntity {
 		return AuroraUtil.isWaterLogged(state) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
 	}
 
-	private static FabricBlockSettings settings(FenceBlock fenceBlock) {
-		return FabricBlockSettings.copyOf(fenceBlock);
+	private static QuiltBlockSettings settings(FenceBlock fenceBlock) {
+		return QuiltBlockSettings.copyOf(fenceBlock);
 	}
 
 	private static StateManager.Factory<Block, BlockState> getStateFactory() {

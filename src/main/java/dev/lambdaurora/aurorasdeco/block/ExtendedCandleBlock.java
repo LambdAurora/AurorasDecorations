@@ -17,8 +17,8 @@
 
 package dev.lambdaurora.aurorasdeco.block;
 
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.CandleBlock;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class ExtendedCandleBlock extends CandleBlock {
 	protected final CandleBlock parent;
 
 	public ExtendedCandleBlock(CandleBlock candleBlock) {
-		super(FabricBlockSettings.copyOf(candleBlock)
+		super(QuiltBlockSettings.copyOf(candleBlock)
 				// Bump up a little bit the luminance,
 				// especially since the candles extending this are not on the floor.
 				.luminance((state) -> CandleBlock.STATE_TO_LUMINANCE.applyAsInt(state) + 2)

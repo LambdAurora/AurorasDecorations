@@ -1,9 +1,9 @@
 plugins {
-    id 'fabric-loom' version '0.10.+'
-    id 'io.github.juuxel.loom-quiltflower-mini' version '1.1.0'
-    id 'java-library'
-    id 'maven-publish'
-    id 'org.cadixdev.licenser' version '0.6.1'
+	id 'fabric-loom' version '0.10.+'
+	id 'io.github.juuxel.loom-quiltflower-mini' version '1.1.0'
+	id 'java-library'
+	id 'maven-publish'
+	id 'org.cadixdev.licenser' version '0.6.1'
 }
 
 group = project.maven_group
@@ -14,103 +14,112 @@ archivesBaseName = project.archives_base_name
 def targetJavaVersion = 17
 
 boolean isMCVersionNonRelease() {
-    return project.minecraft_version.matches('^\\d\\dw\\d\\d[a-z]$')
-            || project.minecraft_version.matches('\\d+\\.\\d+-(pre|rc)(\\d+)')
+	return project.minecraft_version.matches('^\\d\\dw\\d\\d[a-z]$')
+			|| project.minecraft_version.matches('\\d+\\.\\d+-(pre|rc)(\\d+)')
 }
 
 String getMCVersionString() {
-    if (isMCVersionNonRelease()) {
-        return project.minecraft_version
-    }
-    def version = project.minecraft_version.split('\\.')
-    return version[0] + '.' + version[1]
+	if (isMCVersionNonRelease()) {
+		return project.minecraft_version
+	}
+	def version = project.minecraft_version.split('\\.')
+	return version[0] + '.' + version[1]
 }
 
-minecraft {
+loom {
+	runs {
+		autoTestServer {
+			server()
+			configName = "Auto test server"
+			source(project.sourceSets.main)
+			property("quilt.auto_test")
+			programArg("--nogui")
+		}
+	}
 }
 
 repositories {
-    maven {
-        name 'Ladysnake Mods'
-        url 'https://ladysnake.jfrog.io/artifactory/mods'
-    }
-    maven {
-        name 'TerraformersMC'
-        url 'https://maven.terraformersmc.com/'
-        content {
-            includeGroup 'dev.emi'
-            includeGroup 'com.terraformersmc'
-        }
-    }
+	maven {
+		name 'Ladysnake Mods'
+		url 'https://ladysnake.jfrog.io/artifactory/mods'
+	}
+	maven {
+		name 'TerraformersMC'
+		url 'https://maven.terraformersmc.com/'
+		content {
+			includeGroup 'dev.emi'
+			includeGroup 'com.terraformersmc'
+		}
+	}
+	maven {
+		name 'Quilt'
+		url 'https://maven.quiltmc.org/repository/snapshot'
+	}
 }
 
 dependencies {
-    //to change the versions see the gradle.properties file
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.minecraft_version}+build.${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	//to change the versions see the gradle.properties file
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.minecraft_version}+build.${project.yarn_mappings}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}") {
-        exclude group: 'net.fabricmc'
-    }
-    modImplementation("dev.emi:trinkets:${project.trinkets_version}") {
-        exclude group: 'net.fabricmc'
-    }
+	modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}") {
+		exclude group: 'net.fabricmc'
+		exclude group: 'net.fabricmc.fabric-api', module: 'fabric-blockrenderlayer-v1'
+	}
+	modImplementation("dev.emi:trinkets:${project.trinkets_version}") {
+		exclude group: 'net.fabricmc'
+		exclude group: 'net.fabricmc.fabric-api'
+	}
+
+	include(modImplementation("org.quiltmc.qsl.core:qsl_base:${project.quilt_base_version}"))
+	include(modImplementation("org.quiltmc.qsl.block:block_extensions:${project.quilt_block_extensions_version}"))
 }
 
 java {
-    sourceCompatibility = JavaVersion.toVersion(targetJavaVersion)
-    targetCompatibility = JavaVersion.toVersion(targetJavaVersion)
+	sourceCompatibility = JavaVersion.toVersion(targetJavaVersion)
+	targetCompatibility = JavaVersion.toVersion(targetJavaVersion)
 
-    withSourcesJar()
+	withSourcesJar()
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.encoding = 'UTF-8'
-    it.options.deprecation(true)
+	it.options.encoding = 'UTF-8'
+	it.options.deprecation(true)
 
-    it.options.release.set(targetJavaVersion)
+	it.options.release.set(targetJavaVersion)
 }
 
 processResources {
-    inputs.property 'version', project.version
+	inputs.property 'version', project.version
 
-    filesMatching('fabric.mod.json') {
-        expand 'version': project.version
-    }
+	filesMatching('fabric.mod.json') {
+		expand 'version': project.version
+	}
 }
 
 jar {
-    from('LICENSE') {
-        rename { "${it}_${project.archivesBaseName}" }
-    }
+	from('LICENSE') {
+		rename { "${it}_${project.archivesBaseName}" }
+	}
 }
 
 license {
-    header file('HEADER')
-    include '**/*.java'
+	header file('HEADER')
+	include '**/*.java'
 }
 
 // configure the maven publication
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            // add all the jars that should be included when publishing to maven
-            artifact(jar) {
-                builtBy remapJar
-            }
-            artifact("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}.jar") {
-                builtBy remapJar
-            }
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
-            }
-        }
-    }
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+		}
+	}
 
-    // select the repositories you want to publish to
-    repositories {
-        // uncomment to publish to the local maven
-        // mavenLocal()
-    }
+	// select the repositories you want to publish to
+	repositories {
+		// uncomment to publish to the local maven
+		// mavenLocal()
+	}
 }

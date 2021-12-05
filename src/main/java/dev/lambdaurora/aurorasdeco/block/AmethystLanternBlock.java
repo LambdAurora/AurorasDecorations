@@ -19,13 +19,13 @@ package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoParticles;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LanternBlock;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.Random;
 
@@ -42,7 +42,7 @@ public class AmethystLanternBlock extends LanternBlock {
 	public static final int EFFECT_RADIUS = 32;
 
 	public AmethystLanternBlock() {
-		super(FabricBlockSettings.copyOf(Blocks.LANTERN).luminance(14));
+		super(QuiltBlockSettings.copyOf(Blocks.LANTERN).luminance(14));
 	}
 
 	@Override

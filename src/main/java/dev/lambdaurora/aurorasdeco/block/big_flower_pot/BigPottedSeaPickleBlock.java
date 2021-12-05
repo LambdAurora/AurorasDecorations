@@ -22,7 +22,6 @@ import dev.lambdaurora.aurorasdeco.mixin.block.BlockAccessor;
 import dev.lambdaurora.aurorasdeco.mixin.block.BlockSettingsAccessor;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -44,6 +43,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.Map;
 
@@ -61,7 +61,7 @@ public class BigPottedSeaPickleBlock extends BigFlowerPotBlock implements Waterl
 	private final Map<BlockState, VoxelShape> shapeCache = new Object2ObjectOpenHashMap<>();
 
 	public BigPottedSeaPickleBlock(PottedPlantType type) {
-		super(type, FabricBlockSettings.of(Material.DECORATION).strength(.1f).nonOpaque());
+		super(type, QuiltBlockSettings.of(Material.DECORATION).strength(.1f).nonOpaque());
 
 		var plantSettings = ((AbstractBlockAccessor) type.getPlant()).getSettings();
 		((AbstractBlockAccessor) this).getSettings()

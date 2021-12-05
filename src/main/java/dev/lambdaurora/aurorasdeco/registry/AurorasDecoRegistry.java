@@ -43,7 +43,6 @@ import dev.lambdaurora.aurorasdeco.util.Registrar;
 import dev.lambdaurora.aurorasdeco.util.RegistrationHelper;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.advancement.CriterionRegistry;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
@@ -70,6 +69,7 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -97,23 +97,23 @@ public final class AurorasDecoRegistry {
 			DerivedBlockItem::lantern);
 
 	public static final CopperHopperBlock COPPER_HOPPER_BLOCK = registerWithItem("copper_hopper",
-			new CopperHopperBlock(FabricBlockSettings.copyOf(Blocks.HOPPER).mapColor(MapColor.ORANGE)),
+			new CopperHopperBlock(QuiltBlockSettings.copyOf(Blocks.HOPPER).mapColor(MapColor.ORANGE)),
 			new FabricItemSettings().group(ItemGroup.REDSTONE),
 			DerivedBlockItem::hopper);
 
 	public static final LanternBlock COPPER_SULFATE_LANTERN_BLOCK = registerWithItem("copper_sulfate_lantern",
-			new LanternBlock(FabricBlockSettings.copyOf(Blocks.LANTERN)),
+			new LanternBlock(QuiltBlockSettings.copyOf(Blocks.LANTERN)),
 			new FabricItemSettings().group(ItemGroup.DECORATIONS),
 			DerivedBlockItem::lantern);
 	public static final CopperSulfateCampfireBlock COPPER_SULFATE_CAMPFIRE_BLOCK = Registrar.register("copper_sulfate_campfire",
-					new CopperSulfateCampfireBlock(FabricBlockSettings.copyOf(Blocks.CAMPFIRE).ticksRandomly()))
+					new CopperSulfateCampfireBlock(QuiltBlockSettings.copyOf(Blocks.CAMPFIRE).ticksRandomly()))
 			.withItem(new FabricItemSettings().group(ItemGroup.DECORATIONS), DerivedBlockItem::campfire)
 			.addSelfTo(BlockEntityType.CAMPFIRE)
 			.finish();
 	public static final AuroraTorchBlock COPPER_SULFATE_TORCH_BLOCK = register("copper_sulfate_torch",
-			new AuroraTorchBlock(FabricBlockSettings.copyOf(Blocks.TORCH), COPPER_SULFATE_FLAME));
+			new AuroraTorchBlock(QuiltBlockSettings.copyOf(Blocks.TORCH), COPPER_SULFATE_FLAME));
 	public static final AuroraWallTorchBlock COPPER_SULFATE_WALL_TORCH_BLOCK = register("copper_sulfate_wall_torch",
-			new AuroraWallTorchBlock(FabricBlockSettings.copyOf(COPPER_SULFATE_TORCH_BLOCK)
+			new AuroraWallTorchBlock(QuiltBlockSettings.copyOf(COPPER_SULFATE_TORCH_BLOCK)
 					.dropsLike(COPPER_SULFATE_TORCH_BLOCK), COPPER_SULFATE_FLAME));
 	public static final WallStandingBlockItem COPPER_SULFATE_TORCH_ITEM = register("copper_sulfate_torch",
 			new WallStandingBlockItem(COPPER_SULFATE_TORCH_BLOCK, COPPER_SULFATE_WALL_TORCH_BLOCK,
@@ -127,7 +127,7 @@ public final class AurorasDecoRegistry {
 	public static final BigFlowerPotBlock.PlantAirBlock PLANT_AIR_BLOCK = register(
 			"plant_air",
 			new BigFlowerPotBlock.PlantAirBlock(
-					FabricBlockSettings.of(Material.AIR)
+					QuiltBlockSettings.of(Material.AIR)
 							.nonOpaque()
 							.strength(-1.f, 3600000.f)
 							.dropsNothing()
@@ -161,19 +161,19 @@ public final class AurorasDecoRegistry {
 			)));
 
 	public static final BlackboardBlock BLACKBOARD_BLOCK = registerWithItem("blackboard",
-			new BlackboardBlock(FabricBlockSettings.of(Material.DECORATION).strength(.2f)
+			new BlackboardBlock(QuiltBlockSettings.of(Material.DECORATION).strength(.2f)
 					.nonOpaque()
 					.sounds(BlockSoundGroup.WOOD),
 					false),
 			new FabricItemSettings().group(ItemGroup.DECORATIONS).equipmentSlot(stack -> EquipmentSlot.HEAD),
 			BlackboardItem::new);
 	public static final BlackboardBlock WAXED_BLACKBOARD_BLOCK = registerWithItem("waxed_blackboard",
-			new BlackboardBlock(FabricBlockSettings.copyOf(BLACKBOARD_BLOCK), true),
+			new BlackboardBlock(QuiltBlockSettings.copyOf(BLACKBOARD_BLOCK), true),
 			new FabricItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
 			BlackboardItem::new);
 
 	public static final BookPileBlock BOOK_PILE_BLOCK = Registrar.register("book_pile",
-					new BookPileBlock(FabricBlockSettings.of(Material.DECORATION).strength(.2f)
+					new BookPileBlock(QuiltBlockSettings.of(Material.DECORATION).strength(.2f)
 							.nonOpaque()))
 			.then(block -> {
 				((ItemExtensions) Items.BOOK).makePlaceable(block);
@@ -183,11 +183,11 @@ public final class AurorasDecoRegistry {
 	public static final BurntVineBlock BURNT_VINE_BLOCK = register("burnt_vine", new BurntVineBlock());
 
 	public static final BlackboardBlock CHALKBOARD_BLOCK = registerWithItem("chalkboard",
-			new BlackboardBlock(FabricBlockSettings.copyOf(BLACKBOARD_BLOCK), false),
+			new BlackboardBlock(QuiltBlockSettings.copyOf(BLACKBOARD_BLOCK), false),
 			new FabricItemSettings().group(ItemGroup.DECORATIONS).equipmentSlot(stack -> EquipmentSlot.HEAD),
 			BlackboardItem::new);
 	public static final BlackboardBlock WAXED_CHALKBOARD_BLOCK = registerWithItem("waxed_chalkboard",
-			new BlackboardBlock(FabricBlockSettings.copyOf(BLACKBOARD_BLOCK), true),
+			new BlackboardBlock(QuiltBlockSettings.copyOf(BLACKBOARD_BLOCK), true),
 			new FabricItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
 			BlackboardItem::new);
 
@@ -195,7 +195,7 @@ public final class AurorasDecoRegistry {
 			.group(ItemGroup.MISC)));
 
 	public static final FenceGateBlock NETHER_BRICK_FENCE_GATE = registerWithItem("nether_brick_fence_gate",
-			new FenceGateBlock(FabricBlockSettings.copyOf(Blocks.NETHER_BRICK_FENCE)),
+			new FenceGateBlock(QuiltBlockSettings.copyOf(Blocks.NETHER_BRICK_FENCE)),
 			new FabricItemSettings().group(ItemGroup.REDSTONE));
 
 	public static final PieBlock PUMPKIN_PIE_BLOCK = register("pumpkin_pie", PieBlock.fromPieItem(Items.PUMPKIN_PIE));
@@ -204,7 +204,7 @@ public final class AurorasDecoRegistry {
 			new FabricItemSettings().group(ItemGroup.DECORATIONS));
 
 	public static final SturdyStoneBlock STURDY_STONE_BLOCK = registerWithItem("sturdy_stone",
-			new SturdyStoneBlock(FabricBlockSettings.of(Material.STONE).requiresTool().strength(3.5f)),
+			new SturdyStoneBlock(QuiltBlockSettings.of(Material.STONE).requiresTool().strength(3.5f)),
 			new FabricItemSettings().group(ItemGroup.REDSTONE));
 
 	public static final WallLanternBlock WALL_LANTERN_BLOCK = register("wall_lantern",
@@ -222,7 +222,7 @@ public final class AurorasDecoRegistry {
 			= LanternRegistry.registerWallLantern(AMETHYST_LANTERN_BLOCK);
 
 	public static final WindChimeBlock WIND_CHIME_BLOCK = registerWithItem("wind_chime",
-			new WindChimeBlock(FabricBlockSettings.of(Material.DECORATION).nonOpaque()
+			new WindChimeBlock(QuiltBlockSettings.of(Material.DECORATION).nonOpaque()
 					.sounds(BlockSoundGroup.AMETHYST_BLOCK)),
 			new Item.Settings().group(ItemGroup.DECORATIONS));
 
@@ -233,7 +233,7 @@ public final class AurorasDecoRegistry {
 			new BrazierBlock(MapColor.LIGHT_BLUE, 2, 10, ParticleTypes.SOUL),
 			new FabricItemSettings().group(ItemGroup.DECORATIONS));
 	public static final BrazierBlock COPPER_SULFATE_BRAZIER_BLOCK = registerWithItem("copper_sulfate_brazier",
-			new CopperSulfateBrazierBlock(FabricBlockSettings.copyOf(BRAZIER_BLOCK)
+			new CopperSulfateBrazierBlock(QuiltBlockSettings.copyOf(BRAZIER_BLOCK)
 					.mapColor(MapColor.EMERALD_GREEN).luminance(14),
 					2, COPPER_SULFATE_FLAME),
 			new FabricItemSettings().group(ItemGroup.DECORATIONS));
@@ -243,7 +243,7 @@ public final class AurorasDecoRegistry {
 	public static final StairsBlock CALCITE_STAIRS = CALCITE_DERIVATOR.stairs(Items.DEEPSLATE_TILE_STAIRS);
 
 	public static final Block POLISHED_CALCITE = registerWithItem("polished_calcite",
-			new Block(FabricBlockSettings.copyOf(Blocks.CALCITE)),
+			new Block(QuiltBlockSettings.copyOf(Blocks.CALCITE)),
 			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem.itemWithStrictPositionFactory(Items.CALCITE));
 	private static final Derivator POLISHED_CALCITE_DERIVATOR = new Derivator(POLISHED_CALCITE.getDefaultState());
@@ -252,7 +252,7 @@ public final class AurorasDecoRegistry {
 	public static final WallBlock POLISHED_CALCITE_WALL = POLISHED_CALCITE_DERIVATOR.wall();
 
 	public static final Block CALCITE_BRICKS = registerWithItem("calcite_bricks",
-			new Block(FabricBlockSettings.copyOf(POLISHED_CALCITE)),
+			new Block(QuiltBlockSettings.copyOf(POLISHED_CALCITE)),
 			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem.itemWithStrictPositionFactory(Items.CHISELED_DEEPSLATE));
 	private static final Derivator CALCITE_BRICKS_DERIVATOR = new Derivator(CALCITE_BRICKS.getDefaultState());
@@ -278,7 +278,7 @@ public final class AurorasDecoRegistry {
 			new HangingFlowerPotBlock((FlowerPotBlock) Blocks.FLOWER_POT));
 
 	public static final FenceLikeWallBlock POLISHED_BASALT_WALL = registerWithItem("polished_basalt_wall",
-			new FenceLikeWallBlock(FabricBlockSettings.copyOf(Blocks.POLISHED_BASALT)),
+			new FenceLikeWallBlock(QuiltBlockSettings.copyOf(Blocks.POLISHED_BASALT)),
 			new FabricItemSettings().group(ItemGroup.DECORATIONS), DerivedBlockItem::wall);
 
 	private static final Derivator TUFF_DERIVATOR = new Derivator(Blocks.TUFF.getDefaultState());
@@ -286,7 +286,7 @@ public final class AurorasDecoRegistry {
 	public static final StairsBlock TUFF_STAIRS = TUFF_DERIVATOR.stairs(Items.DEEPSLATE_TILE_STAIRS);
 
 	public static final Block POLISHED_TUFF = registerWithItem("polished_tuff",
-			new Block(FabricBlockSettings.copyOf(Blocks.TUFF)),
+			new Block(QuiltBlockSettings.copyOf(Blocks.TUFF)),
 			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem.itemWithStrictPositionFactory(Items.TUFF));
 	private static final Derivator POLISHED_TUFF_DERIVATOR = new Derivator(POLISHED_TUFF.getDefaultState());
@@ -295,7 +295,7 @@ public final class AurorasDecoRegistry {
 	public static final WallBlock POLISHED_TUFF_WALL = POLISHED_TUFF_DERIVATOR.wall();
 
 	public static final Block TUFF_BRICKS = registerWithItem("tuff_bricks",
-			new Block(FabricBlockSettings.copyOf(POLISHED_TUFF)),
+			new Block(QuiltBlockSettings.copyOf(POLISHED_TUFF)),
 			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem.itemWithStrictPositionFactory(CHISELED_CALCITE_BRICKS.asItem()));
 	private static final Derivator TUFF_BRICKS_DERIVATOR = new Derivator(TUFF_BRICKS.getDefaultState());
@@ -319,7 +319,7 @@ public final class AurorasDecoRegistry {
 	/* Potted Plants */
 
 	public static final FlowerPotBlock POTTED_DAFFODIL = register("potted/daffodil",
-			new DirectionalFlowerPotBlock(DAFFODIL, FabricBlockSettings.of(Material.DECORATION).nonOpaque().breakInstantly()));
+			new DirectionalFlowerPotBlock(DAFFODIL, QuiltBlockSettings.of(Material.DECORATION).nonOpaque().breakInstantly()));
 
 	/* Block Entities */
 
@@ -432,7 +432,7 @@ public final class AurorasDecoRegistry {
 
 	private static PetBedBlock registerPetBed(DyeColor color) {
 		return registerWithItem("pet_bed/" + color.getName(),
-				new PetBedBlock(FabricBlockSettings.of(Material.WOOL)
+				new PetBedBlock(QuiltBlockSettings.of(Material.WOOL)
 						.mapColor(color).sounds(BlockSoundGroup.WOOD).strength(.2f)),
 				new FabricItemSettings().group(ItemGroup.DECORATIONS));
 	}

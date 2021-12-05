@@ -19,7 +19,6 @@ package dev.lambdaurora.aurorasdeco.block.big_flower_pot;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.Entity;
@@ -45,6 +44,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -82,7 +82,7 @@ public class BigFlowerPotBlock extends Block/* implements FluidFillable*/ {
 	}
 
 	public BigFlowerPotBlock(PottedPlantType type) {
-		this(type, FabricBlockSettings.of(Material.DECORATION).strength(.1f).nonOpaque());
+		this(type, QuiltBlockSettings.of(Material.DECORATION).strength(.1f).nonOpaque());
 	}
 
 	public PottedPlantType getPlantType() {
