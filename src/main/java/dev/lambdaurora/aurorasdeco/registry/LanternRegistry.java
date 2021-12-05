@@ -22,7 +22,6 @@ import dev.lambdaurora.aurorasdeco.accessor.BlockEntityTypeAccessor;
 import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -33,6 +32,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.block.extensions.api.client.BlockRenderLayerMap;
 
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -75,7 +75,7 @@ public final class LanternRegistry {
 		WALL_LANTERN_BLOCK_MAP.put(block, wallLanternBlock);
 
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-			BlockRenderLayerMap.INSTANCE.putBlock(wallLanternBlock, RenderLayer.getCutout());
+			BlockRenderLayerMap.put(RenderLayer.getCutout(), wallLanternBlock);
 		}
 
 		return wallLanternBlock;

@@ -22,7 +22,6 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
 import net.minecraft.client.render.RenderLayer;
@@ -36,6 +35,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
+import org.quiltmc.qsl.block.extensions.api.client.BlockRenderLayerMap;
 
 import java.util.List;
 
@@ -59,7 +59,7 @@ public class ChandelierBlock extends ExtendedCandleBlock {
 		super(candleBlock);
 
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-			BlockRenderLayerMap.INSTANCE.putBlock(this, RenderLayer.getCutout());
+			BlockRenderLayerMap.put(RenderLayer.getCutout(), this);
 		}
 	}
 
