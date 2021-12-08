@@ -5,6 +5,7 @@
   "mixins": [
     "ForestFlowerBlockListMixin",
     "ModResourcePackCreatorMixin",
+    "PointOfInterestTypeAccessor",
     "PointOfInterestTypeMixin",
     "RecipeManagerMixin",
     "ServerAdvancementLoaderMixin",

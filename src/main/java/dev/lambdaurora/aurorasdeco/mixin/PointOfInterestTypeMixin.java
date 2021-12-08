@@ -18,7 +18,6 @@
 package dev.lambdaurora.aurorasdeco.mixin;
 
 import com.google.common.collect.ImmutableSet;
-import dev.lambdaurora.aurorasdeco.accessor.PointOfInterestTypeAccessor;
 import net.minecraft.block.BlockState;
 import net.minecraft.world.poi.PointOfInterestType;
 import org.spongepowered.asm.mixin.Final;
@@ -33,7 +32,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Mixin(PointOfInterestType.class)
-public class PointOfInterestTypeMixin implements PointOfInterestTypeAccessor {
+public class PointOfInterestTypeMixin {
 	@Mutable
 	@Shadow
 	@Final
@@ -48,10 +47,5 @@ public class PointOfInterestTypeMixin implements PointOfInterestTypeAccessor {
 			// We need this one to be mutable.
 			this.blockStates = new HashSet<>(blockStates);
 		}
-	}
-
-	@Override
-	public Set<BlockState> getBlockStates() {
-		return this.blockStates;
 	}
 }

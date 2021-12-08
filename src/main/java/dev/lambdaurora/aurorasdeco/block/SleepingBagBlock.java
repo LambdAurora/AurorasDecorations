@@ -19,7 +19,7 @@ package dev.lambdaurora.aurorasdeco.block;
 
 import com.google.common.collect.ImmutableMap;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.accessor.PointOfInterestTypeAccessor;
+import dev.lambdaurora.aurorasdeco.mixin.PointOfInterestTypeAccessor;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BedPart;
@@ -274,7 +274,11 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
 		SleepingBagBlock.forEach(sleepingBag -> {
 			sleepingBag.getStateManager().getStates().stream()
 					.filter(state -> state.get(SleepingBagBlock.PART) == BedPart.HEAD)
-					.forEach(states::add);
+					.forEach(state -> {
+						states.add(state);
+						PointOfInterestTypeAccessor.aurorasdeco$getBlockStateToPointOfInterestType()
+								.putIfAbsent(state, poiType);
+					});
 		});
 	}
 
