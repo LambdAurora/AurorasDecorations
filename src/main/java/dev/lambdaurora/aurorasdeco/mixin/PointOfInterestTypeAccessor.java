@@ -15,19 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.accessor;
+package dev.lambdaurora.aurorasdeco.mixin;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.world.poi.PointOfInterestType;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
+import java.util.Map;
 import java.util.Set;
 
-/**
- * Represents an accessor made to {@link net.minecraft.world.poi.PointOfInterestType}.
- *
- * @author LambdAurora
- * @version 1.0.0
- * @since 1.0.0
- */
+@Mixin(PointOfInterestType.class)
 public interface PointOfInterestTypeAccessor {
+	@Accessor("BLOCK_STATE_TO_POINT_OF_INTEREST_TYPE")
+	static Map<BlockState, PointOfInterestType> aurorasdeco$getBlockStateToPointOfInterestType() {
+		throw new IllegalStateException("Injection failed.");
+	}
+
+	@Accessor
 	Set<BlockState> getBlockStates();
 }

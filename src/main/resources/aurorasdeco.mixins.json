@@ -6,6 +6,7 @@
     "ForestFlowerBlockStateProviderAccessor",
     "ForestFlowerBlockStateProviderMixin",
     "ModResourcePackCreatorMixin",
+    "PointOfInterestTypeAccessor",
     "PointOfInterestTypeMixin",
     "RecipeManagerMixin",
     "ServerAdvancementLoaderMixin",
