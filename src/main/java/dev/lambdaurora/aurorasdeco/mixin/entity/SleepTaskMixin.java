@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.mixin.entity;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.Activity;
+import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.task.SleepTask;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.dynamic.GlobalPos;
@@ -33,9 +34,10 @@ import java.util.Optional;
 
 @Mixin(SleepTask.class)
 public class SleepTaskMixin {
-	@Inject(method = "shouldKeepRunning", at = @At(value = "RETURN", ordinal = 1), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
-	private void onShouldKeepRunning(ServerWorld world, LivingEntity entity, long time, CallbackInfoReturnable<Boolean> cir,
-	                                 Optional<GlobalPos> homePos, BlockPos pos) {
+	@Inject(method = "shouldKeepRunning", at = @At(value = "RETURN", ordinal = 1), cancellable = true)
+	private void onShouldKeepRunning(ServerWorld world, LivingEntity entity, long time, CallbackInfoReturnable<Boolean> cir) {
+		Optional<GlobalPos> homePos = entity.getBrain().getOptionalMemory(MemoryModuleType.HOME);
+		BlockPos pos = homePos.get().getPos();
 		if (!(entity.getY() > pos.getY() + 0.4) && entity.getBrain().hasActivity(Activity.REST)) {
 			cir.setReturnValue(entity.getY() > pos.getY() + 0.2 && pos.isWithinDistance(entity.getPos(), 1.14));
 		}
