@@ -49,6 +49,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
+import net.fabricmc.fabric.api.registry.OxidizableBlocksRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -482,6 +483,9 @@ public final class AurorasDecoRegistry {
 	@SuppressWarnings("unchecked")
 	public static void init() {
 		AurorasDecoSounds.init();
+
+		OxidizableBlocksRegistry.registerWaxableBlockPair(BLACKBOARD_BLOCK, WAXED_BLACKBOARD_BLOCK);
+		OxidizableBlocksRegistry.registerWaxableBlockPair(CHALKBOARD_BLOCK, WAXED_CHALKBOARD_BLOCK);
 
 		((BlockItemAccessor) Items.FLOWER_POT).aurorasdeco$setCeilingBlock(HANGING_FLOWER_POT_BLOCK);
 		Item.BLOCK_ITEMS.put(HANGING_FLOWER_POT_BLOCK, Items.FLOWER_POT);
