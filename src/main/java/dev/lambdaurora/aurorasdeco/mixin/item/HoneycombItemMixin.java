@@ -17,11 +17,8 @@
 
 package dev.lambdaurora.aurorasdeco.mixin.item;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.ImmutableBiMap;
 import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.HoneycombItem;
 import net.minecraft.item.ItemUsageContext;
@@ -40,15 +37,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class HoneycombItemMixin {
 	@Unique
 	private static final ThreadLocal<NbtCompound> aurorasdeco$blockEntityData = new ThreadLocal<>();
-
-	@Dynamic
-	@Inject(method = "method_34723", at = @At("RETURN"), remap = false, cancellable = true)
-	private static void onBuildWaxedMapping(CallbackInfoReturnable<BiMap<Block, Block>> cir) {
-		var builder = ImmutableBiMap.<Block, Block>builder().putAll(cir.getReturnValue());
-		builder.put(AurorasDecoRegistry.BLACKBOARD_BLOCK, AurorasDecoRegistry.WAXED_BLACKBOARD_BLOCK);
-		builder.put(AurorasDecoRegistry.CHALKBOARD_BLOCK, AurorasDecoRegistry.WAXED_CHALKBOARD_BLOCK);
-		cir.setReturnValue(builder.build());
-	}
 
 	@Dynamic
 	@Inject(method = "method_34719", at = @At("HEAD"), remap = false, cancellable = true)
