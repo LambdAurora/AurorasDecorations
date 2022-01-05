@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,10 +28,10 @@ import java.util.Arrays;
 
 @Mixin(VegetationConfiguredFeatures.class)
 public class ForestFlowerBlockListMixin {
-    @ModifyArg(method = "method_39726", at = @At(value = "INVOKE", target = "Ljava/util/List;of([Ljava/lang/Object;)Ljava/util/List;"), remap = false)
-    private static Object[] addAurorasDecoFlowers(Object[] states) {
-        var newStates = Arrays.copyOf((BlockState[]) states, states.length+1);
-        newStates[states.length] = AurorasDecoRegistry.DAFFODIL.getDefaultState();
-        return newStates;
-    }
+	@ModifyArg(method = "method_39726", at = @At(value = "INVOKE", target = "Ljava/util/List;of([Ljava/lang/Object;)Ljava/util/List;"), remap = false)
+	private static Object[] addAurorasDecoFlowers(Object[] states) {
+		var newStates = Arrays.copyOf((BlockState[]) states, states.length + 1);
+		newStates[states.length] = AurorasDecoRegistry.DAFFODIL.getDefaultState();
+		return newStates;
+	}
 }

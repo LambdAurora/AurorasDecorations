@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -159,7 +159,7 @@ public final class ColorUtil {
 
 		for (int y = 0; y < image.getHeight(); y++) {
 			for (int x = 0; x < image.getWidth(); x++) {
-				int color = image.getColor(x, y);
+				int color = image.getPixelColor(x, y);
 
 				if (argbUnpackAlpha(color) == 255) {
 					colors.add(color);

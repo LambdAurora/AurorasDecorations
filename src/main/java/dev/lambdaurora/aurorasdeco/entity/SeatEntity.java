@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -61,7 +61,7 @@ public class SeatEntity extends Entity {
 	public Vec3d updatePassengerForDismount(LivingEntity passenger) {
 		var vec = super.updatePassengerForDismount(passenger);
 
-		if (this.getEntityWorld().getBlockState(this.getBlockPos().up()).isAir()) {
+		if (this.getWorld().getBlockState(this.getBlockPos().up()).isAir()) {
 			return new Vec3d(vec.x, this.getBlockY() + 1, vec.z);
 		}
 
@@ -104,7 +104,7 @@ public class SeatEntity extends Entity {
 		super.tick();
 
 		if (!this.world.isClient()) {
-			var state = this.getEntityWorld().getBlockState(this.getBlockPos());
+			var state = this.getWorld().getBlockState(this.getBlockPos());
 			if (!(state.getBlock() instanceof SeatBlock || this.timeout) || !this.hasPassengers())
 				this.discard();
 		}

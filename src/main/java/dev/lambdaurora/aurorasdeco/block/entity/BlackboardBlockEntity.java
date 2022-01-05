@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -29,11 +29,9 @@ import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -51,8 +49,8 @@ import java.util.Set;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class BlackboardBlockEntity extends BlockEntity implements Nameable,
-		RenderAttachmentBlockEntity, BlackboardHandler, BlockEntityHelper {
+public class BlackboardBlockEntity extends BasicBlockEntity implements Nameable,
+		RenderAttachmentBlockEntity, BlackboardHandler {
 	@Environment(EnvType.CLIENT)
 	private static final Set<BlackboardBlockEntity> ACTIVE_BLACKBOARDS = new ObjectOpenHashSet<>();
 	private final Blackboard blackboard = new AssignedBlackboard();
@@ -288,16 +286,6 @@ public class BlackboardBlockEntity extends BlockEntity implements Nameable,
 			nbt.putString("custom_name", Text.Serializer.toJson(this.customName));
 		}
 		return nbt;
-	}
-
-	@Override
-	public BlockEntityUpdateS2CPacket toUpdatePacket() {
-		return BlockEntityUpdateS2CPacket.create(this);
-	}
-
-	@Override
-	public NbtCompound toInitialChunkDataNbt() {
-		return this.createNbt();
 	}
 
 	private class AssignedBlackboard extends Blackboard {

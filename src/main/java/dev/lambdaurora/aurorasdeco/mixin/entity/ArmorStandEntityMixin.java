@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -70,7 +70,7 @@ public abstract class ArmorStandEntityMixin extends LivingEntity {
 	)
 	private void onInteractAt(PlayerEntity player, Vec3d hitPos, Hand hand, CallbackInfoReturnable<ActionResult> cir,
 	                          ItemStack stack) {
-		var world = this.getEntityWorld();
+		var world = this.getWorld();
 		if (stack.isOf(Items.STICK) && !this.shouldShowArms()) {
 			this.setShowArms(true);
 			this.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 1.f, 1.f);
@@ -90,7 +90,7 @@ public abstract class ArmorStandEntityMixin extends LivingEntity {
 	@Inject(method = "breakAndDropItem", at = @At("HEAD"))
 	private void onBreakAndDropItem(DamageSource damageSource, CallbackInfo ci) {
 		if (this.shouldShowArms()) {
-			Block.dropStack(this.getEntityWorld(), this.getBlockPos(), new ItemStack(Items.STICK));
+			Block.dropStack(this.getWorld(), this.getBlockPos(), new ItemStack(Items.STICK));
 		}
 	}
 }

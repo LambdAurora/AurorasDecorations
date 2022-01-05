@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -62,7 +62,7 @@ public class BakedBlackboardModel extends ForwardingBakedModel {
 	public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
 		super.emitItemQuads(stack, randomSupplier, context);
 
-		var nbt = BlockItem.getBlockEntityNbt(stack);
+		var nbt = BlockItem.getBlockEntityNbtFromStack(stack);
 		if (nbt != null && nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
 			var blackboard = Blackboard.fromNbt(nbt);
 			context.meshConsumer().accept(blackboard.buildMesh(Direction.NORTH, blackboard.isLit() ? LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE : 0));

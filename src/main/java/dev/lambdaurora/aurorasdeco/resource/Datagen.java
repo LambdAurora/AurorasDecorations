@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -801,14 +801,14 @@ public final class Datagen {
 
 				for (int y = 0; y < defaultTexture.getHeight(); y++) {
 					for (int x = 0; x < defaultTexture.getWidth(); x++) {
-						var paletteIndex = defaultPalette.indexOf(defaultTexture.getColor(x, y));
+						var paletteIndex = defaultPalette.indexOf(defaultTexture.getPixelColor(x, y));
 
 						if (paletteIndex < 0)
 							continue;
 						else if (paletteIndex >= woodPalette.size())
 							paletteIndex = woodPalette.size() - 1;
 
-						outputImage.setColor(x, y, woodPalette.getInt(paletteIndex));
+						outputImage.setPixelColor(x, y, woodPalette.getInt(paletteIndex));
 					}
 				}
 

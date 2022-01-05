@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -114,7 +114,7 @@ public record RenderRule(List<Model> models) {
 			model = rule.getModel(stack, state, seed);
 
 		if (model == null)
-			return MinecraftClient.getInstance().getItemRenderer().getModel(stack, world, null, 0);
+			return MinecraftClient.getInstance().getItemRenderer().getHeldItemModel(stack, world, null, 0);
 		return model;
 	}
 

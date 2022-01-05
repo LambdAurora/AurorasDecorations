@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -108,7 +108,7 @@ public class BlackboardItem extends BlockItem {
 	}
 
 	private ItemStack ensureValidStack(ItemStack stack) {
-		if (BlockItem.getBlockEntityNbt(stack) == null) {
+		if (BlockItem.getBlockEntityNbtFromStack(stack) == null) {
 			var nbt = AuroraUtil.getOrCreateBlockEntityNbt(stack, AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE);
 			var blackboard = new Blackboard();
 			blackboard.writeNbt(nbt);
@@ -119,7 +119,7 @@ public class BlackboardItem extends BlockItem {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public Optional<TooltipData> getTooltipData(ItemStack stack) {
-		var nbt = BlockItem.getBlockEntityNbt(stack);
+		var nbt = BlockItem.getBlockEntityNbtFromStack(stack);
 		if (nbt != null && nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
 			var blackboard = Blackboard.fromNbt(nbt);
 			return Optional.of(new BlackboardTooltipData(

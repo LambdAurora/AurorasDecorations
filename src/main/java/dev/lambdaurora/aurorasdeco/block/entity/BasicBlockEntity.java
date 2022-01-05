@@ -20,29 +20,31 @@ package dev.lambdaurora.aurorasdeco.block.entity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.Packet;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.LightType;
-import net.minecraft.world.World;
 
-public class SwayingBlockEntity extends BlockEntity {
-	protected boolean naturalSway = false;
-
-	public SwayingBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-		super(type, pos, state);
+/**
+ * Represents a basic block entity with common serialization and update packet code.
+ *
+ * @author LambdAurora
+ * @version 1.0.0
+ * @since 1.0.0
+ */
+public class BasicBlockEntity extends BlockEntity implements BlockEntityHelper {
+	public BasicBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
+		super(blockEntityType, blockPos, blockState);
 	}
 
-	/**
-	 * Returns whether this block entity can naturally sway.
-	 *
-	 * @return {@code true} if this block entity can naturally sway, else {@code false}
-	 */
-	public boolean canNaturallySway() {
-		return this.naturalSway;
+	@Override
+	public NbtCompound toInitialChunkDataNbt() {
+		return this.toNbt();
 	}
 
-	/* Ticking */
-
-	protected void tickClient(World world) {
-		this.naturalSway = world.getLightLevel(LightType.SKY, this.pos) >= 12;
+	@Override
+	public Packet<ClientPlayPacketListener> toUpdatePacket() {
+		return BlockEntityUpdateS2CPacket.of(this);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,11 +19,9 @@ package dev.lambdaurora.aurorasdeco.block.entity;
 
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 
@@ -34,7 +32,7 @@ import net.minecraft.util.math.BlockPos;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class BookPileBlockEntity extends BlockEntity {
+public class BookPileBlockEntity extends BasicBlockEntity {
 	private final DefaultedList<ItemStack> books = DefaultedList.ofSize(5, ItemStack.EMPTY);
 
 	public BookPileBlockEntity(BlockPos pos, BlockState state) {
@@ -84,15 +82,5 @@ public class BookPileBlockEntity extends BlockEntity {
 	public void writeNbt(NbtCompound nbt) {
 		super.writeNbt(nbt);
 		Inventories.writeNbt(nbt, this.books);
-	}
-
-	@Override
-	public NbtCompound toInitialChunkDataNbt() {
-		return this.createNbt();
-	}
-
-	@Override
-	public BlockEntityUpdateS2CPacket toUpdatePacket() {
-		return BlockEntityUpdateS2CPacket.create(this);
 	}
 }

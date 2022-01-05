@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -83,12 +83,12 @@ public class ShelfBlockEntity extends LootableContainerBlockEntity
 
 	@Override
 	public NbtCompound toInitialChunkDataNbt() {
-		return this.createNbt();
+		return this.toNbt();
 	}
 
 	@Override
 	public BlockEntityUpdateS2CPacket toUpdatePacket() {
-		return BlockEntityUpdateS2CPacket.create(this);
+		return BlockEntityUpdateS2CPacket.of(this);
 	}
 
 	/* Inventory */

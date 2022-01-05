@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -86,7 +86,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
 				if (OUTPUT.test(craftStack) && !this.isInput(craftStack)) {
 					output = craftStack;
 				} else if (this.isInput(craftStack)) {
-					var nbt = BlockItem.getBlockEntityNbt(craftStack);
+					var nbt = BlockItem.getBlockEntityNbtFromStack(craftStack);
 					blackboard = Blackboard.fromNbt(nbt);
 					if (craftStack.hasCustomName())
 						customName = craftStack.getName();
@@ -107,7 +107,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
 	}
 
 	private boolean isInput(ItemStack stack) {
-		var nbt = BlockItem.getBlockEntityNbt(stack);
+		var nbt = BlockItem.getBlockEntityNbtFromStack(stack);
 		if (nbt != null) {
 			if (nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
 				byte[] pixels = nbt.getByteArray("pixels");

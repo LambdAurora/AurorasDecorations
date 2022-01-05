@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -55,7 +55,7 @@ public class MultipartBlockStateBuilder {
 		block.add("when", whenBlock);
 
 		for (var val : when) {
-			whenBlock.addProperty(val.property().getName(), val.toString().split("=")[1]);
+			whenBlock.addProperty(val.comp_70().getName(), val.toString().split("=")[1]);
 		}
 
 		this.multipartJson.add(block);
@@ -75,7 +75,7 @@ public class MultipartBlockStateBuilder {
 			var conditionBlock = new JsonObject();
 			or.add(conditionBlock);
 			for (var val : condition.when()) {
-				conditionBlock.addProperty(val.property().getName(), val.toString().split("=")[1]);
+				conditionBlock.addProperty(val.comp_70().getName(), val.toString().split("=")[1]);
 			}
 		}
 

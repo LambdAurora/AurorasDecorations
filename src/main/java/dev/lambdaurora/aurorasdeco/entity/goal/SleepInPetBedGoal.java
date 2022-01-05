@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -62,7 +62,7 @@ public abstract class SleepInPetBedGoal extends MoveToTargetPosGoal {
 
 		boolean result = super.canStart();
 		if (result) {
-			if (!this.mob.getEntityWorld().getOtherEntities(this.mob, new Box(this.getTargetPos())).isEmpty())
+			if (!this.mob.getWorld().getOtherEntities(this.mob, new Box(this.getTargetPos())).isEmpty())
 				result = false;
 		}
 
@@ -100,7 +100,7 @@ public abstract class SleepInPetBedGoal extends MoveToTargetPosGoal {
 			reached = true;
 			--this.tryingTime;
 
-			AurorasDecoRegistry.PET_USE_PET_BED_CRITERION.trigger(this.mob, (ServerWorld) this.mob.getEntityWorld(), targetPos);
+			AurorasDecoRegistry.PET_USE_PET_BED_CRITERION.trigger(this.mob, (ServerWorld) this.mob.getWorld(), targetPos);
 		}
 
 		this.setInSleepingPosition(reached);

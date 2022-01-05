@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -144,7 +144,7 @@ public abstract class BlockItemMixin extends Item implements BlockItemAccessor {
 		if (server == null) return;
 		var inv = new SimpleInventory(entity.getStack());
 		server.getRecipeManager()
-				.getFirstMatch(AurorasDecoRegistry.EXPLODING_RECIPE_TYPE, inv, entity.getEntityWorld())
+				.getFirstMatch(AurorasDecoRegistry.EXPLODING_RECIPE_TYPE, inv, entity.getWorld())
 				.ifPresent(explodingRecipe -> {
 					int count = entity.getStack().getCount();
 					for (int i = 0; i < count; i++)

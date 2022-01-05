@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -66,7 +66,7 @@ public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.Dynam
 					false, matrices, vertexConsumers, light, overlay, maskModel);
 		}
 
-		var nbt = BlockItem.getBlockEntityNbt(stack);
+		var nbt = BlockItem.getBlockEntityNbtFromStack(stack);
 		if (nbt != null && nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
 			float z = .933f;
 			if (mode == Mode.HEAD) {
@@ -92,7 +92,7 @@ public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.Dynam
 
 			var blackboard = Blackboard.fromNbt(nbt);
 			BlackboardTexture.fromBlackboard(blackboard)
-					.render(matrices.peek().getPositionMatrix(), vertexConsumers, blackboard.isLit() ? LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE : light);
+					.render(matrices.peek().getModel(), vertexConsumers, blackboard.isLit() ? LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE : light);
 		}
 
 		matrices.pop();

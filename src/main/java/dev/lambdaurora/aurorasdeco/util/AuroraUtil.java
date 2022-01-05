@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -90,7 +90,7 @@ public final class AuroraUtil {
 	}
 
 	public static NbtCompound getOrCreateBlockEntityNbt(ItemStack stack, BlockEntityType<?> type) {
-		var nbt = BlockItem.getBlockEntityNbt(stack);
+		var nbt = BlockItem.getBlockEntityNbtFromStack(stack);
 		if (nbt == null) {
 			/* setBlockEntityNbt only actually sets the nbt tag if it isn't empty.
 			   We want to hit the code path to set the nbt tag. So we add a dummy boolean to our tag,
@@ -99,7 +99,7 @@ public final class AuroraUtil {
 			 */
 			var nbt2 = new NbtCompound();
 			nbt2.putBoolean("aurorasdeco_dummy", true);
-			BlockItem.setBlockEntityNbt(stack, type, nbt2);
+			BlockItem.writeBlockEntityNbtToStack(stack, type, nbt2);
 			nbt2.remove("aurorasdeco_dummy");
 			return nbt2;
 		} else {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -25,11 +25,9 @@ import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -48,7 +46,7 @@ import java.util.UUID;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class SignPostBlockEntity extends BlockEntity implements BlockEntityHelper {
+public class SignPostBlockEntity extends BasicBlockEntity {
 	private Sign up;
 	private Sign down;
 	@Nullable
@@ -157,16 +155,6 @@ public class SignPostBlockEntity extends BlockEntity implements BlockEntityHelpe
 		this.writeSignPostNbt(nbt);
 	}
 
-	@Override
-	public NbtCompound toInitialChunkDataNbt() {
-		return this.createNbt();
-	}
-
-	@Override
-	public BlockEntityUpdateS2CPacket toUpdatePacket() {
-		return BlockEntityUpdateS2CPacket.create(this);
-	}
-
 	private void readSignPostNbt(NbtCompound nbt) {
 		if (nbt.contains("up_sign", NbtElement.COMPOUND_TYPE)) {
 			this.up = this.getSignFromNbt(nbt.getCompound("up_sign"));
@@ -192,7 +180,7 @@ public class SignPostBlockEntity extends BlockEntity implements BlockEntityHelpe
 			if (text != null) {
 				return text;
 			}
-		} catch (Exception var3) {
+		} catch (Exception ignored) {
 		}
 
 		return LiteralText.EMPTY;

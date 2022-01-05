@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -91,7 +91,7 @@ public class BlackboardTexture {
 	public void update(Blackboard blackboard) {
 		for (int y = 0; y < 16; y++) {
 			for (int x = 0; x < 16; x++) {
-				this.texture.getImage().setColor(x, y, blackboard.getColor(x, y));
+				this.texture.getImage().setPixelColor(x, y, blackboard.getColor(x, y));
 			}
 		}
 		this.texture.upload();

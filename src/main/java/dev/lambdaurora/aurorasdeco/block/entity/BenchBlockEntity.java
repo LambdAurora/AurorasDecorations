@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,11 +23,9 @@ import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
@@ -41,7 +39,7 @@ import org.jetbrains.annotations.Nullable;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class BenchBlockEntity extends BlockEntity implements RenderAttachmentBlockEntity {
+public class BenchBlockEntity extends BasicBlockEntity implements RenderAttachmentBlockEntity {
 	private SeatRestItem rest;
 
 	public BenchBlockEntity(BlockPos pos, BlockState state) {
@@ -146,15 +144,5 @@ public class BenchBlockEntity extends BlockEntity implements RenderAttachmentBlo
 	private void writeBenchNbt(NbtCompound nbt) {
 		if (this.rest != null)
 			nbt.putString("rest", Registry.ITEM.getId(this.rest).toString());
-	}
-
-	@Override
-	public NbtCompound toInitialChunkDataNbt() {
-		return this.createNbt();
-	}
-
-	@Override
-	public BlockEntityUpdateS2CPacket toUpdatePacket() {
-		return BlockEntityUpdateS2CPacket.create(this);
 	}
 }

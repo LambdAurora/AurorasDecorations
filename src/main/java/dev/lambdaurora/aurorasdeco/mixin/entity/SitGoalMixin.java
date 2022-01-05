@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -37,7 +37,7 @@ public class SitGoalMixin {
 	@Inject(method = "start", at = @At("RETURN"))
 	private void onStart(CallbackInfo ci) {
 		if (this.tameable instanceof CatEntity) {
-			var state = this.tameable.getEntityWorld().getBlockState(this.tameable.getBlockPos());
+			var state = this.tameable.getWorld().getBlockState(this.tameable.getBlockPos());
 			if (state.isIn(AurorasDecoTags.PET_BEDS)) {
 				this.tameable.setInSittingPose(false);
 				((CatEntity) this.tameable).setInSleepingPose(true);

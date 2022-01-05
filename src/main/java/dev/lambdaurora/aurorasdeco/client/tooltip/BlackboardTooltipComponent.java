@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -76,7 +76,7 @@ public class BlackboardTooltipComponent implements TooltipComponent {
 		matrices.scale(128.f, 128.f, 1);
 
 		int light = 15728880;
-		var model = matrices.peek().getPositionMatrix();
+		var model = matrices.peek().getModel();
 
 		this.quad(this.background, 0.f, 0.f, 1.f, 1.f, model, vertexConsumers, light);
 
@@ -85,7 +85,7 @@ public class BlackboardTooltipComponent implements TooltipComponent {
 		if (this.blackboard.isLit()) {
 			matrices.push();
 			matrices.translate(0, 0, 1);
-			model = matrices.peek().getPositionMatrix();
+			model = matrices.peek().getModel();
 
 			var glow = RenderLayer.getText(GLOW_TEXTURE);
 
@@ -103,7 +103,7 @@ public class BlackboardTooltipComponent implements TooltipComponent {
 		if (this.locked) {
 			matrices.translate(.5f, .5f, 1);
 			matrices.scale(.5f, .5f, 1.f);
-			model = matrices.peek().getPositionMatrix();
+			model = matrices.peek().getModel();
 			RenderLayer locked = RenderLayer.getText(LOCK_ICON_TEXTURE);
 			this.quad(locked, 0.f, .6484375f, .2421875f, .890625f, model, vertexConsumers, light);
 		}

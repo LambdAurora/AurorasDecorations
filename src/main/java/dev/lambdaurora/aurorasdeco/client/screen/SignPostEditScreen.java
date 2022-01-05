@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -51,7 +51,7 @@ import org.lwjgl.glfw.GLFW;
  */
 @Environment(EnvType.CLIENT)
 public class SignPostEditScreen extends Screen {
-	private static final OrderedText END_CURSOR = OrderedText.styledForwardsVisitedString("_", Style.EMPTY);
+	private static final OrderedText END_CURSOR = OrderedText.method_30747("_", Style.EMPTY);
 	private final SignPostBlockEntity signPost;
 	private int ticksSinceOpened;
 	private int currentRow;
@@ -225,12 +225,12 @@ public class SignPostEditScreen extends Screen {
 				rowText = this.textRenderer.mirror(rowText);
 			}
 
-			var text = OrderedText.styledForwardsVisitedString(rowText, Style.EMPTY);
+			var text = OrderedText.method_30747(rowText, Style.EMPTY);
 			float x = -this.textRenderer.getWidth(text) / 2.f;
 			if (glowing) {
-				this.textRenderer.drawWithOutline(text, x, 0, color, backgroundColor, matrices.peek().getPositionMatrix(), vertexConsumers, light);
+				this.textRenderer.drawWithOutline(text, x, 0, color, backgroundColor, matrices.peek().getModel(), vertexConsumers, light);
 			} else {
-				this.textRenderer.draw(text, x, 0, color, false, matrices.peek().getPositionMatrix(), vertexConsumers,
+				this.textRenderer.draw(text, x, 0, color, false, matrices.peek().getModel(), vertexConsumers,
 						false, 0, light);
 			}
 
@@ -246,9 +246,9 @@ public class SignPostEditScreen extends Screen {
 					int cursorX = o + (int) x;
 					if (selectionStart >= rowText.length()) {
 						if (glowing) {
-							this.textRenderer.drawWithOutline(END_CURSOR, cursorX, 0, color, backgroundColor, matrices.peek().getPositionMatrix(), vertexConsumers, light);
+							this.textRenderer.drawWithOutline(END_CURSOR, cursorX, 0, color, backgroundColor, matrices.peek().getModel(), vertexConsumers, light);
 						} else {
-							this.textRenderer.draw(END_CURSOR, cursorX, 0, color, false, matrices.peek().getPositionMatrix(), vertexConsumers,
+							this.textRenderer.draw(END_CURSOR, cursorX, 0, color, false, matrices.peek().getModel(), vertexConsumers,
 									false, 0, light);
 						}
 						vertexConsumers.draw();
@@ -261,7 +261,7 @@ public class SignPostEditScreen extends Screen {
 				}
 
 				if (selectionStart != selectionEnd) {
-					var model = matrices.peek().getPositionMatrix();
+					var model = matrices.peek().getModel();
 
 					int start = Math.min(selectionStart, selectionEnd);
 					int end = Math.max(selectionStart, selectionEnd);

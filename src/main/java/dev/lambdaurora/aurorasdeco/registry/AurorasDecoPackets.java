@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 LambdAurora <aurora42lambda@gmail.com>
+ * Copyright (c) 2021 - 2022 LambdAurora <aurora42lambda@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -53,7 +53,7 @@ public final class AurorasDecoPackets {
 		var pos = buf.readBlockPos();
 
 		server.execute(() -> {
-			var signPost = AurorasDecoRegistry.SIGN_POST_BLOCK_ENTITY_TYPE.get(player.getEntityWorld(), pos);
+			var signPost = AurorasDecoRegistry.SIGN_POST_BLOCK_ENTITY_TYPE.get(player.getWorld(), pos);
 			if (signPost == null)
 				return; // Sign Post is not here.
 
@@ -72,7 +72,7 @@ public final class AurorasDecoPackets {
 			if (!player.getAbilities().allowModifyWorld)
 				return; // Avoid griefing.
 
-			var signPost = AurorasDecoRegistry.SIGN_POST_BLOCK_ENTITY_TYPE.get(player.getEntityWorld(), pos);
+			var signPost = AurorasDecoRegistry.SIGN_POST_BLOCK_ENTITY_TYPE.get(player.getWorld(), pos);
 			if (signPost == null)
 				return; // Sign Post is not here.
 
