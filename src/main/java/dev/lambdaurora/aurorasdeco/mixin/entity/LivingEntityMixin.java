@@ -57,7 +57,7 @@ public abstract class LivingEntityMixin extends Entity {
 
 	@Dynamic("Lambda in LivingEntity#wakeUp")
 	@Inject(
-			method = "m_ljzijdub",
+			method = "m_ljzijdub(Lnet/minecraft/util/math/BlockPos;)V",
 			at = @At(
 					value = "INVOKE",
 					target = "Lnet/minecraft/block/BlockState;getBlock()Lnet/minecraft/block/Block;"
