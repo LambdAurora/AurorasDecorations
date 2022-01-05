@@ -17,7 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.mixin;
 
-import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPlants;
 import net.minecraft.block.BlockState;
 import net.minecraft.world.gen.feature.VegetationConfiguredFeatures;
 import org.spongepowered.asm.mixin.Mixin;
@@ -30,8 +30,10 @@ import java.util.Arrays;
 public class ForestFlowerBlockListMixin {
 	@ModifyArg(method = "method_39726", at = @At(value = "INVOKE", target = "Ljava/util/List;of([Ljava/lang/Object;)Ljava/util/List;"), remap = false)
 	private static Object[] addAurorasDecoFlowers(Object[] states) {
-		var newStates = Arrays.copyOf((BlockState[]) states, states.length + 1);
-		newStates[states.length] = AurorasDecoRegistry.DAFFODIL.getDefaultState();
+		var newStates = Arrays.copyOf((BlockState[]) states, states.length + AurorasDecoPlants.FLOWER_FOREST_PLANTS.size());
+		for (int i = 0; i < AurorasDecoPlants.FLOWER_FOREST_PLANTS.size(); i++) {
+			newStates[states.length + i] = AurorasDecoPlants.FLOWER_FOREST_PLANTS.get(i);
+		}
 		return newStates;
 	}
 }

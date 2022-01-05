@@ -28,9 +28,6 @@ You will find information about this mod's features here.
   - Can filter items and simplifies redstone contraptions.
   - The filtering is not entirely strict (some parameters may not be accounted like durability).
 - [Copper Sulfate](copper_sulfate.md)
-- Daffodils
-  - A cute yellow flower.
-  - Can be found in flower forests.
 - Item Frames can be made invisible when using shears on them while they hold an item.
   After the item is removed, the item frame will be visible again.
 - Lanterns
@@ -51,6 +48,9 @@ You will find information about this mod's features here.
   Ever wished to share a pumpkin pie with your friends?
   Or just place it on a table to eat it later?
   Now you can!
+- Plants
+  - [Daffodil](plants/daffodil.md)
+  - [Lavender](plants/lavender.md)
 - Polished Basalt Wall
 - [Sawmill](sawmill.md)
 - [Shelves](shelves.md)

@@ -55,15 +55,14 @@ public abstract class LivingEntityMixin extends Entity {
 		}
 	}
 
-	@Dynamic
+	@Dynamic("Lambda in LivingEntity#wakeUp")
 	@Inject(
-			method = "method_18404",
+			method = "m_ljzijdub",
 			at = @At(
 					value = "INVOKE",
 					target = "Lnet/minecraft/block/BlockState;getBlock()Lnet/minecraft/block/Block;"
 			),
-			locals = LocalCapture.CAPTURE_FAILHARD,
-			remap = false
+			locals = LocalCapture.CAPTURE_FAILHARD
 	)
 	private void onWakeUp(BlockPos pos, CallbackInfo ci, BlockState state) {
 		if (state.getBlock() instanceof SleepingBagBlock) {

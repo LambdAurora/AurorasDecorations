@@ -29,11 +29,9 @@ import dev.lambdaurora.aurorasdeco.client.screen.CopperHopperScreen;
 import dev.lambdaurora.aurorasdeco.client.screen.SawmillScreen;
 import dev.lambdaurora.aurorasdeco.client.screen.ShelfScreen;
 import dev.lambdaurora.aurorasdeco.hook.TrinketsHooks;
-import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPackets;
-import dev.lambdaurora.aurorasdeco.registry.AurorasDecoParticles;
-import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import dev.lambdaurora.aurorasdeco.registry.WoodType;
+import dev.lambdaurora.aurorasdeco.registry.*;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
+import dev.lambdaurora.aurorasdeco.tooltip.ConvertibleTooltipData;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -100,8 +98,10 @@ public class AurorasDecoClient implements ClientModInitializer {
 				COPPER_SULFATE_LANTERN_BLOCK,
 				COPPER_SULFATE_TORCH_BLOCK,
 				COPPER_SULFATE_WALL_TORCH_BLOCK,
-				DAFFODIL,
-				POTTED_DAFFODIL,
+				AurorasDecoPlants.DAFFODIL,
+				AurorasDecoPlants.LAVENDER,
+				AurorasDecoPlants.POTTED_DAFFODIL,
+				AurorasDecoPlants.POTTED_LAVENDER,
 				SAWMILL_BLOCK,
 				SOUL_BRAZIER_BLOCK,
 				WIND_CHIME_BLOCK
@@ -174,6 +174,14 @@ public class AurorasDecoClient implements ClientModInitializer {
 
 		ModelLoadingRegistry.INSTANCE.registerModelProvider(RenderRule::reload);
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(resourceManager -> new BakedSignPostModel.Provider());
+
+		TooltipComponentCallback.EVENT.register(data -> {
+			if (data instanceof ConvertibleTooltipData convertible) {
+				return convertible.toComponent();
+			}
+
+			return null;
+		});
 
 		TrinketsHooks.init(BLACKBOARD_BLOCK.asItem(), WAXED_BLACKBOARD_BLOCK.asItem(),
 				CHALKBOARD_BLOCK.asItem(), WAXED_CHALKBOARD_BLOCK.asItem());

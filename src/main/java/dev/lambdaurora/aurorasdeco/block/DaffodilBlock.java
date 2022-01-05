@@ -19,13 +19,10 @@ package dev.lambdaurora.aurorasdeco.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.FlowerBlock;
-import net.minecraft.block.Material;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
@@ -35,7 +32,6 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.List;
 
@@ -46,16 +42,11 @@ import java.util.List;
  * @version 1.0.0
  * @since 1.0.0
  */
-public final class DaffodilBlock extends FlowerBlock {
+public final class DaffodilBlock extends AurorasDecoFlowerBlock {
 	public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
 	public DaffodilBlock() {
-		super(StatusEffects.NAUSEA, 8,
-				QuiltBlockSettings.of(Material.PLANT)
-						.noCollision()
-						.breakInstantly()
-						.sounds(BlockSoundGroup.GRASS)
-		);
+		super(StatusEffects.NAUSEA, 8, defaultSettings());
 
 		this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
 	}

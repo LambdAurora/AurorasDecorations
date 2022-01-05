@@ -10,6 +10,8 @@
 .wiki_page > .wiki_content {
 	flex: 1 1 auto;
 	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
 }
 
 .wiki_page > aside {
@@ -30,6 +32,9 @@
 
 .wiki_page nav li {
 	padding-left: 1em;
+	margin-top: 0.25em;
+	margin-bottom: 0.25em;
+	cursor: pointer;
 }
 
 .wiki_page nav li > div {

@@ -55,8 +55,7 @@
     "client.MobEntityRendererAccessor",
     "client.ModelLoaderMixin",
     "client.NativeImageAccessor",
-    "client.ReloadableResourceManagerImplMixin",
-    "client.ScreenMixin"
+    "client.ReloadableResourceManagerImplMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,0 +1,28 @@
+# Lavender
+
+<!--description:Learn everything about the lavender, a very cozy flower.-->
+<!--thumbnail:images/assets/item/lavender.png-->
+
+[Lavender][lavender_wikipedia] is a common flower in temperate climates,
+it has a nice shade of purple which lead the color to be named the same.
+
+<div style="display: flex; justify-content: center;">
+<img alt="Lavender Item" title="Lavender Item" class="item" src="../../src/main/resources/assets/aurorasdeco/textures/item/lavender.png" width="128" height="128" />
+<img alt="Lavender Flower" title="Lavender Flower" class="item" src="../../images/render/lavender.png" width="128" height="128" />
+<img alt="Potted Lavender" title="Potted Lavender" class="item" src="../../images/render/potted/lavender.png" width="128" height="128" />
+</div>
+
+## Usage
+
+Lavender can be crafted into purple dye.
+
+## Locations
+
+Lavender can be found in flower forests.
+
+## Planned Updates
+
+ - Add a lavender plain biome.
+ - Add some particles.
+
+[lavender_wikipedia]: https://en.wikipedia.org/wiki/Lavandula "Wikipedia page"

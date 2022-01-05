@@ -28,7 +28,7 @@ function deploy_path(path) {
 	if (path.startsWith("./public"))
 		return path.replace(/^\.\/public/, "./deploy_out");
 	else if (path.startsWith(TEXTURES_PATH))
-		return path.replace(TEXTURES_PATH, "./deploy_out/images");
+		return path.replace(TEXTURES_PATH, "./deploy_out/images/assets");
 	else
 		return path.replace(/^\.\.?/, "./deploy_out")
 }
@@ -199,7 +199,7 @@ function fix_links_in_html(nodes, assets_to_copy) {
 					let result;
 					if ((result = ASSETS_PATH_REGEX.exec(value))) {
 						assets_to_copy[result[1]] = "../src/main/resources/assets/aurorasdeco/textures/" + result[1];
-						node.attr(attr.name, value.replace(TEXTURES_PATH, 'images'));
+						node.attr(attr.name, value.replace(TEXTURES_PATH, 'images/assets'));
 						continue;
 					}
 

@@ -311,17 +311,6 @@ public final class AurorasDecoRegistry {
 	public static final StairsBlock MOSSY_TUFF_BRICK_STAIRS = MOSSY_TUFF_BRICKS_DERIVATOR.stairs(Items.DEEPSLATE_TILE_STAIRS);
 	public static final WallBlock MOSSY_TUFF_BRICK_WALL = MOSSY_TUFF_BRICKS_DERIVATOR.wall();
 
-	/* Plants */
-
-	public static final DaffodilBlock DAFFODIL = Registrar.register("daffodil", new DaffodilBlock())
-			.withItem(new FabricItemSettings().group(ItemGroup.DECORATIONS), DerivedBlockItem::flower)
-			.finish();
-
-	/* Potted Plants */
-
-	public static final FlowerPotBlock POTTED_DAFFODIL = register("potted/daffodil",
-			new DirectionalFlowerPotBlock(DAFFODIL, QuiltBlockSettings.of(Material.DECORATION).nonOpaque().breakInstantly()));
-
 	/* Block Entities */
 
 	public static final BlockEntityType<BenchBlockEntity> BENCH_BLOCK_ENTITY_TYPE = registerBlockEntity(
@@ -417,7 +406,7 @@ public final class AurorasDecoRegistry {
 	public static final PetUsePetBedCriterion PET_USE_PET_BED_CRITERION = CriterionRegistry
 			.register(new PetUsePetBedCriterion());
 
-	private static <T extends Block> T register(String name, T block) {
+	static <T extends Block> T register(String name, T block) {
 		return Registry.register(Registry.BLOCK, id(name), block);
 	}
 
@@ -474,6 +463,7 @@ public final class AurorasDecoRegistry {
 
 	@SuppressWarnings("unchecked")
 	public static void init() {
+		AurorasDecoPlants.init();
 		AurorasDecoSounds.init();
 
 		OxidizableBlocksRegistry.registerWaxableBlockPair(BLACKBOARD_BLOCK, WAXED_BLACKBOARD_BLOCK);
@@ -494,7 +484,7 @@ public final class AurorasDecoRegistry {
 				if (block == Blocks.FLOWER_POT) return;
 
 				RegistrationHelper.BLOCK.register(
-						RegistrationHelper.getIdPath("hanging_flower_pot", id, "^potted_"),
+						RegistrationHelper.getIdPath("hanging_flower_pot", id, "^potted[_/]"),
 						new HangingFlowerPotBlock(flowerPotBlock)
 				);
 			} else {

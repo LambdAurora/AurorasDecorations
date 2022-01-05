@@ -39,7 +39,7 @@ public class HoneycombItemMixin {
 	private static final ThreadLocal<NbtCompound> aurorasdeco$blockEntityData = new ThreadLocal<>();
 
 	@Dynamic
-	@Inject(method = "method_34719", at = @At("HEAD"), remap = false, cancellable = true)
+	@Inject(method = "m_blzykkgi", at = @At("HEAD"), cancellable = true)
 	private static void onBeforeReplace(ItemUsageContext context, BlockPos pos, World world, BlockState state, CallbackInfoReturnable<ActionResult> cir) {
 		if (state.getBlock() instanceof BlackboardBlock) {
 			var blockEntity = AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE.get(world, pos);
@@ -50,7 +50,7 @@ public class HoneycombItemMixin {
 	}
 
 	@Dynamic
-	@Inject(method = "method_34719", at = @At("RETURN"), remap = false, cancellable = true)
+	@Inject(method = "m_blzykkgi", at = @At("RETURN"), cancellable = true)
 	private static void onAfterReplace(ItemUsageContext context, BlockPos pos, World world, BlockState state, CallbackInfoReturnable<ActionResult> cir) {
 		if (state.getBlock() instanceof BlackboardBlock) {
 			var blockEntity = AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE.get(world, pos);
