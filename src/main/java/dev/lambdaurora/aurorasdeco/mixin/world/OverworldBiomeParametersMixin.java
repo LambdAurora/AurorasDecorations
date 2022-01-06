@@ -41,14 +41,6 @@ public abstract class OverworldBiomeParametersMixin {
 
 	@Shadow
 	@Final
-	private MultiNoiseUtil.ParameterRange[] temperatures;
-
-	@Shadow
-	@Final
-	private MultiNoiseUtil.ParameterRange[] humidities;
-
-	@Shadow
-	@Final
 	private MultiNoiseUtil.ParameterRange coastContinentalness;
 
 	@Shadow
