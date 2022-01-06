@@ -1,7 +1,7 @@
 # Daffodil
 
 <!--description:Learn everything about the daffodil, a nice yellow flower.-->
-<!--thumbnail:images/item/daffodil.png-->
+<!--thumbnail:images/assets/item/daffodil.png-->
 
 Copper Sulfate ([Copper(II) Sulfate][copper_sulfate_wikipedia])
 is an item created from copper. It has a wide usage in crafting new light sources with green flames.
