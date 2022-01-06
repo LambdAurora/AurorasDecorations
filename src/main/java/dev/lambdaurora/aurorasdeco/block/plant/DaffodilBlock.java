@@ -15,8 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.block;
+package dev.lambdaurora.aurorasdeco.block.plant;
 
+import dev.lambdaurora.aurorasdeco.block.plant.AurorasDecoFlowerBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;

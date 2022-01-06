@@ -203,7 +203,7 @@ function fix_links_in_html(nodes, assets_to_copy) {
 						continue;
 					}
 
-					if (value.startsWith("../"))
+					if (value.startsWith("../") && !value.includes(".md"))
 						value = node.attr(attr.name, value.substr(3)).value();
 					if (value.includes('.md'))
 						node.attr(attr.name, value.replace(/\.md/, ".html"));

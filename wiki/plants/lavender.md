@@ -18,11 +18,8 @@ Lavender can be crafted into purple dye.
 
 ## Locations
 
-Lavender can be found in flower forests.
-
-## Planned Updates
-
- - Add a lavender plain biome.
- - Add some particles.
+ - Flower Forests
+ - [Lavender Plains](../biomes/lavender_plains.md)  
+   ![Lavender Plains Picture](../../images/biome/lavender_plains.png "Lavender Plains")
 
 [lavender_wikipedia]: https://en.wikipedia.org/wiki/Lavandula "Wikipedia page"

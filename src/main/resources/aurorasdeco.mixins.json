@@ -3,7 +3,6 @@
   "package": "dev.lambdaurora.aurorasdeco.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ForestFlowerBlockListMixin",
     "ModResourcePackCreatorMixin",
     "PointOfInterestTypeAccessor",
     "PointOfInterestTypeMixin",
@@ -44,7 +43,11 @@
     "item.HoneycombItemMixin",
     "item.ItemMixin",
     "item.LeadItemMixin",
-    "item.ShovelItemMixin"
+    "item.ShovelItemMixin",
+    "world.OverworldBiomeCreatorAccessor",
+    "world.OverworldBiomeParametersMixin",
+    "world.TreeConfiguredFeaturesAccessor",
+    "world.VegetationConfiguredFeaturesMixin"
   ],
   "client": [
     "client.BedBlockClientMixin",

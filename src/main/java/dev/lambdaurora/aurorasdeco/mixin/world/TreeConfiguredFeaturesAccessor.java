@@ -15,22 +15,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.mixin.client;
+package dev.lambdaurora.aurorasdeco.mixin.world;
 
-import dev.lambdaurora.aurorasdeco.block.entity.BlackboardBlockEntity;
-import dev.lambdaurora.aurorasdeco.client.Wind;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.world.ClientWorld;
+import net.minecraft.world.gen.feature.TreeConfiguredFeatures;
+import net.minecraft.world.gen.feature.TreeFeatureConfig;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(MinecraftClient.class)
-public class MinecraftClientMixin {
-	@Inject(method = "setWorld", at = @At("HEAD"))
-	private void onSetWorld(ClientWorld world, CallbackInfo ci) {
-		BlackboardBlockEntity.onWorldChange(world);
-		Wind.get().reset();
+@Mixin(TreeConfiguredFeatures.class)
+public interface TreeConfiguredFeaturesAccessor {
+	@Invoker
+	static TreeFeatureConfig.Builder invokeOak() {
+		throw new IllegalStateException("Mixin injection failed");
+	}
+
+	@Invoker
+	static TreeFeatureConfig.Builder invokeBirch() {
+		throw new IllegalStateException("Mixin injection failed");
+	}
+
+	@Invoker
+	static TreeFeatureConfig.Builder invokeFancyOak() {
+		throw new IllegalStateException("Mixin injection failed");
 	}
 }

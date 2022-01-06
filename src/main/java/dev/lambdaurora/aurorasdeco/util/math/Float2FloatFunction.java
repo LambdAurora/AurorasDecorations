@@ -15,22 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.mixin.client;
+package dev.lambdaurora.aurorasdeco.util.math;
 
-import dev.lambdaurora.aurorasdeco.block.entity.BlackboardBlockEntity;
-import dev.lambdaurora.aurorasdeco.client.Wind;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.world.ClientWorld;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-@Mixin(MinecraftClient.class)
-public class MinecraftClientMixin {
-	@Inject(method = "setWorld", at = @At("HEAD"))
-	private void onSetWorld(ClientWorld world, CallbackInfo ci) {
-		BlackboardBlockEntity.onWorldChange(world);
-		Wind.get().reset();
-	}
+public interface Float2FloatFunction {
+	float apply(float value);
 }

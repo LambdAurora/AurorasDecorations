@@ -464,6 +464,7 @@ public final class AurorasDecoRegistry {
 	@SuppressWarnings("unchecked")
 	public static void init() {
 		AurorasDecoPlants.init();
+		AurorasDecoBiomes.init();
 		AurorasDecoSounds.init();
 
 		OxidizableBlocksRegistry.registerWaxableBlockPair(BLACKBOARD_BLOCK, WAXED_BLACKBOARD_BLOCK);

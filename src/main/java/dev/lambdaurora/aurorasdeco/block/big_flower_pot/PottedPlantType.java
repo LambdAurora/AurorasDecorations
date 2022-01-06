@@ -18,7 +18,7 @@
 package dev.lambdaurora.aurorasdeco.block.big_flower_pot;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.block.DaffodilBlock;
+import dev.lambdaurora.aurorasdeco.block.plant.DaffodilBlock;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.block.*;

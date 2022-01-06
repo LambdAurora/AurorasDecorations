@@ -15,8 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.block;
+package dev.lambdaurora.aurorasdeco.block.plant;
 
+import dev.lambdaurora.aurorasdeco.block.plant.AurorasDecoFlowerBlock;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoParticles;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.effect.StatusEffects;
@@ -24,6 +26,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
+
+import java.util.Random;
 
 /**
  * Represents the lavender flower.
@@ -42,5 +47,19 @@ public final class LavenderBlock extends AurorasDecoFlowerBlock {
 	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
 		return VoxelShapes.fullCube();
+	}
+
+	/* Ticking */
+
+	@Override
+	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+		if (!world.getDimension().hasCeiling() && world.isSkyVisible(pos)) {
+			if (random.nextBoolean()) {
+				double x = pos.getX() + random.nextFloat() * 5;
+				double y = pos.getY() + random.nextFloat();
+				double z = pos.getZ() + random.nextFloat() * 5;
+				world.addParticle(AurorasDecoParticles.LAVENDER_PETAL, x, y, z, 0.f, 0.f, 0.f);
+			}
+		}
 	}
 }

@@ -37,6 +37,7 @@ public final class AurorasDecoParticles {
 	public static final DefaultParticleType AMETHYST_GLINT = register("amethyst_glint");
 	public static final DefaultParticleType COPPER_SULFATE_FLAME = register("copper_sulfate_flame");
 	public static final DefaultParticleType COPPER_SULFATE_LAVA = register("copper_sulfate_lava");
+	public static final DefaultParticleType LAVENDER_PETAL = register("lavender_petal");
 
 	private static DefaultParticleType register(String name) {
 		return Registry.register(Registry.PARTICLE_TYPE, AurorasDeco.id(name), FabricParticleTypes.simple());

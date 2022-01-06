@@ -15,8 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.block;
+package dev.lambdaurora.aurorasdeco.block.plant;
 
+import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Fertilizable;
 import net.minecraft.block.FlowerBlock;
@@ -42,6 +43,8 @@ import java.util.Random;
 public class AurorasDecoFlowerBlock extends FlowerBlock implements Fertilizable {
 	public AurorasDecoFlowerBlock(StatusEffect statusEffect, int effectInStewDuration, Settings settings) {
 		super(statusEffect, effectInStewDuration, settings);
+
+		FlammableBlockRegistry.getDefaultInstance().add(this, 60, 100);
 	}
 
 	public static QuiltBlockSettings defaultSettings() {

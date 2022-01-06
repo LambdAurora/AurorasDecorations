@@ -24,6 +24,7 @@ import dev.lambdaurora.aurorasdeco.block.StumpBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.client.model.BakedSignPostModel;
 import dev.lambdaurora.aurorasdeco.client.particle.AmethystGlintParticle;
+import dev.lambdaurora.aurorasdeco.client.particle.LavenderPetalParticle;
 import dev.lambdaurora.aurorasdeco.client.renderer.*;
 import dev.lambdaurora.aurorasdeco.client.screen.CopperHopperScreen;
 import dev.lambdaurora.aurorasdeco.client.screen.SawmillScreen;
@@ -36,6 +37,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
@@ -110,6 +112,7 @@ public class AurorasDecoClient implements ClientModInitializer {
 		ParticleFactoryRegistry.getInstance().register(AurorasDecoParticles.AMETHYST_GLINT, AmethystGlintParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(AurorasDecoParticles.COPPER_SULFATE_FLAME, FlameParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(AurorasDecoParticles.COPPER_SULFATE_LAVA, LavaEmberParticle.Factory::new);
+		ParticleFactoryRegistry.getInstance().register(AurorasDecoParticles.LAVENDER_PETAL, LavenderPetalParticle.Factory::new);
 
 		BlockRenderLayerMap.put(RenderLayer.getCutout(), StumpBlock.streamLogStumps().toArray(Block[]::new));
 
@@ -154,6 +157,8 @@ public class AurorasDecoClient implements ClientModInitializer {
 						}
 					});
 		});
+
+		ClientTickEvents.START_WORLD_TICK.register(Wind.get()::tick);
 
 		this.registerBlackboardItemRenderer(BLACKBOARD_BLOCK);
 		this.registerBlackboardItemRenderer(CHALKBOARD_BLOCK);
