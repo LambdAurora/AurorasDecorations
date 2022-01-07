@@ -18,15 +18,25 @@
 package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.block.entity.SwayingBlockEntity;
-import dev.lambdaurora.aurorasdeco.block.entity.WindChimeBlockEntity;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.tag.BlockTags;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.function.BooleanBiFunction;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
@@ -36,10 +46,12 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
+import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("deprecation")
-public class WindChimeBlock extends BlockWithEntity {
+public class WindChimeBlock extends BlockWithEntity implements Waterloggable {
+	public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 	public static final VoxelShape SHAPE;
 	public static final Box COLLISION_BOX;
 
@@ -47,6 +59,13 @@ public class WindChimeBlock extends BlockWithEntity {
 
 	public WindChimeBlock(Settings settings) {
 		super(settings);
+
+		this.setDefaultState(this.getDefaultState().with(WATERLOGGED, false));
+	}
+
+	@Override
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+		builder.add(WATERLOGGED);
 	}
 
 	/* Shapes */
@@ -73,11 +92,29 @@ public class WindChimeBlock extends BlockWithEntity {
 				HOLDER_SHAPE, BooleanBiFunction.ONLY_SECOND);
 	}
 
+	@Override
+	public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
+		var state = super.getPlacementState(ctx);
+		if (state != null) {
+			var world = ctx.getWorld();
+			var pos = ctx.getBlockPos();
+			var fluidState = world.getFluidState(pos);
+
+			return state.with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+		}
+
+		return null;
+	}
+
 	/* Updates */
 
 	@Override
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world,
 	                                            BlockPos pos, BlockPos posFrom) {
+		if (state.get(WATERLOGGED)) {
+			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+		}
+
 		state = super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
 		return direction == Direction.UP && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : state;
 	}
@@ -85,8 +122,16 @@ public class WindChimeBlock extends BlockWithEntity {
 	/* Interaction */
 
 	@Override
+	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+	                          BlockHitResult hit) {
+		return this.swing(world, hit, player, true) ? ActionResult.success(world.isClient()) : ActionResult.PASS;
+	}
+
+	@Override
 	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
 		if (world.isClient())
+			return;
+		if (entity instanceof ProjectileEntity)
 			return;
 
 		var windChime = AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE.get(world, pos);
@@ -94,7 +139,49 @@ public class WindChimeBlock extends BlockWithEntity {
 			return;
 
 		if (windChime.getCollisionBox().intersects(entity.getBoundingBox()))
-			windChime.activate(entity);
+			this.swing(entity, world, pos, null, true);
+	}
+
+	@Override
+	public void onProjectileHit(World world, BlockState state, BlockHitResult hit, ProjectileEntity projectile) {
+		var entity = projectile.getOwner();
+		var playerEntity = entity instanceof PlayerEntity ? (PlayerEntity) entity : null;
+		this.swing(world, hit, playerEntity, true);
+	}
+
+	private boolean isPointOnLantern(Direction side, double y) {
+		return side.getAxis() != Direction.Axis.Y && y <= 0.8123999834060669D;
+	}
+
+	public boolean swing(World world, BlockHitResult hitResult, @Nullable PlayerEntity player,
+	                     boolean hitResultIndependent) {
+		var direction = hitResult.getSide();
+		var blockPos = hitResult.getBlockPos();
+		boolean canSwing = !hitResultIndependent
+				|| this.isPointOnLantern(direction, hitResult.getPos().y - (double) blockPos.getY());
+		if (canSwing) {
+			this.swing(player, world, blockPos, direction, false);
+
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public void swing(@Nullable Entity entity, World world, BlockPos pos, @Nullable Direction direction, boolean collision) {
+		var blockEntity = AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE.get(world, pos);
+		if (!world.isClient() && blockEntity != null) {
+			if (!blockEntity.isColliding()) {
+				/*world.playSound(null, pos, AurorasDecoSounds.LANTERN_SWING_SOUND_EVENT, SoundCategory.BLOCKS,
+						2.f, 1.f);*/
+				world.emitGameEvent(entity, GameEvent.RING_BELL, pos);
+			}
+
+			if (!collision)
+				blockEntity.activate(direction);
+			else if (direction == null && entity != null)
+				blockEntity.activate(entity);
+		}
 	}
 
 	/* Block Entity Stuff */
@@ -114,6 +201,13 @@ public class WindChimeBlock extends BlockWithEntity {
 	@Override
 	public BlockRenderType getRenderType(BlockState state) {
 		return BlockRenderType.MODEL;
+	}
+
+	/* Fluid */
+
+	@Override
+	public FluidState getFluidState(BlockState state) {
+		return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
 	}
 
 	static {

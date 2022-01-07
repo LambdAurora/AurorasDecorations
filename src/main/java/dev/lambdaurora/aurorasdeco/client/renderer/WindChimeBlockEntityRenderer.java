@@ -30,7 +30,6 @@ import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +41,18 @@ public class WindChimeBlockEntityRenderer implements BlockEntityRenderer<WindChi
 	public static final SpriteIdentifier WIND_CHIME_TEXTURE = new SpriteIdentifier(
 			PlayerScreenHandler.BLOCK_ATLAS_TEXTURE,
 			AurorasDeco.id("block/wind_chime"));
+
+	private static final float EASTERN_CHIME_X = 11.f;
+	private static final float WESTERN_CHIME_X = 5.f;
+
+	private static final List<ChimeData> CHIMES = List.of(
+			new ChimeData(0, WESTERN_CHIME_X, 10, 10),
+			new ChimeData(1, WESTERN_CHIME_X, 7, 9),
+			new ChimeData(2, 8, 5, 8),
+			new ChimeData(3, EASTERN_CHIME_X, 6, 6),
+			new ChimeData(4, EASTERN_CHIME_X, 9, 9),
+			new ChimeData(5, 8, 11, 7)
+	);
 
 	private final ModelPart root;
 	private final List<ModelPart> chimes = new ArrayList<>();
@@ -58,21 +69,18 @@ public class WindChimeBlockEntityRenderer implements BlockEntityRenderer<WindChi
 		var modelData = new ModelData();
 		var root = modelData.getRoot();
 
-		addChime(root, 1, 10.f, 5.f, 10.f);
-		addChime(root, 2, 9.f, 5.f, 7.f);
-		addChime(root, 3, 8.f, 8.f, 5.f);
-		addChime(root, 4, 6.f, 11.f, 6.f);
-		addChime(root, 5, 9.f, 11.f, 9.f);
-		addChime(root, 6, 7.f, 8.f, 11.f);
+		for (var chime : CHIMES) {
+			addChime(root, chime);
+		}
 
 		return TexturedModelData.of(modelData, 16, 16);
 	}
 
-	private static void addChime(ModelPartData root, int number, float size, float x, float z) {
-		var chimeBody = root.addChild("chime" + number + "_body", ModelPartBuilder.create()
+	private static void addChime(ModelPartData root, ChimeData chime) {
+		var chimeBody = root.addChild("chime" + (chime.index() + 1) + "_body", ModelPartBuilder.create()
 						.uv(0, 0)
-						.cuboid(-1.f, -(2.f + size), -1.f, 2.f, size, 2.f),
-				ModelTransform.pivot(x, 12.f, z));
+						.cuboid(-1.f, -(2.f + chime.size()), -1.f, 2.f, chime.size(), 2.f),
+				ModelTransform.pivot(chime.x(), 12.f, chime.z()));
 		addString(chimeBody);
 	}
 
@@ -86,17 +94,48 @@ public class WindChimeBlockEntityRenderer implements BlockEntityRenderer<WindChi
 	@Override
 	public void render(WindChimeBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
 	                   int light, int overlay) {
-		float ticks = (float) entity.getSwingTicks() + tickDelta;
-		if (!entity.isColliding())
-			ticks = 0.f;
-		float angle = MathHelper.sin(ticks / (float) Math.PI) / (4.f + ticks / 3.f);
-
 		this.chimes.forEach(model -> {
-			model.pitch = angle;
-			model.roll = angle;
+			model.pitch = entity.getPitch(tickDelta);
+			model.roll = entity.getRoll(tickDelta);
 		});
+		CHIMES.forEach(chime -> chime.apply(this, entity.getPitch(tickDelta), entity.getRoll(tickDelta)));
 
 		this.root.render(matrices, WIND_CHIME_TEXTURE.getVertexConsumer(vertexConsumers, RenderLayer::getEntitySolid),
 				light, overlay);
+	}
+
+	record ChimeData(int index, float x, float z, float size) {
+		float getDistanceX() {
+			return 8 - this.x();
+		}
+
+		float getDistanceZ() {
+			return 8 - this.z();
+		}
+
+		void apply(WindChimeBlockEntityRenderer renderer, float pitch, float roll) {
+			var model = renderer.chimes.get(this.index());
+
+			float distanceZ = this.getDistanceZ();
+			if (distanceZ < 0 && pitch > 0 || distanceZ > 0 && pitch < 0) {
+				pitch -= (pitch * pitch * distanceZ / 8.f) / pitch;
+			}
+			model.pitch = pitch;
+
+			float distanceX = this.getDistanceX();
+
+			if (distanceX == 0) {
+				if (roll > 0) {
+					distanceX = 2;
+				} else {
+					distanceX = -2;
+				}
+			}
+
+			if (distanceX < 0 && roll < 0 || distanceX > 0 && roll > 0) {
+				roll += (roll * roll * distanceX / 8.f) / roll;
+			}
+			model.roll = roll;
+		}
 	}
 }

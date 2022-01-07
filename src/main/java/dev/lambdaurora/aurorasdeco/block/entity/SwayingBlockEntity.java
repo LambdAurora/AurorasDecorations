@@ -18,6 +18,8 @@
 package dev.lambdaurora.aurorasdeco.block.entity;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -28,7 +30,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
 import java.util.Set;
 
 public abstract class SwayingBlockEntity extends BlockEntity {
@@ -59,6 +60,19 @@ public abstract class SwayingBlockEntity extends BlockEntity {
 
 	public int getSwingTicks() {
 		return this.swingTicks;
+	}
+
+	public float getAdjustedSwingTicks() {
+		boolean fluid = !this.getCachedState().getFluidState().isEmpty();
+		float ticks = (float) this.getSwingTicks();
+
+		if (this.isColliding() && ticks > 4) {
+			ticks = 4.f;
+		}
+		if (fluid)
+			ticks /= 2.f;
+
+		return ticks;
 	}
 
 	/**
@@ -139,7 +153,7 @@ public abstract class SwayingBlockEntity extends BlockEntity {
 		double diffZ = selfZ - entity.getZ();
 
 		Direction direction;
-		if (Math.abs(diffX) < Math.abs(diffZ)) {
+		if (Math.abs(diffX) > Math.abs(diffZ)) {
 			if (diffX > 0) direction = Direction.WEST;
 			else direction = Direction.EAST;
 		} else {
@@ -184,6 +198,7 @@ public abstract class SwayingBlockEntity extends BlockEntity {
 		}
 	}
 
+	@Environment(EnvType.CLIENT)
 	protected void tickClient(World world) {
 		this.naturalSway = world.getLightLevel(LightType.SKY, this.pos) >= 12;
 		this.tick();
@@ -197,20 +212,21 @@ public abstract class SwayingBlockEntity extends BlockEntity {
 		boolean canTick = true;
 
 		if (!swayingBlockEntity.collisions.isEmpty()) {
-			var toRemove = new ArrayList<Entity>();
-			for (var entry : swayingBlockEntity.collisions) {
-				if (entry.isRemoved()) {
-					toRemove.add(entry);
-				} else {
+			var it = swayingBlockEntity.collisions.iterator();
+
+			while (it.hasNext()) {
+				var entry = it.next();
+
+				if (entry.isRemoved())
+					it.remove();
+				else {
 					if (swayingBlockEntity.getCollisionBox().intersects(entry.getBoundingBox())) {
 						canTick = false;
 					} else {
-						toRemove.add(entry);
+						it.remove();
 					}
 				}
 			}
-
-			toRemove.forEach(swayingBlockEntity.collisions::remove);
 		}
 		if (swayingBlockEntity.collisions.isEmpty() && swayingBlockEntity.isColliding()) {
 			swayingBlockEntity.colliding = false;

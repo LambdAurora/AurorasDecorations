@@ -83,6 +83,10 @@ public final class Wind {
 		return this.windZ;
 	}
 
+	public State getState() {
+		return this.state;
+	}
+
 	private void tickState(ClientWorld world) {
 		this.stateDuration--;
 

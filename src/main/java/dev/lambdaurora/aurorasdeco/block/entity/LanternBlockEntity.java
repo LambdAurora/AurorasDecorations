@@ -19,6 +19,8 @@ package dev.lambdaurora.aurorasdeco.block.entity;
 
 import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.util.math.BlockPos;
@@ -94,6 +96,7 @@ public class LanternBlockEntity extends SwayingBlockEntity {
 
 	/* Ticking */
 
+	@Environment(EnvType.CLIENT)
 	@Override
 	protected void tickClient(World world) {
 		super.tickClient(world);
@@ -101,15 +104,7 @@ public class LanternBlockEntity extends SwayingBlockEntity {
 		this.prevAngle = this.angle;
 
 		if (this.isSwinging() || this.isColliding()) {
-			boolean fluid = !this.getCachedState().getFluidState().isEmpty();
-			float ticks = (float) this.getSwingTicks();
-
-			if (this.isColliding() && ticks > 4) {
-				ticks = 4.f;
-			}
-			if (fluid)
-				ticks /= 2.f;
-
+			float ticks = this.getAdjustedSwingTicks();
 			float shiftedTicks = ticks - 100;
 			this.angle = (shiftedTicks * shiftedTicks) / 5000 * MathHelper.sin(ticks / MathHelper.PI) / (4 + ticks / 3);
 		} else {
