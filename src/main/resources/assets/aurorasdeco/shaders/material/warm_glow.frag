@@ -20,11 +20,13 @@ vec3 aurorasdeco_rgb_to_hsv(vec3 c) {
     return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
 }
 
-void frx_startFragment(inout frx_FragmentData fragData) {
-    float e = frx_luminance(fragData.spriteColor.rgb);
-    vec3 hsv = aurorasdeco_rgb_to_hsv(fragData.spriteColor.rgb); // HSV is a little bit more reliable for that tbh.
+void frx_materialFragment() {
+#ifndef DEPTH_PASS
+    float e = frx_luminance(frx_sampleColor.rgb);
+    vec3 hsv = aurorasdeco_rgb_to_hsv(frx_sampleColor.rgb); // HSV is a little bit more reliable for that tbh.
     bool lit = hsv.z > 0.5 && !aurorasdeco_is_near(hsv.x, 0.01, 35.7f / 360f);
-    fragData.emissivity = lit ? e : 0.0;
-    fragData.diffuse = fragData.diffuse && !lit;
-    fragData.ao = fragData.ao && !lit;
+    frx_fragEmissive = lit ? e : 0.0;
+    frx_fragEnableDiffuse = frx_fragEnableDiffuse && !lit;
+    frx_fragEnableAo = frx_fragEnableAo && !lit;
+#endif
 }

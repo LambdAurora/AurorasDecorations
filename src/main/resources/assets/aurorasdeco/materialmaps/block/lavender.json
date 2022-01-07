@@ -1,0 +1,10 @@
+{
+  "defaultMap": {
+    "spriteMap": [
+      {
+        "sprite": "aurorasdeco:block/lavender",
+        "material": "canvas:low_foliage"
+      }
+    ]
+  }
+}

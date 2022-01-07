@@ -1,0 +1,14 @@
+{
+  "defaultMap": {
+    "spriteMap": [
+      {
+        "sprite": "aurorasdeco:block/daffodil_front",
+        "material": "canvas:low_foliage"
+      },
+      {
+        "sprite": "aurorasdeco:block/daffodil_leaves",
+        "material": "canvas:low_foliage"
+      }
+    ]
+  }
+}
