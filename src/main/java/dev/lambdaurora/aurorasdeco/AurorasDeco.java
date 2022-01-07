@@ -22,8 +22,8 @@ import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPackets;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
+import dev.lambdaurora.aurorasdeco.util.RegistrationHelper;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Blocks;
 import net.minecraft.resource.ResourceType;
@@ -48,7 +48,7 @@ public class AurorasDeco implements ModInitializer {
 	public void onInitialize() {
 		AurorasDecoRegistry.init();
 
-		RegistryEntryAddedCallback.event(Registry.ITEM).register((rawId, id, object) -> {
+		RegistrationHelper.ITEM.addRegistrationCallback((helper, id, object) -> {
 			if (id.toString().equals("pockettools:pocket_cactus")) {
 				Registry.register(Registry.BLOCK, id("big_flower_pot/pocket_cactus"),
 						PottedPlantType.register("pocket_cactus", Blocks.POTTED_CACTUS, object,
@@ -61,6 +61,7 @@ public class AurorasDeco implements ModInitializer {
 
 			Blackboard.Color.tryRegisterColorFromItem(id, object);
 		});
+		RegistrationHelper.ITEM.init();
 
 		ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_OPEN_GUI_FAIL, AurorasDecoPackets::handleSignPostOpenGuiFailPacket);
 		ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_SET_TEXT, AurorasDecoPackets::handleSignPostSetTextPacket);

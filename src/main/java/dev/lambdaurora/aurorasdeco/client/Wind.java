@@ -36,7 +36,8 @@ import java.util.Random;
  */
 @Environment(EnvType.CLIENT)
 public final class Wind {
-	private static final Random RANDOM = new Random();
+	public static final long WIND_SEED = 0xa4505a;
+	private static final Random RANDOM = new Random(WIND_SEED);
 	private static final Wind INSTANCE = new Wind();
 
 	private float windX;

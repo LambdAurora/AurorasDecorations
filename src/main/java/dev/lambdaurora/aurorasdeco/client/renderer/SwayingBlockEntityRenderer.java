@@ -25,20 +25,4 @@ import net.minecraft.util.math.MathHelper;
 
 @Environment(EnvType.CLIENT)
 public abstract class SwayingBlockEntityRenderer<T extends SwayingBlockEntity> implements BlockEntityRenderer<T> {
-	public float getNaturalSwayingAngle(T entity, float tickDelta) {
-		if (!entity.canNaturallySway())
-			return 0.f;
-
-		var pos = entity.getPos();
-
-		long time = 0;
-		if (entity.getWorld() != null) {
-			time = entity.getWorld().getTime();
-		}
-
-		int period = 125;
-		float n = ((float) Math.floorMod(pos.getX() * 7L + pos.getY() * 9L + pos.getZ() * 13L + time, (long) period) + tickDelta)
-				/ period;
-		return (float) ((.01f * MathHelper.cos((float) (Math.PI * 2 * n))) * Math.PI);
-	}
 }

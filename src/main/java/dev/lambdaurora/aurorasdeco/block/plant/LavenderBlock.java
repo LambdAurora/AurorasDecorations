@@ -49,7 +49,7 @@ public final class LavenderBlock extends AurorasDecoFlowerBlock {
 		return VoxelShapes.fullCube();
 	}
 
-	/* Ticking */
+	/* Visual */
 
 	@Override
 	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {

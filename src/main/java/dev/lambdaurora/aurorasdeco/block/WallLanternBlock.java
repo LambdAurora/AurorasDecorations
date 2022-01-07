@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
-import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
+import dev.lambdaurora.aurorasdeco.block.entity.SwayingBlockEntity;
 import dev.lambdaurora.aurorasdeco.mixin.block.BlockAccessor;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoSounds;
@@ -250,7 +250,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 		boolean canSwing = !hitResultIndependent
 				|| this.isPointOnLantern(state, direction, hitResult.getPos().y - (double) blockPos.getY());
 		if (canSwing) {
-			this.swing(player, world, blockPos, direction, null);
+			this.swing(player, world, blockPos, direction, false);
 
 			return true;
 		} else {
@@ -267,24 +267,19 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 		}
 	}
 
-	public void swing(@Nullable Entity entity, World world, BlockPos pos, @Nullable Direction direction,
-	                  @Nullable Direction.Axis lanternCollisionAxis) {
+	public void swing(@Nullable Entity entity, World world, BlockPos pos, Direction direction, boolean collision) {
 		var blockEntity = AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
 		if (!world.isClient() && blockEntity != null) {
-			if (direction == null) {
-				direction = world.getBlockState(pos).get(FACING);
-			}
-
-			boolean previousColliding = blockEntity.isColliding();
-			if (lanternCollisionAxis == null)
-				blockEntity.activate(direction);
-			else
-				blockEntity.activate(direction, entity, lanternCollisionAxis);
-			if (!previousColliding) {
+			if (!blockEntity.isColliding()) {
 				world.playSound(null, pos, AurorasDecoSounds.LANTERN_SWING_SOUND_EVENT, SoundCategory.BLOCKS,
 						2.f, 1.f);
 				world.emitGameEvent(entity, GameEvent.RING_BELL, pos);
 			}
+
+			if (!collision)
+				blockEntity.activate(direction);
+			else
+				blockEntity.activate(direction, entity);
 		}
 	}
 
@@ -301,7 +296,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
 		var swingAxis = state.get(FACING).rotateYClockwise().getAxis();
 
-		var lanternBox = blockEntity.getLanternCollisionBox(swingAxis);
+		var lanternBox = blockEntity.getCollisionBox();
 		var entityBox = entity.getBoundingBox();
 		if (lanternBox.intersects(entityBox)) {
 			var swingDirection = Direction.NORTH;
@@ -311,7 +306,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 			} else if (swingAxis == Direction.Axis.Z) {
 				if ((pos.getZ() + .5f) < entity.getZ()) swingDirection = Direction.SOUTH;
 			}
-			this.swing(entity, world, pos, swingDirection, swingAxis);
+			this.swing(entity, world, pos, swingDirection, true);
 		}
 	}
 
@@ -331,7 +326,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 	public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(World world, BlockState state,
 	                                                                        BlockEntityType<T> type) {
 		return checkType(type, AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE,
-				world.isClient() ? LanternBlockEntity::clientTick : LanternBlockEntity::serverTick);
+				world.isClient() ? SwayingBlockEntity::clientTick : SwayingBlockEntity::serverTick);
 	}
 
 	/* Piston */
@@ -370,7 +365,7 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 				return 15;
 			} else if (lantern.isSwinging()) {
 				int max = lantern.getMaxSwingTicks();
-				float progress = (max - lantern.swingTicks) / (float) max;
+				float progress = (max - lantern.getSwingTicks()) / (float) max;
 				return (int) (progress * 14);
 			}
 		}

@@ -47,6 +47,7 @@ import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.List;
+import java.util.Random;
 import java.util.function.Consumer;
 
 /**
@@ -201,6 +202,15 @@ public class BigFlowerPotBlock extends Block/* implements FluidFillable*/ {
 		}
 
 		world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+	}
+
+	/* Visual */
+
+	@Override
+	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+		if (this.getPlant() != null) {
+			this.getPlant().randomDisplayTick(state, world, pos, random);
+		}
 	}
 
 	/* Loot table */

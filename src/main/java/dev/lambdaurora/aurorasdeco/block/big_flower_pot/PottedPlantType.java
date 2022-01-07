@@ -65,17 +65,7 @@ public final class PottedPlantType {
 		return TYPES.getOrDefault(id, AurorasDecoRegistry.BIG_FLOWER_POT_BLOCK.getPlantType());
 	}
 
-	public static @Nullable BigFlowerPotBlock registerFromItem(Item item) {
-		if (item instanceof BlockItem blockItem)
-			return registerFromBlock(blockItem.getBlock());
-		return null;
-	}
-
-	public static @Nullable BigFlowerPotBlock registerFromBlock(Block plant) {
-		return registerFromBlock(Registry.BLOCK.getId(plant), plant);
-	}
-
-	public static @Nullable BigFlowerPotBlock registerFromBlock(Identifier plantId, Block plant) {
+	private static String getIdFromPlant(Identifier plantId) {
 		var id = plantId.toString();
 		if (id.startsWith("minecraft:")) {
 			id = id.substring("minecraft:".length());
@@ -85,10 +75,20 @@ public final class PottedPlantType {
 			id = id.replace(':', '/');
 		}
 
-		if (TYPES.containsKey(id))
-			return null;
+		return id;
+	}
 
-		return register(id, plant, plant.asItem());
+	public static @Nullable BigFlowerPotBlock registerFromItem(Item item) {
+		if (item instanceof BlockItem blockItem) {
+			var block = blockItem.getBlock();
+			var id = getIdFromPlant(Registry.BLOCK.getId(block));
+
+			if (TYPES.containsKey(id))
+				return null;
+
+			return register(id, block, item);
+		}
+		return null;
 	}
 
 	public static BigFlowerPotBlock register(String id, Block plant, Item item) {

@@ -17,6 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.block;
 
+import dev.lambdaurora.aurorasdeco.block.entity.SwayingBlockEntity;
 import dev.lambdaurora.aurorasdeco.block.entity.WindChimeBlockEntity;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.minecraft.block.*;
@@ -85,7 +86,7 @@ public class WindChimeBlock extends BlockWithEntity {
 
 	@Override
 	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-		if (!world.isClient())
+		if (world.isClient())
 			return;
 
 		var windChime = AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE.get(world, pos);
@@ -93,7 +94,7 @@ public class WindChimeBlock extends BlockWithEntity {
 			return;
 
 		if (windChime.getCollisionBox().intersects(entity.getBoundingBox()))
-			windChime.startColliding(entity);
+			windChime.activate(entity);
 	}
 
 	/* Block Entity Stuff */
@@ -107,7 +108,7 @@ public class WindChimeBlock extends BlockWithEntity {
 	public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(World world, BlockState state,
 	                                                                        BlockEntityType<T> type) {
 		return checkType(type, AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE,
-				world.isClient() ? WindChimeBlockEntity::clientTick : null);
+				world.isClient() ? SwayingBlockEntity::clientTick : SwayingBlockEntity::serverTick);
 	}
 
 	@Override

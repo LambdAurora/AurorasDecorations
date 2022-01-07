@@ -68,7 +68,7 @@ dependencies {
 
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}") {
 		exclude group: 'net.fabricmc'
-		exclude group: 'net.fabricmc.fabric-api', module: 'fabric-blockrenderlayer-v1'
+		//exclude group: 'net.fabricmc.fabric-api', module: 'fabric-blockrenderlayer-v1'
 	}
 	modImplementation("dev.emi:trinkets:${project.trinkets_version}") {
 		exclude group: 'net.fabricmc'

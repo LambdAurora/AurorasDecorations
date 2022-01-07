@@ -477,11 +477,7 @@ public final class AurorasDecoRegistry {
 			if ((id.getNamespace().equals("betternether") || id.getNamespace().equals("betterend")) && (id.getPath().contains("stripped") || (id.getPath().contains("mushroom") && !id.getPath().contains("mushroom_fir")) || id.getPath().contains("amaranita")))
 				return;
 			if (id.getNamespace().equals("aurorasdeco") && id.getPath().contains("sign_post")) return;
-			if (PottedPlantType.isValidPlant(block)) {
-				var potBlock = PottedPlantType.registerFromBlock(block);
-				if (potBlock != null)
-					helper.register("big_flower_pot/" + potBlock.getPlantType().getId(), potBlock);
-			} else if (block instanceof FlowerPotBlock flowerPotBlock) {
+			if (block instanceof FlowerPotBlock flowerPotBlock) {
 				if (block == Blocks.FLOWER_POT) return;
 
 				RegistrationHelper.BLOCK.register(

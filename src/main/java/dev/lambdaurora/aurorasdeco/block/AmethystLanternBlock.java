@@ -45,6 +45,8 @@ public class AmethystLanternBlock extends LanternBlock {
 		super(QuiltBlockSettings.copyOf(Blocks.LANTERN).luminance(14));
 	}
 
+	/* Visual */
+
 	@Override
 	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
 		if (random.nextBoolean()) {

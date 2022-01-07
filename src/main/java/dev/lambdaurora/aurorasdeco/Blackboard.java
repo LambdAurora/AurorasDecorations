@@ -17,6 +17,8 @@
 
 package dev.lambdaurora.aurorasdeco;
 
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPlants;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
@@ -338,6 +340,7 @@ public class Blackboard implements BlackboardHandler {
 		public static final byte FREE_COLOR_SPACE = (byte) (DyeColor.values().length + 1);
 		public static final Color SWEET_BERRIES = new Color(FREE_COLOR_SPACE, 0xffbb0000, Items.SWEET_BERRIES);
 		public static final Color GLOW_BERRIES = new Color(FREE_COLOR_SPACE + 1, 0xffff9737, Items.GLOW_BERRIES);
+		public static final Color LAVENDER = new Color(FREE_COLOR_SPACE + 3, 0xffb886db, AurorasDecoPlants.LAVENDER.asItem());
 
 		public static final int BLUEBERRIES_COLOR = 0xff006ac6;
 

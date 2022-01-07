@@ -20,6 +20,7 @@ package dev.lambdaurora.aurorasdeco.client.renderer;
 import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
 import dev.lambdaurora.aurorasdeco.hook.LBGHooks;
+import dev.lambdaurora.aurorasdeco.util.math.SmoothNoise;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -50,30 +51,19 @@ public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<Lante
 	public void render(LanternBlockEntity lantern, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
 	                   int light, int overlay) {
 		var pos = lantern.getPos();
-		boolean fluid = !lantern.getCachedState().getFluidState().isEmpty();
-		float ticks = (float) lantern.swingTicks + tickDelta;
-
-		if (lantern.isColliding() && ticks > 4) {
-			ticks = 4.f;
-		}
-		if (fluid)
-			ticks /= 2.f;
 
 		float pitch = 0.0F;
 		float roll = 0.0F;
+		float angle = MathHelper.lerp(tickDelta, lantern.prevAngle, lantern.angle);
+		lantern.prevAngle = angle;
 		if (lantern.isSwinging() || lantern.isColliding()) {
-			float angle = MathHelper.sin(ticks / (float) Math.PI) / (4.f + ticks / 3.f);
-			if (lantern.lastSideHit == Direction.NORTH) {
-				pitch = -angle;
-			} else if (lantern.lastSideHit == Direction.SOUTH) {
-				pitch = angle;
-			} else if (lantern.lastSideHit == Direction.EAST) {
-				roll = -angle;
-			} else if (lantern.lastSideHit == Direction.WEST) {
-				roll = angle;
+			switch (lantern.getSwingBaseDirection()) {
+				case NORTH -> pitch = -angle;
+				case SOUTH -> pitch = angle;
+				case EAST -> roll = -angle;
+				case WEST -> roll = angle;
 			}
 		} else {
-			float angle = this.getNaturalSwayingAngle(lantern, tickDelta);
 			if (lantern.getCachedState().get(WallLanternBlock.FACING).getAxis() == Direction.Axis.Z) roll = angle;
 			else pitch = angle;
 		}
@@ -89,7 +79,7 @@ public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<Lante
 			matrices.multiply(Vec3f.POSITIVE_X.getRadialQuaternion(pitch));
 
 		var facing = lantern.getCachedState().get(WallLanternBlock.FACING);
-		int angle = switch (facing) {
+		int lanternRotation = switch (facing) {
 			case NORTH -> 90;
 			case EAST -> 180;
 			case SOUTH -> 270;
@@ -101,7 +91,7 @@ public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<Lante
 				0.f,
 				(-facing.getOffsetZ() * extension) / 16.f);
 
-		matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(angle));
+		matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(lanternRotation));
 
 		var lanternShape = lanternState.getOutlineShape(lantern.getWorld(), pos);
 		var lanternShapeMaxY = lanternShape.getMax(Direction.Axis.Y);
