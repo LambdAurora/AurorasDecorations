@@ -17,14 +17,13 @@
 
 package dev.lambdaurora.aurorasdeco.block.plant;
 
-import dev.lambdaurora.aurorasdeco.block.plant.AurorasDecoFlowerBlock;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoParticles;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
@@ -38,6 +37,8 @@ import java.util.Random;
  * @since 1.0.0
  */
 public final class LavenderBlock extends AurorasDecoFlowerBlock {
+	private static final VoxelShape SHAPE = Block.createCuboidShape(2.0, 0.0, 2.0, 14.0, 13.0, 14.0);
+
 	public LavenderBlock() {
 		super(StatusEffects.REGENERATION, 10, defaultSettings());
 	}
@@ -46,7 +47,7 @@ public final class LavenderBlock extends AurorasDecoFlowerBlock {
 
 	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-		return VoxelShapes.fullCube();
+		return SHAPE;
 	}
 
 	/* Visual */
