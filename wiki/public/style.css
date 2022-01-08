@@ -198,7 +198,7 @@ pre {
 /* Images */
 
 img.item, .mod_icon {
-	image-rendering: crisp-edges;
+	image-rendering: pixelated;
 }
 
 .mod_icon {
