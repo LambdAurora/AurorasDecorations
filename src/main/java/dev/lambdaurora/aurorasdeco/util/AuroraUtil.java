@@ -37,8 +37,6 @@ import java.util.Collection;
 import java.util.List;
 
 public final class AuroraUtil {
-	public static final float TAU = (float) (2 * Math.PI);
-
 	private AuroraUtil() {
 		throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
 	}

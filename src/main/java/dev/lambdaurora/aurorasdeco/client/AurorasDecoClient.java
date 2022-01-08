@@ -158,7 +158,7 @@ public class AurorasDecoClient implements ClientModInitializer {
 					});
 		});
 
-		ClientTickEvents.START_WORLD_TICK.register(Wind.get()::tick);
+		ClientTickEvents.START_WORLD_TICK.register(world -> Wind.get().tick(world));
 
 		this.registerBlackboardItemRenderer(BLACKBOARD_BLOCK);
 		this.registerBlackboardItemRenderer(CHALKBOARD_BLOCK);

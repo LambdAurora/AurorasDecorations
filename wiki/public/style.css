@@ -75,6 +75,13 @@ li.wiki_nav_directory[open] > ul {
 	}
 }
 
+.mod_banner {
+	display: flex;
+	width: 100%;
+	justify-content: space-around;
+	align-items: center;
+}
+
 /* Markdown styling */
 
 details > summary {
@@ -190,8 +197,13 @@ pre {
 
 /* Images */
 
-img.item {
+img.item, .mod_icon {
 	image-rendering: crisp-edges;
+}
+
+.mod_icon {
+	width: 5em;
+	height: 5em;
 }
 
 .wiki-gallery {

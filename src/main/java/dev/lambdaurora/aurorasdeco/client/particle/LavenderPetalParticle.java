@@ -18,13 +18,13 @@
 package dev.lambdaurora.aurorasdeco.client.particle;
 
 import dev.lambdaurora.aurorasdeco.client.Wind;
-import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.List;
@@ -59,9 +59,9 @@ public class LavenderPetalParticle extends SpriteBillboardParticle {
 		this.maxAge = 200;
 
 		this.maxRotateTime = (3 + this.random.nextInt(5)) * 20;
-		this.maxRotateSpeed = (this.random.nextBoolean() ? -1 : 1) * (0.1f + 2.4f * this.random.nextFloat()) * AuroraUtil.TAU / 20f;
+		this.maxRotateSpeed = (this.random.nextBoolean() ? -1 : 1) * (0.1f + 2.4f * this.random.nextFloat()) * MathHelper.TAU / 20f;
 
-		this.angle = this.prevAngle = this.random.nextFloat() * AuroraUtil.TAU;
+		this.angle = this.prevAngle = this.random.nextFloat() * MathHelper.TAU;
 
 		this.scale *= this.random.nextFloat() * 0.4f + 0.7f;
 	}

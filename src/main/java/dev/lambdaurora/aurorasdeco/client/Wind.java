@@ -17,7 +17,6 @@
 
 package dev.lambdaurora.aurorasdeco.client;
 
-import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.util.math.SmoothNoise;
 import dev.lambdaurora.aurorasdeco.util.math.TriangularDistribution;
 import net.fabricmc.api.EnvType;
@@ -26,6 +25,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.dimension.DimensionType;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -35,10 +35,10 @@ import java.util.Random;
  * https://github.com/RandomMcSomethin/fallingleaves/blob/main/src/main/java/randommcsomethin/fallingleaves/util/Wind.java
  */
 @Environment(EnvType.CLIENT)
-public final class Wind {
+public class Wind {
 	public static final long WIND_SEED = 0xa4505a;
 	private static final Random RANDOM = new Random(WIND_SEED);
-	private static final Wind INSTANCE = new Wind();
+	private static Wind INSTANCE = new Wind();
 
 	private float windX;
 	private float windZ;
@@ -56,7 +56,11 @@ public final class Wind {
 		return INSTANCE;
 	}
 
-	private Wind() {
+	public static void use(Wind wind) {
+		INSTANCE = wind;
+	}
+
+	protected Wind() {
 		this.reset();
 	}
 
@@ -69,10 +73,10 @@ public final class Wind {
 		this.windX = this.windZ = 0;
 
 		this.velocityNoise = new SmoothNoise(2 * 20, 0, old -> this.state.getVelocityDistribution().sample());
-		this.directionTrendNoise = new SmoothNoise(30 * 60 * 20, RANDOM.nextFloat() * AuroraUtil.TAU,
-				old -> RANDOM.nextFloat() * AuroraUtil.TAU
+		this.directionTrendNoise = new SmoothNoise(30 * 60 * 20, RANDOM.nextFloat() * MathHelper.TAU,
+				old -> RANDOM.nextFloat() * MathHelper.TAU
 		);
-		this.directionNoise = new SmoothNoise(10 * 20, 0, old -> (2f * RANDOM.nextFloat() - 1f) * AuroraUtil.TAU / 8f);
+		this.directionNoise = new SmoothNoise(10 * 20, 0, old -> (2f * RANDOM.nextFloat() - 1f) * MathHelper.TAU / 8f);
 	}
 
 	public float getWindX() {
@@ -121,7 +125,7 @@ public final class Wind {
 			} else {
 				// Windy and stormy when raining, calm and windy otherwise.
 				int index = RANDOM.nextInt(2);
-				state = State.VALUES[(raining ? index + 1 : index)];
+				state = State.VALUES.get(raining ? index + 1 : index);
 			}
 
 			this.stateDuration = 6 * 60 * 20; // Change state every 6 minutes.
@@ -150,7 +154,7 @@ public final class Wind {
 		WINDY(0.05f, 0.3f, 0.7f),
 		STORMY(0.05f, 0.6f, 1.1f);
 
-		private static final State[] VALUES = values();
+		public static final List<State> VALUES = List.of(values());
 
 		private final TriangularDistribution velocityDistribution;
 

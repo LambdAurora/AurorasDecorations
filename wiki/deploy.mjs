@@ -20,6 +20,8 @@ await deploy_dir(".", path => path.startsWith("./public"), markdown_pages, asset
 await deploy_dir("../images", path => path.startsWith("../images"));
 await deploy_dir(TEXTURES_PATH, path => assets_to_copy[path.substr(TEXTURES_PATH.length + 1)] !== undefined);
 
+Deno.copyFile("../src/main/resources/assets/aurorasdeco/icon.png", "./deploy_out/icon.png").then(() => console.log("Copied icon."));
+
 for (const page of Object.values(markdown_pages)) {
 	await deploy_markdown(markdown_pages, page);
 }
@@ -154,6 +156,8 @@ async function deploy_markdown(markdown_pages, page_data) {
 		<meta property="og:description" content="${page_data.description}">
 		${page_data.thumbnail_meta}
 
+		<link rel="icon" href="${relativize_from_root(page_data.path)}icon.png" />
+
 		<link rel="stylesheet" type="text/css" href="https://lambdaurora.dev/style.css" />
 		<link rel="stylesheet" type="text/css" href="${relativize_from_root(page_data.path)}style.css" />
 
@@ -162,6 +166,10 @@ async function deploy_markdown(markdown_pages, page_data) {
 	</head>
 	<body class="wiki_page">
 		<aside>
+			<a class="mod_banner" href="${relativize_from_root(page_data.path)}">
+				<img class="mod_icon" src="${relativize_from_root(page_data.path)}icon.png" alt="Aurora's Decorations Icon">
+				Aurora's Decorations
+			</a>
 			${build_navigation(markdown_pages, page_data).html()}
 		</aside>
 		<div class="wiki_content">
@@ -232,7 +240,9 @@ function get_markdown_title(title) {
 }
 
 function relativize_from_root(path) {
-	return "../".repeat(path.split("/").length - 2);
+	const result = "../".repeat(path.split("/").length - 2);
+	if (result.length === 0) return "./";
+	return result;
 }
 
 function build_navigation_data(html, start = 0, level = 1) {
