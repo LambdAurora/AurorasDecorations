@@ -19,10 +19,14 @@ package dev.lambdaurora.aurorasdeco.registry;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.world.biome.AurorasDecoOverworldBiomeCreator;
+import dev.lambdaurora.aurorasdeco.world.gen.feature.AurorasDecoVegetationPlacedFeatures;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.GenerationStep;
 
 /**
  * Contains the different biomes definitions added in Aurora's Decorations.
@@ -36,9 +40,6 @@ public final class AurorasDecoBiomes {
 		throw new UnsupportedOperationException("AurorasDecoBiomes only contains static definitions.");
 	}
 
-	static void init() {
-	}
-
 	public static final RegistryKey<Biome> LAVENDER_PLAINS_KEY = key("lavender_plains");
 	public static final Biome LAVENDER_PLAINS = register(LAVENDER_PLAINS_KEY, AurorasDecoOverworldBiomeCreator.createLavenderPlains());
 
@@ -48,5 +49,13 @@ public final class AurorasDecoBiomes {
 
 	private static Biome register(RegistryKey<Biome> key, Biome biome) {
 		return BuiltinRegistries.set(BuiltinRegistries.BIOME, key, biome);
+	}
+
+	static void init() {
+		BiomeModifications.addFeature(BiomeSelectors.foundInOverworld()
+						.and(AurorasDecoVegetationPlacedFeatures.FALLEN_FOREST_TREES.getBiomeSelectionPredicate()),
+				GenerationStep.Feature.VEGETAL_DECORATION,
+				AurorasDecoVegetationPlacedFeatures.FALLEN_FOREST_TREES.getKey()
+		);
 	}
 }

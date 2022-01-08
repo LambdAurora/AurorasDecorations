@@ -47,10 +47,25 @@ public final class AurorasDecoVegetationConfiguredFeatures {
 					.configure(
 							new RandomFeatureConfig(
 									List.of(
+											new class_3226(AurorasDecoTreeConfiguredFeatures.FALLEN_OAK_TREE.withPlacement(), 0.25f),
+											new class_3226(AurorasDecoTreeConfiguredFeatures.FALLEN_BIRCH_TREE.withPlacement(), 0.20f),
 											new class_3226(AurorasDecoTreeConfiguredFeatures.BIRCH_BEES_015.withPlacement(), 0.5f),
 											new class_3226(AurorasDecoTreeConfiguredFeatures.FANCY_OAK_BEES_015.withPlacement(), 0.33333334F)
 									),
 									AurorasDecoTreeConfiguredFeatures.OAK_BEES_015.withPlacement()
+							)
+					)
+	);
+
+	public static final ConfiguredFeature<RandomFeatureConfig, ?> FALLEN_FOREST_TREES = ConfiguredFeatureUtil.register(
+			AurorasDeco.id("fallen_average_trees").toString(),
+			Feature.RANDOM_SELECTOR
+					.configure(
+							new RandomFeatureConfig(
+									List.of(
+											new class_3226(AurorasDecoTreeConfiguredFeatures.FALLEN_BIRCH_TREE.withPlacement(), 0.35f)
+									),
+									AurorasDecoTreeConfiguredFeatures.FALLEN_OAK_TREE.withPlacement()
 							)
 					)
 	);

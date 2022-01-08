@@ -18,15 +18,18 @@
 package dev.lambdaurora.aurorasdeco.world.gen.feature;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.block.Blocks;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.intprovider.ClampedIntProvider;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
+import net.minecraft.util.registry.BuiltinRegistries;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.blockpredicate.BlockPredicate;
-import net.minecraft.world.gen.decorator.BiomePlacementModifier;
-import net.minecraft.world.gen.decorator.BlockPredicateFilterPlacementModifier;
-import net.minecraft.world.gen.decorator.CountPlacementModifier;
-import net.minecraft.world.gen.decorator.InSquarePlacementModifier;
+import net.minecraft.world.gen.decorator.*;
 import net.minecraft.world.gen.feature.PlacedFeature;
 import net.minecraft.world.gen.feature.VegetationPlacedFeatures;
 import net.minecraft.world.gen.feature.util.PlacedFeatureUtil;
@@ -36,8 +39,8 @@ public final class AurorasDecoVegetationPlacedFeatures {
 		throw new UnsupportedOperationException("AurorasDecoVegetationPlacedFeatures only contains static definitions.");
 	}
 
-	public static final PlacedFeature PATCH_LAVENDER = PlacedFeatureUtil.register(
-			AurorasDeco.id("patch_lavender").toString(),
+	public static final PlacedFeature PATCH_LAVENDER = register(
+			key("patch_lavender"),
 			AurorasDecoVegetationConfiguredFeatures.PATCH_LAVENDER
 					.withPlacement(
 							CountPlacementModifier.create(ClampedIntProvider.create(UniformIntProvider.create(-1, 5), 0, 5)),
@@ -47,8 +50,8 @@ public final class AurorasDecoVegetationPlacedFeatures {
 					)
 	);
 
-	public static final PlacedFeature TREES_LAVENDER_PLAINS = PlacedFeatureUtil.register(
-			AurorasDeco.id("trees_lavender_plains").toString(),
+	public static final PlacedFeature TREES_LAVENDER_PLAINS = register(
+			key("trees_lavender_plains"),
 			AurorasDecoVegetationConfiguredFeatures.TREES_LAVENDER_PLAINS
 					.withPlacement(
 							PlacedFeatureUtil.method_39736(0, 0.05F, 1),
@@ -59,4 +62,27 @@ public final class AurorasDecoVegetationPlacedFeatures {
 							BiomePlacementModifier.getInstance()
 					)
 	);
+
+	public static final PlacedFeatureMetadata FALLEN_FOREST_TREES = new PlacedFeatureMetadata(key("fallen_forest_trees"),
+			AurorasDecoVegetationConfiguredFeatures.FALLEN_FOREST_TREES.withPlacement(
+					RarityFilterPlacementModifier.create(3),
+					InSquarePlacementModifier.getInstance(),
+					VegetationPlacedFeatures.TREE_THRESHOLD,
+					PlacedFeatureUtil.OCEAN_FLOOR_HEIGHTMAP,
+					BlockPredicateFilterPlacementModifier.create(BlockPredicate.wouldSurvive(Blocks.OAK_SAPLING.getDefaultState(), BlockPos.ORIGIN)),
+					BiomePlacementModifier.getInstance()
+			))
+			.addAllowedBiomeCategory(Biome.Category.FOREST)
+			.addAllowedNeighborFeature(new Identifier("trees_birch_and_oak"))
+			.addAllowedNeighborFeature(new Identifier("trees_flower_forest"))
+			.setAllowedTag(TagFactory.BIOME.create(AurorasDeco.id("feature/fallen_forest_trees")))
+			.register();
+
+	private static RegistryKey<PlacedFeature> key(String name) {
+		return RegistryKey.of(Registry.PLACED_FEATURE_KEY, AurorasDeco.id(name));
+	}
+
+	private static PlacedFeature register(RegistryKey<PlacedFeature> key, PlacedFeature feature) {
+		return Registry.register(BuiltinRegistries.PLACED_FEATURE, key, feature);
+	}
 }

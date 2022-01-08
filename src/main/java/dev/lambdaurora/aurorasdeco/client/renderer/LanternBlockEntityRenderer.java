@@ -20,7 +20,6 @@ package dev.lambdaurora.aurorasdeco.client.renderer;
 import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
 import dev.lambdaurora.aurorasdeco.hook.LBGHooks;
-import dev.lambdaurora.aurorasdeco.util.math.SmoothNoise;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;

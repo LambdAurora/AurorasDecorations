@@ -21,7 +21,6 @@ import dev.lambdaurora.aurorasdeco.block.entity.SwayingBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.util.math.MathHelper;
 
 @Environment(EnvType.CLIENT)
 public abstract class SwayingBlockEntityRenderer<T extends SwayingBlockEntity> implements BlockEntityRenderer<T> {

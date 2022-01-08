@@ -17,8 +17,8 @@
 
 package dev.lambdaurora.aurorasdeco.registry;
 
-import dev.lambdaurora.aurorasdeco.block.plant.DaffodilBlock;
 import dev.lambdaurora.aurorasdeco.block.DirectionalFlowerPotBlock;
+import dev.lambdaurora.aurorasdeco.block.plant.DaffodilBlock;
 import dev.lambdaurora.aurorasdeco.block.plant.LavenderBlock;
 import dev.lambdaurora.aurorasdeco.item.DerivedBlockItem;
 import dev.lambdaurora.aurorasdeco.util.Registrar;

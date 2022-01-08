@@ -19,10 +19,13 @@ package dev.lambdaurora.aurorasdeco.world.gen.feature;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.mixin.world.TreeConfiguredFeaturesAccessor;
+import dev.lambdaurora.aurorasdeco.world.gen.feature.config.FallenTreeFeatureConfig;
+import net.minecraft.block.Blocks;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.TreeFeatureConfig;
 import net.minecraft.world.gen.feature.util.ConfiguredFeatureUtil;
+import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 import net.minecraft.world.gen.treedecorator.BeehiveTreeDecorator;
 
 import java.util.List;
@@ -47,5 +50,53 @@ public final class AurorasDecoTreeConfiguredFeatures {
 	public static final ConfiguredFeature<TreeFeatureConfig, ?> BIRCH_BEES_015 = ConfiguredFeatureUtil.register(
 			AurorasDeco.id("birch_bees_15").toString(),
 			Feature.TREE.configure(TreeConfiguredFeaturesAccessor.invokeBirch().decorators(List.of(BEES_015)).build())
+	);
+
+	/* Fallen Trees */
+
+	public static final ConfiguredFeature<FallenTreeFeatureConfig, ?> FALLEN_OAK_TREE = ConfiguredFeatureUtil.register(
+			AurorasDeco.id("fallen_oak_tree").toString(),
+			AurorasDecoFeatures.FALLEN_TREE.configure(FallenTreeFeatureConfig.builder(BlockStateProvider.of(Blocks.OAK_LOG))
+					.layerProvider(FallenTreeFeatureConfig.LayerType.MOSS)
+					.build()
+			)
+	);
+
+	public static final ConfiguredFeature<FallenTreeFeatureConfig, ?> FALLEN_BIRCH_TREE = ConfiguredFeatureUtil.register(
+			AurorasDeco.id("fallen_birch_tree").toString(),
+			AurorasDecoFeatures.FALLEN_TREE.configure(FallenTreeFeatureConfig.builder(BlockStateProvider.of(Blocks.BIRCH_LOG))
+					.baseHeight(4)
+					.layerProvider(FallenTreeFeatureConfig.LayerType.MOSS)
+					.build()
+			)
+	);
+
+	public static final ConfiguredFeature<FallenTreeFeatureConfig, ?> FALLEN_SPRUCE_TREE = ConfiguredFeatureUtil.register(
+			AurorasDeco.id("fallen_spruce_tree").toString(),
+			AurorasDecoFeatures.FALLEN_TREE.configure(FallenTreeFeatureConfig.builder(BlockStateProvider.of(Blocks.SPRUCE_LOG))
+					.baseHeight(5)
+					.variance(4)
+					.layerProvider(FallenTreeFeatureConfig.LayerType.MOSS)
+					.build()
+			)
+	);
+
+	public static final ConfiguredFeature<FallenTreeFeatureConfig, ?> SNOWY_FALLEN_SPRUCE_TREE = ConfiguredFeatureUtil.register(
+			AurorasDeco.id("snowy_fallen_spruce_tree").toString(),
+			AurorasDecoFeatures.FALLEN_TREE.configure(FallenTreeFeatureConfig.builder(BlockStateProvider.of(Blocks.SPRUCE_LOG))
+					.baseHeight(4)
+					.variance(3)
+					.layerProvider(FallenTreeFeatureConfig.LayerType.SNOW)
+					.noMushrooms()
+					.build()
+			)
+	);
+
+	public static final ConfiguredFeature<FallenTreeFeatureConfig, ?> SAVANNA_FALLEN_OAK_TREE = ConfiguredFeatureUtil.register(
+			AurorasDeco.id("savanna_fallen_oak_tree").toString(),
+			AurorasDecoFeatures.FALLEN_TREE.configure(FallenTreeFeatureConfig.builder(BlockStateProvider.of(Blocks.OAK_LOG))
+					.noMushrooms()
+					.build()
+			)
 	);
 }
