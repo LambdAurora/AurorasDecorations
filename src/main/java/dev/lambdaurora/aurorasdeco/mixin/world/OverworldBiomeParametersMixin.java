@@ -78,7 +78,7 @@ public abstract class OverworldBiomeParametersMixin {
 					MultiNoiseUtil.ParameterRange.combine(this.erosions[2], this.erosions[3]),
 					weirdness,
 					0.f,
-					AurorasDecoBiomes.LAVENDER_PLAINS_KEY
+					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
 			);
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
@@ -86,7 +86,7 @@ public abstract class OverworldBiomeParametersMixin {
 					this.erosions[4],
 					weirdness,
 					0.f,
-					AurorasDecoBiomes.LAVENDER_PLAINS_KEY
+					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
 			);
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
@@ -94,7 +94,7 @@ public abstract class OverworldBiomeParametersMixin {
 					this.erosions[6],
 					weirdness,
 					0.f,
-					AurorasDecoBiomes.LAVENDER_PLAINS_KEY
+					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
 			);
 		}
 	}
@@ -118,7 +118,7 @@ public abstract class OverworldBiomeParametersMixin {
 					MultiNoiseUtil.ParameterRange.combine(this.erosions[0], this.erosions[1]),
 					weirdness,
 					0.f,
-					AurorasDecoBiomes.LAVENDER_PLAINS_KEY
+					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
 			);
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
@@ -126,7 +126,7 @@ public abstract class OverworldBiomeParametersMixin {
 					MultiNoiseUtil.ParameterRange.combine(this.erosions[2], this.erosions[3]),
 					weirdness,
 					0.f,
-					AurorasDecoBiomes.LAVENDER_PLAINS_KEY
+					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
 			);
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
@@ -134,7 +134,7 @@ public abstract class OverworldBiomeParametersMixin {
 					this.erosions[4],
 					weirdness,
 					0.f,
-					AurorasDecoBiomes.LAVENDER_PLAINS_KEY
+					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
 			);
 		}
 	}
@@ -155,7 +155,7 @@ public abstract class OverworldBiomeParametersMixin {
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
 					this.nearInlandContinentalness, this.erosions[2], weirdness, 0.f,
-					AurorasDecoBiomes.LAVENDER_PLAINS_KEY
+					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
 			);
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
@@ -163,7 +163,7 @@ public abstract class OverworldBiomeParametersMixin {
 					this.erosions[3],
 					weirdness,
 					0.f,
-					AurorasDecoBiomes.LAVENDER_PLAINS_KEY
+					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
 			);
 
 			if (weirdness.max() < 0L) {
@@ -173,7 +173,7 @@ public abstract class OverworldBiomeParametersMixin {
 						this.erosions[4],
 						weirdness,
 						0.f,
-						AurorasDecoBiomes.LAVENDER_PLAINS_KEY
+						AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
 				);
 			} else {
 				this.addSurfaceBiomeTo(
@@ -182,12 +182,12 @@ public abstract class OverworldBiomeParametersMixin {
 						this.erosions[4],
 						weirdness,
 						0.f,
-						AurorasDecoBiomes.LAVENDER_PLAINS_KEY
+						AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
 				);
 				this.addSurfaceBiomeTo(
 						parameters, temperature, humidity,
 						this.coastContinentalness, this.erosions[6], weirdness, 0.f,
-						AurorasDecoBiomes.LAVENDER_PLAINS_KEY
+						AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
 				);
 			}
 		}
@@ -212,14 +212,15 @@ public abstract class OverworldBiomeParametersMixin {
 					MultiNoiseUtil.ParameterRange.combine(this.erosions[2], this.erosions[3]),
 					weirdness,
 					0.f,
-					AurorasDecoBiomes.LAVENDER_PLAINS_KEY);
+					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
+			);
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
 					MultiNoiseUtil.ParameterRange.combine(this.nearInlandContinentalness, this.farInlandContinentalness),
 					this.erosions[4],
 					weirdness,
 					0.f,
-					AurorasDecoBiomes.LAVENDER_PLAINS_KEY
+					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
 			);
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
@@ -227,7 +228,7 @@ public abstract class OverworldBiomeParametersMixin {
 					this.erosions[5],
 					weirdness,
 					0.f,
-					AurorasDecoBiomes.LAVENDER_PLAINS_KEY
+					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
 			);
 		}
 	}

@@ -54,7 +54,7 @@ public final class AurorasDecoVegetationPlacedFeatures {
 			key("trees_lavender_plains"),
 			AurorasDecoVegetationConfiguredFeatures.TREES_LAVENDER_PLAINS
 					.withPlacement(
-							PlacedFeatureUtil.method_39736(0, 0.05F, 1),
+							PlacedFeatureUtil.method_39736(0, 0.05f, 1),
 							InSquarePlacementModifier.getInstance(),
 							VegetationPlacedFeatures.TREE_THRESHOLD,
 							PlacedFeatureUtil.OCEAN_FLOOR_HEIGHTMAP,
@@ -77,6 +77,67 @@ public final class AurorasDecoVegetationPlacedFeatures {
 			.addAllowedNeighborFeature(new Identifier("trees_flower_forest"))
 			.setAllowedTag(TagFactory.BIOME.create(AurorasDeco.id("feature/fallen_forest_trees")))
 			.register();
+
+	public static final PlacedFeatureMetadata FALLEN_BIRCH_FOREST_TREES = new PlacedFeatureMetadata(key("fallen_birch_forest_trees"),
+			AurorasDecoTreeConfiguredFeatures.FALLEN_BIRCH_TREE.withPlacement(
+					RarityFilterPlacementModifier.create(5),
+					InSquarePlacementModifier.getInstance(),
+					VegetationPlacedFeatures.TREE_THRESHOLD,
+					PlacedFeatureUtil.OCEAN_FLOOR_HEIGHTMAP,
+					BlockPredicateFilterPlacementModifier.create(BlockPredicate.wouldSurvive(Blocks.BIRCH_SAPLING.getDefaultState(), BlockPos.ORIGIN)),
+					BiomePlacementModifier.getInstance()
+			))
+			.addAllowedBiomeCategory(Biome.Category.FOREST)
+			.addAllowedNeighborFeature(new Identifier("birch_tall"))
+			.setAllowedTag(TagFactory.BIOME.create(AurorasDeco.id("feature/fallen_birch_forest_trees")))
+			.register();
+
+	public static final PlacedFeatureMetadata FALLEN_SPRUCE_TAIGA_TREES = new PlacedFeatureMetadata(key("fallen_spruce_taiga_trees"),
+			AurorasDecoTreeConfiguredFeatures.FALLEN_SPRUCE_TREE.withPlacement(
+					RarityFilterPlacementModifier.create(4),
+					InSquarePlacementModifier.getInstance(),
+					VegetationPlacedFeatures.TREE_THRESHOLD,
+					PlacedFeatureUtil.OCEAN_FLOOR_HEIGHTMAP,
+					BlockPredicateFilterPlacementModifier.create(BlockPredicate.wouldSurvive(Blocks.SPRUCE_SAPLING.getDefaultState(), BlockPos.ORIGIN)),
+					BiomePlacementModifier.getInstance()
+			))
+			.addAllowedBiomeCategory(Biome.Category.TAIGA)
+			.addAllowedPrecipitation(Biome.Precipitation.RAIN)
+			.addAllowedNeighborFeature(new Identifier("trees_taiga"))
+			.setAllowedTag(TagFactory.BIOME.create(AurorasDeco.id("feature/fallen_spruce_taiga_trees")))
+			.register();
+
+	public static final PlacedFeatureMetadata SNOWY_FALLEN_SPRUCE_TAIGA_TREES = new PlacedFeatureMetadata(key("snowy_fallen_spruce_taiga_trees"),
+			AurorasDecoTreeConfiguredFeatures.SNOWY_FALLEN_SPRUCE_TREE.withPlacement(
+					RarityFilterPlacementModifier.create(3),
+					InSquarePlacementModifier.getInstance(),
+					VegetationPlacedFeatures.TREE_THRESHOLD,
+					PlacedFeatureUtil.OCEAN_FLOOR_HEIGHTMAP,
+					BlockPredicateFilterPlacementModifier.create(BlockPredicate.wouldSurvive(Blocks.SPRUCE_SAPLING.getDefaultState(), BlockPos.ORIGIN)),
+					BiomePlacementModifier.getInstance()
+			))
+			.addAllowedBiomeCategory(Biome.Category.TAIGA)
+			.addAllowedPrecipitation(Biome.Precipitation.SNOW)
+			.addAllowedNeighborFeature(new Identifier("trees_taiga"))
+			.setAllowedTag(TagFactory.BIOME.create(AurorasDeco.id("feature/snowy_fallen_spruce_taiga_trees")))
+			.register();
+
+	public static final PlacedFeatureMetadata FALLEN_OLD_GROWTH_SPRUCE_TAIGA_TREES = new PlacedFeatureMetadata(
+			key("fallen_old_growth_spruce_taiga_trees"),
+			AurorasDecoTreeConfiguredFeatures.FALLEN_SPRUCE_TREE.withPlacement(
+					RarityFilterPlacementModifier.create(2),
+					InSquarePlacementModifier.getInstance(),
+					VegetationPlacedFeatures.TREE_THRESHOLD,
+					PlacedFeatureUtil.OCEAN_FLOOR_HEIGHTMAP,
+					BlockPredicateFilterPlacementModifier.create(BlockPredicate.wouldSurvive(Blocks.SPRUCE_SAPLING.getDefaultState(), BlockPos.ORIGIN)),
+					BiomePlacementModifier.getInstance()
+			))
+			.addAllowedBiomeCategory(Biome.Category.TAIGA)
+			.addAllowedNeighborFeature(new Identifier("trees_old_growth_spruce_taiga"))
+			.addAllowedNeighborFeature(new Identifier("trees_old_growth_pine_taiga"))
+			.setAllowedTag(TagFactory.BIOME.create(AurorasDeco.id("feature/fallen_old_growth_spruce_taiga_trees")))
+			.register();
+
 
 	private static RegistryKey<PlacedFeature> key(String name) {
 		return RegistryKey.of(Registry.PLACED_FEATURE_KEY, AurorasDeco.id(name));

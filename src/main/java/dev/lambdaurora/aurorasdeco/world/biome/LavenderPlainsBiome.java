@@ -17,8 +17,8 @@
 
 package dev.lambdaurora.aurorasdeco.world.biome;
 
-import dev.lambdaurora.aurorasdeco.mixin.world.OverworldBiomeCreatorAccessor;
 import dev.lambdaurora.aurorasdeco.world.gen.feature.AurorasDecoVegetationPlacedFeatures;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.biome.SpawnSettings;
@@ -26,15 +26,42 @@ import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.DefaultBiomeFeatures;
 import net.minecraft.world.gen.feature.VegetationPlacedFeatures;
 
-public final class AurorasDecoOverworldBiomeCreator {
-	private AurorasDecoOverworldBiomeCreator() {
-		throw new UnsupportedOperationException("AurorasDecoOverworldBiomeCreator only contains static definitions.");
+/**
+ * Represents the Lavender Plains biome.
+ *
+ * @author LambdAurora
+ * @version 1.0.0
+ * @since 1.0.0
+ */
+public final class LavenderPlainsBiome extends AurorasDecoBiome {
+	public LavenderPlainsBiome() {
+		super(key("lavender_plains"));
 	}
 
-	public static Biome createLavenderPlains() {
-		SpawnSettings.Builder spawnSettings = new SpawnSettings.Builder();
-		GenerationSettings.Builder generationSettings = new GenerationSettings.Builder();
-		OverworldBiomeCreatorAccessor.invokeAddBasicFeatures(generationSettings);
+	@Override
+	public Biome.Category getCategory() {
+		return Biome.Category.PLAINS;
+	}
+
+	@Override
+	public float getTemperature() {
+		return 0.7f;
+	}
+
+	@Override
+	public float getDownfall() {
+		return 0.4f;
+	}
+
+	@Override
+	public void init() {
+		this.addStructure(new Identifier("mineshaft"));
+		this.addStructure(new Identifier("ruined_portal"));
+	}
+
+	@Override
+	public void initSettings(GenerationSettings.Builder generationSettings, SpawnSettings.Builder spawnSettings) {
+		this.addBasicFeatures(generationSettings);
 		DefaultBiomeFeatures.addPlainsMobs(spawnSettings);
 		DefaultBiomeFeatures.addPlainsTallGrass(generationSettings);
 		generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, AurorasDecoVegetationPlacedFeatures.PATCH_LAVENDER);
@@ -48,15 +75,5 @@ public final class AurorasDecoOverworldBiomeCreator {
 		DefaultBiomeFeatures.addDefaultMushrooms(generationSettings);
 		generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.PATCH_SUGAR_CANE);
 		generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, VegetationPlacedFeatures.PATCH_PUMPKIN);
-
-		return OverworldBiomeCreatorAccessor.invokeCreateBiome(
-				Biome.Precipitation.RAIN,
-				Biome.Category.PLAINS,
-				0.7f,
-				0.4f,
-				spawnSettings,
-				generationSettings,
-				null
-		);
 	}
 }

@@ -20,7 +20,9 @@ package dev.lambdaurora.aurorasdeco.world.gen.feature;
 import com.mojang.serialization.Codec;
 import dev.lambdaurora.aurorasdeco.world.gen.feature.config.FallenTreeFeatureConfig;
 import net.minecraft.block.*;
+import net.minecraft.state.property.Properties;
 import net.minecraft.tag.BlockTags;
+import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.StructureWorldAccess;
@@ -69,6 +71,10 @@ public class FallenTreeFeature extends Feature<FallenTreeFeatureConfig> {
 		}
 
 		return result;
+	}
+
+	private boolean isVegetation(StructureWorldAccess world, BlockPos pos) {
+		return world.testBlockState(pos, state -> !state.isSolidBlock(world, pos));
 	}
 
 	private boolean isAirOrVegetation(StructureWorldAccess world, BlockPos pos) {
@@ -158,10 +164,25 @@ public class FallenTreeFeature extends Feature<FallenTreeFeatureConfig> {
 					var offset = placeTo.offset(vineDirection);
 
 					if (this.isAirOrVegetation(world, offset)) {
-						this.setBlockState(world, offset,
-								config.vineProvider().getBlockState(random, offset)
-										.with(VineBlock.getFacingProperty(vineDirection.getOpposite()), true)
-						);
+						var vineState = config.vineProvider().getBlockState(random, offset)
+								.with(VineBlock.getFacingProperty(vineDirection.getOpposite()), true);
+
+						if (world.testFluidState(offset, fluidState -> fluidState.isIn(FluidTags.WATER))) {
+							if (vineState.getProperties().contains(Properties.WATERLOGGED))
+								vineState = vineState.with(Properties.WATERLOGGED, true);
+							else
+								vineState = null;
+						}
+
+						if (vineState != null) {
+							this.setBlockState(world, offset, vineState);
+
+							// Fix floating top double plant.
+							var up = offset.up();
+							if (this.isVegetation(world, up)) {
+								this.setBlockState(world, up, Blocks.AIR.getDefaultState());
+							}
+						}
 					}
 				}
 			}
@@ -175,12 +196,12 @@ public class FallenTreeFeature extends Feature<FallenTreeFeatureConfig> {
 				if (value == 0) {
 					var mushroomBlock = config.mushroomProvider().getBlockState(random, offset);
 					if (!mushroomBlock.isAir()) {
-						world.setBlockState(offset, mushroomBlock, Block.FORCE_STATE);
+						world.setBlockState(offset, mushroomBlock, Block.NOTIFY_LISTENERS);
 					}
 				} else if (value == 1) {
 					var layerBlock = config.layerType().getBlock();
 					if (layerBlock != Blocks.AIR) {
-						world.setBlockState(offset, layerBlock.getDefaultState(), 0);
+						world.setBlockState(offset, layerBlock.getDefaultState(), Block.NOTIFY_LISTENERS);
 					}
 				}
 			}

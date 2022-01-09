@@ -1,7 +1,8 @@
 - Jar
 - Telescope to look at pretty Ecotones sky.
-- Wind Chime
+- Wind Chime (sound)
 - Lamp post (like in Dungeons)
+- Jacaranda Tree
 
 - they want it
   - glassboards

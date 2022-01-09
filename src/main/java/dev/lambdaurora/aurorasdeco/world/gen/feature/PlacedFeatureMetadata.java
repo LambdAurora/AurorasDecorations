@@ -40,6 +40,7 @@ public class PlacedFeatureMetadata {
 	private final RegistryKey<PlacedFeature> key;
 	private final PlacedFeature feature;
 	private final List<Biome.Category> allowedCategories = new ArrayList<>();
+	private final List<Biome.Precipitation> allowedPrecipitations = new ArrayList<>();
 	private final List<RegistryKey<ConfiguredFeature<?, ?>>> allowedNeighborFeatures = new ArrayList<>();
 	private Tag<Biome> allowedTag;
 
@@ -69,6 +70,24 @@ public class PlacedFeatureMetadata {
 		if (this.allowedCategories.isEmpty())
 			return biomeSelectionContext -> true;
 		return BiomeSelectors.categories(this.getAllowedBiomeCategories());
+	}
+
+	public PlacedFeatureMetadata addAllowedPrecipitation(Biome.Precipitation... precipitations) {
+		this.allowedPrecipitations.addAll(Arrays.asList(precipitations));
+		return this;
+	}
+
+	public Predicate<BiomeSelectionContext> getAllowedPrecipitationsPredicate() {
+		if (this.allowedPrecipitations.isEmpty())
+			return biomeSelectionContext -> true;
+		return biomeSelectionContext -> {
+			for (var precipitation : this.allowedPrecipitations) {
+				if (biomeSelectionContext.getBiome().getPrecipitation() == precipitation)
+					return true;
+			}
+
+			return false;
+		};
 	}
 
 	public PlacedFeatureMetadata addAllowedNeighborFeature(Identifier key) {
@@ -108,8 +127,13 @@ public class PlacedFeatureMetadata {
 	}
 
 	public Predicate<BiomeSelectionContext> getBiomeSelectionPredicate() {
+		if (this.allowedCategories.isEmpty() && this.allowedPrecipitations.isEmpty() && this.allowedNeighborFeatures.isEmpty())
+			return this.getTagPredicate();
+
 		return this.getAllowedBiomeCategoriesPredicate()
-				.and(this.getAllowedNeighborFeaturesPredicate())
+				.and(this.getAllowedPrecipitationsPredicate()
+						.and(this.getAllowedNeighborFeaturesPredicate())
+				)
 				.or(this.getTagPredicate());
 	}
 

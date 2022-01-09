@@ -17,13 +17,13 @@
 
 package dev.lambdaurora.aurorasdeco.registry;
 
-import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.world.biome.AurorasDecoOverworldBiomeCreator;
+import dev.lambdaurora.aurorasdeco.world.biome.AurorasDecoBiome;
+import dev.lambdaurora.aurorasdeco.world.biome.LavenderPlainsBiome;
 import dev.lambdaurora.aurorasdeco.world.gen.feature.AurorasDecoVegetationPlacedFeatures;
+import dev.lambdaurora.aurorasdeco.world.gen.feature.PlacedFeatureMetadata;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStep;
@@ -40,22 +40,30 @@ public final class AurorasDecoBiomes {
 		throw new UnsupportedOperationException("AurorasDecoBiomes only contains static definitions.");
 	}
 
-	public static final RegistryKey<Biome> LAVENDER_PLAINS_KEY = key("lavender_plains");
-	public static final Biome LAVENDER_PLAINS = register(LAVENDER_PLAINS_KEY, AurorasDecoOverworldBiomeCreator.createLavenderPlains());
+	public static final LavenderPlainsBiome LAVENDER_PLAINS = register(new LavenderPlainsBiome());
 
-	private static RegistryKey<Biome> key(String name) {
-		return RegistryKey.of(Registry.BIOME_KEY, AurorasDeco.id(name));
+	private static <T extends AurorasDecoBiome> T register(T biome) {
+		register(biome.getKey(), biome.create());
+		biome.init();
+		return biome;
 	}
 
-	private static Biome register(RegistryKey<Biome> key, Biome biome) {
-		return BuiltinRegistries.set(BuiltinRegistries.BIOME, key, biome);
+	private static void register(RegistryKey<Biome> key, Biome biome) {
+		BuiltinRegistries.set(BuiltinRegistries.BIOME, key, biome);
 	}
 
 	static void init() {
+		addBiomeModification(GenerationStep.Feature.VEGETAL_DECORATION, AurorasDecoVegetationPlacedFeatures.FALLEN_FOREST_TREES);
+		addBiomeModification(GenerationStep.Feature.VEGETAL_DECORATION, AurorasDecoVegetationPlacedFeatures.FALLEN_BIRCH_FOREST_TREES);
+		addBiomeModification(GenerationStep.Feature.VEGETAL_DECORATION, AurorasDecoVegetationPlacedFeatures.FALLEN_SPRUCE_TAIGA_TREES);
+		addBiomeModification(GenerationStep.Feature.VEGETAL_DECORATION, AurorasDecoVegetationPlacedFeatures.SNOWY_FALLEN_SPRUCE_TAIGA_TREES);
+		addBiomeModification(GenerationStep.Feature.VEGETAL_DECORATION, AurorasDecoVegetationPlacedFeatures.FALLEN_OLD_GROWTH_SPRUCE_TAIGA_TREES);
+	}
+
+	private static void addBiomeModification(GenerationStep.Feature step, PlacedFeatureMetadata metadata) {
 		BiomeModifications.addFeature(BiomeSelectors.foundInOverworld()
-						.and(AurorasDecoVegetationPlacedFeatures.FALLEN_FOREST_TREES.getBiomeSelectionPredicate()),
-				GenerationStep.Feature.VEGETAL_DECORATION,
-				AurorasDecoVegetationPlacedFeatures.FALLEN_FOREST_TREES.getKey()
+						.and(metadata.getBiomeSelectionPredicate()),
+				step, metadata.getKey()
 		);
 	}
 }
