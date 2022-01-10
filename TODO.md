@@ -5,7 +5,6 @@
 - Jacaranda Tree
 
 - they want it
-  - glassboards
   - blackboards on floor/ceiling
 
 - xbxbxb123's ideas

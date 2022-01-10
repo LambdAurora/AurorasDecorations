@@ -52,6 +52,10 @@ public class BakedBlackboardModel extends ForwardingBakedModel {
 	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
 		super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 
+		this.emitBlockMesh(blockView, pos, context);
+	}
+
+	protected void emitBlockMesh(BlockRenderView blockView, BlockPos pos, RenderContext context) {
 		var attachment = ((RenderAttachedBlockView) blockView).getBlockEntityRenderAttachment(pos);
 		if (attachment instanceof Mesh mesh) {
 			context.meshConsumer().accept(mesh);

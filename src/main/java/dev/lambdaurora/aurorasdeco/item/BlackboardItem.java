@@ -124,7 +124,8 @@ public class BlackboardItem extends BlockItem {
 			var blackboard = Blackboard.fromNbt(nbt);
 			return Optional.of(new BlackboardTooltipData(
 					Registry.ITEM.getId(this).getPath().replace("waxed_", ""),
-					blackboard, this.locked));
+					blackboard, this.locked)
+			);
 		}
 		return super.getTooltipData(stack);
 	}

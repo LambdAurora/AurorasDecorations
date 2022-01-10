@@ -57,15 +57,13 @@ public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.Dynam
 
 		matrices.translate(0.5, 0.5, 0.5);
 		boolean leftHanded = mode == Mode.THIRD_PERSON_LEFT_HAND;
-		MinecraftClient.getInstance().getItemRenderer().renderItem(stack, mode,
-				leftHanded,
-				matrices, vertexConsumers, light, overlay, model);
 		if (mode == Mode.HEAD) {
 			var maskModel = MinecraftClient.getInstance().getBakedModelManager().getModel(AurorasDecoClient.BLACKBOARD_MASK);
 			MinecraftClient.getInstance().getItemRenderer().renderItem(stack, mode,
 					false, matrices, vertexConsumers, light, overlay, maskModel);
 		}
 
+		matrices.push();
 		var nbt = BlockItem.getBlockEntityNbtFromStack(stack);
 		if (nbt != null && nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
 			float z = .933f;
@@ -92,8 +90,26 @@ public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.Dynam
 
 			var blackboard = Blackboard.fromNbt(nbt);
 			BlackboardTexture.fromBlackboard(blackboard)
-					.render(matrices.peek().getModel(), vertexConsumers, blackboard.isLit() ? LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE : light);
+					.render(
+							matrices.peek().getModel(), vertexConsumers,
+							blackboard.isLit() ? LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE : light,
+							false
+					);
+
+			if (stack.getTranslationKey().contains("glass")) {
+				BlackboardTexture.fromBlackboard(blackboard)
+						.render(
+								matrices.peek().getModel(), vertexConsumers,
+								blackboard.isLit() ? LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE : light,
+								true
+						);
+			}
 		}
+		matrices.pop();
+
+		MinecraftClient.getInstance().getItemRenderer().renderItem(stack, mode,
+				leftHanded,
+				matrices, vertexConsumers, light, overlay, model);
 
 		matrices.pop();
 	}

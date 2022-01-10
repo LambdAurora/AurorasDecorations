@@ -76,16 +76,20 @@ public class BlackboardTexture {
 		}
 	}
 
-	public void render(Matrix4f model, VertexConsumerProvider vertexConsumers, int light) {
+	public void render(Matrix4f model, VertexConsumerProvider vertexConsumers, int light, boolean mirror) {
 		var vertices = vertexConsumers.getBuffer(this.renderLayer);
-		vertices.vertex(model, 0.f, 1.f, 0.f).color(255, 255, 255, 255)
-				.texture(0.f, 1.f).light(light).next();
-		vertices.vertex(model, 1.f, 1.f, 0.f).color(255, 255, 255, 255)
-				.texture(1.f, 1.f).light(light).next();
-		vertices.vertex(model, 1.f, 0.f, 0.f).color(255, 255, 255, 255)
-				.texture(1.f, 0.f).light(light).next();
-		vertices.vertex(model, 0.f, 0.f, 0.f).color(255, 255, 255, 255)
-				.texture(0.f, 0.f).light(light).next();
+		vertices.vertex(model, mirror ? 1.f : 0.f, 1.f, 0.f)
+				.color(255, 255, 255, 255)
+				.texture(mirror ? 1.f : 0.f, 1.f).light(light).next();
+		vertices.vertex(model, mirror ? 0.f : 1.f, 1.f, 0.f)
+				.color(255, 255, 255, 255)
+				.texture(mirror ? 0.f : 1.f, 1.f).light(light).next();
+		vertices.vertex(model, mirror ? 0.f : 1.f, 0.f, 0.f)
+				.color(255, 255, 255, 255)
+				.texture(mirror ? 0.f : 1.f, 0.f).light(light).next();
+		vertices.vertex(model, mirror ? 1.f : 0.f, 0.f, 0.f)
+				.color(255, 255, 255, 255)
+				.texture(mirror ? 1.f : 0.f, 0.f).light(light).next();
 	}
 
 	public void update(Blackboard blackboard) {

@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.recipe;
 
 import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoTags;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.BlockItem;
@@ -40,15 +41,11 @@ import net.minecraft.world.World;
  * @since 1.0.0
  */
 public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
-	private static final Ingredient INPUT = Ingredient.ofItems(
-			AurorasDecoRegistry.BLACKBOARD_BLOCK,
-			AurorasDecoRegistry.CHALKBOARD_BLOCK,
-			AurorasDecoRegistry.WAXED_BLACKBOARD_BLOCK,
-			AurorasDecoRegistry.WAXED_CHALKBOARD_BLOCK
-	);
+	private static final Ingredient INPUT = Ingredient.fromTag(AurorasDecoTags.BLACKBOARD_ITEMS);
 	private static final Ingredient OUTPUT = Ingredient.ofItems(
 			AurorasDecoRegistry.BLACKBOARD_BLOCK,
-			AurorasDecoRegistry.CHALKBOARD_BLOCK
+			AurorasDecoRegistry.CHALKBOARD_BLOCK,
+			AurorasDecoRegistry.GLASSBOARD_BLOCK
 	);
 
 	public BlackboardCloneRecipe(Identifier id) {

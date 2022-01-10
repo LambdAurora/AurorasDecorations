@@ -5,11 +5,17 @@ Wonderful blocks on which you can draw on.-->
 <!--thumbnail:images/blackboards.png-->
 
 Blackboards are blocks which you can draw on with dyes.
-They come in two variants: blackboard and chalkboard (green).
+They come in three variants: blackboard, chalkboard (green), and glassboard (transparent).
 
 They also can be worn as masks on the helmet slot, and on a dedicated slot if [Trinkets] is present.
 
+To place them they will need a support block, like candles, and they won't break if the support block is removed afterwards.
+
 ![Blackboards](../images/blackboards.png)
+*<span style="text-align: center; display: block">Blackboards and Chalkboards</span>*
+
+![Glassboard](../images/glassboard.png)
+*<span style="text-align: center; display: block">Glassboards!</span>*
 
 ## Crafting
 
@@ -42,7 +48,7 @@ They also can be worn as masks on the helmet slot, and on a dedicated slot if [T
 
 <table class="crafting-grid">
 <thead>
-    <th>Crafting</th>
+    <th>Crafting Table</th>
 </thead>
 <tbody>
     <tr>
@@ -53,6 +59,31 @@ They also can be worn as masks on the helmet slot, and on a dedicated slot if [T
     <tr>
         <td>Stick</td>
         <td>Green Concrete</td>
+        <td>Stick</td>
+    </tr>
+    <tr>
+        <td>Stick</td>
+        <td>Stick</td>
+        <td>Stick</td>
+    </tr>
+</tbody>
+</table>
+
+### Glassboard
+
+<table class="crafting-grid">
+<thead>
+    <th>Crafting Table</th>
+</thead>
+<tbody>
+    <tr>
+        <td>Stick</td>
+        <td>Stick</td>
+        <td>Stick</td>
+    </tr>
+    <tr>
+        <td>Stick</td>
+        <td>Glass</td>
         <td>Stick</td>
     </tr>
     <tr>
@@ -87,7 +118,7 @@ To erase a blackboard you can either:
 
 You also can erase a single pixel with paper.
 
-A blackboard can be glow in the dark if a glow ink sac is used on it, to stop the glow a normal ink sac can be used.
+A blackboard can glow in the dark if a glow ink sac is used on it, to stop the glow a normal ink sac can be used.
 
 Once you are satisfied with your drawing you can use wax it using honeycomb, either by right-clicking it or by using a smithing table.
 Waxed blackboards are made uneditable.

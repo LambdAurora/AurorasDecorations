@@ -161,6 +161,8 @@ public final class AurorasDecoRegistry {
 					12.f, 21.f, 12.f
 			)));
 
+	/* Blackboards */
+
 	public static final BlackboardBlock BLACKBOARD_BLOCK = registerWithItem("blackboard",
 			new BlackboardBlock(QuiltBlockSettings.of(Material.DECORATION).strength(.2f)
 					.nonOpaque()
@@ -173,6 +175,26 @@ public final class AurorasDecoRegistry {
 			new FabricItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
 			BlackboardItem::new);
 
+	public static final BlackboardBlock CHALKBOARD_BLOCK = registerWithItem("chalkboard",
+			new BlackboardBlock(QuiltBlockSettings.copyOf(BLACKBOARD_BLOCK), false),
+			new FabricItemSettings().group(ItemGroup.DECORATIONS).equipmentSlot(stack -> EquipmentSlot.HEAD),
+			BlackboardItem::new);
+	public static final BlackboardBlock WAXED_CHALKBOARD_BLOCK = registerWithItem("waxed_chalkboard",
+			new BlackboardBlock(QuiltBlockSettings.copyOf(CHALKBOARD_BLOCK), true),
+			new FabricItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
+			BlackboardItem::new);
+
+	public static final BlackboardBlock GLASSBOARD_BLOCK = registerWithItem("glassboard",
+			new BlackboardBlock(QuiltBlockSettings.copyOf(BLACKBOARD_BLOCK).sounds(BlockSoundGroup.GLASS), false),
+			new FabricItemSettings().group(ItemGroup.DECORATIONS).equipmentSlot(stack -> EquipmentSlot.HEAD),
+			BlackboardItem::new);
+	public static final BlackboardBlock WAXED_GLASSBOARD_BLOCK = registerWithItem("waxed_glassboard",
+			new BlackboardBlock(QuiltBlockSettings.copyOf(GLASSBOARD_BLOCK), true),
+			new FabricItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
+			BlackboardItem::new);
+
+	/* Blackboards - END */
+
 	public static final BookPileBlock BOOK_PILE_BLOCK = Registrar.register("book_pile",
 					new BookPileBlock(QuiltBlockSettings.of(Material.DECORATION).strength(.2f)
 							.nonOpaque()))
@@ -182,15 +204,6 @@ public final class AurorasDecoRegistry {
 			}).finish();
 
 	public static final BurntVineBlock BURNT_VINE_BLOCK = register("burnt_vine", new BurntVineBlock());
-
-	public static final BlackboardBlock CHALKBOARD_BLOCK = registerWithItem("chalkboard",
-			new BlackboardBlock(QuiltBlockSettings.copyOf(BLACKBOARD_BLOCK), false),
-			new FabricItemSettings().group(ItemGroup.DECORATIONS).equipmentSlot(stack -> EquipmentSlot.HEAD),
-			BlackboardItem::new);
-	public static final BlackboardBlock WAXED_CHALKBOARD_BLOCK = registerWithItem("waxed_chalkboard",
-			new BlackboardBlock(QuiltBlockSettings.copyOf(BLACKBOARD_BLOCK), true),
-			new FabricItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
-			BlackboardItem::new);
 
 	public static final Item COPPER_SULFATE_ITEM = register("copper_sulfate", new Item(new FabricItemSettings()
 			.group(ItemGroup.MISC)));
@@ -319,7 +332,8 @@ public final class AurorasDecoRegistry {
 	public static final BlockEntityType<BlackboardBlockEntity> BLACKBOARD_BLOCK_ENTITY_TYPE = registerBlockEntity(
 			"blackboard",
 			BlackboardBlockEntity::new,
-			BLACKBOARD_BLOCK, CHALKBOARD_BLOCK, WAXED_BLACKBOARD_BLOCK, WAXED_CHALKBOARD_BLOCK
+			BLACKBOARD_BLOCK, CHALKBOARD_BLOCK, GLASSBOARD_BLOCK,
+			WAXED_BLACKBOARD_BLOCK, WAXED_CHALKBOARD_BLOCK, WAXED_GLASSBOARD_BLOCK
 	);
 	public static final BlockEntityType<BookPileBlockEntity> BOOK_PILE_BLOCK_ENTITY_TYPE = registerBlockEntity(
 			"book_pile", BookPileBlockEntity::new, BOOK_PILE_BLOCK
@@ -469,6 +483,7 @@ public final class AurorasDecoRegistry {
 
 		OxidizableBlocksRegistry.registerWaxableBlockPair(BLACKBOARD_BLOCK, WAXED_BLACKBOARD_BLOCK);
 		OxidizableBlocksRegistry.registerWaxableBlockPair(CHALKBOARD_BLOCK, WAXED_CHALKBOARD_BLOCK);
+		OxidizableBlocksRegistry.registerWaxableBlockPair(GLASSBOARD_BLOCK, WAXED_GLASSBOARD_BLOCK);
 
 		((BlockItemAccessor) Items.FLOWER_POT).aurorasdeco$setCeilingBlock(HANGING_FLOWER_POT_BLOCK);
 		Item.BLOCK_ITEMS.put(HANGING_FLOWER_POT_BLOCK, Items.FLOWER_POT);

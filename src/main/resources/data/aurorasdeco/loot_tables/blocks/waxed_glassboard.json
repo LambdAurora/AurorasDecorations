@@ -1,0 +1,42 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_name",
+              "source": "block_entity"
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "source": "block_entity",
+              "ops": [
+                {
+                  "source": "pixels",
+                  "target": "BlockEntityTag.pixels",
+                  "op": "replace"
+                },
+                {
+                  "source": "version",
+                  "target": "BlockEntityTag.version",
+                  "op": "replace"
+                },
+                {
+                  "source": "lit",
+                  "target": "BlockEntityTag.lit",
+                  "op": "replace"
+                }
+              ]
+            }
+          ],
+          "name": "aurorasdeco:waxed_glassboard"
+        }
+      ]
+    }
+  ]
+}

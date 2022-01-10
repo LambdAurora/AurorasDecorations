@@ -39,6 +39,8 @@ public final class AurorasDecoTags {
 	public static final Tag<Item> BLACKBOARD_ITEMS = TagFactory.ITEM.create(id("blackboards"));
 
 	public static final Tag<Block> BLACKBOARD_BLOCKS = TagFactory.BLOCK.create(id("blackboards"));
+	public static final Tag<Block> GLASSBOARD_BLOCKS = TagFactory.BLOCK.create(id("glassboards"));
+
 	public static final Tag<Block> BRAZIERS = TagFactory.BLOCK.create(id("braziers"));
 	public static final Tag<Block> COPPER_SULFATE_DECOMPOSABLE = TagFactory.BLOCK.create(id("copper_sulfate_decomposable"));
 	public static final Tag<Block> HOPPERS = TagFactory.BLOCK.create(id("hoppers"));

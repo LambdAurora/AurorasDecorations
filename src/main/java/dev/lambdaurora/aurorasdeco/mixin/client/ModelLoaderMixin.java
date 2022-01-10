@@ -81,8 +81,12 @@ public abstract class ModelLoaderMixin {
 				}
 
 				if (modelId.getNamespace().equals(AurorasDeco.NAMESPACE)) {
+					System.out.println("SOMETHING IS WRONG, " + modelId);
 					if (modelId.getPath().startsWith("bench/")) {
-						this.putModel(id, new UnbakedBenchModel(unbakedModel, this.aurorasdeco$restModelManager));
+						System.out.println("SOMETHING IS MORE WRONG, " + modelId);
+						var model = new UnbakedBenchModel(unbakedModel, this.aurorasdeco$restModelManager);
+						this.putModel(id, model);
+						this.modelsToBake.put(id, model);
 						ci.cancel();
 					} else if (modelId.getPath().startsWith("big_flower_pot/")) {
 						var potBlock = PottedPlantType.fromId(modelId.getPath().substring("big_flower_pot/".length())).getPot();
@@ -94,7 +98,13 @@ public abstract class ModelLoaderMixin {
 						this.putModel(id, new UnbakedForwardingModel(unbakedModel, BakedHangingFlowerPotModel::new));
 						ci.cancel();
 					} else if (modelId.getPath().endsWith("board")) {
-						this.putModel(id, new UnbakedBlackboardModel(unbakedModel));
+						this.putModel(id, UnbakedBlackboardModel.of(modelId, unbakedModel,
+								this.resourceManager, this.variantMapDeserializationContext,
+								(partId, model) -> {
+									this.putModel(partId, model);
+									this.modelsToBake.put(partId, model);
+								}
+						));
 						ci.cancel();
 					}
 				}

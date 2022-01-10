@@ -1,0 +1,25 @@
+{
+  "credit": "Made by LambdAurora",
+  "parent": "aurorasdeco:block/template/board",
+  "ambientocclusion": false,
+  "textures": {
+    "board": "aurorasdeco:block/glassboard",
+    "wood": "aurorasdeco:block/glassboard_side"
+  },
+  "elements": [
+    {
+      "name": "board",
+      "from": [ 0, 0, 15 ],
+      "to": [ 16, 16, 16 ],
+      "faces": {
+        "north": {"uv": [ 0, 0, 16, 16 ], "texture": "#board"},
+        "east":  {"uv": [ 0, 15, 16, 16 ], "texture": "#wood", "rotation": 90, "cullface": "east" },
+        "south": {"uv": [ 16, 0, 0, 16 ], "texture": "#board", "cullface": "south"},
+        "west":  {"uv": [ 0, 15, 16, 16 ], "texture": "#wood", "rotation": 90, "cullface": "west"},
+        "up":    {"uv": [ 16, 0, 0, 1 ], "texture": "#wood", "cullface": "up"},
+        "down":  {"uv": [ 16, 15, 0, 16 ], "texture": "#wood", "cullface": "down"}
+      }
+    }
+  ],
+  "gui_light": "side"
+}

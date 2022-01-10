@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "aurorasdeco:block/glassboard/glassboard_lu"
+    },
+    "facing=east": {
+      "model": "aurorasdeco:block/glassboard/glassboard_lu",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "aurorasdeco:block/glassboard/glassboard_lu",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "aurorasdeco:block/glassboard/glassboard_lu",
+      "y": 270
+    }
+  }
+}

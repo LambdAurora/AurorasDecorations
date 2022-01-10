@@ -186,9 +186,6 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
 		}
 
-		if (direction.getOpposite() == state.get(FACING) && !state.canPlaceAt(world, pos))
-			return Blocks.AIR.getDefaultState();
-
 		if (!this.isLocked()) {
 			var blackboard = this.getBlackboardEntity(world, pos);
 			if (blackboard != null && !world.isClient()) {
@@ -352,7 +349,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 				var stack = new ItemStack(this);
 				var nbt = blackboard.writeBlackBoardNbt(new NbtCompound());
 				nbt.remove("custom_name");
-				BlockItem.writeBlockEntityNbtToStack(stack, AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE, nbt);
+				AuroraUtil.writeBlockEntityNbtToStack(stack, AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE, nbt, false);
 
 				if (blackboard.hasCustomName()) {
 					stack.setCustomName(blackboard.getCustomName());
@@ -375,7 +372,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 		if (blackboard != null) {
 			var nbt = blackboard.writeBlackBoardNbt(new NbtCompound());
 			nbt.remove("custom_name");
-			BlockItem.writeBlockEntityNbtToStack(stack, AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE, nbt);
+			AuroraUtil.writeBlockEntityNbtToStack(stack, AurorasDecoRegistry.BLACKBOARD_BLOCK_ENTITY_TYPE, nbt, false);
 		}
 
 		return stack;
@@ -449,7 +446,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 					var target = MinecraftClient.getInstance().crosshairTarget;
 					if (target != null && target.getType() == HitResult.Type.BLOCK) {
 						var targetBlock = world.getBlockState(((BlockHitResult) target).getBlockPos());
-						if (targetBlock.isOf(AurorasDecoRegistry.BLACKBOARD_BLOCK) || targetBlock.isOf(AurorasDecoRegistry.CHALKBOARD_BLOCK))
+						if (targetBlock.getBlock() instanceof BlackboardBlock)
 							return TypedActionResult.fail(ItemStack.EMPTY);
 					}
 				}

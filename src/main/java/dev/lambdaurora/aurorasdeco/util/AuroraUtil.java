@@ -89,6 +89,23 @@ public final class AuroraUtil {
 		return AurorasDeco.id(prefix + '/' + path);
 	}
 
+	/* NBT */
+
+	public static void writeBlockEntityNbtToStack(ItemStack stack, BlockEntityType<?> type, NbtCompound nbt, boolean force) {
+		boolean hasDummy = false;
+		if (nbt.isEmpty() && force) {
+			nbt.putBoolean("aurorasdeco$dummy", true);
+			hasDummy = true;
+		}
+
+		BlockItem.writeBlockEntityNbtToStack(stack, type, nbt);
+		nbt.remove("id");
+
+		if (hasDummy) {
+			nbt.remove("aurorasdeco$dummy");
+		}
+	}
+
 	public static NbtCompound getOrCreateBlockEntityNbt(ItemStack stack, BlockEntityType<?> type) {
 		var nbt = BlockItem.getBlockEntityNbtFromStack(stack);
 		if (nbt == null) {
@@ -98,9 +115,7 @@ public final class AuroraUtil {
 			    and then remove the dummy boolean again.
 			 */
 			var nbt2 = new NbtCompound();
-			nbt2.putBoolean("aurorasdeco_dummy", true);
-			BlockItem.writeBlockEntityNbtToStack(stack, type, nbt2);
-			nbt2.remove("aurorasdeco_dummy");
+			writeBlockEntityNbtToStack(stack, type, nbt2, true);
 			return nbt2;
 		} else {
 			return nbt;

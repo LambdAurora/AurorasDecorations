@@ -91,7 +91,8 @@ public class RestModelManager {
 
 	public class RestModelEntry {
 		private final Identifier benchRestId;
-		private final UnbakedModel benchRest;
+		private UnbakedModel benchRest;
+		private BakedModel bakedModel;
 
 		public RestModelEntry(Identifier benchRestId, UnbakedModel benchRest) {
 			this.benchRestId = benchRestId;

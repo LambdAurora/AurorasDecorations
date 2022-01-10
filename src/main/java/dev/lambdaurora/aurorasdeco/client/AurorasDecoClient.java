@@ -100,6 +100,8 @@ public class AurorasDecoClient implements ClientModInitializer {
 				COPPER_SULFATE_LANTERN_BLOCK,
 				COPPER_SULFATE_TORCH_BLOCK,
 				COPPER_SULFATE_WALL_TORCH_BLOCK,
+				GLASSBOARD_BLOCK,
+				WAXED_GLASSBOARD_BLOCK,
 				AurorasDecoPlants.DAFFODIL,
 				AurorasDecoPlants.LAVENDER,
 				AurorasDecoPlants.POTTED_DAFFODIL,
@@ -162,8 +164,10 @@ public class AurorasDecoClient implements ClientModInitializer {
 
 		this.registerBlackboardItemRenderer(BLACKBOARD_BLOCK);
 		this.registerBlackboardItemRenderer(CHALKBOARD_BLOCK);
+		this.registerBlackboardItemRenderer(GLASSBOARD_BLOCK);
 		this.registerBlackboardItemRenderer(WAXED_BLACKBOARD_BLOCK);
 		this.registerBlackboardItemRenderer(WAXED_CHALKBOARD_BLOCK);
+		this.registerBlackboardItemRenderer(WAXED_GLASSBOARD_BLOCK);
 
 		ScreenRegistry.register(COPPER_HOPPER_SCREEN_HANDLER_TYPE, CopperHopperScreen::new);
 		ScreenRegistry.register(SAWMILL_SCREEN_HANDLER_TYPE, SawmillScreen::new);
@@ -188,8 +192,11 @@ public class AurorasDecoClient implements ClientModInitializer {
 			return null;
 		});
 
-		TrinketsHooks.init(BLACKBOARD_BLOCK.asItem(), WAXED_BLACKBOARD_BLOCK.asItem(),
-				CHALKBOARD_BLOCK.asItem(), WAXED_CHALKBOARD_BLOCK.asItem());
+		TrinketsHooks.init(
+				BLACKBOARD_BLOCK.asItem(), WAXED_BLACKBOARD_BLOCK.asItem(),
+				CHALKBOARD_BLOCK.asItem(), WAXED_CHALKBOARD_BLOCK.asItem(),
+				GLASSBOARD_BLOCK.asItem(), WAXED_GLASSBOARD_BLOCK.asItem()
+		);
 	}
 
 	private void registerBlackboardItemRenderer(BlackboardBlock blackboard) {

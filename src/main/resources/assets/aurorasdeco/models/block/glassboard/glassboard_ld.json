@@ -1,0 +1,17 @@
+{
+  "credit": "Made by LambdAurora",
+  "parent": "aurorasdeco:block/glassboard",
+  "elements": [
+    {
+      "name": "board",
+      "from": [ 8, 0, 15 ],
+      "to": [ 16, 8, 16 ],
+      "faces": {
+        "north": {"uv": [ 0, 8, 8, 16 ], "texture": "#board"},
+        "east":  {"uv": [ 8, 15, 16, 16 ], "texture": "#wood", "rotation": 90, "cullface": "east" },
+        "south": {"uv": [ 8, 8, 0, 16 ], "texture": "#board", "cullface": "south"},
+        "down":  {"uv": [ 8, 15, 0, 16 ], "texture": "#wood", "cullface": "down"}
+      }
+    }
+  ]
+}
