@@ -57,7 +57,8 @@ public final class AurorasDecoBiomes {
 		addBiomeModification(GenerationStep.Feature.VEGETAL_DECORATION, AurorasDecoVegetationPlacedFeatures.FALLEN_BIRCH_FOREST_TREES);
 		addBiomeModification(GenerationStep.Feature.VEGETAL_DECORATION, AurorasDecoVegetationPlacedFeatures.FALLEN_SPRUCE_TAIGA_TREES);
 		addBiomeModification(GenerationStep.Feature.VEGETAL_DECORATION, AurorasDecoVegetationPlacedFeatures.SNOWY_FALLEN_SPRUCE_TAIGA_TREES);
-		addBiomeModification(GenerationStep.Feature.VEGETAL_DECORATION, AurorasDecoVegetationPlacedFeatures.FALLEN_OLD_GROWTH_SPRUCE_TAIGA_TREES);
+		addBiomeModification(GenerationStep.Feature.VEGETAL_DECORATION, AurorasDecoVegetationPlacedFeatures.FALLEN_TREES_OLD_GROWTH_SPRUCE_TAIGA);
+		addBiomeModification(GenerationStep.Feature.VEGETAL_DECORATION, AurorasDecoVegetationPlacedFeatures.FALLEN_TREES_SPARSE_JUNGLE);
 	}
 
 	private static void addBiomeModification(GenerationStep.Feature step, PlacedFeatureMetadata metadata) {

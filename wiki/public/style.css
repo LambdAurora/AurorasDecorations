@@ -97,7 +97,6 @@ details > summary {
 }
 
 .crafting-grid td, .crafting-grid th {
-	border: 1px solid var(--ls_theme_border_color);
 	text-align: center;
 }
 
@@ -114,8 +113,16 @@ details > summary {
 	border-collapse: collapse;
 }
 
-.explosion-crafting td, .crafting-grid th {
+.explosion-crafting td, .crafting-grid td, .crafting-grid th {
 	border: 1px solid var(--ls_theme_border_color);
+}
+
+.explosion-crafting tr, .crafting-grid tr {
+	height: 34px;
+}
+
+td {
+	padding: 0 0.5em 0 0.5em;
 }
 
 td img, th img {

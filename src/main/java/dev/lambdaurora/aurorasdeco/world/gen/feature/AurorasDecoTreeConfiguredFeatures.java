@@ -92,6 +92,17 @@ public final class AurorasDecoTreeConfiguredFeatures {
 			)
 	);
 
+	public static final ConfiguredFeature<FallenTreeFeatureConfig, ?> FALLEN_JUNGLE_TREE = ConfiguredFeatureUtil.register(
+			AurorasDeco.id("fallen_jungle_tree").toString(),
+			AurorasDecoFeatures.FALLEN_TREE.configure(FallenTreeFeatureConfig.builder(BlockStateProvider.of(Blocks.JUNGLE_LOG))
+					.baseHeight(3)
+					.variance(6)
+					.layerProvider(FallenTreeFeatureConfig.LayerType.MOSS)
+					.noMushrooms()
+					.build()
+			)
+	);
+
 	public static final ConfiguredFeature<FallenTreeFeatureConfig, ?> SAVANNA_FALLEN_OAK_TREE = ConfiguredFeatureUtil.register(
 			AurorasDeco.id("savanna_fallen_oak_tree").toString(),
 			AurorasDecoFeatures.FALLEN_TREE.configure(FallenTreeFeatureConfig.builder(BlockStateProvider.of(Blocks.OAK_LOG))

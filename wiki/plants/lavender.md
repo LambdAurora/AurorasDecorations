@@ -19,7 +19,7 @@ Lavender can be crafted into purple dye. Lavender can also be used as a dye <spa
 ## Locations
 
  - Flower Forests
- - [Lavender Plains](../biomes/lavender_plains.md)  
+ - [Lavender Plains](java/minecraft/aurorasdecorations/wiki/world_generation/biomes/lavender_plains.md)  
    ![Lavender Plains Picture](../../images/biome/lavender_plains.png "Lavender Plains")
 
 [lavender_wikipedia]: https://en.wikipedia.org/wiki/Lavandula "Wikipedia page"

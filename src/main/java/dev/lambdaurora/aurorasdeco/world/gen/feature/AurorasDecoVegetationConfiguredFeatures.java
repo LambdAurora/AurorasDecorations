@@ -58,7 +58,7 @@ public final class AurorasDecoVegetationConfiguredFeatures {
 	);
 
 	public static final ConfiguredFeature<RandomFeatureConfig, ?> FALLEN_FOREST_TREES = ConfiguredFeatureUtil.register(
-			AurorasDeco.id("fallen_average_trees").toString(),
+			AurorasDeco.id("fallen_trees/average").toString(),
 			Feature.RANDOM_SELECTOR
 					.configure(
 							new RandomFeatureConfig(
@@ -66,6 +66,19 @@ public final class AurorasDecoVegetationConfiguredFeatures {
 											new class_3226(AurorasDecoTreeConfiguredFeatures.FALLEN_BIRCH_TREE.withPlacement(), 0.35f)
 									),
 									AurorasDecoTreeConfiguredFeatures.FALLEN_OAK_TREE.withPlacement()
+							)
+					)
+	);
+
+	public static final ConfiguredFeature<RandomFeatureConfig, ?> FALLEN_TREES_SPARSE_JUNGLE = ConfiguredFeatureUtil.register(
+			AurorasDeco.id("fallen_trees/sparse_jungle").toString(),
+			Feature.RANDOM_SELECTOR
+					.configure(
+							new RandomFeatureConfig(
+									List.of(
+											new class_3226(AurorasDecoTreeConfiguredFeatures.FALLEN_OAK_TREE.withPlacement(), 0.05f)
+									),
+									AurorasDecoTreeConfiguredFeatures.FALLEN_JUNGLE_TREE.withPlacement()
 							)
 					)
 	);

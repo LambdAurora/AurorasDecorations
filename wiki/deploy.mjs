@@ -275,6 +275,8 @@ function build_navigation(pages, current_page) {
 
 	index_page.nav[0].content = ["Main page"];
 
+	const current_path = current_page.path.split("/");
+
 	function build_tree(page, elements, first) {
 		let path = root + page.path.replace(/^\.\//, "/").replace(/index\.html$/, "");
 		if (!first) {
@@ -315,10 +317,18 @@ function build_navigation(pages, current_page) {
 			const entry = {
 				type: "dir",
 				path: path[level],
-				raw_title: path[level].replace(/\w/, firstLetter => firstLetter.toUpperCase()),
+				full_path: path.filter((_, index) => index <= level),
+				raw_title: path[level]
+					.replace(/\w/, firstLetter => firstLetter.toUpperCase())
+					.replace(/_\w/g, wordFirstLetter => " " + wordFirstLetter[1].toUpperCase()),
 				entries: []
 			};
 			entries.push(entry);
+
+			if (level !== path.length - 2) {
+				return find_or_append_directory(entry.entries, path, level + 1);
+			}
+
 			return entry;
 		}
 	}
@@ -338,16 +348,30 @@ function build_navigation(pages, current_page) {
 		}
 	}
 
+	function should_open_dir(entry) {
+		for (let i = 0; i < entry.full_path.length; i++) {
+			if (entry.full_path[i] !== current_path[i])
+				return false;
+		}
+
+		return true;
+	}
+
 	function build_navigational_tree(tree, entry) {
 		if (entry.type === "dir") {
 			const subtree = html.create_element("ul");
 			for (const item of entry.entries)
 				build_navigational_tree(subtree, item);
-			tree.append_child(
-				html.create_element("li").with_attr("class", "wiki_nav_directory")
-					.with_child(entry.raw_title)
-					.with_child(subtree)
-			);
+
+			const li = html.create_element("li").with_attr("class", "wiki_nav_directory")
+				.with_child(entry.raw_title)
+				.with_child(subtree);
+
+			if (should_open_dir(entry)) {
+				li.attr("open", "");
+			}
+
+			tree.append_child(li);
 		} else {
 			for (const h1 of entry.nav) {
 				tree.append_child(build_tree(entry, h1, true));

@@ -131,6 +131,8 @@ public class FallenTreeFeature extends Feature<FallenTreeFeatureConfig> {
 
 		// First log
 		this.setBlockState(world, pos, config.trunkProvider().getBlockState(random, pos).with(PillarBlock.AXIS, Direction.Axis.Y));
+		this.setBlockState(world, pos.move(0, -1, 0), Blocks.ROOTED_DIRT.getDefaultState());
+		pos.move(0, 1, 0);
 		if (config.layerType() != FallenTreeFeatureConfig.LayerType.SNOW) {
 			Direction tmp = direction;
 			for (int i = 0; i < 3; i++) {
