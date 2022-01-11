@@ -144,7 +144,7 @@ The copper sulfate campfire decays leaves, mushroom blocks, and nether wart bloc
 
 ### Copper Sulfate Brazier
 
-This is the copper sulfate variant of the [brazier](braziers.md), it inherits the special properties of the [copper sulfate campfire].
+This is the copper sulfate variant of the [brazier](braziers.md), it inherits the special properties of the [copper sulfate campfire][copper_sulfate_campfire].
 
 <div class="wiki-gallery">
 <img alt="Copper Sulfate Brazier" title="Copper Sulfate Brazier" src="../images/render/copper_sulfate_brazier.png" width="128" height="128" />
@@ -170,5 +170,5 @@ This is the copper sulfate variant of the [brazier](braziers.md), it inherits th
 </tbody>
 </table>
 
-[copper sulfate campfire]: #copper-sulfate-campfire
+[copper_sulfate_campfire]: #copper-sulfate-campfire
 [copper_sulfate_wikipedia]: https://en.wikipedia.org/wiki/Copper%28II%29_sulfate "Wikipedia page"
