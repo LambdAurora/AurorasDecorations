@@ -19,6 +19,8 @@ package dev.lambdaurora.aurorasdeco.resource.datagen;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
+import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementRewards;
@@ -34,25 +36,44 @@ import net.minecraft.util.Identifier;
 
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 
 import static dev.lambdaurora.aurorasdeco.util.AuroraUtil.jsonArray;
 
 public final class AdvancementDatagen {
 	private static final Map<Identifier, Supplier<Advancement.Task>> ADVANCEMENT_BUILDERS = new Object2ObjectOpenHashMap<>();
 	private static final Map<Identifier, Advancement.Task> ADVANCEMENTS = new Object2ObjectOpenHashMap<>();
+	private static final Pattern MISSING_TAG_REGEX = Pattern.compile("Unknown item tag '([a-z0-9_.-]+:[a-z0-9/._-]+)'");
 
 	private AdvancementDatagen() {
 		throw new UnsupportedOperationException("AdvancementDatagen only contains static definitions.");
 	}
 
 	public static void applyAdvancements(Map<Identifier, Advancement.Task> builder) {
-		if (ADVANCEMENTS.isEmpty()) {
+		AurorasDeco.debug("Applying advancement injection...");
+
+		if (!ADVANCEMENT_BUILDERS.isEmpty()) {
+			AurorasDeco.debug("Building {} advancements...", ADVANCEMENT_BUILDERS.size());
 			var it = ADVANCEMENT_BUILDERS.entrySet().iterator();
 
 			while (it.hasNext()) {
 				var advancementBuilder = it.next();
-				ADVANCEMENTS.put(advancementBuilder.getKey(), advancementBuilder.getValue().get());
-				it.remove();
+
+				try {
+					ADVANCEMENTS.put(advancementBuilder.getKey(), advancementBuilder.getValue().get());
+					it.remove();
+				} catch (JsonSyntaxException e) {
+					var matcher = MISSING_TAG_REGEX.matcher(e.getMessage());
+
+					if (matcher.find()) {
+						var badTag = new Identifier(matcher.group(1));
+						AurorasDeco.error("Could not build advancement {} due to a missing item tag {}. " +
+										"This probably means the mod {} is very likely to break Vanilla's expectations! Please report this issue!",
+								advancementBuilder.getKey(), badTag, badTag.getNamespace());
+					} else {
+						throw e;
+					}
+				}
 			}
 		}
 

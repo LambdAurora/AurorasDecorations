@@ -25,6 +25,7 @@ import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
 import dev.lambdaurora.aurorasdeco.util.RegistrationHelper;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Blocks;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
@@ -67,12 +68,41 @@ public class AurorasDeco implements ModInitializer {
 		ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_SET_TEXT, AurorasDecoPackets::handleSignPostSetTextPacket);
 	}
 
+	public static boolean isDevMode() {
+		return FabricLoader.getInstance().isDevelopmentEnvironment();
+	}
+
 	public static void log(String message) {
-		LOGGER.info("[AurorasDeco] " + message);
+		if (isDevMode())
+			LOGGER.info("\033[32m" + message + "\033[0m");
+		else
+			LOGGER.info("[AurorasDeco] " + message);
 	}
 
 	public static void warn(String message, Object... params) {
-		LOGGER.warn("[AurorasDeco] " + message, params);
+		if (isDevMode())
+			LOGGER.warn("\033[33m" + message + "\033[0m", params);
+		else
+			LOGGER.warn("[AurorasDeco] " + message, params);
+	}
+
+	public static void error(String message, Object... params) {
+		if (isDevMode())
+			LOGGER.error("\033[31;1m" + message + "\033[0m", params);
+		else
+			LOGGER.error("[AurorasDeco] " + message, params);
+	}
+
+	public static void debug(String message, Object... params) {
+		if (isDevMode()) {
+			LOGGER.info("\033[38;5;214m[Debug] \033[32;1m" + message + "\033[0m", params);
+		}
+	}
+
+	public static void debugWarn(String message, Object... params) {
+		if (isDevMode()) {
+			LOGGER.info("\033[38;5;214m[Debug] \033[31;1m" + message + "\033[0m", params);
+		}
 	}
 
 	public static Identifier id(String path) {
