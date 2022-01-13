@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "aurorasdeco:block/azalea/slab"
+    },
+    "type=double": {
+      "model": "aurorasdeco:block/azalea/planks"
+    },
+    "type=top": {
+      "model": "aurorasdeco:block/azalea/slab_top"
+    }
+  }
+}

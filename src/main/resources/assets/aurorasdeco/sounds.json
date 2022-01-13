@@ -1,4 +1,10 @@
 {
+  "block.flowering.shear": {
+    "sounds": [
+      "mob/sheep/shear"
+    ],
+    "subtitle": "subtitles.item.shears.shear"
+  },
   "block.brazier.crackle": {
     "sounds": [
       "block/campfire/crackle1",

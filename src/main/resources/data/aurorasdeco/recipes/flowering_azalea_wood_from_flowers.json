@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "aurorasdeco:flowering_log",
+  "ingredients": [
+    {
+      "item": "aurorasdeco:azalea_wood"
+    },
+    {
+      "item": "minecraft:flowering_azalea_leaves"
+    }
+  ],
+  "result": {
+    "item": "aurorasdeco:flowering_azalea_wood",
+    "count": 1
+  }
+}

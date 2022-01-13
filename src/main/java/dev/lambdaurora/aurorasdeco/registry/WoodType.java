@@ -17,6 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.registry;
 
+import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.mixin.block.AbstractBlockAccessor;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -190,11 +191,18 @@ public final class WoodType {
 
 	public static void onBlockRegister(Identifier id, Block block) {
 		if (id.getNamespace().equals("mossywood")) return; // Mossywood is too much of a pain to support.
+
 		for (var componentType : ComponentType.types()) {
 			var woodName = componentType.filter(id, block);
 			if (woodName == null) continue;
 
-			var woodId = new Identifier(id.getNamespace(), woodName);
+			Identifier woodId;
+			if (id.getNamespace().equals("minecraft") && woodName.equals("azalea")) {
+				woodId = AurorasDeco.id("azalea");
+			} else {
+				woodId = new Identifier(id.getNamespace(), woodName);
+			}
+
 			var woodType = TYPES.stream().filter(type -> type.getId().equals(woodId)).findFirst()
 					.orElseGet(() -> {
 						var newWoodType = new WoodType(woodId);
@@ -228,14 +236,15 @@ public final class WoodType {
 	private static String getPathName(Identifier id) {
 		var path = id.getPath();
 		var namespace = id.getNamespace();
-		if (!namespace.equals("minecraft"))
+		if (!namespace.equals("minecraft") && !namespace.equals(AurorasDeco.NAMESPACE))
 			path = namespace + '/' + path;
 		return path;
 	}
 
 	private static String getLangPath(Identifier id) {
 		return switch (id.getPath()) {
-			case "bamboo" -> "bamboo"; // Common
+			case "azalea" -> "azalea"; // Common
+			case "bamboo" -> "bamboo";
 			case "redwood" -> "redwood";
 			default -> getPathName(id).replaceAll("/", ".");
 		};
@@ -426,7 +435,8 @@ public final class WoodType {
 
 		if (texture.getNamespace().equals("betternether") || texture.getNamespace().equals("betterend")) {
 			String newPath = texture.getPath().substring(0, texture.getPath().length() - 4) + "_bark";
-			boolean logSides = texture.getNamespace().equals("betterend") || texture.getPath().contains("rubeus") || texture.getPath().contains("nether_sakura") || texture.getPath().contains("anchor_tree");
+			boolean logSides = texture.getNamespace().equals("betterend") || texture.getPath().contains("rubeus")
+					|| texture.getPath().contains("nether_sakura") || texture.getPath().contains("anchor_tree");
 			if (logSides) newPath = texture.getPath() + "_side";
 			if (texture.getPath().contains("stalagnate")) newPath += "_side";
 			return new Identifier(texture.getNamespace(), newPath);

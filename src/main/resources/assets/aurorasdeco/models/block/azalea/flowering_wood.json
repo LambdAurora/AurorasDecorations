@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "aurorasdeco:block/flowering_azalea_log",
+    "side": "aurorasdeco:block/flowering_azalea_log"
+  }
+}

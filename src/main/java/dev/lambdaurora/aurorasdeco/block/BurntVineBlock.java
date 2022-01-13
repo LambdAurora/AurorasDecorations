@@ -18,7 +18,7 @@
 package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.mixin.block.VineBlockAccessor;
-import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPlants;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -61,7 +61,7 @@ public final class BurntVineBlock extends VineBlock {
 	}
 
 	public static BlockState fromVine(BlockState state) {
-		BlockState self = AurorasDecoRegistry.BURNT_VINE_BLOCK.getDefaultState();
+		BlockState self = AurorasDecoPlants.BURNT_VINE_BLOCK.getDefaultState();
 
 		return self.with(UP, state.get(UP))
 				.with(NORTH, state.get(NORTH))

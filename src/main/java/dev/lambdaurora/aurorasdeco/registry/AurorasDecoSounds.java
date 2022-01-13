@@ -34,6 +34,7 @@ public final class AurorasDecoSounds {
 		throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
 	}
 
+	public static final SoundEvent FLOWERING_SHEAR_SOUND_EVENT = register("block.flowering.shear");
 	public static final SoundEvent BRAZIER_CRACKLE_SOUND_EVENT = register("block.brazier.crackle");
 	public static final SoundEvent LANTERN_SWING_SOUND_EVENT = register("block.lantern.swing");
 	public static final SoundEvent ARMOR_STAND_HIDE_BASE_PLATE_SOUND_EVENT = register("entity.armor_stand.hide_base_plate");

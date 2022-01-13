@@ -36,7 +36,7 @@ import java.util.Random;
  * @version 1.0.0
  * @since 1.0.0
  */
-public final class LavenderBlock extends AurorasDecoFlowerBlock {
+public final class LavenderBlock extends AuroraFlowerBlock {
 	private static final VoxelShape SHAPE = Block.createCuboidShape(2.0, 0.0, 2.0, 14.0, 13.0, 14.0);
 
 	public LavenderBlock() {

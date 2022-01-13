@@ -70,6 +70,18 @@ public class DerivedBlockItem extends BlockItem {
 		return new DerivedBlockItem(block, KindSearcher.CAMPFIRE_SEARCHER, KindSearcher::findLastOfGroup, settings);
 	}
 
+	public static DerivedBlockItem door(Block block, Settings settings) {
+		return new DerivedBlockItem(block, KindSearcher.DOOR_SEARCHER, KindSearcher::findLastOfGroup, settings);
+	}
+
+	public static DerivedBlockItem fence(Block block, Settings settings) {
+		return new DerivedBlockItem(block, KindSearcher.FENCE_SEARCHER, KindSearcher::findLastOfGroup, settings);
+	}
+
+	public static DerivedBlockItem fenceGate(Block block, Settings settings) {
+		return new DerivedBlockItem(block, KindSearcher.FENCE_GATE_SEARCHER, KindSearcher::findLastOfGroup, settings);
+	}
+
 	public static DerivedBlockItem flower(Block block, Settings settings) {
 		return new DerivedBlockItem(block, KindSearcher.FLOWER_SEARCHER, KindSearcher::findLastOfGroup, settings);
 	}
@@ -82,8 +94,48 @@ public class DerivedBlockItem extends BlockItem {
 		return new DerivedBlockItem(block, KindSearcher.LANTERN_SEARCHER, KindSearcher::findLastOfGroup, settings);
 	}
 
+	public static DerivedBlockItem log(Block block, Settings settings) {
+		return new DerivedBlockItem(block, KindSearcher.LOG_SEARCHER, KindSearcher::findLastOfGroup, settings);
+	}
+
+	public static DerivedBlockItem planks(Block block, Settings settings) {
+		return new DerivedBlockItem(block, KindSearcher.PLANKS_SEARCHER, KindSearcher::findLastOfGroup, settings);
+	}
+
+	public static DerivedBlockItem pressurePlate(Block block, Settings settings) {
+		return new DerivedBlockItem(block, KindSearcher.PRESSURE_PLATE_SEARCHER, KindSearcher::findLastOfGroup, settings);
+	}
+
+	public static DerivedBlockItem strippedLog(Block block, Settings settings) {
+		return new DerivedBlockItem(block, KindSearcher.STRIPPED_LOG_SEARCHER, KindSearcher::findLastOfGroup, settings);
+	}
+
+	public static DerivedBlockItem strippedWood(Block block, Settings settings) {
+		return new DerivedBlockItem(block, KindSearcher.STRIPPED_WOOD_SEARCHER, KindSearcher::findLastOfGroup, settings);
+	}
+
+	public static DerivedBlockItem trapdoor(Block block, Settings settings) {
+		return new DerivedBlockItem(block, KindSearcher.TRAPDOOR_SEARCHER, KindSearcher::findLastOfGroup, settings);
+	}
+
 	public static DerivedBlockItem wall(Block block, Settings settings) {
 		return new DerivedBlockItem(block, KindSearcher.WALL_SEARCHER, KindSearcher::findLastOfGroup, settings);
+	}
+
+	public static DerivedBlockItem wood(Block block, Settings settings) {
+		return new DerivedBlockItem(block, KindSearcher.WOOD_SEARCHER, KindSearcher::findLastOfGroup, settings);
+	}
+
+	public static DerivedBlockItem woodenButton(Block block, Settings settings) {
+		return new DerivedBlockItem(block, KindSearcher.WOODEN_BUTTON_SEARCHER, KindSearcher::findLastOfGroup, settings);
+	}
+
+	public static DerivedBlockItem woodenSlab(Block block, Settings settings) {
+		return new DerivedBlockItem(block, KindSearcher.WOODEN_SLAB_SEARCHER, KindSearcher::findLastOfGroup, settings);
+	}
+
+	public static DerivedBlockItem woodenStairs(Block block, Settings settings) {
+		return new DerivedBlockItem(block, KindSearcher.WOODEN_STAIRS_SEARCHER, KindSearcher::findLastOfGroup, settings);
 	}
 
 	public interface SearchMethod extends ToIntBiFunction<KindSearcher<ItemStack, KindSearcher.StackEntry>, List<ItemStack>> {

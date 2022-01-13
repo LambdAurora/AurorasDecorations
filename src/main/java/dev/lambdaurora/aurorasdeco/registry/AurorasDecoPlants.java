@@ -17,6 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.registry;
 
+import dev.lambdaurora.aurorasdeco.block.BurntVineBlock;
 import dev.lambdaurora.aurorasdeco.block.DirectionalFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.plant.DaffodilBlock;
 import dev.lambdaurora.aurorasdeco.block.plant.LavenderBlock;
@@ -32,7 +33,7 @@ import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.List;
 
-import static dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry.register;
+import static dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry.registerBlock;
 
 /**
  * Contains the different plants definitions added in Aurora's Decorations.
@@ -61,12 +62,16 @@ public final class AurorasDecoPlants {
 			.withItem(new FabricItemSettings().group(ItemGroup.DECORATIONS), DerivedBlockItem::flower)
 			.finish();
 
+	/* Burnt Plants */
+
+	public static final BurntVineBlock BURNT_VINE_BLOCK = registerBlock("burnt_vine", new BurntVineBlock());
+
 	/* Potted Plants */
 
-	public static final FlowerPotBlock POTTED_DAFFODIL = register("potted/daffodil",
+	public static final FlowerPotBlock POTTED_DAFFODIL = registerBlock("potted/daffodil",
 			new DirectionalFlowerPotBlock(DAFFODIL, QuiltBlockSettings.of(Material.DECORATION).nonOpaque().breakInstantly()));
 
-	public static final FlowerPotBlock POTTED_LAVENDER = register("potted/lavender",
+	public static final FlowerPotBlock POTTED_LAVENDER = registerBlock("potted/lavender",
 			new FlowerPotBlock(LAVENDER, QuiltBlockSettings.of(Material.DECORATION).nonOpaque().breakInstantly()));
 
 	static {

@@ -42,7 +42,7 @@ import java.util.List;
  * @version 1.0.0
  * @since 1.0.0
  */
-public final class DaffodilBlock extends AurorasDecoFlowerBlock {
+public final class DaffodilBlock extends AuroraFlowerBlock {
 	public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
 	public DaffodilBlock() {

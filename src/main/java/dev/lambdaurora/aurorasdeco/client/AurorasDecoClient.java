@@ -17,6 +17,8 @@
 
 package dev.lambdaurora.aurorasdeco.client;
 
+import com.terraformersmc.terraform.boat.api.client.TerraformBoatClientHelper;
+import com.terraformersmc.terraform.sign.SpriteIdentifierRegistry;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
 import dev.lambdaurora.aurorasdeco.block.HangingFlowerPotBlock;
@@ -51,7 +53,9 @@ import net.minecraft.client.color.world.GrassColors;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.particle.LavaEmberParticle;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.client.util.ModelIdentifier;
+import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -74,51 +78,18 @@ public class AurorasDecoClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		BlockEntityRendererRegistry.register(AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE,
-				BookPileEntityRenderer::new);
-		BlockEntityRendererRegistry.register(AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE,
-				ShelfBlockEntityRenderer::new);
-		BlockEntityRendererRegistry.register(SIGN_POST_BLOCK_ENTITY_TYPE,
-				SignPostBlockEntityRenderer::new);
-		BlockEntityRendererRegistry.register(AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE,
-				LanternBlockEntityRenderer::new);
-		BlockEntityRendererRegistry.register(AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE,
-				WindChimeBlockEntityRenderer::new);
-
-		EntityRendererRegistry.register(AurorasDecoRegistry.FAKE_LEASH_KNOT_ENTITY_TYPE,
-				FakeLeashKnotEntityRenderer::new);
-		EntityRendererRegistry.register(AurorasDecoRegistry.SEAT_ENTITY_TYPE,
-				SeatEntityRenderer::new);
-
-		BlockRenderLayerMap.put(RenderLayer.getCutoutMipped(),
-				BURNT_VINE_BLOCK);
-		BlockRenderLayerMap.put(RenderLayer.getCutout(),
-				AMETHYST_LANTERN_BLOCK,
-				BRAZIER_BLOCK,
-				COPPER_SULFATE_BRAZIER_BLOCK,
-				COPPER_SULFATE_CAMPFIRE_BLOCK,
-				COPPER_SULFATE_LANTERN_BLOCK,
-				COPPER_SULFATE_TORCH_BLOCK,
-				COPPER_SULFATE_WALL_TORCH_BLOCK,
-				GLASSBOARD_BLOCK,
-				WAXED_GLASSBOARD_BLOCK,
-				AurorasDecoPlants.DAFFODIL,
-				AurorasDecoPlants.LAVENDER,
-				AurorasDecoPlants.POTTED_DAFFODIL,
-				AurorasDecoPlants.POTTED_LAVENDER,
-				SAWMILL_BLOCK,
-				SOUL_BRAZIER_BLOCK,
-				WIND_CHIME_BLOCK
-		);
+		this.initBlockEntityRenderers();
+		this.initEntityRenderers();
+		this.initBlockRenderLayers();
 
 		ParticleFactoryRegistry.getInstance().register(AurorasDecoParticles.AMETHYST_GLINT, AmethystGlintParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(AurorasDecoParticles.COPPER_SULFATE_FLAME, FlameParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(AurorasDecoParticles.COPPER_SULFATE_LAVA, LavaEmberParticle.Factory::new);
 		ParticleFactoryRegistry.getInstance().register(AurorasDecoParticles.LAVENDER_PETAL, LavenderPetalParticle.Factory::new);
 
-		BlockRenderLayerMap.put(RenderLayer.getCutout(), StumpBlock.streamLogStumps().toArray(Block[]::new));
-
+		/* Signs */
 		ClientPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_OPEN_GUI, AurorasDecoPackets.Client::handleSignPostOpenGuiPacket);
+		SpriteIdentifierRegistry.INSTANCE.addIdentifier(new SpriteIdentifier(TexturedRenderLayers.SIGNS_ATLAS_TEXTURE, AZALEA_SIGN_BLOCK.getTexture()));
 
 		ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
 			PottedPlantType.stream()
@@ -176,7 +147,7 @@ public class AurorasDecoClient implements ClientModInitializer {
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) ->
 						world != null && pos != null
 								? BiomeColors.getFoliageColor(world, pos) : FoliageColors.getDefaultColor(),
-				BURNT_VINE_BLOCK);
+				AurorasDecoPlants.BURNT_VINE_BLOCK);
 
 		EntityModelLayerRegistry.registerModelLayer(WindChimeBlockEntityRenderer.WIND_CHIME_MODEL_LAYER,
 				WindChimeBlockEntityRenderer::getTexturedModelData);
@@ -197,6 +168,54 @@ public class AurorasDecoClient implements ClientModInitializer {
 				CHALKBOARD_BLOCK.asItem(), WAXED_CHALKBOARD_BLOCK.asItem(),
 				GLASSBOARD_BLOCK.asItem(), WAXED_GLASSBOARD_BLOCK.asItem()
 		);
+	}
+
+	private void initBlockEntityRenderers() {
+		BlockEntityRendererRegistry.register(AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE,
+				BookPileEntityRenderer::new);
+		BlockEntityRendererRegistry.register(AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE,
+				ShelfBlockEntityRenderer::new);
+		BlockEntityRendererRegistry.register(SIGN_POST_BLOCK_ENTITY_TYPE,
+				SignPostBlockEntityRenderer::new);
+		BlockEntityRendererRegistry.register(AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE,
+				LanternBlockEntityRenderer::new);
+		BlockEntityRendererRegistry.register(AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE,
+				WindChimeBlockEntityRenderer::new);
+	}
+
+	private void initEntityRenderers() {
+		EntityRendererRegistry.register(AurorasDecoRegistry.FAKE_LEASH_KNOT_ENTITY_TYPE,
+				FakeLeashKnotEntityRenderer::new);
+		EntityRendererRegistry.register(AurorasDecoRegistry.SEAT_ENTITY_TYPE,
+				SeatEntityRenderer::new);
+		TerraformBoatClientHelper.registerModelLayer(AurorasDeco.id("azalea"));
+	}
+
+	private void initBlockRenderLayers() {
+		BlockRenderLayerMap.put(RenderLayer.getCutoutMipped(),
+				AurorasDecoPlants.BURNT_VINE_BLOCK);
+		BlockRenderLayerMap.put(RenderLayer.getCutout(),
+				AMETHYST_LANTERN_BLOCK,
+				AZALEA_DOOR,
+				AZALEA_TRAPDOOR,
+				BRAZIER_BLOCK,
+				COPPER_SULFATE_BRAZIER_BLOCK,
+				COPPER_SULFATE_CAMPFIRE_BLOCK,
+				COPPER_SULFATE_LANTERN_BLOCK,
+				COPPER_SULFATE_TORCH_BLOCK,
+				COPPER_SULFATE_WALL_TORCH_BLOCK,
+				GLASSBOARD_BLOCK,
+				WAXED_GLASSBOARD_BLOCK,
+				AurorasDecoPlants.DAFFODIL,
+				AurorasDecoPlants.LAVENDER,
+				AurorasDecoPlants.POTTED_DAFFODIL,
+				AurorasDecoPlants.POTTED_LAVENDER,
+				SAWMILL_BLOCK,
+				SOUL_BRAZIER_BLOCK,
+				WIND_CHIME_BLOCK
+		);
+
+		BlockRenderLayerMap.put(RenderLayer.getCutout(), StumpBlock.streamLogStumps().toArray(Block[]::new));
 	}
 
 	private void registerBlackboardItemRenderer(BlackboardBlock blackboard) {

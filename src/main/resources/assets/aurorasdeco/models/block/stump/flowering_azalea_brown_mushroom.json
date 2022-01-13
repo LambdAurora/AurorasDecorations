@@ -1,0 +1,9 @@
+{
+  "parent": "aurorasdeco:block/template/log_stump_brown_mushroom",
+  "textures": {
+    "log_side": "aurorasdeco:block/flowering_azalea_log",
+    "log_top": "aurorasdeco:block/azalea_log_top",
+    "leaf": "aurorasdeco:block/azalea_log_stump_leaf",
+    "mushroom": "minecraft:block/brown_mushroom_block"
+  }
+}

@@ -40,8 +40,8 @@ import java.util.Random;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class AurorasDecoFlowerBlock extends FlowerBlock implements Fertilizable {
-	public AurorasDecoFlowerBlock(StatusEffect statusEffect, int effectInStewDuration, Settings settings) {
+public class AuroraFlowerBlock extends FlowerBlock implements Fertilizable {
+	public AuroraFlowerBlock(StatusEffect statusEffect, int effectInStewDuration, Settings settings) {
 		super(statusEffect, effectInStewDuration, settings);
 
 		FlammableBlockRegistry.getDefaultInstance().add(this, 60, 100);

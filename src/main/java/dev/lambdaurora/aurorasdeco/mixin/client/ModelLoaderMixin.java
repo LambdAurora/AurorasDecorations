@@ -81,9 +81,7 @@ public abstract class ModelLoaderMixin {
 				}
 
 				if (modelId.getNamespace().equals(AurorasDeco.NAMESPACE)) {
-					System.out.println("SOMETHING IS WRONG, " + modelId);
 					if (modelId.getPath().startsWith("bench/")) {
-						System.out.println("SOMETHING IS MORE WRONG, " + modelId);
 						var model = new UnbakedBenchModel(unbakedModel, this.aurorasdeco$restModelManager);
 						this.putModel(id, model);
 						this.modelsToBake.put(id, model);

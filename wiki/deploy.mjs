@@ -174,7 +174,9 @@ async function deploy_markdown(markdown_pages, page_data) {
 		</aside>
 		<div class="wiki_content">
 			<main>
-				${page_data.main.inner_html()}
+				<article>
+					${page_data.main.inner_html()}
+				</article>
 			</main>
 			<footer class="ls_app_footer">
 				<div class="ls_app_footer_license">

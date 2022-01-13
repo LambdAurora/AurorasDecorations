@@ -19,7 +19,7 @@ package dev.lambdaurora.aurorasdeco.mixin;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
-import dev.lambdaurora.aurorasdeco.resource.Datagen;
+import dev.lambdaurora.aurorasdeco.resource.datagen.RecipeDatagen;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
@@ -43,6 +43,6 @@ public class RecipeManagerMixin {
 	)
 	private void onReload(Map<Identifier, JsonElement> map, ResourceManager resourceManager, Profiler profiler,
 	                      CallbackInfo ci, Map<RecipeType<?>, ImmutableMap.Builder<Identifier, Recipe<?>>> builderMap) {
-		Datagen.applyRecipes(map, builderMap);
+		RecipeDatagen.applyRecipes(map, builderMap);
 	}
 }

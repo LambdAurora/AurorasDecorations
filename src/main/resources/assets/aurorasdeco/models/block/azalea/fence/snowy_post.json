@@ -1,0 +1,6 @@
+{
+  "parent": "lambdabettergrass:block/template/snowy_fence_post",
+  "textures": {
+    "texture": "aurorasdeco:block/azalea/fence/snowy_post"
+  }
+}

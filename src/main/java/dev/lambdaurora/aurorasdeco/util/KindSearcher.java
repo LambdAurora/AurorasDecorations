@@ -22,6 +22,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -160,6 +161,21 @@ public class KindSearcher<I, O> {
 	)
 			.afterMapped(Items.SOUL_CAMPFIRE, ItemStack::getItem)
 			.build();
+	public static final KindSearcher<ItemStack, StackEntry> DOOR_SEARCHER = itemIdentifierSearcher(
+			entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof DoorBlock
+	)
+			.afterMapped(Items.WARPED_DOOR, ItemStack::getItem)
+			.build();
+	public static final KindSearcher<ItemStack, StackEntry> FENCE_SEARCHER = itemIdentifierSearcher(
+			entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof FenceBlock
+	)
+			.afterMapped(Items.WARPED_FENCE, ItemStack::getItem)
+			.build();
+	public static final KindSearcher<ItemStack, StackEntry> FENCE_GATE_SEARCHER = itemIdentifierSearcher(
+			entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof FenceGateBlock
+	)
+			.afterMapped(Items.WARPED_FENCE_GATE, ItemStack::getItem)
+			.build();
 	public static final KindSearcher<ItemStack, StackEntry> FLOWER_SEARCHER = itemIdentifierSearcher(
 			entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof FlowerBlock
 	)
@@ -175,14 +191,111 @@ public class KindSearcher<I, O> {
 	)
 			.afterMapped(Items.SOUL_LANTERN, ItemStack::getItem)
 			.build();
+	public static final KindSearcher<ItemStack, StackEntry> PRESSURE_PLATE_SEARCHER = itemIdentifierSearcher(
+			entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof PressurePlateBlock
+	)
+			.afterMapped(Items.WARPED_PRESSURE_PLATE, ItemStack::getItem)
+			.build();
 	public static final KindSearcher<ItemStack, StackEntry> TORCH_SEARCHER = itemIdentifierSearcher(
 			entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof TorchBlock
 	)
 			.afterMapped(Items.SOUL_TORCH, ItemStack::getItem)
 			.build();
+	public static final KindSearcher<ItemStack, StackEntry> TRAPDOOR_SEARCHER = itemIdentifierSearcher(
+			entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof TrapdoorBlock
+	)
+			.afterMapped(Items.WARPED_TRAPDOOR, ItemStack::getItem)
+			.build();
 	public static final KindSearcher<ItemStack, StackEntry> WALL_SEARCHER = itemIdentifierSearcher(
 			entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof WallBlock
 	)
 			.afterMapped(Items.COBBLESTONE_WALL, ItemStack::getItem)
+			.build();
+
+	/* Wood */
+
+	public static final KindSearcher<ItemStack, StackEntry> LOG_SEARCHER = itemIdentifierSearcher(
+			entry -> {
+				if (entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof PillarBlock block
+						&& (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.NETHER_WOOD)) {
+					Identifier id = Registry.ITEM.getId(blockItem);
+					return !id.getPath().startsWith("stripped") && (id.getPath().endsWith("log") || id.getPath().endsWith("stem"));
+				}
+
+				return false;
+			}
+	)
+			.afterMapped(Items.WARPED_STEM, ItemStack::getItem)
+			.build();
+	public static final KindSearcher<ItemStack, StackEntry> PLANKS_SEARCHER = itemIdentifierSearcher(
+			entry -> {
+				if (entry.stack().getItem() instanceof BlockItem blockItem
+						&& blockItem.getBlock().getSoundGroup(blockItem.getBlock().getDefaultState()) == BlockSoundGroup.WOOD) {
+					Identifier id = Registry.ITEM.getId(blockItem);
+					return id.getPath().contains("planks");
+				}
+
+				return false;
+			}
+	)
+			.afterMapped(Items.WARPED_PLANKS, ItemStack::getItem)
+			.build();
+	public static final KindSearcher<ItemStack, StackEntry> STRIPPED_LOG_SEARCHER = itemIdentifierSearcher(
+			entry -> {
+				if (entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof PillarBlock block
+						&& (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.NETHER_WOOD)) {
+					Identifier id = Registry.ITEM.getId(blockItem);
+					return id.getPath().startsWith("stripped") && (id.getPath().endsWith("log") || id.getPath().endsWith("stem"));
+				}
+
+				return false;
+			}
+	)
+			.afterMapped(Items.STRIPPED_WARPED_STEM, ItemStack::getItem)
+			.build();
+	public static final KindSearcher<ItemStack, StackEntry> STRIPPED_WOOD_SEARCHER = itemIdentifierSearcher(
+			entry -> {
+				if (entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof PillarBlock block
+						&& (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.NETHER_WOOD)) {
+					Identifier id = Registry.ITEM.getId(blockItem);
+					return id.getPath().startsWith("stripped") && (id.getPath().endsWith("wood") || id.getPath().endsWith("hyphae"));
+				}
+
+				return false;
+			}
+	)
+			.afterMapped(Items.STRIPPED_WARPED_HYPHAE, ItemStack::getItem)
+			.build();
+	public static final KindSearcher<ItemStack, StackEntry> WOOD_SEARCHER = itemIdentifierSearcher(
+			entry -> {
+				if (entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof PillarBlock block
+						&& (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.NETHER_WOOD)) {
+					Identifier id = Registry.ITEM.getId(blockItem);
+					return !id.getPath().startsWith("stripped") && (id.getPath().endsWith("wood") || id.getPath().endsWith("hyphae"));
+				}
+
+				return false;
+			}
+	)
+			.afterMapped(Items.WARPED_HYPHAE, ItemStack::getItem)
+			.build();
+	public static final KindSearcher<ItemStack, StackEntry> WOODEN_BUTTON_SEARCHER = itemIdentifierSearcher(
+			entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof WoodenButtonBlock
+	)
+			.afterMapped(Items.WARPED_PRESSURE_PLATE, ItemStack::getItem)
+			.build();
+	public static final KindSearcher<ItemStack, StackEntry> WOODEN_SLAB_SEARCHER = itemIdentifierSearcher(
+			entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof SlabBlock block && (
+					block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.NETHER_WOOD
+			)
+	)
+			.afterMapped(Items.WARPED_SLAB, ItemStack::getItem)
+			.build();
+	public static final KindSearcher<ItemStack, StackEntry> WOODEN_STAIRS_SEARCHER = itemIdentifierSearcher(
+			entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof StairsBlock block && (
+					block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.NETHER_WOOD
+			)
+	)
+			.afterMapped(Items.WARPED_STAIRS, ItemStack::getItem)
 			.build();
 }

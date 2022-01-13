@@ -50,6 +50,7 @@ repositories {
 		content {
 			includeGroup 'dev.emi'
 			includeGroup 'com.terraformersmc'
+			includeGroup 'com.terraformersmc.terraform-api'
 		}
 	}
 	maven {
@@ -70,6 +71,10 @@ dependencies {
 		exclude group: 'net.fabricmc'
 		//exclude group: 'net.fabricmc.fabric-api', module: 'fabric-blockrenderlayer-v1'
 	}
+	include(modImplementation("com.terraformersmc.terraform-api:terraform-wood-api-v1:2.0.2") {
+		exclude group: 'net.fabricmc'
+		exclude group: 'net.fabricmc.fabric-api'
+	})
 	modImplementation("dev.emi:trinkets:${project.trinkets_version}") {
 		exclude group: 'net.fabricmc'
 		exclude group: 'net.fabricmc.fabric-api'

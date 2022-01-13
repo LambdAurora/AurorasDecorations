@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "planks",
+  "ingredients": [
+    {
+      "tag": "aurorasdeco:azalea_logs"
+    }
+  ],
+  "result": {
+    "item": "aurorasdeco:azalea_planks",
+    "count": 4
+  }
+}

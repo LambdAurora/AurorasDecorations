@@ -17,9 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.resource;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.*;
@@ -37,13 +35,8 @@ import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import dev.lambdaurora.aurorasdeco.resource.datagen.*;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.util.ColorUtil;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.fabricmc.fabric.api.tag.TagFactory;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.advancement.Advancement;
-import net.minecraft.advancement.AdvancementRewards;
-import net.minecraft.advancement.CriterionMerger;
-import net.minecraft.advancement.criterion.InventoryChangedCriterion;
-import net.minecraft.advancement.criterion.RecipeUnlockedCriterion;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.Blocks;
@@ -53,10 +46,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.predicate.NumberRange;
-import net.minecraft.predicate.entity.EntityPredicate;
-import net.minecraft.predicate.item.ItemPredicate;
-import net.minecraft.recipe.*;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.ShapedRecipe;
+import net.minecraft.recipe.ShapelessRecipe;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
@@ -67,13 +60,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import static dev.lambdaurora.aurorasdeco.AurorasDeco.id;
+import static dev.lambdaurora.aurorasdeco.resource.datagen.RecipeDatagen.registerRecipe;
 import static dev.lambdaurora.aurorasdeco.util.AuroraUtil.jsonArray;
 
 /**
@@ -112,59 +103,8 @@ public final class Datagen {
 	private static final Pattern STEM_TO_BASE_ID = Pattern.compile("[_/]stem$");
 	private static final Pattern STEM_SEPARATOR_DETECTOR = Pattern.compile("[/]stem$");
 
-	private static final Map<RecipeType<?>, List<Recipe<?>>> RECIPES = new Object2ObjectOpenHashMap<>();
-	private static final Map<Recipe<?>, String> RECIPES_CATEGORIES = new Object2ObjectOpenHashMap<>();
-	private static final Map<Identifier, Advancement.Task> ADVANCEMENTS = new Object2ObjectOpenHashMap<>();
-
 	private Datagen() {
 		throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
-	}
-
-	public static void applyAdvancements(Map<Identifier, Advancement.Task> builder) {
-		ADVANCEMENTS.forEach((identifier, task) -> {
-			task.parent((Advancement) null);
-
-			builder.put(identifier, task);
-		});
-	}
-
-	public static void applyRecipes(Map<Identifier, JsonElement> map,
-	                                Map<RecipeType<?>, ImmutableMap.Builder<Identifier, Recipe<?>>> builderMap) {
-		var recipeCount = new int[]{0};
-		RECIPES.forEach((key, recipes) -> {
-			var recipeBuilder = builderMap.computeIfAbsent(key, o -> ImmutableMap.builder());
-
-			recipes.forEach(recipe -> {
-				if (!map.containsKey(recipe.getId())) {
-					recipeBuilder.put(recipe.getId(), recipe);
-					recipeCount[0]++;
-				}
-			});
-		});
-
-		LOGGER.info("Loaded {} additional recipes", recipeCount[0]);
-	}
-
-	public static Recipe<?> registerRecipe(Recipe<?> recipe, String category) {
-		var recipes = RECIPES.computeIfAbsent(recipe.getType(), recipeType -> new ArrayList<>());
-
-		for (var other : recipes) {
-			if (other.getId().equals(recipe.getId()))
-				return other;
-		}
-
-		recipes.add(recipe);
-		RECIPES_CATEGORIES.put(recipe, category);
-
-		register(new Identifier(recipe.getId().getNamespace(), "recipes/" + category + "/" + recipe.getId().getPath()),
-				simpleRecipeUnlock(recipe));
-
-		return recipe;
-	}
-
-	public static Advancement.Task register(Identifier id, Advancement.Task advancement) {
-		ADVANCEMENTS.put(id, advancement);
-		return advancement;
 	}
 
 	public static void registerBetterGrassLayer(Identifier blockId, Identifier data) {
@@ -180,43 +120,6 @@ public final class Datagen {
 
 	public static void registerBetterGrassLayer(Block block, Identifier data) {
 		registerBetterGrassLayer(Registry.BLOCK.getId(block), data);
-	}
-
-	public static InventoryChangedCriterion.Conditions inventoryChangedCriterion(Ingredient item) {
-		var items = new JsonArray();
-		var ingredientJson = item.toJson();
-		if (ingredientJson instanceof JsonObject ingredientJsonObject) {
-			if (ingredientJsonObject.has("item")) {
-				var child = new JsonObject();
-				child.add("items", jsonArray(ingredientJsonObject.get("item").getAsString()));
-				items.add(child);
-			} else items.add(ingredientJson);
-		}
-		return new InventoryChangedCriterion.Conditions(EntityPredicate.Extended.EMPTY,
-				NumberRange.IntRange.ANY, NumberRange.IntRange.ANY, NumberRange.IntRange.ANY,
-				ItemPredicate.deserializeAll(items));
-	}
-
-	public static Advancement.Task simpleRecipeUnlock(Recipe<?> recipe) {
-		var advancement = Advancement.Task.create();
-
-		advancement.parent(new Identifier("recipes/root"));
-		advancement.rewards(AdvancementRewards.Builder.recipe(recipe.getId()));
-		advancement.criteriaMerger(CriterionMerger.OR);
-		advancement.criterion("has_self", InventoryChangedCriterion.Conditions.items(recipe.getOutput().getItem()));
-		advancement.criterion("has_the_recipe",
-				new RecipeUnlockedCriterion.Conditions(EntityPredicate.Extended.EMPTY, recipe.getId())
-		);
-
-		int i = 0;
-		for (var ingredient : recipe.getIngredients()) {
-			if (ingredient.isEmpty())
-				continue;
-			advancement.criterion("has_" + i, inventoryChangedCriterion(ingredient));
-			i++;
-		}
-
-		return advancement;
 	}
 
 	private static JsonObject generateBlockLootTableSimplePool(Identifier id, boolean copyName) {
@@ -494,7 +397,10 @@ public final class Datagen {
 				var planksId = planks.getItemId();
 				registerRecipe(new WoodcuttingRecipe(AuroraUtil.appendWithNamespace("woodcutting", planksId),
 								"planks",
-								Ingredient.ofItems(log.item()), new ItemStack(planks.item(), 4)),
+								Ingredient.fromTag(TagFactory.ITEM.create(
+										new Identifier(log.id().getNamespace(), log.id().getPath() + "s")
+								)),
+								new ItemStack(planks.item(), 4)),
 						"building_blocks");
 			}
 		});

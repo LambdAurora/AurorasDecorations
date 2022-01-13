@@ -5,6 +5,25 @@
   "biome.aurorasdeco.lavender_plains": "Lavender Plains",
 
   "block.aurorasdeco.amethyst_lantern": "Amethyst Lantern",
+
+  "block.aurorasdeco.azalea_button": "Azalea Button",
+  "block.aurorasdeco.azalea_door": "Azalea Door",
+  "block.aurorasdeco.azalea_fence": "Azalea Fence",
+  "block.aurorasdeco.azalea_fence_gate": "Azalea Fence Gate",
+  "block.aurorasdeco.azalea_log": "Azalea Log",
+  "block.aurorasdeco.azalea_planks": "Azalea Planks",
+  "block.aurorasdeco.azalea_pressure_plate": "Azalea Pressure Plate",
+  "block.aurorasdeco.azalea_sign": "Azalea Sign",
+  "block.aurorasdeco.azalea_slab": "Azalea Slab",
+  "block.aurorasdeco.azalea_stairs": "Azalea Stairs",
+  "block.aurorasdeco.azalea_trapdoor": "Azalea Trapdoor",
+  "block.aurorasdeco.azalea_wood": "Azalea Wood",
+  "block.aurorasdeco.flowering_azalea_log": "Flowering Azalea Log",
+  "block.aurorasdeco.flowering_azalea_wood": "Flowering Azalea Wood",
+  "block.aurorasdeco.stripped_azalea_log": "Stripped Azalea Log",
+  "block.aurorasdeco.stripped_azalea_wood": "Stripped Azalea Wood",
+  "item.aurorasdeco.azalea_boat": "Azalea Boat",
+
   "block.aurorasdeco.big_flower_pot": "Big Flower Pot",
   "block.aurorasdeco.brazier": "Brazier",
 
@@ -141,6 +160,7 @@
   "aurorasdeco.wood_type.acacia": "Acacia",
   "aurorasdeco.wood_type.dark_oak": "Dark Oak",
   "aurorasdeco.wood_type.azalea": "Azalea",
+  "aurorasdeco.wood_type.flowering_azalea": "Flowering Azalea",
   "aurorasdeco.wood_type.mushroom": "Mushroom",
   "aurorasdeco.wood_type.crimson": "Crimson",
   "aurorasdeco.wood_type.warped": "Warped",

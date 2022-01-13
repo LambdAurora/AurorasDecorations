@@ -17,18 +17,33 @@
 
 package dev.lambdaurora.aurorasdeco.world.gen.feature;
 
+import com.mojang.serialization.Lifecycle;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.mixin.world.TreeConfiguredFeaturesAccessor;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.world.gen.feature.config.FallenTreeFeatureConfig;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.DataPool;
+import net.minecraft.util.math.intprovider.ConstantIntProvider;
+import net.minecraft.util.math.intprovider.UniformIntProvider;
+import net.minecraft.util.registry.BuiltinRegistries;
+import net.minecraft.util.registry.MutableRegistry;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.TreeFeatureConfig;
+import net.minecraft.world.gen.feature.size.TwoLayersFeatureSize;
 import net.minecraft.world.gen.feature.util.ConfiguredFeatureUtil;
+import net.minecraft.world.gen.foliage.RandomSpreadFoliagePlacer;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
+import net.minecraft.world.gen.stateprovider.WeightedBlockStateProvider;
 import net.minecraft.world.gen.treedecorator.BeehiveTreeDecorator;
+import net.minecraft.world.gen.trunk.BendingTrunkPlacer;
 
 import java.util.List;
+import java.util.OptionalInt;
 
 public final class AurorasDecoTreeConfiguredFeatures {
 	private AurorasDecoTreeConfiguredFeatures() {
@@ -50,6 +65,31 @@ public final class AurorasDecoTreeConfiguredFeatures {
 	public static final ConfiguredFeature<TreeFeatureConfig, ?> BIRCH_BEES_015 = ConfiguredFeatureUtil.register(
 			AurorasDeco.id("birch_bees_15").toString(),
 			Feature.TREE.configure(TreeConfiguredFeaturesAccessor.invokeBirch().decorators(List.of(BEES_015)).build())
+	);
+
+	public static final ConfiguredFeature<?, ?> AZALEA_TREE = replace( // I am sorry, but the mixin injection was just too hard.
+			new Identifier("azalea_tree"),
+			Feature.TREE
+					.configure(
+							(new TreeFeatureConfig.Builder(
+									new WeightedBlockStateProvider(
+											DataPool.<BlockState>builder()
+													.add(AurorasDecoRegistry.AZALEA_LOG_BLOCK.getDefaultState(), 2)
+													.add(AurorasDecoRegistry.FLOWERING_AZALEA_LOG_BLOCK.getDefaultState(), 1)
+									),
+									new BendingTrunkPlacer(4, 2, 0, 3, UniformIntProvider.create(1, 2)),
+									new WeightedBlockStateProvider(
+											DataPool.<BlockState>builder()
+													.add(Blocks.AZALEA_LEAVES.getDefaultState(), 3)
+													.add(Blocks.FLOWERING_AZALEA_LEAVES.getDefaultState(), 1)
+									),
+									new RandomSpreadFoliagePlacer(ConstantIntProvider.create(3), ConstantIntProvider.create(0), ConstantIntProvider.create(2), 50),
+									new TwoLayersFeatureSize(1, 0, 1)
+							))
+									.dirtProvider(BlockStateProvider.of(Blocks.ROOTED_DIRT))
+									.forceDirt()
+									.build()
+					)
 	);
 
 	/* Fallen Trees */
@@ -110,4 +150,20 @@ public final class AurorasDecoTreeConfiguredFeatures {
 					.build()
 			)
 	);
+
+	private static ConfiguredFeature<?, ?> replace(Identifier id, ConfiguredFeature<?, ?> feature) {
+		((MutableRegistry<ConfiguredFeature<?, ?>>) BuiltinRegistries.CONFIGURED_FEATURE)
+				.replace(
+						OptionalInt.empty(),
+						RegistryKey.of(BuiltinRegistries.CONFIGURED_FEATURE.getKey(), id),
+						feature,
+						Lifecycle.stable()
+				);
+
+		return feature;
+	}
+
+	static {
+		TreeConfiguredFeaturesAccessor.setAzaleaTree(AZALEA_TREE);
+	}
 }

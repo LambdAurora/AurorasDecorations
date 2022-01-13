@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "boat",
+  "pattern": [
+    "# #",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "aurorasdeco:azalea_planks"
+    }
+  },
+  "result": {
+    "item": "aurorasdeco:azalea_boat"
+  }
+}

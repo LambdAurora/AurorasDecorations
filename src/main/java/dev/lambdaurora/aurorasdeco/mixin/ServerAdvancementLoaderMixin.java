@@ -18,7 +18,7 @@
 package dev.lambdaurora.aurorasdeco.mixin;
 
 import com.google.gson.JsonElement;
-import dev.lambdaurora.aurorasdeco.resource.Datagen;
+import dev.lambdaurora.aurorasdeco.resource.datagen.AdvancementDatagen;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.server.ServerAdvancementLoader;
@@ -41,6 +41,6 @@ public class ServerAdvancementLoaderMixin {
 	)
 	private void onApply(Map<Identifier, JsonElement> map, ResourceManager resourceManager, Profiler profiler, CallbackInfo ci,
 	                     Map<Identifier, Advancement.Task> builder) {
-		Datagen.applyAdvancements(builder);
+		AdvancementDatagen.applyAdvancements(builder);
 	}
 }
