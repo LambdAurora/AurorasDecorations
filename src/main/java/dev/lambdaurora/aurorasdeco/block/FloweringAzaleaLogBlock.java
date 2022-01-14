@@ -36,6 +36,7 @@ import net.minecraft.world.World;
 
 import java.util.function.Supplier;
 
+@SuppressWarnings("deprecation")
 public class FloweringAzaleaLogBlock extends StrippableLogBlock {
 	private final Supplier<Block> normalSupplier;
 

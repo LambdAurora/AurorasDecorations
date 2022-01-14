@@ -539,25 +539,22 @@ public final class AurorasDecoRegistry {
 	private static PillarBlock createFloweringLogBlock(Supplier<Block> normal, MapColor topMapColor, MapColor sideMapColor) {
 		return new FloweringAzaleaLogBlock(
 				normal,
-				QuiltBlockSettings.of(Material.WOOD, state -> state.get(PillarBlock.AXIS).isVertical() ? topMapColor : sideMapColor)
-						.strength(2.f)
-						.sounds(BlockSoundGroup.WOOD)
+				QuiltBlockSettings.copyOf(Blocks.OAK_LOG)
+						.mapColorProvider(state -> state.get(PillarBlock.AXIS).isVertical() ? topMapColor : sideMapColor)
 		);
 	}
 
 	private static PillarBlock createStrippableLogBlock(MapColor topMapColor, MapColor sideMapColor) {
 		return new StrippableLogBlock(
-				QuiltBlockSettings.of(Material.WOOD, state -> state.get(PillarBlock.AXIS).isVertical() ? topMapColor : sideMapColor)
-						.strength(2.f)
-						.sounds(BlockSoundGroup.WOOD)
+				QuiltBlockSettings.copyOf(Blocks.OAK_LOG)
+						.mapColorProvider(state -> state.get(PillarBlock.AXIS).isVertical() ? topMapColor : sideMapColor)
 		);
 	}
 
 	private static PillarBlock createLogBlock(MapColor topMapColor, MapColor sideMapColor) {
 		return new PillarBlock(
-				QuiltBlockSettings.of(Material.WOOD, state -> state.get(PillarBlock.AXIS).isVertical() ? topMapColor : sideMapColor)
-						.strength(2.f)
-						.sounds(BlockSoundGroup.WOOD)
+				QuiltBlockSettings.copyOf(Blocks.OAK_LOG)
+						.mapColorProvider(state -> state.get(PillarBlock.AXIS).isVertical() ? topMapColor : sideMapColor)
 		);
 	}
 
