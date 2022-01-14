@@ -352,9 +352,7 @@ public final class AurorasDecoRegistry {
 			new BrazierBlock(MapColor.LIGHT_BLUE, 2, 10, ParticleTypes.SOUL),
 			new FabricItemSettings().group(ItemGroup.DECORATIONS));
 	public static final BrazierBlock COPPER_SULFATE_BRAZIER_BLOCK = registerWithItem("copper_sulfate_brazier",
-			new CopperSulfateBrazierBlock(QuiltBlockSettings.copyOf(BRAZIER_BLOCK)
-					.mapColor(MapColor.EMERALD_GREEN).luminance(14),
-					2, COPPER_SULFATE_FLAME),
+			new CopperSulfateBrazierBlock(MapColor.EMERALD_GREEN, 2, 14, COPPER_SULFATE_FLAME),
 			new FabricItemSettings().group(ItemGroup.DECORATIONS));
 	//endregion
 

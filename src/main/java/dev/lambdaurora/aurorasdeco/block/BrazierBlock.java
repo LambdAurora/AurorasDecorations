@@ -80,7 +80,11 @@ public class BrazierBlock extends Block implements Waterloggable {
 	private final int fireDamage;
 
 	public BrazierBlock(MapColor color, int fireDamage, int luminance, ParticleEffect particle) {
-		this(QuiltBlockSettings.of(Material.DECORATION, color)
+		this(QuiltBlockSettings.of(Material.DECORATION), color, fireDamage, luminance, particle);
+	}
+
+	public BrazierBlock(QuiltBlockSettings settings, MapColor color, int fireDamage, int luminance, ParticleEffect particle) {
+		this(settings.mapColor(color)
 						.strength(2.f)
 						.nonOpaque()
 						.luminance(state -> state.get(LIT) ? luminance : 0)
