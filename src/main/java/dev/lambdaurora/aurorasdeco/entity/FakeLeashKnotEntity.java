@@ -96,9 +96,9 @@ public class FakeLeashKnotEntity extends MobEntity {
 				var pos = this.getPos();
 				double decimal = pos.y - (int) pos.y;
 				double target = 0.375;
-				if (decimal != target) {
-					double diff = target - decimal;
-					this.setPosition(pos.x, pos.y + diff, pos.z);
+				double epsilon = 0.01;
+				if (Math.abs(decimal - target) < epsilon) {
+					this.setPosition(pos.x, ((int) pos.y) + target, pos.z);
 				}
 
 				if (!this.canStayAttached()) {
