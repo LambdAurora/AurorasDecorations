@@ -43,6 +43,8 @@ import net.minecraft.world.World;
  * @since 1.0.0
  */
 public class FakeLeashKnotEntity extends MobEntity {
+	private int obstructionCheckCounter;
+
 	public FakeLeashKnotEntity(EntityType<? extends MobEntity> entityType, World world) {
 		super(entityType, world);
 
@@ -87,20 +89,26 @@ public class FakeLeashKnotEntity extends MobEntity {
 	public void tick() {
 		super.tick();
 
-		var pos = this.getPos();
-		double decimal = pos.y - (int) pos.y;
-		double target = 0.375;
-		if (decimal != target) {
-			double diff = target - decimal;
-			this.setPosition(pos.x, pos.y + diff, pos.z);
-		}
+		if (!this.world.isClient()) {
+			if (this.obstructionCheckCounter++ == 100) {
+				this.obstructionCheckCounter = 0;
 
-		if (!this.canStayAttached()) {
-			this.breakAndDiscard(true);
-		} else {
-			var holding = this.getHoldingEntity();
-			if (holding == null || !holding.isAlive())
-				this.breakAndDiscard(true);
+				var pos = this.getPos();
+				double decimal = pos.y - (int) pos.y;
+				double target = 0.375;
+				if (decimal != target) {
+					double diff = target - decimal;
+					this.setPosition(pos.x, pos.y + diff, pos.z);
+				}
+
+				if (!this.canStayAttached()) {
+					this.breakAndDiscard(true);
+				} else {
+					var holding = this.getHoldingEntity();
+					if (holding == null || !holding.isAlive())
+						this.breakAndDiscard(true);
+				}
+			}
 		}
 	}
 
@@ -130,6 +138,7 @@ public class FakeLeashKnotEntity extends MobEntity {
 	}
 
 	public boolean canStayAttached() {
-		return this.world.getBlockState(this.getBlockPos()).isIn(BlockTags.FENCES);
+		var state = this.world.getBlockState(this.getBlockPos());
+		return state.isIn(BlockTags.FENCES);
 	}
 }
