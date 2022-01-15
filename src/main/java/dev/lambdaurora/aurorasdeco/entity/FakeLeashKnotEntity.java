@@ -27,6 +27,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.BlockTags;
@@ -48,6 +49,7 @@ public class FakeLeashKnotEntity extends MobEntity {
 	public FakeLeashKnotEntity(EntityType<? extends MobEntity> entityType, World world) {
 		super(entityType, world);
 
+		this.setPersistent();
 		this.setAiDisabled(true);
 	}
 
@@ -55,9 +57,10 @@ public class FakeLeashKnotEntity extends MobEntity {
 
 	@Override
 	public void readCustomDataFromNbt(NbtCompound nbt) {
-		if (nbt.contains("Leash", 10)) {
+		if (nbt.contains("Leash", NbtElement.COMPOUND_TYPE)) {
 			((MobEntityAccessor) this).setLeashNbt(nbt.getCompound("Leash"));
 		}
+		this.setPersistent();
 		this.setAiDisabled(true);
 	}
 
@@ -105,8 +108,9 @@ public class FakeLeashKnotEntity extends MobEntity {
 					this.breakAndDiscard(true);
 				} else {
 					var holding = this.getHoldingEntity();
-					if (holding == null || !holding.isAlive())
+					if (holding == null || !holding.isAlive()) {
 						this.breakAndDiscard(true);
+					}
 				}
 			}
 		}
