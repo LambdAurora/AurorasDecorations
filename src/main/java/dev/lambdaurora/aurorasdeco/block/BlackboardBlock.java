@@ -116,17 +116,16 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 
 	/* Placement */
 
-	@Override
-	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+	public boolean isPlacingPreferred(BlockState state, WorldView world, BlockPos pos) {
 		return world.getBlockState(pos.offset(state.get(FACING).getOpposite())).getMaterial().isSolid();
 	}
 
 	@Override
 	public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-		var state = this.getDefaultState();
-		var fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
-		var world = ctx.getWorld();
 		var pos = ctx.getBlockPos();
+		var fluidState = ctx.getWorld().getFluidState(pos);
+		var state = this.getDefaultState().with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+		var world = ctx.getWorld();
 		var directions = ctx.getPlacementDirections();
 
 		var nbt = BlockItem.getBlockEntityNbtFromStack(ctx.getStack());
@@ -134,17 +133,26 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 			state = state.with(LIT, nbt.getBoolean("lit"));
 		}
 
+		Direction firstDirection = Direction.NORTH;
 		for (var direction : directions) {
+			var adjacentState = world.getBlockState(pos.offset(direction));
+			if (adjacentState.getBlock() instanceof BlackboardBlock) {
+				return state.with(FACING, adjacentState.get(FACING));
+			}
+
 			if (direction.getAxis().isHorizontal()) {
+				firstDirection = direction;
+
 				var opposite = direction.getOpposite();
 				state = state.with(FACING, opposite);
-				if (state.canPlaceAt(world, pos)) {
-					return state.with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+
+				if (this.isPlacingPreferred(state, world, pos)) {
+					return state;
 				}
 			}
 		}
 
-		return null;
+		return state.with(FACING, firstDirection);
 	}
 
 	@Override
