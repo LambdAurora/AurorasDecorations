@@ -24,6 +24,8 @@
   "block.aurorasdeco.stripped_azalea_wood": "Bois d'azalée écorcée",
   "item.aurorasdeco.azalea_boat": "Bateau en azalée",
 
+  "block.aurorasdeco.jacaranda_planks": "Planches de jacaranda",
+
   "block.aurorasdeco.big_flower_pot": "Gros pôt de fleurs",
   "block.aurorasdeco.brazier": "Brasero",
 
@@ -165,6 +167,7 @@
   "aurorasdeco.wood_type.crimson": "bois carmin",
   "aurorasdeco.wood_type.warped": "bois biscornu",
   "aurorasdeco.wood_type.bamboo": "bamboo",
+  "aurorasdeco.wood_type.jacaranda": "jacaranda",
   "aurorasdeco.wood_type.redwood": "séquoia",
   "aurorasdeco.wood_type.blockus.charred": "bois carbonisé",
   "aurorasdeco.wood_type.blockus.legacy": "ancien bois",

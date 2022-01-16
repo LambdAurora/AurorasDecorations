@@ -24,6 +24,8 @@
   "block.aurorasdeco.stripped_azalea_wood": "Stripped Azalea Wood",
   "item.aurorasdeco.azalea_boat": "Azalea Boat",
 
+  "block.aurorasdeco.jacaranda_planks": "Jacaranda Planks",
+
   "block.aurorasdeco.big_flower_pot": "Big Flower Pot",
   "block.aurorasdeco.brazier": "Brazier",
 
@@ -165,6 +167,7 @@
   "aurorasdeco.wood_type.crimson": "Crimson",
   "aurorasdeco.wood_type.warped": "Warped",
   "aurorasdeco.wood_type.bamboo": "Bamboo",
+  "aurorasdeco.wood_type.jacaranda": "Jacaranda",
   "aurorasdeco.wood_type.redwood": "Redwood",
   "aurorasdeco.wood_type.blockus.charred": "Charred",
   "aurorasdeco.wood_type.blockus.legacy": "Legacy",
