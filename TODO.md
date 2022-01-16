@@ -3,6 +3,7 @@
 - Wind Chime (sound)
 - Lamp post (like in Dungeons)
 - Jacaranda Tree
+- Palo Verde Tree
 
 - they want it
   - blackboards on floor/ceiling

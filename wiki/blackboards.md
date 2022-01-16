@@ -83,7 +83,7 @@ To place them they will need a support block, like candles, and they won't break
     </tr>
     <tr>
         <td>Stick</td>
-        <td>Glass</td>
+        <td>Glass Pane</td>
         <td>Stick</td>
     </tr>
     <tr>

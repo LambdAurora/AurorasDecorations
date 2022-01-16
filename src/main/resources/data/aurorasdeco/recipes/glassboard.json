@@ -11,7 +11,7 @@
       "item": "minecraft:stick"
     },
     "C": {
-      "item": "minecraft:glass"
+      "item": "minecraft:glass_pane"
     }
   },
   "result": {
