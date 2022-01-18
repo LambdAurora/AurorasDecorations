@@ -1,7 +1,7 @@
 # Fallen Trees
 
 <!--description:Learn everything about the lavender plains, a beautiful and very purple biome.-->
-<!--thumbnail:../../images/features/fallen_oak_tree.png-->
+<!--thumbnail:images/features/fallen_oak_tree.png-->
 
 Fallen Trees are a new world generation feature introduced by this mod.
 They come in different variants similar to different tree types.
