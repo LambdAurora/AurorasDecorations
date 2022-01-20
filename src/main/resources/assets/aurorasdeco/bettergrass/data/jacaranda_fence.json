@@ -1,0 +1,97 @@
+
+{
+  "snow": {
+    "layer": true,
+    "block_state": {
+      "multipart": [
+        {
+          "apply": {
+            "model": "aurorasdeco:block/jacaranda/fence/snowy_post"
+          }
+        },
+        {
+          "when": {
+            "north": "true"
+          },
+          "apply": {
+            "model": "aurorasdeco:block/jacaranda/fence/snowy_side"
+          }
+        },
+        {
+          "when": {
+            "east": "true"
+          },
+          "apply": {
+            "model": "aurorasdeco:block/jacaranda/fence/snowy_side",
+            "y": 90
+          }
+        },
+        {
+          "when": {
+            "south": "true"
+          },
+          "apply": {
+            "model": "aurorasdeco:block/jacaranda/fence/snowy_side",
+            "y": 180
+          }
+        },
+        {
+          "when": {
+            "west": "true"
+          },
+          "apply": {
+            "model": "aurorasdeco:block/jacaranda/fence/snowy_side",
+            "y": 270
+          }
+        }
+      ]
+    }
+  },
+  "moss": {
+    "layer": true,
+    "block_state": {
+      "multipart": [
+        {
+          "apply": {
+            "model": "aurorasdeco:block/jacaranda/fence/mossy_post"
+          }
+        },
+        {
+          "when": {
+            "north": "true"
+          },
+          "apply": {
+            "model": "aurorasdeco:block/jacaranda/fence/mossy_side"
+          }
+        },
+        {
+          "when": {
+            "east": "true"
+          },
+          "apply": {
+            "model": "aurorasdeco:block/jacaranda/fence/mossy_side",
+            "y": 90
+          }
+        },
+        {
+          "when": {
+            "south": "true"
+          },
+          "apply": {
+            "model": "aurorasdeco:block/jacaranda/fence/mossy_side",
+            "y": 180
+          }
+        },
+        {
+          "when": {
+            "west": "true"
+          },
+          "apply": {
+            "model": "aurorasdeco:block/jacaranda/fence/mossy_side",
+            "y": 270
+          }
+        }
+      ]
+    }
+  }
+}

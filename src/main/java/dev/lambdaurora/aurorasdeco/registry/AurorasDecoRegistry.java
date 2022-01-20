@@ -214,6 +214,25 @@ public final class AurorasDecoRegistry {
 			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::woodenStairs
 	);
+	public static final Block JACARANDA_BUTTON_BLOCK = registerWithItem("jacaranda_button",
+			new AuroraWoodenButtonBlock(QuiltBlockSettings.copyOf(Blocks.OAK_BUTTON)), new FabricItemSettings().group(ItemGroup.REDSTONE),
+			DerivedBlockItem::woodenButton
+	);
+	public static final FenceBlock JACARANDA_FENCE_BLOCK = registerWithItem("jacaranda_fence",
+			new FenceBlock(QuiltBlockSettings.copyOf(JACARANDA_PLANKS_BLOCK)),
+			new FabricItemSettings().group(ItemGroup.DECORATIONS),
+			DerivedBlockItem::fence);
+	public static final FenceGateBlock JACARANDA_FENCE_GATE_BLOCK = registerWithItem("jacaranda_fence_gate",
+			new FenceGateBlock(QuiltBlockSettings.copyOf(JACARANDA_PLANKS_BLOCK)), new FabricItemSettings().group(ItemGroup.REDSTONE),
+			DerivedBlockItem::fenceGate);
+	public static final Block JACARANDA_PRESSURE_PLATE_BLOCK = registerWithItem("jacaranda_pressure_plate",
+			new AuroraPressurePlateBlock(
+					PressurePlateBlock.ActivationRule.EVERYTHING,
+					QuiltBlockSettings.copyOf(Blocks.OAK_PRESSURE_PLATE).mapColor(JACARANDA_PLANKS_BLOCK.getDefaultMapColor())
+			),
+			new FabricItemSettings().group(ItemGroup.REDSTONE),
+			DerivedBlockItem::pressurePlate
+	);
 	//endregion
 
 	//region Big Flower Pot
@@ -733,6 +752,8 @@ public final class AurorasDecoRegistry {
 		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_SLAB_BLOCK, 5, 20);
 		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_STAIRS_BLOCK, 5, 20);
 		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_PLANKS_BLOCK, 5, 20);
+		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_FENCE_BLOCK, 5, 20);
+		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_FENCE_GATE_BLOCK, 5, 20);
 		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_SLAB_BLOCK, 5, 20);
 		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_STAIRS_BLOCK, 5, 20);
 		FlammableBlockRegistry.getDefaultInstance().add(AurorasDecoTags.PET_BEDS, 10, 30);

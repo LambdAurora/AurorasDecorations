@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "aurorasdeco:block/jacaranda/pressure_plate"
+    },
+    "powered=true": {
+      "model": "aurorasdeco:block/jacaranda/pressure_plate_down"
+    }
+  }
+}
