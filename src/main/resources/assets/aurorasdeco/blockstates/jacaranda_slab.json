@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "aurorasdeco:block/jacaranda/slab"
+    },
+    "type=double": {
+      "model": "aurorasdeco:block/jacaranda/planks"
+    },
+    "type=top": {
+      "model": "aurorasdeco:block/jacaranda/slab_top"
+    }
+  }
+}

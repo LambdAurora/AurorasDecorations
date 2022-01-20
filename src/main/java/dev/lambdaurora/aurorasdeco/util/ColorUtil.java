@@ -23,6 +23,7 @@ import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.Range;
 
 import java.util.stream.Collectors;
 
@@ -42,6 +43,39 @@ public final class ColorUtil {
 	public static final int WHITE = 0xffffffff;
 	public static final int TEXT_COLOR = 0xffe0e0e0;
 	public static final int UNEDITABLE_COLOR = 0xff707070;
+
+	/**
+	 * Returns a color value between {@code 0.0} and {@code 1.0} using the integer value.
+	 *
+	 * @param colorComponent the color value as int
+	 * @return the color value as float
+	 */
+	public static float floatColor(@Range(from = 0, to = 255) int colorComponent) {
+		return colorComponent / 255.f;
+	}
+
+	/**
+	 * Returns a color value between {@code 0} and {@code 255} using the float value.
+	 *
+	 * @param colorComponent the color value as float
+	 * @return the color value as integer
+	 */
+	public static @Range(from = 0, to = 255) int intColor(float colorComponent) {
+		return MathHelper.clamp((int) (colorComponent * 255.f), 0, 255);
+	}
+
+	/**
+	 * Packs the given color into an ARGB integer.
+	 *
+	 * @param red the red color value
+	 * @param green the green color value
+	 * @param blue the blue color value
+	 * @param alpha the alpha value
+	 * @return the packed ARGB color
+	 */
+	public static int packARGBColor(@Range(from = 0, to = 255) int red, @Range(from = 0, to = 255) int green, @Range(from = 0, to = 255) int blue, @Range(from = 0, to = 255) int alpha) {
+		return ((alpha & 255) << 24) + ((red & 255) << 16) + ((green & 255) << 8) + ((blue) & 255);
+	}
 
 	/**
 	 * Unpacks the given ARGB color into an array of 4 integers in the following format: {@code {red, green, blue, alpha}}.
@@ -104,6 +138,55 @@ public final class ColorUtil {
 
 	public static float luminance(int red, int green, int blue) {
 		return (0.2126f * red + 0.7152f * green + 0.0722f * blue);
+	}
+
+	public static int blendColors(int foreground, int background) {
+		float _alpha = floatColor(argbUnpackAlpha(foreground));
+		float beta = floatColor(argbUnpackAlpha(background)) * (1 - _alpha);
+		float alpha = _alpha + beta;
+		return packARGBColor(
+				intColor((floatColor(argbUnpackRed(foreground)) * _alpha + floatColor(argbUnpackRed(background)) * beta) / alpha),
+				intColor((floatColor(argbUnpackGreen(foreground)) * _alpha + floatColor(argbUnpackGreen(background)) * beta) / alpha),
+				intColor((floatColor(argbUnpackBlue(foreground)) * _alpha + floatColor(argbUnpackBlue(background)) * beta) / alpha),
+				intColor(alpha));
+	}
+
+	public static int mixColors(int a, int b, float ratio) {
+		int[] aA = unpackARGBColor(a);
+		int[] bA = unpackARGBColor(b);
+		int[] r = new int[4];
+
+		for (int i = 0; i < 4; i++) {
+			r[i] = intColor(floatColor(aA[i]) * (1 - ratio) + floatColor(bA[i]) * ratio);
+		}
+
+		return packARGBColor(r[0], r[1], r[2], r[3]);
+	}
+
+	/**
+	 * Multiples two ARGB color.
+	 *
+	 * @param a an ARGB color
+	 * @param b an ARGB color
+	 * @return the multiplied color
+	 */
+	public static int argbMultiply(int a, int b) {
+		float aRed = floatColor(argbUnpackRed(a));
+		float aGreen = floatColor(argbUnpackGreen(a));
+		float aBlue = floatColor(argbUnpackBlue(a));
+		float aAlpha = floatColor(argbUnpackAlpha(a));
+
+		float bRed = floatColor(argbUnpackRed(b));
+		float bGreen = floatColor(argbUnpackGreen(b));
+		float bBlue = floatColor(argbUnpackBlue(b));
+		float bAlpha = floatColor(argbUnpackAlpha(b));
+
+		return packARGBColor(
+				intColor(aRed * bRed),
+				intColor(aGreen * bGreen),
+				intColor(aBlue * bBlue),
+				intColor(aAlpha * bAlpha)
+		);
 	}
 
 	public static float[] rgbToHsb(int r, int g, int b) {

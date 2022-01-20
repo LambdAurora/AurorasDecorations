@@ -200,6 +200,22 @@ public final class AurorasDecoRegistry {
 	}
 	//endregion
 
+	//region Jacaranda
+	public static final Block JACARANDA_PLANKS_BLOCK = registerWithItem("jacaranda_planks",
+			new Block(QuiltBlockSettings.copyOf(AZALEA_PLANKS_BLOCK).mapColor(MapColor.DULL_PINK)),
+			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			DerivedBlockItem::planks);
+	public static final Block JACARANDA_SLAB_BLOCK = registerWithItem("jacaranda_slab",
+			new SlabBlock(QuiltBlockSettings.copyOf(JACARANDA_PLANKS_BLOCK)), new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			DerivedBlockItem::woodenSlab
+	);
+	public static final Block JACARANDA_STAIRS_BLOCK = registerWithItem("jacaranda_stairs",
+			new AuroraStairsBlock(JACARANDA_PLANKS_BLOCK.getDefaultState(), QuiltBlockSettings.copyOf(JACARANDA_PLANKS_BLOCK)),
+			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			DerivedBlockItem::woodenStairs
+	);
+	//endregion
+
 	//region Big Flower Pot
 	public static final BigFlowerPotBlock BIG_FLOWER_POT_BLOCK = registerWithItem(
 			"big_flower_pot",
@@ -716,6 +732,9 @@ public final class AurorasDecoRegistry {
 		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_FENCE_GATE_BLOCK, 5, 20);
 		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_SLAB_BLOCK, 5, 20);
 		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_STAIRS_BLOCK, 5, 20);
+		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_PLANKS_BLOCK, 5, 20);
+		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_SLAB_BLOCK, 5, 20);
+		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_STAIRS_BLOCK, 5, 20);
 		FlammableBlockRegistry.getDefaultInstance().add(AurorasDecoTags.PET_BEDS, 10, 30);
 	}
 }
