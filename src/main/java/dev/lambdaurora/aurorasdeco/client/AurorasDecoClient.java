@@ -90,6 +90,7 @@ public class AurorasDecoClient implements ClientModInitializer {
 		/* Signs */
 		ClientPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_OPEN_GUI, AurorasDecoPackets.Client::handleSignPostOpenGuiPacket);
 		SpriteIdentifierRegistry.INSTANCE.addIdentifier(new SpriteIdentifier(TexturedRenderLayers.SIGNS_ATLAS_TEXTURE, AZALEA_SIGN_BLOCK.getTexture()));
+		SpriteIdentifierRegistry.INSTANCE.addIdentifier(new SpriteIdentifier(TexturedRenderLayers.SIGNS_ATLAS_TEXTURE, JACARANDA_SIGN_BLOCK.getTexture()));
 
 		ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
 			PottedPlantType.stream()
@@ -189,6 +190,7 @@ public class AurorasDecoClient implements ClientModInitializer {
 		EntityRendererRegistry.register(AurorasDecoRegistry.SEAT_ENTITY_TYPE,
 				SeatEntityRenderer::new);
 		TerraformBoatClientHelper.registerModelLayer(AurorasDeco.id("azalea"));
+		TerraformBoatClientHelper.registerModelLayer(AurorasDeco.id("jacaranda"));
 	}
 
 	private void initBlockRenderLayers() {

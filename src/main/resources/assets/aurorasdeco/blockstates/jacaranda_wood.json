@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "aurorasdeco:block/jacaranda/wood",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "aurorasdeco:block/jacaranda/wood"
+    },
+    "axis=z": {
+      "model": "aurorasdeco:block/jacaranda/wood",
+      "x": 90
+    }
+  }
+}

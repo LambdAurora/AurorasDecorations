@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "planks",
+  "ingredients": [
+    {
+      "tag": "aurorasdeco:jacaranda_logs"
+    }
+  ],
+  "result": {
+    "item": "aurorasdeco:jacaranda_planks",
+    "count": 4
+  }
+}

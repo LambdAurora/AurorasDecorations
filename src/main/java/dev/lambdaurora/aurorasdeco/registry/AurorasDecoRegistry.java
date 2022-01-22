@@ -201,8 +201,24 @@ public final class AurorasDecoRegistry {
 	//endregion
 
 	//region Jacaranda
+	public static final PillarBlock JACARANDA_LOG_BLOCK = registerWithItem("jacaranda_log",
+			createStrippableLogBlock(MapColor.PALE_PURPLE, MapColor.TERRACOTTA_PURPLE),
+			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			DerivedBlockItem::log);
+	public static final PillarBlock STRIPPED_JACARANDA_LOG_BLOCK = registerWithItem("stripped_jacaranda_log",
+			new PillarBlock(QuiltBlockSettings.copyOf(Blocks.STRIPPED_OAK_LOG).mapColor(MapColor.TERRACOTTA_PURPLE)),
+			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			DerivedBlockItem::strippedLog);
+	public static final PillarBlock STRIPPED_JACARANDA_WOOD_BLOCK = registerWithItem("stripped_jacaranda_wood",
+			new PillarBlock(QuiltBlockSettings.copyOf(STRIPPED_JACARANDA_LOG_BLOCK)),
+			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			DerivedBlockItem::strippedWood);
+	public static final PillarBlock JACARANDA_WOOD_BLOCK = registerWithItem("jacaranda_wood",
+			createStrippableLogBlock(MapColor.PALE_PURPLE, MapColor.TERRACOTTA_PURPLE),
+			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			DerivedBlockItem::wood);
 	public static final Block JACARANDA_PLANKS_BLOCK = registerWithItem("jacaranda_planks",
-			new Block(QuiltBlockSettings.copyOf(AZALEA_PLANKS_BLOCK).mapColor(MapColor.DULL_PINK)),
+			new Block(QuiltBlockSettings.copyOf(AZALEA_PLANKS_BLOCK).mapColor(MapColor.PALE_PURPLE)),
 			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::planks);
 	public static final Block JACARANDA_SLAB_BLOCK = registerWithItem("jacaranda_slab",
@@ -233,6 +249,33 @@ public final class AurorasDecoRegistry {
 			new FabricItemSettings().group(ItemGroup.REDSTONE),
 			DerivedBlockItem::pressurePlate
 	);
+	public static final TerraformSignBlock JACARANDA_SIGN_BLOCK = registerBlock("jacaranda_sign",
+			new TerraformSignBlock(
+					id("entity/sign/jacaranda"),
+					QuiltBlockSettings.copyOf(JACARANDA_PLANKS_BLOCK).strength(1.f).noCollision()
+			)
+	);
+	public static final Block JACARANDA_WALL_SIGN_BLOCK = registerBlock("jacaranda_wall_sign",
+			new TerraformWallSignBlock(id("entity/sign/jacaranda"), QuiltBlockSettings.copyOf(JACARANDA_SIGN_BLOCK))
+	);
+
+	public static final Item JACARANDA_BOAT_ITEM = TerraformBoatItemHelper.registerBoatItem(
+			id("jacaranda_boat"), AurorasDecoRegistry::provideJacarandaBoatType
+	);
+	public static final TerraformBoatType JACARANDA_BOAT_TYPE = Registry.register(TerraformBoatTypeRegistry.INSTANCE, id("jacaranda"),
+			new TerraformBoatType.Builder().item(JACARANDA_BOAT_ITEM).build()
+	);
+
+	public static final SignItem JACARANDA_SIGN_ITEM = registerItem("jacaranda_sign",
+			new SignItem(
+					new FabricItemSettings().group(ItemGroup.DECORATIONS),
+					JACARANDA_SIGN_BLOCK, JACARANDA_WALL_SIGN_BLOCK
+			)
+	);
+
+	private static TerraformBoatType provideJacarandaBoatType() {
+		return JACARANDA_BOAT_TYPE;
+	}
 	//endregion
 
 	//region Big Flower Pot
@@ -751,6 +794,8 @@ public final class AurorasDecoRegistry {
 		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_FENCE_GATE_BLOCK, 5, 20);
 		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_SLAB_BLOCK, 5, 20);
 		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_STAIRS_BLOCK, 5, 20);
+		FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_JACARANDA_LOG_BLOCK, 5, 5);
+		FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_JACARANDA_WOOD_BLOCK, 5, 5);
 		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_PLANKS_BLOCK, 5, 20);
 		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_FENCE_BLOCK, 5, 20);
 		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_FENCE_GATE_BLOCK, 5, 20);
