@@ -252,7 +252,7 @@ public class BlackboardBlockEntity extends BasicBlockEntity implements Nameable,
 		super.readNbt(nbt);
 		this.readBlackBoardNbt(nbt);
 		this.lastUser = null;
-		if (this.world != null && this.world instanceof ClientWorld) {
+		if (this.world != null && this.world.isClient()) {
 			this.refreshRendering();
 		}
 	}
