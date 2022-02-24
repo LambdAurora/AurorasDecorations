@@ -162,26 +162,6 @@ td img, th img {
 
 /* Code blocks */
 
-code {
-	padding: .2em .4em;
-	margin: 0;
-	border-radius: 3px;
-	font-size: 90%;
-	border: 1px solid #ffffff1a !important;
-	background: #222;
-	color: #bebebe;
-
-	font-family: "Menlo", Consolas, "Liberation Mono", Menlo, Courier, monospace !important;
-	font-feature-settings: normal !important;
-}
-
-pre > code {
-	padding: 0 !important;
-	margin: 0 !important;
-	border: 0px !important;
-	background: #ffffff00 !important;
-}
-
 .block_code {
 	max-width: 100vw;
 	overflow-x: auto;

@@ -72,8 +72,18 @@ async function load_markdown(path, assets_to_copy) {
 	}
 
 	const main = html.create_element("main");
-	main.children = md.render_to_html(doc, {image: {class_name: "ls_responsive_img"}, spoiler: {enable: true}, parent: main}).children
-		.filter(node => {
+	main.children = md.render_to_html(doc, {
+			image: {
+				class_name: "ls_responsive_img"
+			},
+			spoiler: {
+				enable: true
+			},
+			table: {
+				process: table => table.with_attr("class", "ls_grid_table")
+			},
+			parent: main
+		}).children.filter(node => {
 			if (node instanceof html.Comment) {
 				if (node.content.startsWith("description:")) {
 					page_description = node.content.substr("description:".length);
