@@ -126,26 +126,26 @@ Waxed blackboards are made uneditable.
 ### Dyes
 
 <ul>
-  <li><span class="color_ship"><span style="background-color: #f9fffe;"></span></span> White Dye</li>
-  <li><span class="color_ship"><span style="background-color: #f9801d;"></span></span> Orange Dye</li>
-  <li><span class="color_ship"><span style="background-color: #c74ebd;"></span></span> Magenta Dye</li>
-  <li><span class="color_ship"><span style="background-color: #3ab3da;"></span></span> Light Blue Dye</li>
-  <li><span class="color_ship"><span style="background-color: #fed83d;"></span></span> Yellow Dye</li>
-  <li><span class="color_ship"><span style="background-color: #80c71f;"></span></span> Lime Dye</li>
-  <li><span class="color_ship"><span style="background-color: #f38baa;"></span></span> Pink Dye</li>
-  <li><span class="color_ship"><span style="background-color: #474f52;"></span></span> Gray Dye</li>
-  <li><span class="color_ship"><span style="background-color: #9d9d97;"></span></span> Light Gray Dye</li>
-  <li><span class="color_ship"><span style="background-color: #169c9c;"></span></span> Cyan Dye</li>
-  <li><span class="color_ship"><span style="background-color: #8932b8;"></span></span> Purple Dye</li>
-  <li><span class="color_ship"><span style="background-color: #3c44aa;"></span></span> Blue Dye</li>
-  <li><span class="color_ship"><span style="background-color: #835432;"></span></span> Brown Dye</li>
-  <li><span class="color_ship"><span style="background-color: #5e7c16;"></span></span> Green Dye</li>
-  <li><span class="color_ship"><span style="background-color: #b02e26;"></span></span> Red Dye</li>
-  <li><span class="color_ship"><span style="background-color: #1d1d21;"></span></span> Black Dye</li>
-  <li><span class="color_ship"><span style="background-color: #bb0000;"></span></span> Sweet Berries</li>
-  <li><span class="color_ship"><span style="background-color: #ff9737;"></span></span> Glow Berries</li>
-  <li><a href="plants/lavender.md"><span class="color_ship"><span style="background-color: #b886db;"></span></span> Lavender</a></li>
-  <li><span class="color_ship"><span style="background-color: #006ac6;"></span></span> Blueberries (if Ecotones is present)</li>
+  <li><span class="ls_color_ship"><span style="background-color: #f9fffe;"></span></span> White Dye</li>
+  <li><span class="ls_color_ship"><span style="background-color: #f9801d;"></span></span> Orange Dye</li>
+  <li><span class="ls_color_ship"><span style="background-color: #c74ebd;"></span></span> Magenta Dye</li>
+  <li><span class="ls_color_ship"><span style="background-color: #3ab3da;"></span></span> Light Blue Dye</li>
+  <li><span class="ls_color_ship"><span style="background-color: #fed83d;"></span></span> Yellow Dye</li>
+  <li><span class="ls_color_ship"><span style="background-color: #80c71f;"></span></span> Lime Dye</li>
+  <li><span class="ls_color_ship"><span style="background-color: #f38baa;"></span></span> Pink Dye</li>
+  <li><span class="ls_color_ship"><span style="background-color: #474f52;"></span></span> Gray Dye</li>
+  <li><span class="ls_color_ship"><span style="background-color: #9d9d97;"></span></span> Light Gray Dye</li>
+  <li><span class="ls_color_ship"><span style="background-color: #169c9c;"></span></span> Cyan Dye</li>
+  <li><span class="ls_color_ship"><span style="background-color: #8932b8;"></span></span> Purple Dye</li>
+  <li><span class="ls_color_ship"><span style="background-color: #3c44aa;"></span></span> Blue Dye</li>
+  <li><span class="ls_color_ship"><span style="background-color: #835432;"></span></span> Brown Dye</li>
+  <li><span class="ls_color_ship"><span style="background-color: #5e7c16;"></span></span> Green Dye</li>
+  <li><span class="ls_color_ship"><span style="background-color: #b02e26;"></span></span> Red Dye</li>
+  <li><span class="ls_color_ship"><span style="background-color: #1d1d21;"></span></span> Black Dye</li>
+  <li><span class="ls_color_ship"><span style="background-color: #bb0000;"></span></span> Sweet Berries</li>
+  <li><span class="ls_color_ship"><span style="background-color: #ff9737;"></span></span> Glow Berries</li>
+  <li><a href="plants/lavender.md"><span class="ls_color_ship"><span style="background-color: #b886db;"></span></span> Lavender</a></li>
+  <li><span class="ls_color_ship"><span style="background-color: #006ac6;"></span></span> Blueberries (if Ecotones is present)</li>
 </ul>
 
 [dyes]: #dyes

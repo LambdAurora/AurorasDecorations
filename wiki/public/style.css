@@ -135,31 +135,6 @@ td img, th img {
 	}
 }
 
-/* Colors */
-
-.color_ship {
-	display: inline-block;
-	line-height: 1;
-	margin: 0 4px 2px 0;
-	vertical-align: middle;
-	border-radius: 3px;
-	width: 0.9em;
-	height: 0.9em;
-	background: #fff linear-gradient(135deg, #e1e1e1 25%, transparent 0%, transparent 75%, #e1e1e1 0%),
-		linear-gradient(135deg, #e1e1e1 25%, transparent 0%, transparent 75%, #e1e1e1 0%);
-	background-size: 1em 1em;
-	background-position: 0 0, 0.5em 0.5em;
-}
-
-.color_ship > span {
-	display: inline-block;
-	width: 100%;
-	height: 100%;
-	margin-bottom: 2px;
-	border-radius: 3px;
-	border: 1px solid #0000004d;
-}
-
 /* Code blocks */
 
 .block_code {
