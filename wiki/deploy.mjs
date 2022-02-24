@@ -73,29 +73,42 @@ async function load_markdown(path, assets_to_copy) {
 
 	const main = html.create_element("main");
 	main.children = md.render_to_html(doc, {
-			image: {
-				class_name: "ls_responsive_img"
-			},
-			spoiler: {
-				enable: true
-			},
-			table: {
-				process: table => table.with_attr("class", "ls_grid_table")
-			},
-			parent: main
-		}).children.filter(node => {
-			if (node instanceof html.Comment) {
-				if (node.content.startsWith("description:")) {
-					page_description = node.content.substr("description:".length);
-					return false;
-				} else if (node.content.startsWith("thumbnail:")) {
-					page_thumbnail = node.content.substr("thumbnail:".length);
-					return false;
+		code: {
+			process: el => {
+				if (el.content.match(/^#[a-fA-F0-9]{3}(?:[a-fA-F0-9]{5}|[a-fA-F0-9]{3})?$/)) {
+					return html.create_element("span")
+						.with_attr("class", "ls_color_ship")
+						.with_child(html.create_element("span")
+							.with_attr("style", `background-color: ${el.content};`)
+						);
+				} else {
+					return el.as_html();
 				}
 			}
+		},
+		image: {
+			class_name: "ls_responsive_img"
+		},
+		spoiler: {
+			enable: true
+		},
+		table: {
+			process: table => table.with_attr("class", "ls_grid_table")
+		},
+		parent: main
+	}).children.filter(node => {
+		if (node instanceof html.Comment) {
+			if (node.content.startsWith("description:")) {
+				page_description = node.content.substr("description:".length);
+				return false;
+			} else if (node.content.startsWith("thumbnail:")) {
+				page_thumbnail = node.content.substr("thumbnail:".length);
+				return false;
+			}
+		}
 
-			return true;
-		});
+		return true;
+	});
 
 	fix_links_in_html(main.children, assets_to_copy);
 

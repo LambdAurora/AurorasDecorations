@@ -14,7 +14,7 @@ it has a nice shade of purple which lead the color to be named the same.
 
 ## Usage
 
-Lavender can be crafted into purple dye. Lavender can also be used as a dye <span class="ls_color_ship"><span style="background-color: #b886db;"></span></span>on [blackboards](../blackboards.md).
+Lavender can be crafted into purple dye. Lavender can also be used as a dye `#b886db` on [blackboards](../blackboards.md).
 
 ## Locations
 

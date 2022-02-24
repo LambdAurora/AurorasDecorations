@@ -125,28 +125,26 @@ Waxed blackboards are made uneditable.
 
 ### Dyes
 
-<ul>
-  <li><span class="ls_color_ship"><span style="background-color: #f9fffe;"></span></span> White Dye</li>
-  <li><span class="ls_color_ship"><span style="background-color: #f9801d;"></span></span> Orange Dye</li>
-  <li><span class="ls_color_ship"><span style="background-color: #c74ebd;"></span></span> Magenta Dye</li>
-  <li><span class="ls_color_ship"><span style="background-color: #3ab3da;"></span></span> Light Blue Dye</li>
-  <li><span class="ls_color_ship"><span style="background-color: #fed83d;"></span></span> Yellow Dye</li>
-  <li><span class="ls_color_ship"><span style="background-color: #80c71f;"></span></span> Lime Dye</li>
-  <li><span class="ls_color_ship"><span style="background-color: #f38baa;"></span></span> Pink Dye</li>
-  <li><span class="ls_color_ship"><span style="background-color: #474f52;"></span></span> Gray Dye</li>
-  <li><span class="ls_color_ship"><span style="background-color: #9d9d97;"></span></span> Light Gray Dye</li>
-  <li><span class="ls_color_ship"><span style="background-color: #169c9c;"></span></span> Cyan Dye</li>
-  <li><span class="ls_color_ship"><span style="background-color: #8932b8;"></span></span> Purple Dye</li>
-  <li><span class="ls_color_ship"><span style="background-color: #3c44aa;"></span></span> Blue Dye</li>
-  <li><span class="ls_color_ship"><span style="background-color: #835432;"></span></span> Brown Dye</li>
-  <li><span class="ls_color_ship"><span style="background-color: #5e7c16;"></span></span> Green Dye</li>
-  <li><span class="ls_color_ship"><span style="background-color: #b02e26;"></span></span> Red Dye</li>
-  <li><span class="ls_color_ship"><span style="background-color: #1d1d21;"></span></span> Black Dye</li>
-  <li><span class="ls_color_ship"><span style="background-color: #bb0000;"></span></span> Sweet Berries</li>
-  <li><span class="ls_color_ship"><span style="background-color: #ff9737;"></span></span> Glow Berries</li>
-  <li><a href="plants/lavender.md"><span class="ls_color_ship"><span style="background-color: #b886db;"></span></span> Lavender</a></li>
-  <li><span class="ls_color_ship"><span style="background-color: #006ac6;"></span></span> Blueberries (if Ecotones is present)</li>
-</ul>
+- `#f9fffe` White Dye
+- `#f9801d` Orange Dye
+- `#c74ebd` Magenta Dye
+- `#3ab3da` Light Blue Dye
+- `#fed83d` Yellow Dye
+- `#80c71f` Lime Dye
+- `#f38baa` Pink Dye
+- `#474f52` Gray Dye
+- `#9d9d97` Light Gray Dye
+- `#169c9c` Cyan Dye
+- `#8932b8` Purple Dye
+- `#3c44aa` Blue Dye
+- `#835432` Brown Dye
+- `#5e7c16` Green Dye
+- `#b02e26` Red Dye
+- `#1d1d21` Black Dye
+- `#bb0000` Sweet Berries
+- `#ff9737` Glow Berries
+- [`#b886db` Lavender](plants/lavender.md)
+- `#006ac6` Blueberries (if Ecotones is present)
 
 [dyes]: #dyes
 [Trinkets]: https://modrinth.com/mod/trinkets
