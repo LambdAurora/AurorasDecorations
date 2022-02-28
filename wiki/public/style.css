@@ -14,36 +14,18 @@
 	flex-direction: column;
 }
 
-.wiki_page > aside {
-	position: sticky;
-	background-color: var(--ls_theme_background_accentuated);
-	min-width: 15%;
-	max-width: 20%;
-	overflow-y: auto;
-}
-
-.wiki_page nav ul {
-	padding: 0;
-}
-
 .wiki_page nav > ul > li {
 	padding: 0 1em;
 }
 
 .wiki_page nav li {
 	padding-left: 1em;
-	margin-top: 0.25em;
-	margin-bottom: 0.25em;
 	cursor: pointer;
 }
 
 .wiki_page nav li > div {
 	display: inline-block;
 	margin: 0.2em 0;
-}
-
-li.wiki_nav_directory {
-	list-style: disclosure-closed inside;
 }
 
 li.wiki_nav_directory:first-child, li.wiki_nav_directory::marker {
@@ -63,23 +45,6 @@ li.wiki_nav_directory[open] {
 li.wiki_nav_directory[open] > ul {
 	max-height: 1000px; /* This is a mess, someone thought it was a good idea to prevent height animation of non-absolute values. */
 	opacity: initial;
-}
-
-@media(max-width: 900px) {
-	.wiki_page > aside {
-		display: none;
-	}
-
-	.wiki_page > aside.opened {
-		display: block;
-	}
-}
-
-.mod_banner {
-	display: flex;
-	width: 100%;
-	justify-content: space-around;
-	align-items: center;
 }
 
 /* Markdown styling */
@@ -164,8 +129,8 @@ img.item, .mod_icon {
 }
 
 .mod_icon {
-	width: 5em;
-	height: 5em;
+	width: 5em !important;
+	height: 5em !important;
 }
 
 .wiki-gallery {

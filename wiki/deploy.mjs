@@ -188,14 +188,15 @@ async function deploy_markdown(markdown_pages, page_data) {
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	</head>
 	<body class="wiki_page">
-		<aside>
-			<a class="mod_banner" href="${relativize_from_root(page_data.path)}">
+		<nav id="main_nav" class="ls_sidenav">
+			<a class="ls_nav_banner href="${relativize_from_root(page_data.path)}">
 				<img class="mod_icon" src="${relativize_from_root(page_data.path)}icon.png" alt="Aurora's Decorations Icon">
-				Aurora's Decorations
+				<span>Aurora's Decorations</span>
 			</a>
 			${build_navigation(markdown_pages, page_data).html()}
-		</aside>
-		<div class="wiki_content">
+		</nav>
+		<a class="ls_sidenav_trigger" ls_data_target="main_nav" aria-label="Menu" aria-description="Open the navigation menu."></a>
+		<div class="wiki_content ls_sidenav_neighbor">
 			<main>
 				<article>
 					${page_data.main.inner_html()}
@@ -213,6 +214,7 @@ async function deploy_markdown(markdown_pages, page_data) {
 			</footer>
 		</div>
 
+		<script src="https://lambdaurora.dev/script.mjs"></script>
 		<script src="${relativize_from_root(page_data.path)}script.js"></script>
 	</body>
 </html>
@@ -321,7 +323,7 @@ function build_navigation(pages, current_page) {
 
 		if (elements.children.length > 0) {
 			const subtree = html.create_element("ul");
-			if (first) tree.attr("class", "wiki_nav_directory");
+			if (first) tree.attr("class", "wiki_nav_directory ls_nav_dir_entry");
 
 			elements.children.forEach(item => subtree.append_child(build_tree(page, item, false)));
 
@@ -388,7 +390,7 @@ function build_navigation(pages, current_page) {
 			for (const item of entry.entries)
 				build_navigational_tree(subtree, item);
 
-			const li = html.create_element("li").with_attr("class", "wiki_nav_directory")
+			const li = html.create_element("li").with_attr("class", "wiki_nav_directory ls_nav_dir_entry")
 				.with_child(entry.raw_title)
 				.with_child(subtree);
 
