@@ -195,7 +195,11 @@ async function deploy_markdown(markdown_pages, page_data) {
 			</a>
 			${build_navigation(markdown_pages, page_data).html()}
 		</nav>
-		<a class="ls_sidenav_trigger" ls_data_target="main_nav" aria-label="Menu" aria-description="Open the navigation menu."></a>
+		<a class="ls_sidenav_trigger ls_btn" ls_variant="fab" ls_data_target="main_nav"
+			aria-role="menu" aria-label="Menu" aria-description="Open the navigation menu.">
+			☰
+		</a>
+		<div class="ls_sidenav_darkened" ls_data_target="main_nav"></div>
 		<div class="wiki_content ls_sidenav_neighbor">
 			<main>
 				<article>
