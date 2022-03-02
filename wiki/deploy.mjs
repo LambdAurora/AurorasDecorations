@@ -188,18 +188,21 @@ async function deploy_markdown(markdown_pages, page_data) {
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	</head>
 	<body class="wiki_page">
-		<nav id="main_nav" class="ls_sidenav">
-			<a class="ls_nav_banner href="${relativize_from_root(page_data.path)}">
-				<img class="mod_icon" src="${relativize_from_root(page_data.path)}icon.png" alt="Aurora's Decorations Icon">
-				<span>Aurora's Decorations</span>
-			</a>
-			${build_navigation(markdown_pages, page_data).html()}
-		</nav>
-		<a class="ls_sidenav_trigger ls_btn" ls_variant="fab" ls_data_target="main_nav"
-			aria-role="menu" aria-label="Menu" aria-description="Open the navigation menu.">
-			☰
-		</a>
-		<div class="ls_sidenav_darkened" ls_data_target="main_nav"></div>
+		<div>
+			<input type="checkbox" id="main_nav_trigger" class="ls_sidenav_internal_trigger" aria-hidden="true">
+			<nav id="main_nav" class="ls_sidenav">
+				<a class="ls_nav_banner" href="${relativize_from_root(page_data.path)}">
+					<img class="mod_icon" src="${relativize_from_root(page_data.path)}icon.png" alt="Aurora's Decorations Icon">
+					<span>Aurora's Decorations</span>
+				</a>
+				${build_navigation(markdown_pages, page_data).html()}
+			</nav>
+			<label for="main_nav_trigger" class="ls_sidenav_trigger ls_btn" ls_variant="fab"
+				aria-role="menu" aria-label="Menu" aria-description="Open the navigation menu.">
+				☰
+			</label>
+			<label for="main_nav_trigger" class="ls_sidenav_darkened"></label>
+		</div>
 		<div class="wiki_content ls_sidenav_neighbor">
 			<main>
 				<article>
@@ -218,7 +221,6 @@ async function deploy_markdown(markdown_pages, page_data) {
 			</footer>
 		</div>
 
-		<script src="https://lambdaurora.dev/script.mjs"></script>
 		<script src="${relativize_from_root(page_data.path)}script.js"></script>
 	</body>
 </html>
