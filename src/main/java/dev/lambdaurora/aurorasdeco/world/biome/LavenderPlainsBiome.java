@@ -55,8 +55,6 @@ public final class LavenderPlainsBiome extends AurorasDecoBiome {
 
 	@Override
 	public void init() {
-		this.addStructure(new Identifier("mineshaft"));
-		this.addStructure(new Identifier("ruined_portal"));
 	}
 
 	@Override

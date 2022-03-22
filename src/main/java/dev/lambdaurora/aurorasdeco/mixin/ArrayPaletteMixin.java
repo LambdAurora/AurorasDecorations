@@ -17,36 +17,37 @@
 
 package dev.lambdaurora.aurorasdeco.mixin;
 
-import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPackCreator;
-import net.fabricmc.fabric.impl.resource.loader.ModResourcePackCreator;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.resource.pack.ResourcePackProfile;
+import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.collection.IndexedIterable;
+import net.minecraft.world.chunk.palette.ArrayPalette;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.function.Consumer;
-
-/**
- * This is cursed, don't look, don't even think about it.
- * <p>
- * It's just me not having actually worked on the virtual resource pack API in Fabric API so I have to do stupid stuff like this.
- */
-@Mixin(ModResourcePackCreator.class)
-public class ModResourcePackCreatorMixin {
-	@Shadow(remap = false)
+@Mixin(ArrayPalette.class)
+public abstract class ArrayPaletteMixin<T> {
+	@Shadow
 	@Final
-	private ResourceType type;
+	private T[] array;
 
-	@Inject(
-			method = "register(Ljava/util/function/Consumer;Lnet/minecraft/resource/pack/ResourcePackProfile$Factory;)V",
-			at = @At("RETURN")
-	)
-	private void onRegister(Consumer<ResourcePackProfile> consumer, ResourcePackProfile.Factory factory, CallbackInfo ci) {
-		if (this.type == ResourceType.SERVER_DATA)
-			new AurorasDecoPackCreator().register(consumer, factory);
+	@Shadow
+	public abstract T getEntry(int id);
+
+	@Shadow
+	@Final
+	private IndexedIterable<T> idList;
+
+	@Inject(method = "write", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/IndexedIterable;getRawId(Ljava/lang/Object;)I"),
+			locals = LocalCapture.CAPTURE_FAILHARD)
+	private void onWrite(PacketByteBuf buf, CallbackInfo ci, int i) {
+		var obj = this.array[i];
+		if (this.idList.getRawId(obj) == -1) {
+			AurorasDeco.error("Detected invalid ID!!! {} {} {}", this.idList.getRawId(obj), obj, obj.getClass().getSimpleName());
+		}
 	}
 }

@@ -72,7 +72,7 @@ public class RestModelManager {
 		var benchRestId = AurorasDeco.id("blockstates/bench/" + pathName + "_rest.json");
 		if (benchBlock != Blocks.AIR) {
 			try {
-				var resource = resourceManager.getResource(benchRestId);
+				var resource = resourceManager.method_14486(benchRestId);
 
 				var stateFactory = deserializationContext.getStateFactory();
 				deserializationContext.setStateFactory(benchBlock.getStateManager());

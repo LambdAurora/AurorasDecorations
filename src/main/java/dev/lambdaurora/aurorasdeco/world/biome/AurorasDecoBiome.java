@@ -19,16 +19,12 @@ package dev.lambdaurora.aurorasdeco.world.biome;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.mixin.world.OverworldBiomeCreatorAccessor;
-import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.minecraft.sound.MusicSound;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.biome.SpawnSettings;
-import net.minecraft.world.gen.feature.ConfiguredStructureFeature;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -95,14 +91,6 @@ public abstract class AurorasDecoBiome {
 
 	protected void addBasicFeatures(GenerationSettings.Builder generationSettings) {
 		OverworldBiomeCreatorAccessor.invokeAddBasicFeatures(generationSettings);
-	}
-
-	protected void addStructure(Identifier key) {
-		this.addStructure(RegistryKey.of(Registry.CONFIGURED_STRUCTURE_FEATURE_KEY, key));
-	}
-
-	protected void addStructure(RegistryKey<ConfiguredStructureFeature<?, ?>> key) {
-		BiomeModifications.addStructure(BiomeSelectors.includeByKey(this.getKey()), key);
 	}
 
 	protected static RegistryKey<Biome> key(String name) {

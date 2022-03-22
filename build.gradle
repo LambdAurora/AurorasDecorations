@@ -1,10 +1,10 @@
 plugins {
-	id 'fabric-loom' version '0.10.+'
-	id 'io.github.juuxel.loom-quiltflower-mini' version '1.2.1'
-	id 'org.quiltmc.quilt-mappings-on-loom' version '3.1.2'
+	id 'fabric-loom' version '0.11.+'
+	id 'io.github.juuxel.loom-quiltflower' version '1.6.1'
+	id 'org.quiltmc.quilt-mappings-on-loom' version '4.0.0'
 	id 'java-library'
 	id 'maven-publish'
-	id 'org.cadixdev.licenser' version '0.6.1'
+	id 'org.quiltmc.gradle.licenser' version '1.1.+'
 }
 
 group = project.maven_group
@@ -71,7 +71,7 @@ dependencies {
 		exclude group: 'net.fabricmc'
 		//exclude group: 'net.fabricmc.fabric-api', module: 'fabric-blockrenderlayer-v1'
 	}
-	include(modImplementation("com.terraformersmc.terraform-api:terraform-wood-api-v1:2.0.2") {
+	include(modImplementation("com.terraformersmc.terraform-api:terraform-wood-api-v1:3.0.0") {
 		exclude group: 'net.fabricmc'
 		exclude group: 'net.fabricmc.fabric-api'
 	})
@@ -80,8 +80,9 @@ dependencies {
 		exclude group: 'net.fabricmc.fabric-api'
 	}
 
-	include(modImplementation("org.quiltmc.qsl.core:qsl_base:${project.quilt_base_version}"))
-	include(modImplementation("org.quiltmc.qsl.block:block_extensions:${project.quilt_block_extensions_version}"))
+	include(modImplementation("org.quiltmc.qsl.core:qsl_base:${project.quilt_base_version}+${project.minecraft_version}-SNAPSHOT"))
+	include(modImplementation("org.quiltmc.qsl.block:block_extensions:${project.quilt_block_extensions_version}+${project.minecraft_version}-SNAPSHOT"))
+	include(modImplementation("org.quiltmc.qsl.gui:tooltip:1.0.0+${project.minecraft_version}-SNAPSHOT"))
 }
 
 java {
@@ -113,7 +114,7 @@ jar {
 }
 
 license {
-	header file('HEADER')
+	rule file('HEADER')
 	include '**/*.java'
 }
 

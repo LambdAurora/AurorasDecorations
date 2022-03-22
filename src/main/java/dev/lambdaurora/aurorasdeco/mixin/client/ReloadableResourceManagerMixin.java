@@ -18,45 +18,41 @@
 package dev.lambdaurora.aurorasdeco.mixin.client;
 
 import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
-import net.minecraft.resource.ReloadableResourceManagerImpl;
-import net.minecraft.resource.ResourcePack;
-import net.minecraft.resource.ResourceReload;
+import net.minecraft.resource.MultiPackResourceManager;
+import net.minecraft.resource.ReloadableResourceManager;
 import net.minecraft.resource.ResourceType;
-import net.minecraft.util.Unit;
+import net.minecraft.resource.pack.ResourcePack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
+import java.util.stream.Stream;
 
-@Mixin(ReloadableResourceManagerImpl.class)
-public abstract class ReloadableResourceManagerImplMixin {
+@Mixin(ReloadableResourceManager.class)
+public abstract class ReloadableResourceManagerMixin {
 	@Shadow
 	@Final
 	private ResourceType type;
 
-	@Shadow
-	public abstract void addPack(ResourcePack resourcePack);
-
-	@Inject(
+	@ModifyArg(
 			method = "reload",
 			at = @At(
 					value = "INVOKE",
-					target = "Lnet/minecraft/resource/ReloadableResourceManagerImpl;clear()V",
-					shift = At.Shift.AFTER
-			)
+					target = "Lnet/minecraft/resource/MultiPackResourceManager;<init>(Lnet/minecraft/resource/ResourceType;Ljava/util/List;)V"
+			),
+			index = 1
 	)
-	private void onBeginMonitoredReload(Executor prepareExecutor, Executor applyExecutor, CompletableFuture<Unit> initialStage,
-	                                    List<ResourcePack> packs, CallbackInfoReturnable<ResourceReload> cir) {
+	private List<ResourcePack> onBeginMonitoredReload(List<ResourcePack> packs) {
 		if (this.type == ResourceType.CLIENT_RESOURCES) {
-			var mirror = new ReloadableResourceManagerImpl(ResourceType.CLIENT_RESOURCES);
-			packs.forEach(mirror::addPack);
-			this.addPack(AurorasDecoClient.RESOURCE_PACK.rebuild(this.type, mirror));
+			packs = new ArrayList<>(packs);
+			var mirror = new MultiPackResourceManager(ResourceType.CLIENT_RESOURCES, packs);
+			packs.add(0, AurorasDecoClient.RESOURCE_PACK.rebuild(this.type, mirror));
 		}
+
+		return packs;
 	}
 }

@@ -42,7 +42,7 @@ public class PistonBlockEntityMixin {
 			)
 	)
 	private static void onTick(World world, BlockPos pos, BlockState state, PistonBlockEntity blockEntity, CallbackInfo ci) {
-		if (blockEntity.getPushedBlock().getBlock() instanceof SeatBlock) {
+		if (blockEntity.getMovedBlockState().getBlock() instanceof SeatBlock) {
 			// Please help me
 			world.getEntitiesByClass(SeatEntity.class, new Box(pos), Entity::hasPassengers).forEach(seat -> seat.setTimeout(false));
 		}

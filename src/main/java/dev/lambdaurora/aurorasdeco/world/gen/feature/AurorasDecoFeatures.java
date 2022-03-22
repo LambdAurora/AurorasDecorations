@@ -19,7 +19,11 @@ package dev.lambdaurora.aurorasdeco.world.gen.feature;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.world.gen.feature.config.FallenTreeFeatureConfig;
+import net.minecraft.util.Holder;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.FeatureConfig;
 
@@ -32,5 +36,11 @@ public final class AurorasDecoFeatures {
 
 	private static <C extends FeatureConfig, F extends Feature<C>> F register(String name, F feature) {
 		return Registry.register(Registry.FEATURE, AurorasDeco.id(name), feature);
+	}
+
+	@SuppressWarnings("unchecked")
+	static <FC extends FeatureConfig, F extends Feature<FC>> Holder<ConfiguredFeature<FC, ?>> register(Identifier id, F feature, FC featureConfig) {
+		return (Holder<ConfiguredFeature<FC, ?>>) (Object) BuiltinRegistries
+				.register(BuiltinRegistries.CONFIGURED_FEATURE, id, new ConfiguredFeature<>(feature, featureConfig));
 	}
 }

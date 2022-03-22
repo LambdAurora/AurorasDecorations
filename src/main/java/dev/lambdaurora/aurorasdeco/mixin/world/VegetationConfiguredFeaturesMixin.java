@@ -30,7 +30,11 @@ import java.util.List;
 
 @Mixin(VegetationConfiguredFeatures.class)
 public class VegetationConfiguredFeaturesMixin {
-	@ModifyArg(method = "method_39726", at = @At(value = "INVOKE", target = "Ljava/util/List;of([Ljava/lang/Object;)Ljava/util/List;"), remap = false)
+	@ModifyArg(
+			method = "<clinit>",
+			at = @At(value = "INVOKE", target = "Ljava/util/List;of([Ljava/lang/Object;)Ljava/util/List;", ordinal = 0),
+			remap = false
+	)
 	private static Object[] onCreateFlowerForestFlowerList(Object[] states) {
 		var newStates = Arrays.copyOf((BlockState[]) states, states.length + AurorasDecoPlants.FLOWER_FOREST_PLANTS.size());
 		for (int i = 0; i < AurorasDecoPlants.FLOWER_FOREST_PLANTS.size(); i++) {
@@ -40,10 +44,11 @@ public class VegetationConfiguredFeaturesMixin {
 	}
 
 	@ModifyArg(
-			method = "method_39723",
+			method = "<clinit>",
 			at = @At(
 					value = "INVOKE",
 					target = "Lnet/minecraft/world/gen/stateprovider/DualNoiseBlockStateProvider;<init>(Lnet/minecraft/util/math/Range;Lnet/minecraft/util/math/noise/DoublePerlinNoiseSampler$NoiseParameters;FJLnet/minecraft/util/math/noise/DoublePerlinNoiseSampler$NoiseParameters;FLjava/util/List;)V",
+					ordinal = 0,
 					remap = true
 			),
 			index = 6,

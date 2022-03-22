@@ -3,6 +3,8 @@
   "package": "dev.lambdaurora.aurorasdeco.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ArrayPaletteMixin",
+    "HolderReferenceMixin",
     "ModResourcePackCreatorMixin",
     "PointOfInterestTypeAccessor",
     "PointOfInterestTypeMixin",
@@ -10,6 +12,8 @@
     "ServerAdvancementLoaderMixin",
     "SimpleRegistryAccessor",
     "SpawnHelperMixin",
+    "StateIdTrackerAccessor",
+    "StateIdTrackerMixin",
     "StateManagerBuilderAccessor",
     "block.AbstractBlockAccessor",
     "block.BedBlockMixin",
@@ -59,7 +63,7 @@
     "client.MobEntityRendererAccessor",
     "client.ModelLoaderMixin",
     "client.NativeImageAccessor",
-    "client.ReloadableResourceManagerImplMixin"
+    "client.ReloadableResourceManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

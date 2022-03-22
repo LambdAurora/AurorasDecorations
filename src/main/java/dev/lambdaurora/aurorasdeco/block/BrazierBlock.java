@@ -226,10 +226,10 @@ public class BrazierBlock extends Block implements Waterloggable {
 	}
 
 	public static boolean canBeLit(BlockState state) {
-		return state.isIn(AurorasDecoTags.BRAZIERS, s -> s.contains(LIT) && !state.get(LIT));
+		return state.isInAndMatches(AurorasDecoTags.BRAZIERS, s -> s.contains(LIT) && !state.get(LIT));
 	}
 
 	public static boolean canBeUnlit(BlockState state) {
-		return state.isIn(AurorasDecoTags.BRAZIERS, s -> s.contains(LIT) && state.get(LIT));
+		return state.isInAndMatches(AurorasDecoTags.BRAZIERS, s -> s.contains(LIT) && state.get(LIT));
 	}
 }

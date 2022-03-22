@@ -18,10 +18,10 @@
 package dev.lambdaurora.aurorasdeco.resource;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import net.minecraft.resource.ResourcePackProfile;
-import net.minecraft.resource.ResourcePackProvider;
-import net.minecraft.resource.ResourcePackSource;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.resource.pack.ResourcePackProfile;
+import net.minecraft.resource.pack.ResourcePackProvider;
+import net.minecraft.resource.pack.ResourcePackSource;
 
 import java.util.function.Consumer;
 

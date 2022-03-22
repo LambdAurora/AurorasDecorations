@@ -47,6 +47,7 @@ public class AurorasDeco implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		log("Aurora's Decorations is initialized, but it's way too late. Sadly Fabric API doesn't support proper initialization.");
 		AurorasDecoRegistry.init();
 
 		RegistrationHelper.ITEM.addRegistrationCallback((helper, id, object) -> {

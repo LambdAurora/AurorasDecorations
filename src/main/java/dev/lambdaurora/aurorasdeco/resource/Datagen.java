@@ -35,7 +35,6 @@ import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import dev.lambdaurora.aurorasdeco.resource.datagen.*;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.util.ColorUtil;
-import net.fabricmc.fabric.api.tag.TagFactory;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockWithEntity;
@@ -52,6 +51,7 @@ import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.recipe.ShapelessRecipe;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
@@ -397,7 +397,8 @@ public final class Datagen {
 				var planksId = planks.getItemId();
 				registerRecipe(new WoodcuttingRecipe(AuroraUtil.appendWithNamespace("woodcutting", planksId),
 								"planks",
-								Ingredient.fromTag(TagFactory.ITEM.create(
+								Ingredient.ofTag(TagKey.of(
+										Registry.ITEM_KEY,
 										new Identifier(log.id().getNamespace(), log.id().getPath() + "s")
 								)),
 								new ItemStack(planks.item(), 4)),
@@ -673,7 +674,7 @@ public final class Datagen {
 
 	private static void generateDirectionalSignsClientData(ResourceManager resourceManager, LangBuilder langBuilder) {
 		NativeImage oakTexture = null;
-		try (var resource = resourceManager.getResource(SignPostItem.ABSOLUTE_OAK_SIGN_POST_TEXTURE)) {
+		try (var resource = resourceManager.method_14486(SignPostItem.ABSOLUTE_OAK_SIGN_POST_TEXTURE)) {
 			oakTexture = NativeImage.read(resource.getInputStream());
 		} catch (IOException e) {
 			LOGGER.error("Cannot read the default texture of the directional sign.", e);
@@ -699,7 +700,7 @@ public final class Datagen {
 
 			var planksTextureId = planks.texture();
 			var texturePath = new Identifier(planksTextureId.getNamespace(), "textures/" + planksTextureId.getPath() + ".png");
-			try (var resource = resourceManager.getResource(texturePath)) {
+			try (var resource = resourceManager.method_14486(texturePath)) {
 				var image = NativeImage.read(resource.getInputStream());
 
 				var woodPalette = ColorUtil.getPaletteFromImage(image, 8);

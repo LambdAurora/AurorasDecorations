@@ -19,7 +19,8 @@ package dev.lambdaurora.aurorasdeco.world.gen.feature;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
-import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
+import net.minecraft.util.Holder;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
@@ -27,6 +28,7 @@ import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.PlacedFeature;
+import net.minecraft.world.gen.feature.PlacementModifier;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,11 +44,13 @@ public class PlacedFeatureMetadata {
 	private final List<Biome.Category> allowedCategories = new ArrayList<>();
 	private final List<Biome.Precipitation> allowedPrecipitations = new ArrayList<>();
 	private final List<RegistryKey<ConfiguredFeature<?, ?>>> allowedNeighborFeatures = new ArrayList<>();
-	private Tag<Biome> allowedTag;
+	private TagKey<Biome> allowedTag;
 
-	public PlacedFeatureMetadata(RegistryKey<PlacedFeature> key, PlacedFeature feature) {
-		this.key = key;
-		this.feature = feature;
+	public PlacedFeatureMetadata(Identifier key,
+	                             Holder<? extends ConfiguredFeature<?, ?>> configuredFeature,
+	                             List<PlacementModifier> modifiers) {
+		this.key = RegistryKey.of(Registry.PLACED_FEATURE_KEY, key);
+		this.feature = new PlacedFeature(Holder.upcast(configuredFeature), List.copyOf(modifiers));
 	}
 
 	public RegistryKey<PlacedFeature> getKey() {
@@ -114,7 +118,7 @@ public class PlacedFeatureMetadata {
 		};
 	}
 
-	public PlacedFeatureMetadata setAllowedTag(Tag<Biome> tag) {
+	public PlacedFeatureMetadata setAllowedTag(TagKey<Biome> tag) {
 		this.allowedTag = tag;
 		return this;
 	}

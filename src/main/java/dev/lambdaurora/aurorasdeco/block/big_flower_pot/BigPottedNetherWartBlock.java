@@ -17,10 +17,10 @@
 
 package dev.lambdaurora.aurorasdeco.block.big_flower_pot;
 
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.NetherWartBlock;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.HoeItem;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -61,7 +61,7 @@ public class BigPottedNetherWartBlock extends BigPottedProxyBlock {
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 		var handStack = player.getStackInHand(hand);
-		if ((handStack.isEmpty() || handStack.isIn(FabricToolTags.HOES)) && state.get(NetherWartBlock.AGE) >= 3) {
+		if ((handStack.isEmpty() || handStack.getItem() instanceof HoeItem) && state.get(NetherWartBlock.AGE) >= 3) {
 			dropStacks(this.getPlantState(state), world, pos, null, player, handStack);
 			world.setBlockState(pos, state.with(NetherWartBlock.AGE, 0), NOTIFY_ALL);
 			world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos);

@@ -17,20 +17,25 @@
 
 package dev.lambdaurora.aurorasdeco.mixin;
 
+import net.minecraft.item.BlockItem;
 import net.minecraft.util.Holder;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.SimpleRegistry;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Map;
+@Mixin(Holder.Reference.class)
+public abstract class HolderReferenceMixin<T> {
+	@Shadow
+	public abstract T value();
 
-@Mixin(SimpleRegistry.class)
-public interface SimpleRegistryAccessor<T> {
-	@Accessor
-	Map<Identifier, Holder.Reference<T>> getById();
+	@Inject(method = "toString", at = @At("RETURN"), cancellable = true)
+	private void onToString(CallbackInfoReturnable<String> cir) {
+		cir.setReturnValue(cir.getReturnValue() + " " + this.value().getClass().getSimpleName());
 
-	@Accessor
-	@Nullable Map<T, Holder.Reference<T>> getIntrusiveHolderCache();
+		if (this.value() instanceof BlockItem blockItem) {
+			cir.setReturnValue(cir.getReturnValue() + " " + blockItem.getBlock() + " " + blockItem.getBlock().getClass().getSimpleName());
+		}
+	}
 }

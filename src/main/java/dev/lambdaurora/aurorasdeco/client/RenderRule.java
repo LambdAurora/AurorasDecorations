@@ -22,7 +22,6 @@ import com.google.gson.JsonParser;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -31,7 +30,7 @@ import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.resource.ResourceManager;
-import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
@@ -59,7 +58,7 @@ import java.util.function.Consumer;
 public record RenderRule(List<Model> models) {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final Map<Identifier, RenderRule> ITEM_RULES = new Object2ObjectOpenHashMap<>();
-	private static final Map<Tag<Item>, RenderRule> TAG_RULES = new Object2ObjectOpenHashMap<>();
+	private static final Map<TagKey<Item>, RenderRule> TAG_RULES = new Object2ObjectOpenHashMap<>();
 
 	public @Nullable Model getModelId(ItemStack stack, BlockState state, long seed) {
 		if (this.models.size() == 1) {
@@ -124,7 +123,7 @@ public record RenderRule(List<Model> models) {
 
 		manager.findResources("aurorasdeco_render_rules", path -> path.endsWith(".json")).forEach(id -> {
 			try {
-				var resource = manager.getResource(id);
+				var resource = manager.method_14486(id);
 				var element = JsonParser.parseReader(new InputStreamReader(resource.getInputStream()));
 				if (element.isJsonObject()) {
 					var root = element.getAsJsonObject();
@@ -155,8 +154,7 @@ public record RenderRule(List<Model> models) {
 						success = true;
 					} else if (match.has("tag")) {
 						var tagId = Identifier.tryParse(match.get("tag").getAsString());
-						var tag = TagFactory.ITEM.create(tagId);
-						TAG_RULES.put(tag, renderRule);
+						TAG_RULES.put(TagKey.of(Registry.ITEM_KEY, tagId), renderRule);
 						success = true;
 					}
 
@@ -169,7 +167,7 @@ public record RenderRule(List<Model> models) {
 		});
 	}
 
-	public record Model(ModelIdentifier modelId, @Nullable Block restrictedBlock, @Nullable Tag<Block> restrictedBlockTag) {
+	public record Model(ModelIdentifier modelId, @Nullable Block restrictedBlock, @Nullable TagKey<Block> restrictedBlockTag) {
 		public ModelIdentifier getModelId() {
 			return this.modelId;
 		}
@@ -212,7 +210,7 @@ public record RenderRule(List<Model> models) {
 			}
 
 			Block restrictedBlock = null;
-			Tag<Block> restrictedBlockTag = null;
+			TagKey<Block> restrictedBlockTag = null;
 			if (object.has("restrict_to")) {
 				var restrict = object.getAsJsonObject("restrict_to");
 				if (restrict.has("block")) {
@@ -227,7 +225,7 @@ public record RenderRule(List<Model> models) {
 					if (blockId == null) {
 						LOGGER.error("Failed to parse tag identifier in render rule {}.", manifest);
 					} else {
-						restrictedBlockTag = TagFactory.BLOCK.create(blockId);
+						restrictedBlockTag = TagKey.of(Registry.BLOCK_KEY, blockId);
 					}
 				}
 			}

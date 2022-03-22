@@ -41,23 +41,23 @@ public abstract class OverworldBiomeParametersMixin {
 
 	@Shadow
 	@Final
-	private MultiNoiseUtil.ParameterRange coastContinentalness;
+	private MultiNoiseUtil.ParameterRange COAST_CONTINENTALNESS;
 
 	@Shadow
 	@Final
-	private MultiNoiseUtil.ParameterRange farInlandContinentalness;
+	private MultiNoiseUtil.ParameterRange FAR_INLAND_CONTINENTALNESS;
 
 	@Shadow
 	@Final
-	private MultiNoiseUtil.ParameterRange nearInlandContinentalness;
+	private MultiNoiseUtil.ParameterRange NEAR_INLAND_CONTINENTALNESS;
 
 	@Shadow
 	@Final
-	private MultiNoiseUtil.ParameterRange[] erosions;
+	private MultiNoiseUtil.ParameterRange[] EROSIONS;
 
 	@Shadow
 	@Final
-	private MultiNoiseUtil.ParameterRange midInlandContinentalness;
+	private MultiNoiseUtil.ParameterRange MID_INLAND_CONTINENTALNESS;
 
 	@Inject(
 			method = "addPeaksTo",
@@ -74,24 +74,24 @@ public abstract class OverworldBiomeParametersMixin {
 		if (temperatureIndex == 2 && humidityIndex == 0) {
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
-					MultiNoiseUtil.ParameterRange.combine(this.coastContinentalness, this.nearInlandContinentalness),
-					MultiNoiseUtil.ParameterRange.combine(this.erosions[2], this.erosions[3]),
+					MultiNoiseUtil.ParameterRange.combine(this.COAST_CONTINENTALNESS, this.NEAR_INLAND_CONTINENTALNESS),
+					MultiNoiseUtil.ParameterRange.combine(this.EROSIONS[2], this.EROSIONS[3]),
 					weirdness,
 					0.f,
 					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
 			);
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
-					MultiNoiseUtil.ParameterRange.combine(this.coastContinentalness, this.farInlandContinentalness),
-					this.erosions[4],
+					MultiNoiseUtil.ParameterRange.combine(this.COAST_CONTINENTALNESS, this.FAR_INLAND_CONTINENTALNESS),
+					this.EROSIONS[4],
 					weirdness,
 					0.f,
 					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
 			);
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
-					MultiNoiseUtil.ParameterRange.combine(this.coastContinentalness, this.farInlandContinentalness),
-					this.erosions[6],
+					MultiNoiseUtil.ParameterRange.combine(this.COAST_CONTINENTALNESS, this.FAR_INLAND_CONTINENTALNESS),
+					this.EROSIONS[6],
 					weirdness,
 					0.f,
 					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
@@ -114,24 +114,24 @@ public abstract class OverworldBiomeParametersMixin {
 		if (temperatureIndex == 2 && humidityIndex == 0) {
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
-					this.coastContinentalness,
-					MultiNoiseUtil.ParameterRange.combine(this.erosions[0], this.erosions[1]),
+					this.COAST_CONTINENTALNESS,
+					MultiNoiseUtil.ParameterRange.combine(this.EROSIONS[0], this.EROSIONS[1]),
 					weirdness,
 					0.f,
 					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
 			);
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
-					MultiNoiseUtil.ParameterRange.combine(this.coastContinentalness, this.nearInlandContinentalness),
-					MultiNoiseUtil.ParameterRange.combine(this.erosions[2], this.erosions[3]),
+					MultiNoiseUtil.ParameterRange.combine(this.COAST_CONTINENTALNESS, this.NEAR_INLAND_CONTINENTALNESS),
+					MultiNoiseUtil.ParameterRange.combine(this.EROSIONS[2], this.EROSIONS[3]),
 					weirdness,
 					0.f,
 					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
 			);
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
-					MultiNoiseUtil.ParameterRange.combine(this.coastContinentalness, this.farInlandContinentalness),
-					this.erosions[4],
+					MultiNoiseUtil.ParameterRange.combine(this.COAST_CONTINENTALNESS, this.FAR_INLAND_CONTINENTALNESS),
+					this.EROSIONS[4],
 					weirdness,
 					0.f,
 					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
@@ -154,13 +154,13 @@ public abstract class OverworldBiomeParametersMixin {
 		if (temperatureIndex == 2 && humidityIndex == 0) {
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
-					this.nearInlandContinentalness, this.erosions[2], weirdness, 0.f,
+					this.NEAR_INLAND_CONTINENTALNESS, this.EROSIONS[2], weirdness, 0.f,
 					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
 			);
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
-					MultiNoiseUtil.ParameterRange.combine(this.coastContinentalness, this.nearInlandContinentalness),
-					this.erosions[3],
+					MultiNoiseUtil.ParameterRange.combine(this.COAST_CONTINENTALNESS, this.NEAR_INLAND_CONTINENTALNESS),
+					this.EROSIONS[3],
 					weirdness,
 					0.f,
 					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
@@ -169,8 +169,8 @@ public abstract class OverworldBiomeParametersMixin {
 			if (weirdness.max() < 0L) {
 				this.addSurfaceBiomeTo(
 						parameters, temperature, humidity,
-						MultiNoiseUtil.ParameterRange.combine(this.nearInlandContinentalness, this.farInlandContinentalness),
-						this.erosions[4],
+						MultiNoiseUtil.ParameterRange.combine(this.NEAR_INLAND_CONTINENTALNESS, this.FAR_INLAND_CONTINENTALNESS),
+						this.EROSIONS[4],
 						weirdness,
 						0.f,
 						AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
@@ -178,15 +178,15 @@ public abstract class OverworldBiomeParametersMixin {
 			} else {
 				this.addSurfaceBiomeTo(
 						parameters, temperature, humidity,
-						MultiNoiseUtil.ParameterRange.combine(this.coastContinentalness, this.farInlandContinentalness),
-						this.erosions[4],
+						MultiNoiseUtil.ParameterRange.combine(this.COAST_CONTINENTALNESS, this.FAR_INLAND_CONTINENTALNESS),
+						this.EROSIONS[4],
 						weirdness,
 						0.f,
 						AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
 				);
 				this.addSurfaceBiomeTo(
 						parameters, temperature, humidity,
-						this.coastContinentalness, this.erosions[6], weirdness, 0.f,
+						this.COAST_CONTINENTALNESS, this.EROSIONS[6], weirdness, 0.f,
 						AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
 				);
 			}
@@ -208,24 +208,24 @@ public abstract class OverworldBiomeParametersMixin {
 		if (temperatureIndex == 2 && humidityIndex == 0) {
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
-					this.nearInlandContinentalness,
-					MultiNoiseUtil.ParameterRange.combine(this.erosions[2], this.erosions[3]),
+					this.NEAR_INLAND_CONTINENTALNESS,
+					MultiNoiseUtil.ParameterRange.combine(this.EROSIONS[2], this.EROSIONS[3]),
 					weirdness,
 					0.f,
 					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
 			);
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
-					MultiNoiseUtil.ParameterRange.combine(this.nearInlandContinentalness, this.farInlandContinentalness),
-					this.erosions[4],
+					MultiNoiseUtil.ParameterRange.combine(this.NEAR_INLAND_CONTINENTALNESS, this.FAR_INLAND_CONTINENTALNESS),
+					this.EROSIONS[4],
 					weirdness,
 					0.f,
 					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
 			);
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
-					MultiNoiseUtil.ParameterRange.combine(this.midInlandContinentalness, this.farInlandContinentalness),
-					this.erosions[5],
+					MultiNoiseUtil.ParameterRange.combine(this.MID_INLAND_CONTINENTALNESS, this.FAR_INLAND_CONTINENTALNESS),
+					this.EROSIONS[5],
 					weirdness,
 					0.f,
 					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()

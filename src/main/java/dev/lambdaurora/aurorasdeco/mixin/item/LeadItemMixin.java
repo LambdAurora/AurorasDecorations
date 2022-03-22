@@ -18,7 +18,7 @@
 package dev.lambdaurora.aurorasdeco.mixin.item;
 
 import dev.lambdaurora.aurorasdeco.entity.FakeLeashKnotEntity;
-import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoEntities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.LeadItem;
@@ -63,7 +63,7 @@ public abstract class LeadItemMixin {
 		if (result == ActionResult.PASS) {
 			var stack = this.aurorasdeco$usageCtx.get().getStack();
 
-			var knot = new FakeLeashKnotEntity(AurorasDecoRegistry.FAKE_LEASH_KNOT_ENTITY_TYPE, world);
+			var knot = new FakeLeashKnotEntity(AurorasDecoEntities.FAKE_LEASH_KNOT_ENTITY_TYPE, world);
 			knot.setPosition(pos.getX() + 0.5, pos.getY() + 0.5 - 1F / 8F, pos.getZ() + 0.5);
 			world.spawnEntity(knot);
 			knot.attachLeash(player, true);

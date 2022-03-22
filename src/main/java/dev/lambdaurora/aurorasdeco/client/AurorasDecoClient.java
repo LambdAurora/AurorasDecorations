@@ -34,7 +34,6 @@ import dev.lambdaurora.aurorasdeco.client.screen.ShelfScreen;
 import dev.lambdaurora.aurorasdeco.hook.TrinketsHooks;
 import dev.lambdaurora.aurorasdeco.registry.*;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
-import dev.lambdaurora.aurorasdeco.tooltip.ConvertibleTooltipData;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -44,12 +43,12 @@ import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
-import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.TallPlantBlock;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.color.world.FoliageColors;
 import net.minecraft.client.color.world.GrassColors;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.particle.LavaEmberParticle;
 import net.minecraft.client.render.RenderLayer;
@@ -58,7 +57,6 @@ import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.quiltmc.qsl.block.extensions.api.client.BlockRenderLayerMap;
 
 import static dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry.*;
@@ -141,9 +139,9 @@ public class AurorasDecoClient implements ClientModInitializer {
 		this.registerBlackboardItemRenderer(WAXED_CHALKBOARD_BLOCK);
 		this.registerBlackboardItemRenderer(WAXED_GLASSBOARD_BLOCK);
 
-		ScreenRegistry.register(COPPER_HOPPER_SCREEN_HANDLER_TYPE, CopperHopperScreen::new);
-		ScreenRegistry.register(SAWMILL_SCREEN_HANDLER_TYPE, SawmillScreen::new);
-		ScreenRegistry.register(SHELF_SCREEN_HANDLER_TYPE, ShelfScreen::new);
+		HandledScreens.register(COPPER_HOPPER_SCREEN_HANDLER_TYPE, CopperHopperScreen::new);
+		HandledScreens.register(SAWMILL_SCREEN_HANDLER_TYPE, SawmillScreen::new);
+		HandledScreens.register(SHELF_SCREEN_HANDLER_TYPE, ShelfScreen::new);
 
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) ->
 						world != null && pos != null
@@ -155,14 +153,6 @@ public class AurorasDecoClient implements ClientModInitializer {
 
 		ModelLoadingRegistry.INSTANCE.registerModelProvider(RenderRule::reload);
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(resourceManager -> new BakedSignPostModel.Provider());
-
-		TooltipComponentCallback.EVENT.register(data -> {
-			if (data instanceof ConvertibleTooltipData convertible) {
-				return convertible.toComponent();
-			}
-
-			return null;
-		});
 
 		TrinketsHooks.init(
 				BLACKBOARD_BLOCK.asItem(), WAXED_BLACKBOARD_BLOCK.asItem(),
@@ -185,9 +175,9 @@ public class AurorasDecoClient implements ClientModInitializer {
 	}
 
 	private void initEntityRenderers() {
-		EntityRendererRegistry.register(AurorasDecoRegistry.FAKE_LEASH_KNOT_ENTITY_TYPE,
+		EntityRendererRegistry.register(AurorasDecoEntities.FAKE_LEASH_KNOT_ENTITY_TYPE,
 				FakeLeashKnotEntityRenderer::new);
-		EntityRendererRegistry.register(AurorasDecoRegistry.SEAT_ENTITY_TYPE,
+		EntityRendererRegistry.register(AurorasDecoEntities.SEAT_ENTITY_TYPE,
 				SeatEntityRenderer::new);
 		TerraformBoatClientHelper.registerModelLayer(AurorasDeco.id("azalea"));
 		TerraformBoatClientHelper.registerModelLayer(AurorasDeco.id("jacaranda"));
@@ -221,7 +211,7 @@ public class AurorasDecoClient implements ClientModInitializer {
 	}
 
 	private void registerBlackboardItemRenderer(BlackboardBlock blackboard) {
-		var id = Registry.BLOCK.getId(blackboard);
+		var id = blackboard.getBuiltInRegistryHolder().getRegistryKey().getValue();
 		var modelId = new ModelIdentifier(new Identifier(id.getNamespace(), id.getPath() + "_base"),
 				"inventory");
 		BuiltinItemRendererRegistry.INSTANCE.register(blackboard, new BlackboardItemRenderer(modelId));

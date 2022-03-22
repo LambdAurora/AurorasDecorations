@@ -46,7 +46,7 @@ public class FallenTreeFeature extends Feature<FallenTreeFeatureConfig> {
 	}
 
 	@Override
-	public boolean generate(FeatureContext<FallenTreeFeatureConfig> context) {
+	public boolean place(FeatureContext<FallenTreeFeatureConfig> context) {
 		var config = context.getConfig();
 		var random = context.getRandom();
 

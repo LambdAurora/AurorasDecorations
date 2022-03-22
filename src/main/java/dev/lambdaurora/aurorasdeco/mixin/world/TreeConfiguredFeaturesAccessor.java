@@ -17,6 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.mixin.world;
 
+import net.minecraft.util.Holder;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.TreeConfiguredFeatures;
 import net.minecraft.world.gen.feature.TreeFeatureConfig;
@@ -29,7 +30,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface TreeConfiguredFeaturesAccessor {
 	@Mutable
 	@Accessor("AZALEA_TREE")
-	static void setAzaleaTree(ConfiguredFeature<?, ?> feature) {
+	static void setAzaleaTree(Holder<ConfiguredFeature<?, ?>> feature) {
 		throw new IllegalStateException("Mixin injection failed");
 	}
 

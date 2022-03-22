@@ -41,19 +41,19 @@ public class CopperHopperScreenHandler extends ScreenHandler {
 	private final Slot filterSlot;
 
 	public CopperHopperScreenHandler(int syncId, PlayerInventory playerInventory) {
-		this(syncId, playerInventory, new SimpleInventory(HopperScreenHandler.SLOT_COUNT), new SimpleInventory(1));
+		this(syncId, playerInventory, new SimpleInventory(HopperScreenHandler.SLOTS_COUNT), new SimpleInventory(1));
 	}
 
 	public CopperHopperScreenHandler(int syncId, PlayerInventory playerInventory,
 	                                 Inventory hopperInventory, Inventory filterInventory) {
 		super(AurorasDecoRegistry.COPPER_HOPPER_SCREEN_HANDLER_TYPE, syncId);
 
-		checkSize(hopperInventory, HopperScreenHandler.SLOT_COUNT);
+		checkSize(hopperInventory, HopperScreenHandler.SLOTS_COUNT);
 		checkSize(filterInventory, 1);
 
 		// Hopper inventory
 		this.inventory = hopperInventory;
-		for (int slot = 0; slot < HopperScreenHandler.SLOT_COUNT; slot++) {
+		for (int slot = 0; slot < HopperScreenHandler.SLOTS_COUNT; slot++) {
 			this.addSlot(new FilteredSlot(this.inventory, slot, slot * 18 + 26, 20));
 		}
 		this.inventory.onOpen(playerInventory.player);

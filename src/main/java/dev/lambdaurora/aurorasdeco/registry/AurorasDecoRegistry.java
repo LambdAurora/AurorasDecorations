@@ -31,8 +31,6 @@ import dev.lambdaurora.aurorasdeco.advancement.PetUsePetBedCriterion;
 import dev.lambdaurora.aurorasdeco.block.*;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.*;
 import dev.lambdaurora.aurorasdeco.block.entity.*;
-import dev.lambdaurora.aurorasdeco.entity.FakeLeashKnotEntity;
-import dev.lambdaurora.aurorasdeco.entity.SeatEntity;
 import dev.lambdaurora.aurorasdeco.item.BlackboardItem;
 import dev.lambdaurora.aurorasdeco.item.DerivedBlockItem;
 import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
@@ -50,7 +48,6 @@ import dev.lambdaurora.aurorasdeco.util.RegistrationHelper;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.advancement.CriterionRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.OxidizableBlocksRegistry;
@@ -58,11 +55,7 @@ import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.*;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Recipe;
@@ -94,6 +87,8 @@ import static net.minecraft.stat.Stats.CUSTOM;
  * @since 1.0.0
  */
 public final class AurorasDecoRegistry {
+	private static boolean itemMapIsBroken = true;
+
 	private AurorasDecoRegistry() {
 		throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
 	}
@@ -542,38 +537,13 @@ public final class AurorasDecoRegistry {
 	/* Screen handlers */
 
 	public static final ScreenHandlerType<CopperHopperScreenHandler> COPPER_HOPPER_SCREEN_HANDLER_TYPE =
-			ScreenHandlerRegistry.registerSimple(id("copper_hopper"), CopperHopperScreenHandler::new);
+			Registry.register(Registry.SCREEN_HANDLER, id("copper_hopper"), new ScreenHandlerType<>(CopperHopperScreenHandler::new));
 
 	public static final ScreenHandlerType<SawmillScreenHandler> SAWMILL_SCREEN_HANDLER_TYPE =
-			ScreenHandlerRegistry.registerSimple(id("sawmill"), SawmillScreenHandler::new);
+			Registry.register(Registry.SCREEN_HANDLER, id("sawmill"), new ScreenHandlerType<>(SawmillScreenHandler::new));
 
 	public static final ScreenHandlerType<ShelfScreenHandler> SHELF_SCREEN_HANDLER_TYPE =
 			ScreenHandlerRegistry.registerExtended(id("shelf"), ShelfScreenHandler::new);
-
-	/* Entities */
-
-	public static final EntityType<FakeLeashKnotEntity> FAKE_LEASH_KNOT_ENTITY_TYPE = Registry.register(
-			Registry.ENTITY_TYPE,
-			id("fake_leash_knot"),
-			FabricEntityTypeBuilder.<FakeLeashKnotEntity>createMob()
-					.entityFactory(FakeLeashKnotEntity::new)
-					.dimensions(EntityDimensions.fixed(.375f, .5f))
-					.defaultAttributes(MobEntity::createMobAttributes)
-					.forceTrackedVelocityUpdates(false)
-					.trackRangeChunks(10)
-					.trackedUpdateRate(Integer.MAX_VALUE)
-					.build()
-	);
-	public static final EntityType<SeatEntity> SEAT_ENTITY_TYPE = Registry.register(
-			Registry.ENTITY_TYPE,
-			id("seat"),
-			FabricEntityTypeBuilder.create(SpawnGroup.MISC, SeatEntity::new)
-					.dimensions(EntityDimensions.fixed(0.f, 0.f))
-					.disableSaving()
-					.disableSummon()
-					.trackRangeChunks(10)
-					.build()
-	);
 
 	/* Stats */
 
@@ -657,7 +627,13 @@ public final class AurorasDecoRegistry {
 	}
 
 	private static <T extends Item> T registerItem(String name, T item) {
-		return Registry.register(Registry.ITEM, id(name), item);
+		var o = Registry.register(Registry.ITEM, id(name), item);
+
+		if (itemMapIsBroken && o instanceof BlockItem blockItem) {
+			blockItem.appendBlocks(Item.BLOCK_ITEMS, o);
+		}
+
+		return o;
 	}
 
 	private static <T extends BlockEntity> BlockEntityType<T> registerBlockEntity(String name,
@@ -687,6 +663,8 @@ public final class AurorasDecoRegistry {
 
 	@SuppressWarnings("unchecked")
 	public static void init() {
+		itemMapIsBroken = false;
+
 		AurorasDecoPlants.init();
 		AurorasDecoBiomes.init();
 		AurorasDecoSounds.init();
@@ -728,8 +706,8 @@ public final class AurorasDecoRegistry {
 
 		RegistrationHelper.BLOCK.init();
 
-		((SimpleRegistryAccessor<Item>) Registry.ITEM).getIdToEntry()
-				.forEach(Blackboard.Color::tryRegisterColorFromItem);
+		((SimpleRegistryAccessor<Item>) Registry.ITEM).getById()
+				.forEach((id, holder) -> Blackboard.Color.tryRegisterColorFromItem(id, holder.value()));
 
 		Registry.ITEM.getOrEmpty(new Identifier("pockettools", "pocket_cactus"))
 				.ifPresent(pocketCactus -> registerBigPotted("pocket_cactus", Blocks.POTTED_CACTUS, pocketCactus,

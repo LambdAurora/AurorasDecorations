@@ -41,7 +41,7 @@ import java.util.stream.IntStream;
  * @since 1.0.0
  */
 public abstract class FilteredHopperBlockEntity extends HopperBlockEntity implements SidedInventory {
-	private static final int[] AVAILABLE_SLOTS = IntStream.range(0, HopperScreenHandler.SLOT_COUNT).toArray();
+	private static final int[] AVAILABLE_SLOTS = IntStream.range(0, HopperScreenHandler.SLOTS_COUNT).toArray();
 
 	public FilteredHopperBlockEntity(BlockPos pos, BlockState state) {
 		super(pos, state);

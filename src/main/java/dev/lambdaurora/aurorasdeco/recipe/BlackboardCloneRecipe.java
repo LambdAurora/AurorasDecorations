@@ -41,7 +41,7 @@ import net.minecraft.world.World;
  * @since 1.0.0
  */
 public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
-	private static final Ingredient INPUT = Ingredient.fromTag(AurorasDecoTags.BLACKBOARD_ITEMS);
+	private static final Ingredient INPUT = Ingredient.ofTag(AurorasDecoTags.BLACKBOARD_ITEMS);
 	private static final Ingredient OUTPUT = Ingredient.ofItems(
 			AurorasDecoRegistry.BLACKBOARD_BLOCK,
 			AurorasDecoRegistry.CHALKBOARD_BLOCK,

@@ -84,7 +84,7 @@ public class UnbakedGlassboardModel extends UnbakedBlackboardModel {
 					var resourceId = AurorasDeco.id("blockstates/" + identifier.getPath() + ".json");
 
 					try {
-						var resource = resourceManager.getResource(resourceId);
+						var resource = resourceManager.method_14486(resourceId);
 
 						var stateFactory = deserializationContext.getStateFactory();
 						deserializationContext.setStateFactory(block.getStateManager());

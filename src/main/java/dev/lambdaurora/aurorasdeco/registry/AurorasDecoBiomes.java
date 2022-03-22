@@ -49,7 +49,7 @@ public final class AurorasDecoBiomes {
 	}
 
 	private static void register(RegistryKey<Biome> key, Biome biome) {
-		BuiltinRegistries.set(BuiltinRegistries.BIOME, key, biome);
+		BuiltinRegistries.register(BuiltinRegistries.BIOME, key, biome);
 	}
 
 	static void init() {

@@ -15,21 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.tooltip;
+package dev.lambdaurora.aurorasdeco.mixin;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.item.TooltipData;
+import net.fabricmc.fabric.impl.registry.sync.trackers.StateIdTracker;
+import net.minecraft.util.collection.IdList;
+import net.minecraft.util.registry.Registry;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Invoker;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-/**
- * Represents a tooltip data which can be converted into a tooltip component on client.
- *
- * @author LambdAurora
- * @version 1.0.0
- * @since 1.0.0
- */
-public interface ConvertibleTooltipData extends TooltipData {
-	@Environment(EnvType.CLIENT)
-	TooltipComponent toComponent();
+import java.util.Collection;
+import java.util.function.Function;
+
+@Mixin(StateIdTracker.class)
+public interface StateIdTrackerAccessor {
+	@Invoker(remap = false)
+	void callRecalcStateMap();
 }

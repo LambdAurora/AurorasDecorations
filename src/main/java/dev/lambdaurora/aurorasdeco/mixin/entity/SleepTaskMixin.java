@@ -42,7 +42,7 @@ public class SleepTaskMixin {
 	private void onShouldKeepRunning(ServerWorld world, LivingEntity entity, long time, CallbackInfoReturnable<Boolean> cir,
 	                                 Optional<GlobalPos> homePos, BlockPos pos) {
 		if (!(entity.getY() > pos.getY() + 0.4) && entity.getBrain().hasActivity(Activity.REST)) {
-			cir.setReturnValue(entity.getY() > pos.getY() + 0.2 && pos.isWithinDistance(entity.getPos(), 1.14));
+			cir.setReturnValue(entity.getY() > pos.getY() + 0.2 && pos.isWithinDistance(entity.getBlockPos(), 1.14));
 		}
 	}
 }

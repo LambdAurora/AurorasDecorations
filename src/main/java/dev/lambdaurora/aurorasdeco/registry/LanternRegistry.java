@@ -20,6 +20,7 @@ package dev.lambdaurora.aurorasdeco.registry;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.accessor.BlockEntityTypeAccessor;
 import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
+import dev.lambdaurora.aurorasdeco.util.RegistrationHelper;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
@@ -66,7 +67,7 @@ public final class LanternRegistry {
 		else if (block == Blocks.LANTERN || block == Blocks.SOUL_LANTERN) {
 			wallLanternBlock = (WallLanternBlock) Registry.BLOCK.get(wallLanternId);
 		} else {
-			wallLanternBlock = Registry.register(Registry.BLOCK, wallLanternId, new WallLanternBlock(block));
+			wallLanternBlock = RegistrationHelper.BLOCK.register(wallLanternId, new WallLanternBlock(block));
 			((BlockEntityTypeAccessor) AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE)
 					.aurorasdeco$addSupportedBlock(wallLanternBlock);
 		}

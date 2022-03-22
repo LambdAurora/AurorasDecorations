@@ -19,8 +19,10 @@ package dev.lambdaurora.aurorasdeco.util;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.mixin.SimpleRegistryAccessor;
+import dev.lambdaurora.aurorasdeco.mixin.StateIdTrackerAccessor;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
+import net.fabricmc.fabric.impl.registry.sync.trackers.StateIdTracker;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
@@ -37,6 +39,7 @@ public final class RegistrationHelper<T> {
 	private final Map<Identifier, T> delayedRegistry = new Object2ObjectOpenHashMap<>();
 	private final List<RegistrationCallback<T>> registrationCallbacks = new ArrayList<>();
 	private final Registry<T> registry;
+	private StateIdTracker<T, ?> fabricTracker;
 	private boolean early = true;
 
 	private RegistrationHelper(Registry<T> registry) {
@@ -86,17 +89,28 @@ public final class RegistrationHelper<T> {
 				.register((rawId, id, object) -> callback.onRegistration(this, id, object));
 	}
 
+	public void setFabricTracker(StateIdTracker<T, ?> tracker) {
+		this.fabricTracker = tracker;
+	}
+
 	@SuppressWarnings("unchecked")
 	public void init() {
+		if (this.fabricTracker != null) {
+			((StateIdTrackerAccessor) (Object) this.fabricTracker).callRecalcStateMap();
+		}
+
+		this.delayedRegistry.forEach((id, obj) -> Registry.register(this.registry, id, obj));
+		this.delayedRegistry.clear();
+
+		((SimpleRegistryAccessor<T>) this.registry).getById()
+				.forEach((id, block) -> {
+					for (var callback : this.registrationCallbacks)
+						callback.onRegistration(this, id, block.value());
+				});
+
 		this.early = false;
 
 		this.delayedRegistry.forEach((id, obj) -> Registry.register(this.registry, id, obj));
-
-		((SimpleRegistryAccessor<T>) this.registry).getIdToEntry()
-				.forEach((id, block) -> {
-					for (var callback : this.registrationCallbacks)
-						callback.onRegistration(this, id, block);
-				});
 	}
 
 	public interface RegistrationCallback<T> {

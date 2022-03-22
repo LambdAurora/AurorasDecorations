@@ -19,67 +19,62 @@ package dev.lambdaurora.aurorasdeco.world.gen.feature;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPlants;
-import net.minecraft.class_3226;
+import net.minecraft.util.Holder;
 import net.minecraft.world.gen.feature.*;
 import net.minecraft.world.gen.feature.util.ConfiguredFeatureUtil;
+import net.minecraft.world.gen.feature.util.PlacedFeatureUtil;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 
 import java.util.List;
+
+import static dev.lambdaurora.aurorasdeco.world.gen.feature.AurorasDecoFeatures.register;
 
 public final class AurorasDecoVegetationConfiguredFeatures {
 	private AurorasDecoVegetationConfiguredFeatures() {
 		throw new UnsupportedOperationException("AurorasDecoVegetationConfiguredFeatures only contains static definitions.");
 	}
 
-	public static final ConfiguredFeature<RandomPatchFeatureConfig, ?> PATCH_LAVENDER = ConfiguredFeatureUtil.register(
-			AurorasDeco.id("patch_lavender").toString(),
-			Feature.RANDOM_PATCH
-					.configure(
-							ConfiguredFeatureUtil.createRandomPatchFeatureConfig(
-									Feature.SIMPLE_BLOCK.configure(new SimpleBlockFeatureConfig(BlockStateProvider.of(AurorasDecoPlants.LAVENDER)))
-							)
-					)
+	public static final Holder<ConfiguredFeature<RandomPatchFeatureConfig, ?>> PATCH_LAVENDER = register(
+			AurorasDeco.id("patch_lavender"),
+			Feature.RANDOM_PATCH,
+			ConfiguredFeatureUtil.createRandomPatchFeatureConfig(
+					Feature.SIMPLE_BLOCK, new SimpleBlockFeatureConfig(BlockStateProvider.of(AurorasDecoPlants.LAVENDER))
+			)
 	);
 
-	public static final ConfiguredFeature<RandomFeatureConfig, ?> TREES_LAVENDER_PLAINS = ConfiguredFeatureUtil.register(
-			AurorasDeco.id("trees_lavender_plains").toString(),
-			Feature.RANDOM_SELECTOR
-					.configure(
-							new RandomFeatureConfig(
-									List.of(
-											new class_3226(AurorasDecoTreeConfiguredFeatures.FALLEN_OAK_TREE.withPlacement(), 0.25f),
-											new class_3226(AurorasDecoTreeConfiguredFeatures.FALLEN_BIRCH_TREE.withPlacement(), 0.20f),
-											new class_3226(AurorasDecoTreeConfiguredFeatures.BIRCH_BEES_015.withPlacement(), 0.5f),
-											new class_3226(AurorasDecoTreeConfiguredFeatures.FANCY_OAK_BEES_015.withPlacement(), 0.33333334F)
-									),
-									AurorasDecoTreeConfiguredFeatures.OAK_BEES_015.withPlacement()
-							)
-					)
+	public static final Holder<ConfiguredFeature<RandomFeatureConfig, ?>> TREES_LAVENDER_PLAINS = register(
+			AurorasDeco.id("trees_lavender_plains"),
+			Feature.RANDOM_SELECTOR,
+			new RandomFeatureConfig(
+					List.of(
+							new WeightedPlacedFeature(PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.FALLEN_OAK_TREE), 0.25f),
+							new WeightedPlacedFeature(PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.FALLEN_BIRCH_TREE), 0.20f),
+							new WeightedPlacedFeature(PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.BIRCH_BEES_015), 0.5f),
+							new WeightedPlacedFeature(PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.FANCY_OAK_BEES_015), 0.33333334F)
+					),
+					PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.OAK_BEES_015)
+			)
 	);
 
-	public static final ConfiguredFeature<RandomFeatureConfig, ?> FALLEN_FOREST_TREES = ConfiguredFeatureUtil.register(
-			AurorasDeco.id("fallen_trees/average").toString(),
-			Feature.RANDOM_SELECTOR
-					.configure(
-							new RandomFeatureConfig(
-									List.of(
-											new class_3226(AurorasDecoTreeConfiguredFeatures.FALLEN_BIRCH_TREE.withPlacement(), 0.35f)
-									),
-									AurorasDecoTreeConfiguredFeatures.FALLEN_OAK_TREE.withPlacement()
-							)
-					)
+	public static final Holder<ConfiguredFeature<RandomFeatureConfig, ?>> FALLEN_FOREST_TREES = register(
+			AurorasDeco.id("fallen_trees/average"),
+			Feature.RANDOM_SELECTOR,
+			new RandomFeatureConfig(
+					List.of(
+							new WeightedPlacedFeature(PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.FALLEN_BIRCH_TREE), 0.35f)
+					),
+					PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.FALLEN_OAK_TREE)
+			)
 	);
 
-	public static final ConfiguredFeature<RandomFeatureConfig, ?> FALLEN_TREES_SPARSE_JUNGLE = ConfiguredFeatureUtil.register(
-			AurorasDeco.id("fallen_trees/sparse_jungle").toString(),
-			Feature.RANDOM_SELECTOR
-					.configure(
-							new RandomFeatureConfig(
-									List.of(
-											new class_3226(AurorasDecoTreeConfiguredFeatures.FALLEN_OAK_TREE.withPlacement(), 0.05f)
-									),
-									AurorasDecoTreeConfiguredFeatures.FALLEN_JUNGLE_TREE.withPlacement()
-							)
-					)
+	public static final Holder<ConfiguredFeature<RandomFeatureConfig, ?>> FALLEN_TREES_SPARSE_JUNGLE = register(
+			AurorasDeco.id("fallen_trees/sparse_jungle"),
+			Feature.RANDOM_SELECTOR,
+			new RandomFeatureConfig(
+					List.of(
+							new WeightedPlacedFeature(PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.FALLEN_OAK_TREE), 0.05f)
+					),
+					PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.FALLEN_JUNGLE_TREE)
+			)
 	);
 }

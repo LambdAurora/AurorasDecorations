@@ -19,7 +19,7 @@ package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.entity.SeatEntity;
-import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -53,7 +53,7 @@ public interface SeatBlock {
 		else if (!this.canSit(world, pos, state))
 			return false;
 
-		var seatEntity = AurorasDecoRegistry.SEAT_ENTITY_TYPE.create(world);
+		var seatEntity = AurorasDecoEntities.SEAT_ENTITY_TYPE.create(world);
 		if (seatEntity == null)
 			return false;
 		seatEntity.setPosition(pos.getX() + .5f, pos.getY() + this.getSitYOffset(), pos.getZ() + .5f);
