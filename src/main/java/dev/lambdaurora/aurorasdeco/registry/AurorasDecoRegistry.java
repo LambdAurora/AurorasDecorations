@@ -52,6 +52,7 @@ import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.OxidizableBlocksRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -575,8 +576,7 @@ public final class AurorasDecoRegistry {
 
 	/* Advancement Criteria */
 
-	public static final PetUsePetBedCriterion PET_USE_PET_BED_CRITERION = CriterionRegistry
-			.register(new PetUsePetBedCriterion());
+	public static final PetUsePetBedCriterion PET_USE_PET_BED_CRITERION = Criteria.register(new PetUsePetBedCriterion());
 
 	static <T extends Block> T registerBlock(String name, T block) {
 		return Registry.register(Registry.BLOCK, id(name), block);
