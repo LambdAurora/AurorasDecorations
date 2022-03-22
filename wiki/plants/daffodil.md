@@ -7,9 +7,9 @@ Daffodil ([Narcissus pseudonarcissus][daffodil_wikipedia]) is an European flower
 Daffodils can be placed with a specific orientation.
 
 <div style="display: flex; justify-content: center;">
-<img alt="Daffodil Item" title="Daffodil Item" class="item" src="../../src/main/resources/assets/aurorasdeco/textures/item/daffodil.png" width="128" height="128" />
-<img alt="Daffodil Flower" title="Daffodil Flower" class="item" src="../../images/render/daffodil.png" width="128" height="128" />
-<img alt="Potted Daffodil" title="Potted Daffodil" class="item" src="../../images/render/potted/daffodil.png" width="128" height="128" />
+<img alt="Daffodil Item" title="Daffodil Item" class="ls_pixelated" src="../../src/main/resources/assets/aurorasdeco/textures/item/daffodil.png" width="128" height="128" />
+<img alt="Daffodil Flower" title="Daffodil Flower" class="ls_pixelated" src="../../images/render/daffodil.png" width="128" height="128" />
+<img alt="Potted Daffodil" title="Potted Daffodil" class="ls_pixelated" src="../../images/render/potted/daffodil.png" width="128" height="128" />
 </div>
 
 ## Usage

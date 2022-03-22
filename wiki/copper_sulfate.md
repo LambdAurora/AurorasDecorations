@@ -7,7 +7,7 @@ Copper Sulfate ([Copper(II) Sulfate][copper_sulfate_wikipedia])
 is an item created from copper. It has a wide usage in crafting new light sources with green flames.
 
 <div style="display: flex; justify-content: center;">
-<img alt="Copper Sulfate" title="Copper Sulfate" class="item" src="../src/main/resources/assets/aurorasdeco/textures/item/copper_sulfate.png" width="128" height="128" />
+<img alt="Copper Sulfate" title="Copper Sulfate" class="ls_pixelated" src="../src/main/resources/assets/aurorasdeco/textures/item/copper_sulfate.png" width="128" height="128" />
 </div>
 
 ## Crafting
@@ -22,19 +22,19 @@ Copper sulfate is crafted from exploding copper blocks, here's a table on the qu
 <tbody>
     <tr>
         <td>Copper Block</td>
-        <td>9 x <img alt="Copper Sulfate" title="Copper Sulfate" class="item" src="../src/main/resources/assets/aurorasdeco/textures/item/copper_sulfate.png" width="32" height="32" /></td>
+        <td>9 x <img alt="Copper Sulfate" title="Copper Sulfate" class="ls_pixelated" src="../src/main/resources/assets/aurorasdeco/textures/item/copper_sulfate.png" width="32" height="32" /></td>
     </tr>
     <tr>
         <td>Exposed Copper Block</td>
-        <td>14 x <img alt="Copper Sulfate" title="Copper Sulfate" class="item" src="../src/main/resources/assets/aurorasdeco/textures/item/copper_sulfate.png" width="32" height="32" /></td>
+        <td>14 x <img alt="Copper Sulfate" title="Copper Sulfate" class="ls_pixelated" src="../src/main/resources/assets/aurorasdeco/textures/item/copper_sulfate.png" width="32" height="32" /></td>
     </tr>
     <tr>
         <td>Weathered Copper Block</td>
-        <td>18 x <img alt="Copper Sulfate" title="Copper Sulfate" class="item" src="../src/main/resources/assets/aurorasdeco/textures/item/copper_sulfate.png" width="32" height="32" /></td>
+        <td>18 x <img alt="Copper Sulfate" title="Copper Sulfate" class="ls_pixelated" src="../src/main/resources/assets/aurorasdeco/textures/item/copper_sulfate.png" width="32" height="32" /></td>
     </tr>
     <tr>
         <td>Oxidized Copper Block</td>
-        <td>32 x <img alt="Copper Sulfate" title="Copper Sulfate" class="item" src="../src/main/resources/assets/aurorasdeco/textures/item/copper_sulfate.png" width="32" height="32" /></td>
+        <td>32 x <img alt="Copper Sulfate" title="Copper Sulfate" class="ls_pixelated" src="../src/main/resources/assets/aurorasdeco/textures/item/copper_sulfate.png" width="32" height="32" /></td>
     </tr>
 </tbody>
 </table>
@@ -48,7 +48,7 @@ The item itself doesn't really have any uses, but it can be used in crafting to 
 The copper sulfate torch is similar to a torch, except it has a green flame instead.
 
 <div style="display: flex; justify-content: center;">
-<img alt="Copper Sulfate Torch" title="Copper Sulfate Torch" class="item" src="../src/main/resources/assets/aurorasdeco/textures/block/copper_sulfate_torch.png" width="128" height="128" />
+<img alt="Copper Sulfate Torch" title="Copper Sulfate Torch" class="ls_pixelated" src="../src/main/resources/assets/aurorasdeco/textures/block/copper_sulfate_torch.png" width="128" height="128" />
 </div>
 
 #### Crafting
@@ -66,7 +66,7 @@ The copper sulfate torch is similar to a torch, except it has a green flame inst
     </tr>
     <tr>
         <td>
-            <img alt="Copper Sulfate" title="Copper Sulfate" class="item" src="../src/main/resources/assets/aurorasdeco/textures/item/copper_sulfate.png" width="32" height="32" />
+            <img alt="Copper Sulfate" title="Copper Sulfate" class="ls_pixelated" src="../src/main/resources/assets/aurorasdeco/textures/item/copper_sulfate.png" width="32" height="32" />
         </td>
     </tr>
 </tbody>
@@ -95,7 +95,7 @@ The copper sulfate lantern is similar to a lantern, except it has a green flame 
     <tr>
         <td>Iron Nugget</td>
         <td>
-            <img alt="Copper Sulfate Torch" title="Copper Sulfate Torch" class="item" src="../src/main/resources/assets/aurorasdeco/textures/block/copper_sulfate_torch.png" width="32" height="32" />
+            <img alt="Copper Sulfate Torch" title="Copper Sulfate Torch" class="ls_pixelated" src="../src/main/resources/assets/aurorasdeco/textures/block/copper_sulfate_torch.png" width="32" height="32" />
         </td>
         <td>Iron Nugget</td>
     </tr>
@@ -131,7 +131,7 @@ The copper sulfate campfire decays leaves, mushroom blocks, and nether wart bloc
     </tr>
     <tr>
         <td>Stick</td>
-        <td><img alt="Copper Sulfate" title="Copper Sulfate" class="item" src="../src/main/resources/assets/aurorasdeco/textures/item/copper_sulfate.png" width="32" height="32" /></td>
+        <td><img alt="Copper Sulfate" title="Copper Sulfate" class="ls_pixelated" src="../src/main/resources/assets/aurorasdeco/textures/item/copper_sulfate.png" width="32" height="32" /></td>
         <td>Stick</td>
     </tr>
     <tr>
@@ -159,7 +159,7 @@ This is the copper sulfate variant of the [brazier](braziers.md), it inherits th
 <tbody>
     <tr>
         <td>Iron Ingot</td>
-        <td><img alt="Copper Sulfate Campfire" title="Copper Sulfate Campfire" class="item" src="../src/main/resources/assets/aurorasdeco/textures/item/copper_sulfate_campfire.png" width="32" height="32" /></td>
+        <td><img alt="Copper Sulfate Campfire" title="Copper Sulfate Campfire" class="ls_pixelated" src="../src/main/resources/assets/aurorasdeco/textures/item/copper_sulfate_campfire.png" width="32" height="32" /></td>
         <td>Iron Ingot</td>
     </tr>
     <tr>

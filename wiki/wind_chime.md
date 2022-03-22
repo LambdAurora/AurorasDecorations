@@ -9,7 +9,7 @@ they will sway with the wind, they can be right-clicked and they will sway harde
 and they will react to collisions! When animated they will emit chime sounds.
 
 <div style="display: flex; justify-content: center;">
-<img alt="Wind Chime" title="Wind Chime" class="item" src="../images/render/wind_chime.png" width="128" height="128" />
+<img alt="Wind Chime" title="Wind Chime" class="ls_pixelated" src="../images/render/wind_chime.png" width="128" height="128" />
 </div>
 
 <!-- TODO: include a video of the Wind Chime in action :3 -->

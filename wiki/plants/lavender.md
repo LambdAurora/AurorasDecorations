@@ -7,9 +7,9 @@
 it has a nice shade of purple which lead the color to be named the same.
 
 <div style="display: flex; justify-content: center;">
-<img alt="Lavender Item" title="Lavender Item" class="item" src="../../src/main/resources/assets/aurorasdeco/textures/item/lavender.png" width="128" height="128" />
-<img alt="Lavender Flower" title="Lavender Flower" class="item" src="../../images/render/lavender.png" width="128" height="128" />
-<img alt="Potted Lavender" title="Potted Lavender" class="item" src="../../images/render/potted/lavender.png" width="128" height="128" />
+<img alt="Lavender Item" title="Lavender Item" class="ls_pixelated" src="../../src/main/resources/assets/aurorasdeco/textures/item/lavender.png" width="128" height="128" />
+<img alt="Lavender Flower" title="Lavender Flower" class="ls_pixelated" src="../../images/render/lavender.png" width="128" height="128" />
+<img alt="Potted Lavender" title="Potted Lavender" class="ls_pixelated" src="../../images/render/potted/lavender.png" width="128" height="128" />
 </div>
 
 ## Usage
