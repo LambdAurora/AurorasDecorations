@@ -34,6 +34,7 @@ import dev.lambdaurora.aurorasdeco.client.screen.ShelfScreen;
 import dev.lambdaurora.aurorasdeco.hook.TrinketsHooks;
 import dev.lambdaurora.aurorasdeco.registry.*;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
+import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -116,6 +117,9 @@ public class AurorasDecoClient implements ClientModInitializer {
 			});
 			StumpBlock.streamLogStumps()
 					.forEach(block -> {
+						if (AuroraUtil.idEqual(block.getWoodType().getId(), AurorasDeco.NAMESPACE, "jacaranda"))
+							return;
+
 						var leavesComponent = block.getWoodType().getComponent(WoodType.ComponentType.LEAVES);
 						if (leavesComponent == null) return;
 
@@ -142,6 +146,8 @@ public class AurorasDecoClient implements ClientModInitializer {
 		HandledScreens.register(COPPER_HOPPER_SCREEN_HANDLER_TYPE, CopperHopperScreen::new);
 		HandledScreens.register(SAWMILL_SCREEN_HANDLER_TYPE, SawmillScreen::new);
 		HandledScreens.register(SHELF_SCREEN_HANDLER_TYPE, ShelfScreen::new);
+
+		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> 0xff808737, AurorasDecoPlants.JACARANDA_LEAVES);
 
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) ->
 						world != null && pos != null

@@ -24,16 +24,14 @@ import dev.lambdaurora.aurorasdeco.block.plant.LavenderBlock;
 import dev.lambdaurora.aurorasdeco.item.DerivedBlockItem;
 import dev.lambdaurora.aurorasdeco.util.Registrar;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FlowerBlock;
-import net.minecraft.block.FlowerPotBlock;
-import net.minecraft.block.Material;
+import net.minecraft.block.*;
 import net.minecraft.item.ItemGroup;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.List;
 
 import static dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry.registerBlock;
+import static dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry.registerWithItem;
 
 /**
  * Contains the different plants definitions added in Aurora's Decorations.
@@ -73,6 +71,13 @@ public final class AurorasDecoPlants {
 
 	public static final FlowerPotBlock POTTED_LAVENDER = registerBlock("potted/lavender",
 			new FlowerPotBlock(LAVENDER.block(), QuiltBlockSettings.of(Material.DECORATION).nonOpaque().breakInstantly()));
+
+	/* Leaves */
+
+	public static final LeavesBlock JACARANDA_LEAVES = registerWithItem("jacaranda_leaves",
+			new LeavesBlock(QuiltBlockSettings.copyOf(Blocks.FLOWERING_AZALEA_LEAVES)),
+			new FabricItemSettings().group(ItemGroup.DECORATIONS),
+			DerivedBlockItem::leaves);
 
 	static {
 		FLOWER_FOREST_PLANTS = List.of(DAFFODIL.getDefaultState(), LAVENDER.getDefaultState());

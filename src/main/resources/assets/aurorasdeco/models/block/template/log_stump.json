@@ -71,12 +71,12 @@
       }
     },
     {
-      "from": [ -4, 4, 6 ],
+      "from": [ -4, 0, 6 ],
       "to": [ 1, 8, 6 ],
       "rotation": {"angle": 22.5, "axis": "y", "origin": [ 8, 8, 6 ]},
       "faces": {
-        "north": {"uv": [ 0, 0, 5, 4 ], "texture": "#leaf", "tintindex": 0},
-        "south": {"uv": [ 5, 0, 0, 4 ], "texture": "#leaf", "tintindex": 0}
+        "north": {"uv": [ 0, 0, 5, 8 ], "texture": "#leaf", "tintindex": 0},
+        "south": {"uv": [ 5, 0, 0, 8 ], "texture": "#leaf", "tintindex": 0}
       }
     }
   ],

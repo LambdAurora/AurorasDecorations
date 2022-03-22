@@ -604,11 +604,11 @@ public final class AurorasDecoRegistry {
 		);
 	}
 
-	private static <T extends Block> T registerWithItem(String name, T block, Item.Settings settings) {
+	static <T extends Block> T registerWithItem(String name, T block, Item.Settings settings) {
 		return registerWithItem(name, block, settings, BlockItem::new);
 	}
 
-	private static <T extends Block> T registerWithItem(String name, T block, Item.Settings settings,
+	static <T extends Block> T registerWithItem(String name, T block, Item.Settings settings,
 	                                                    BiFunction<T, Item.Settings, BlockItem> factory) {
 		registerItem(name, factory.apply(registerBlock(name, block), settings));
 		return block;

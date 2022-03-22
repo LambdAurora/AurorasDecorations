@@ -94,6 +94,10 @@ public class DerivedBlockItem extends BlockItem {
 		return new DerivedBlockItem(block, KindSearcher.LANTERN_SEARCHER, KindSearcher::findLastOfGroup, settings);
 	}
 
+	public static DerivedBlockItem leaves(Block block, Settings settings) {
+		return new DerivedBlockItem(block, KindSearcher.LEAVES_SEARCHER, KindSearcher::findLastOfGroup, settings);
+	}
+
 	public static DerivedBlockItem log(Block block, Settings settings) {
 		return new DerivedBlockItem(block, KindSearcher.LOG_SEARCHER, KindSearcher::findLastOfGroup, settings);
 	}

@@ -191,6 +191,11 @@ public class KindSearcher<I, O> {
 	)
 			.afterMapped(Items.SOUL_LANTERN, ItemStack::getItem)
 			.build();
+	public static final KindSearcher<ItemStack, StackEntry> LEAVES_SEARCHER = itemIdentifierSearcher(
+			entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof LeavesBlock
+	)
+			.afterMapped(Items.FLOWERING_AZALEA_LEAVES, ItemStack::getItem)
+			.build();
 	public static final KindSearcher<ItemStack, StackEntry> PRESSURE_PLATE_SEARCHER = itemIdentifierSearcher(
 			entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof PressurePlateBlock
 	)
