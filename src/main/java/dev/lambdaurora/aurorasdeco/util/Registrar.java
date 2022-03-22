@@ -21,11 +21,13 @@ import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.accessor.BlockEntityTypeAccessor;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -41,12 +43,12 @@ public final class Registrar {
 	private Registrar() {
 	}
 
-	public static <V, T extends V> RegistrationCompleter<T> register(Registry<V> registry, String name, T object) {
+	public static <V, T extends V> RegistrationCompleter<T, T> register(Registry<V> registry, String name, T object) {
 		return register(registry, AurorasDeco.id(name), object);
 	}
 
-	public static <V, T extends V> RegistrationCompleter<T> register(Registry<V> registry, Identifier id, T object) {
-		return new RegistrationCompleter<>(id, Registry.register(registry, id, object));
+	public static <V, T extends V> RegistrationCompleter<T, T> register(Registry<V> registry, Identifier id, T object) {
+		return new IdentityRegistrationCompleter<>(id, Registry.register(registry, id, object));
 	}
 
 	public static <T extends Block> BlockRegistrationCompleter<T> register(String name, T block) {
@@ -57,11 +59,11 @@ public final class Registrar {
 		return new BlockRegistrationCompleter<>(id, Registry.register(Registry.BLOCK, id, block));
 	}
 
-	public static <T extends Item> RegistrationCompleter<T> register(String name, T item) {
+	public static <T extends Item> RegistrationCompleter<T, T> register(String name, T item) {
 		return register(Registry.ITEM, name, item);
 	}
 
-	public static <T extends Item> RegistrationCompleter<T> register(Identifier id, T item) {
+	public static <T extends Item> RegistrationCompleter<T, T> register(Identifier id, T item) {
 		return register(Registry.ITEM, id, item);
 	}
 
@@ -70,7 +72,7 @@ public final class Registrar {
 	 *
 	 * @param <T> the type of the registered object
 	 */
-	public static class RegistrationCompleter<T> {
+	public static abstract class RegistrationCompleter<T, R> {
 		protected final Identifier id;
 		protected final T registeredObject;
 
@@ -79,17 +81,28 @@ public final class Registrar {
 			this.registeredObject = registeredObject;
 		}
 
-		public RegistrationCompleter<T> then(Consumer<T> handler) {
+		public RegistrationCompleter<T, R> then(Consumer<T> handler) {
 			handler.accept(this.registeredObject);
 			return this;
 		}
 
+		public abstract R finish();
+	}
+
+	public static class IdentityRegistrationCompleter<T> extends RegistrationCompleter<T, T> {
+		protected IdentityRegistrationCompleter(Identifier id, T registeredObject) {
+			super(id, registeredObject);
+		}
+
+		@Override
 		public T finish() {
 			return this.registeredObject;
 		}
 	}
 
-	public static class BlockRegistrationCompleter<T extends Block> extends RegistrationCompleter<T> {
+	public static class BlockRegistrationCompleter<T extends Block> extends RegistrationCompleter<T, BlockEntry<T>> {
+		private BlockItem item;
+
 		protected BlockRegistrationCompleter(Identifier id, T registeredObject) {
 			super(id, registeredObject);
 		}
@@ -100,12 +113,17 @@ public final class Registrar {
 			return this;
 		}
 
+		@Override
+		public BlockEntry<T> finish() {
+			return new BlockEntry<>(this.registeredObject, item);
+		}
+
 		public BlockRegistrationCompleter<T> withItem(Item.Settings settings) {
 			return this.withItem(settings, BlockItem::new);
 		}
 
 		public BlockRegistrationCompleter<T> withItem(Item.Settings settings, BiFunction<T, Item.Settings, BlockItem> factory) {
-			Registrar.register(this.id, factory.apply(this.registeredObject, settings));
+			this.item = Registrar.register(this.id, factory.apply(this.registeredObject, settings)).finish();
 			return this;
 		}
 
@@ -129,6 +147,17 @@ public final class Registrar {
 			if (entry != null && entry.getBurnChance() != 0 && entry.getSpreadChance() != 0)
 				return this.flammable(entry.getBurnChance(), entry.getSpreadChance());
 			else return this;
+		}
+	}
+
+	public record BlockEntry<T extends Block>(T block, @Nullable BlockItem item) {
+		/**
+		 * {@return the default block state of the block}
+		 *
+		 * @see Block#getDefaultState()
+		 */
+		public BlockState getDefaultState() {
+			return this.block().getDefaultState();
 		}
 	}
 }

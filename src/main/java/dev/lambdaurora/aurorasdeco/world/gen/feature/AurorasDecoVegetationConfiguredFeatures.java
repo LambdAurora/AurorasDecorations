@@ -38,7 +38,7 @@ public final class AurorasDecoVegetationConfiguredFeatures {
 			AurorasDeco.id("patch_lavender"),
 			Feature.RANDOM_PATCH,
 			ConfiguredFeatureUtil.createRandomPatchFeatureConfig(
-					Feature.SIMPLE_BLOCK, new SimpleBlockFeatureConfig(BlockStateProvider.of(AurorasDecoPlants.LAVENDER))
+					Feature.SIMPLE_BLOCK, new SimpleBlockFeatureConfig(BlockStateProvider.of(AurorasDecoPlants.LAVENDER.block()))
 			)
 	);
 

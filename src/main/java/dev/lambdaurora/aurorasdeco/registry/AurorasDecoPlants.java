@@ -54,11 +54,11 @@ public final class AurorasDecoPlants {
 
 	/* Plants */
 
-	public static final DaffodilBlock DAFFODIL = Registrar.register("daffodil", new DaffodilBlock())
+	public static final Registrar.BlockEntry<DaffodilBlock> DAFFODIL = Registrar.register("daffodil", new DaffodilBlock())
 			.withItem(new FabricItemSettings().group(ItemGroup.DECORATIONS), DerivedBlockItem::flower)
 			.finish();
 
-	public static final FlowerBlock LAVENDER = Registrar.register("lavender", new LavenderBlock())
+	public static final Registrar.BlockEntry<LavenderBlock> LAVENDER = Registrar.register("lavender", new LavenderBlock())
 			.withItem(new FabricItemSettings().group(ItemGroup.DECORATIONS), DerivedBlockItem::flower)
 			.finish();
 
@@ -69,10 +69,10 @@ public final class AurorasDecoPlants {
 	/* Potted Plants */
 
 	public static final FlowerPotBlock POTTED_DAFFODIL = registerBlock("potted/daffodil",
-			new DirectionalFlowerPotBlock(DAFFODIL, QuiltBlockSettings.of(Material.DECORATION).nonOpaque().breakInstantly()));
+			new DirectionalFlowerPotBlock(DAFFODIL.block(), QuiltBlockSettings.of(Material.DECORATION).nonOpaque().breakInstantly()));
 
 	public static final FlowerPotBlock POTTED_LAVENDER = registerBlock("potted/lavender",
-			new FlowerPotBlock(LAVENDER, QuiltBlockSettings.of(Material.DECORATION).nonOpaque().breakInstantly()));
+			new FlowerPotBlock(LAVENDER.block(), QuiltBlockSettings.of(Material.DECORATION).nonOpaque().breakInstantly()));
 
 	static {
 		FLOWER_FOREST_PLANTS = List.of(DAFFODIL.getDefaultState(), LAVENDER.getDefaultState());

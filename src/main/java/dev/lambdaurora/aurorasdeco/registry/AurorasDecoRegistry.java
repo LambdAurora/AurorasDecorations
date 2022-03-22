@@ -360,7 +360,7 @@ public final class AurorasDecoRegistry {
 					new CopperSulfateCampfireBlock(QuiltBlockSettings.copyOf(Blocks.CAMPFIRE).ticksRandomly()))
 			.withItem(new FabricItemSettings().group(ItemGroup.DECORATIONS), DerivedBlockItem::campfire)
 			.addSelfTo(BlockEntityType.CAMPFIRE)
-			.finish();
+			.finish().block();
 	public static final AuroraTorchBlock COPPER_SULFATE_TORCH_BLOCK = registerBlock("copper_sulfate_torch",
 			new AuroraTorchBlock(QuiltBlockSettings.copyOf(Blocks.TORCH), COPPER_SULFATE_FLAME));
 	public static final AuroraWallTorchBlock COPPER_SULFATE_WALL_TORCH_BLOCK = registerBlock("copper_sulfate_wall_torch",
@@ -391,7 +391,7 @@ public final class AurorasDecoRegistry {
 			.then(block -> {
 				((ItemExtensions) Items.BOOK).makePlaceable(block);
 				((ItemExtensions) Items.ENCHANTED_BOOK).makePlaceable(block);
-			}).finish();
+			}).finish().block();
 
 	public static final PieBlock PUMPKIN_PIE_BLOCK = registerBlock("pumpkin_pie", PieBlock.fromPieItem(Items.PUMPKIN_PIE));
 
