@@ -117,9 +117,6 @@ public class AurorasDecoClient implements ClientModInitializer {
 			});
 			StumpBlock.streamLogStumps()
 					.forEach(block -> {
-						if (AuroraUtil.idEqual(block.getWoodType().getId(), AurorasDeco.NAMESPACE, "jacaranda"))
-							return;
-
 						var leavesComponent = block.getWoodType().getComponent(WoodType.ComponentType.LEAVES);
 						if (leavesComponent == null) return;
 
@@ -146,8 +143,6 @@ public class AurorasDecoClient implements ClientModInitializer {
 		HandledScreens.register(COPPER_HOPPER_SCREEN_HANDLER_TYPE, CopperHopperScreen::new);
 		HandledScreens.register(SAWMILL_SCREEN_HANDLER_TYPE, SawmillScreen::new);
 		HandledScreens.register(SHELF_SCREEN_HANDLER_TYPE, ShelfScreen::new);
-
-		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> 0xff808737, AurorasDecoPlants.JACARANDA_LEAVES);
 
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) ->
 						world != null && pos != null

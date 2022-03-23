@@ -49,10 +49,11 @@ public final class AurorasDecoVegetationConfiguredFeatures {
 					List.of(
 							new WeightedPlacedFeature(PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.FALLEN_OAK_TREE), 0.25f),
 							new WeightedPlacedFeature(PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.FALLEN_BIRCH_TREE), 0.20f),
+							new WeightedPlacedFeature(PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.OAK_BEES_015), 0.5f),
 							new WeightedPlacedFeature(PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.BIRCH_BEES_015), 0.5f),
 							new WeightedPlacedFeature(PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.FANCY_OAK_BEES_015), 0.33333334F)
 					),
-					PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.OAK_BEES_015)
+					PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.JACARANDA_TREE)
 			)
 	);
 

@@ -28,9 +28,12 @@
   "block.aurorasdeco.jacaranda_door": "Porte en jacaranda",
   "block.aurorasdeco.jacaranda_fence": "Barrière en jacaranda",
   "block.aurorasdeco.jacaranda_fence_gate": "Portillon en jacaranda",
+  "block.aurorasdeco.jacaranda_leaves": "Feuilles de jacaranda",
+  "block.aurorasdeco.flowering_jacaranda_leaves": "Feuilles de jacaranda fleurie",
   "block.aurorasdeco.jacaranda_log": "Bûche de jacaranda",
   "block.aurorasdeco.jacaranda_planks": "Planches de jacaranda",
   "block.aurorasdeco.jacaranda_pressure_plate": "Plaque de pression en jacaranda",
+  "block.aurorasdeco.jacaranda_sapling": "Pousse de jacaranda",
   "block.aurorasdeco.jacaranda_sign": "Pancarte en jacaranda",
   "block.aurorasdeco.jacaranda_slab": "Dalle en jacaranda",
   "block.aurorasdeco.jacaranda_stairs": "Escalier en jacaranda",
@@ -78,6 +81,7 @@
 
   "block.aurorasdeco.daffodil": "Jonquille",
   "block.aurorasdeco.lavender": "Lavande",
+  "block.aurorasdeco.lemnoideae": "Lenticule",
 
   "block.aurorasdeco.mossy_deepslate_bricks": "Ardoise des abîmes taillée moussue",
   "block.aurorasdeco.mossy_deepslate_brick_slab": "Dalle en ardoise des abîmes taillée moussue",

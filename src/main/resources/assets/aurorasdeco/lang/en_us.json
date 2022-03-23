@@ -29,9 +29,11 @@
   "block.aurorasdeco.jacaranda_fence": "Jacaranda Fence",
   "block.aurorasdeco.jacaranda_fence_gate": "Jacaranda Fence Gate",
   "block.aurorasdeco.jacaranda_leaves": "Jacaranda Leaves",
+  "block.aurorasdeco.flowering_jacaranda_leaves": "Flowering Jacaranda Leaves",
   "block.aurorasdeco.jacaranda_log": "Jacaranda Log",
   "block.aurorasdeco.jacaranda_planks": "Jacaranda Planks",
   "block.aurorasdeco.jacaranda_pressure_plate": "Jacaranda Pressure Plate",
+  "block.aurorasdeco.jacaranda_sapling": "Jacaranda Sapling",
   "block.aurorasdeco.jacaranda_sign": "Jacaranda Sign",
   "block.aurorasdeco.jacaranda_slab": "Jacaranda Slab",
   "block.aurorasdeco.jacaranda_stairs": "Jacaranda Stairs",
@@ -79,6 +81,7 @@
 
   "block.aurorasdeco.daffodil": "Daffodil",
   "block.aurorasdeco.lavender": "Lavender",
+  "block.aurorasdeco.lemnoideae": "Duckweed",
 
   "block.aurorasdeco.mossy_deepslate_bricks": "Mossy Deepslate Bricks",
   "block.aurorasdeco.mossy_deepslate_brick_slab": "Mossy Deepslate Brick Slab",
