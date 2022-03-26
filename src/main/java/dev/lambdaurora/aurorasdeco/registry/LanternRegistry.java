@@ -58,7 +58,7 @@ public final class LanternRegistry {
 	 * @param lanternId the lantern block id
 	 * @return the wall lantern block
 	 */
-	public static WallLanternBlock registerWallLantern(LanternBlock block, Identifier lanternId) {
+	public static WallLanternBlock registerWallLantern(Registry<Block> registry, LanternBlock block, Identifier lanternId) {
 		var wallLanternId = getWallLanternId(lanternId);
 
 		WallLanternBlock wallLanternBlock;
@@ -67,7 +67,7 @@ public final class LanternRegistry {
 		else if (block == Blocks.LANTERN || block == Blocks.SOUL_LANTERN) {
 			wallLanternBlock = (WallLanternBlock) Registry.BLOCK.get(wallLanternId);
 		} else {
-			wallLanternBlock = RegistrationHelper.BLOCK.register(wallLanternId, new WallLanternBlock(block));
+			wallLanternBlock = Registry.register(registry, wallLanternId, new WallLanternBlock(block));
 			((BlockEntityTypeAccessor) AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE)
 					.aurorasdeco$addSupportedBlock(wallLanternBlock);
 		}
@@ -83,12 +83,12 @@ public final class LanternRegistry {
 	}
 
 	public static WallLanternBlock registerWallLantern(LanternBlock block) {
-		return registerWallLantern(block, Registry.BLOCK.getId(block));
+		return registerWallLantern(Registry.BLOCK, block, Registry.BLOCK.getId(block));
 	}
 
-	public static void tryRegisterWallLantern(Block block, Identifier id) {
+	public static void tryRegisterWallLantern(Registry<Block> registry, Block block, Identifier id) {
 		if (block instanceof LanternBlock)
-			registerWallLantern((LanternBlock) block, id);
+			registerWallLantern(registry, (LanternBlock) block, id);
 	}
 
 	private static Identifier getWallLanternId(Identifier lanternId) {

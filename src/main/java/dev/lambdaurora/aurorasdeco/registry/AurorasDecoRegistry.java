@@ -23,6 +23,7 @@ import com.terraformersmc.terraform.boat.api.item.TerraformBoatItemHelper;
 import com.terraformersmc.terraform.sign.block.TerraformSignBlock;
 import com.terraformersmc.terraform.sign.block.TerraformWallSignBlock;
 import com.terraformersmc.terraform.wood.block.TerraformTrapdoorBlock;
+import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.accessor.BlockEntityTypeAccessor;
 import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
@@ -46,7 +47,6 @@ import dev.lambdaurora.aurorasdeco.util.Derivator;
 import dev.lambdaurora.aurorasdeco.util.Registrar;
 import dev.lambdaurora.aurorasdeco.util.RegistrationHelper;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.fabricmc.fabric.api.object.builder.v1.advancement.CriterionRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
@@ -71,6 +71,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
+import org.quiltmc.qsl.registry.api.event.RegistryMonitor;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -87,9 +88,8 @@ import static net.minecraft.stat.Stats.CUSTOM;
  * @version 1.0.0
  * @since 1.0.0
  */
+@SuppressWarnings("unused")
 public final class AurorasDecoRegistry {
-	private static boolean itemMapIsBroken = true;
-
 	private AurorasDecoRegistry() {
 		throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
 	}
@@ -609,7 +609,7 @@ public final class AurorasDecoRegistry {
 	}
 
 	static <T extends Block> T registerWithItem(String name, T block, Item.Settings settings,
-	                                                    BiFunction<T, Item.Settings, BlockItem> factory) {
+	                                            BiFunction<T, Item.Settings, BlockItem> factory) {
 		registerItem(name, factory.apply(registerBlock(name, block), settings));
 		return block;
 	}
@@ -628,10 +628,6 @@ public final class AurorasDecoRegistry {
 
 	private static <T extends Item> T registerItem(String name, T item) {
 		var o = Registry.register(Registry.ITEM, id(name), item);
-
-		if (itemMapIsBroken && o instanceof BlockItem blockItem) {
-			blockItem.appendBlocks(Item.BLOCK_ITEMS, o);
-		}
 
 		return o;
 	}
@@ -663,8 +659,6 @@ public final class AurorasDecoRegistry {
 
 	@SuppressWarnings("unchecked")
 	public static void init() {
-		itemMapIsBroken = false;
-
 		AurorasDecoPlants.init();
 		AurorasDecoBiomes.init();
 		AurorasDecoSounds.init();
@@ -680,29 +674,36 @@ public final class AurorasDecoRegistry {
 		((BlockItemAccessor) Items.FLOWER_POT).aurorasdeco$setCeilingBlock(HANGING_FLOWER_POT_BLOCK);
 		Item.BLOCK_ITEMS.put(HANGING_FLOWER_POT_BLOCK, Items.FLOWER_POT);
 
-		RegistrationHelper.BLOCK.addRegistrationCallback((helper, id, block) -> {
-			if ((id.getNamespace().equals("betternether") || id.getNamespace().equals("betterend")) && (id.getPath().contains("stripped") || (id.getPath().contains("mushroom") && !id.getPath().contains("mushroom_fir")) || id.getPath().contains("amaranita")))
-				return;
-			if (id.getNamespace().equals("aurorasdeco") && id.getPath().contains("sign_post")) return;
-			if (block instanceof FlowerPotBlock flowerPotBlock) {
-				if (block == Blocks.FLOWER_POT) return;
+		RegistryMonitor.create(Registry.BLOCK)
+				.filter(context -> {
+					var id = context.id();
 
-				RegistrationHelper.BLOCK.register(
-						RegistrationHelper.getIdPath("hanging_flower_pot", id, "^potted[_/]"),
-						new HangingFlowerPotBlock(flowerPotBlock)
-				);
-			} else {
-				WoodType.onBlockRegister(id, block);
-				if (block instanceof FenceBlock fenceBlock) {
-					var signPostBlock = RegistrationHelper.BLOCK.register(
-							RegistrationHelper.getIdPath("sign_post", id, "_fence$"),
-							new SignPostBlock(fenceBlock)
-					);
+					if ((id.getNamespace().equals("betternether") || id.getNamespace().equals("betterend")) && (id.getPath().contains("stripped") || (id.getPath().contains("mushroom") && !id.getPath().contains("mushroom_fir")) || id.getPath().contains("amaranita")))
+						return false;
+					return !id.getNamespace().equals("aurorasdeco") || !id.getPath().contains("sign_post");
+				})
+				.forAll(context -> {
+					if (context.value() instanceof FlowerPotBlock flowerPotBlock) {
+						if (flowerPotBlock == Blocks.FLOWER_POT) return;
 
-					((BlockEntityTypeAccessor) SIGN_POST_BLOCK_ENTITY_TYPE).aurorasdeco$addSupportedBlock(signPostBlock);
-				} else LanternRegistry.tryRegisterWallLantern(block, id);
-			}
-		});
+						Registry.register(
+								context.registry(),
+								AurorasDeco.id(RegistrationHelper.getIdPath("hanging_flower_pot", context.id(), "^potted[_/]")),
+								new HangingFlowerPotBlock(flowerPotBlock)
+						);
+					} else {
+						WoodType.onBlockRegister(context.id(), context.value());
+						if (context.value() instanceof FenceBlock fenceBlock) {
+							var signPostBlock = Registry.register(
+									context.registry(),
+									AurorasDeco.id(RegistrationHelper.getIdPath("sign_post", context.id(), "_fence$")),
+									new SignPostBlock(fenceBlock)
+							);
+
+							((BlockEntityTypeAccessor) SIGN_POST_BLOCK_ENTITY_TYPE).aurorasdeco$addSupportedBlock(signPostBlock);
+						} else LanternRegistry.tryRegisterWallLantern(context.registry(), context.value(), context.id());
+					}
+				});
 
 		RegistrationHelper.BLOCK.init();
 

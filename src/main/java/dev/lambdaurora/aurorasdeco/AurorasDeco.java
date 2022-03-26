@@ -32,6 +32,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.quiltmc.qsl.registry.api.event.RegistryMonitor;
 
 /**
  * Represents the Aurora's Decorations mod.
@@ -50,20 +51,19 @@ public class AurorasDeco implements ModInitializer {
 		log("Aurora's Decorations is initialized, but it's way too late. Sadly Fabric API doesn't support proper initialization.");
 		AurorasDecoRegistry.init();
 
-		RegistrationHelper.ITEM.addRegistrationCallback((helper, id, object) -> {
-			if (id.toString().equals("pockettools:pocket_cactus")) {
+		RegistryMonitor.create(Registry.ITEM).forAll(context -> {
+			if (context.id().toString().equals("pockettools:pocket_cactus")) {
 				Registry.register(Registry.BLOCK, id("big_flower_pot/pocket_cactus"),
-						PottedPlantType.register("pocket_cactus", Blocks.POTTED_CACTUS, object,
+						PottedPlantType.register("pocket_cactus", Blocks.POTTED_CACTUS, context.value(),
 								type -> new BigPottedCactusBlock(type, BigPottedCactusBlock.POCKET_CACTUS_SHAPE)));
-			} else if (PottedPlantType.isValidPlant(object)) {
-				var potBlock = PottedPlantType.registerFromItem(object);
+			} else if (PottedPlantType.isValidPlant(context.value())) {
+				var potBlock = PottedPlantType.registerFromItem(context.value());
 				if (potBlock != null)
 					Registry.register(Registry.BLOCK, id("big_flower_pot/" + potBlock.getPlantType().getId()), potBlock);
 			}
 
-			Blackboard.Color.tryRegisterColorFromItem(id, object);
+			Blackboard.Color.tryRegisterColorFromItem(context.id(), context.value());
 		});
-		RegistrationHelper.ITEM.init();
 
 		ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_OPEN_GUI_FAIL, AurorasDecoPackets::handleSignPostOpenGuiFailPacket);
 		ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_SET_TEXT, AurorasDecoPackets::handleSignPostSetTextPacket);

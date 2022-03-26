@@ -55,7 +55,7 @@ public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<Lante
 		float roll = 0.0F;
 		float angle = MathHelper.lerp(tickDelta, lantern.prevAngle, lantern.angle);
 		lantern.prevAngle = angle;
-		if (lantern.isSwinging() || lantern.isColliding()) {
+		if ((lantern.isSwinging() || lantern.isColliding()) && lantern.getSwingBaseDirection() != null) {
 			switch (lantern.getSwingBaseDirection()) {
 				case NORTH -> pitch = -angle;
 				case SOUTH -> pitch = angle;

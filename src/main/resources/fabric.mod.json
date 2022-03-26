@@ -35,7 +35,11 @@
     "minecraft": ">=1.18.2",
     "fabricloader": ">=0.13.3",
     "fabric": ">=0.44.0",
-    "java": ">=17"
+    "java": ">=17",
+    "quilt_base": "*",
+    "quilt_block_extensions": "*",
+    "quilt_registry": "*",
+    "quilt_tooltip": "*"
   },
   "suggests": {
     "trinkets": ">=3.0.2"

@@ -24,7 +24,6 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.fabricmc.fabric.impl.registry.sync.trackers.StateIdTracker;
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -34,7 +33,6 @@ import java.util.Map;
 
 public final class RegistrationHelper<T> {
 	public static final RegistrationHelper<Block> BLOCK = new RegistrationHelper<>(Registry.BLOCK);
-	public static final RegistrationHelper<Item> ITEM = new RegistrationHelper<>(Registry.ITEM);
 
 	private final Map<Identifier, T> delayedRegistry = new Object2ObjectOpenHashMap<>();
 	private final List<RegistrationCallback<T>> registrationCallbacks = new ArrayList<>();

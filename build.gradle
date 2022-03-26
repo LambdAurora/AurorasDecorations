@@ -81,6 +81,7 @@ dependencies {
 	}
 
 	include(modImplementation("org.quiltmc.qsl.core:qsl_base:${project.quilt_base_version}+${project.minecraft_version}-SNAPSHOT"))
+	include(modImplementation("org.quiltmc.qsl.core:registry:1.0.0+${project.minecraft_version}-SNAPSHOT"))
 	include(modImplementation("org.quiltmc.qsl.block:block_extensions:${project.quilt_block_extensions_version}+${project.minecraft_version}-SNAPSHOT"))
 	include(modImplementation("org.quiltmc.qsl.gui:tooltip:1.0.0+${project.minecraft_version}-SNAPSHOT"))
 }

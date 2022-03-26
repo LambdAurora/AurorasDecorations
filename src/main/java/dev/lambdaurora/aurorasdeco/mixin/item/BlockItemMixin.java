@@ -86,11 +86,13 @@ public abstract class BlockItemMixin extends Item implements BlockItemAccessor {
 		} else if (this.getBlock() instanceof CandleBlock candleBlock) {
 			var candleId = Registry.BLOCK.getId(this.getBlock());
 			if (candleId.getNamespace().equals("minecraft")) {
-				this.aurorasdeco$wallBlock = RegistrationHelper.BLOCK.register(
+				this.aurorasdeco$wallBlock = Registry.register(
+						Registry.BLOCK,
 						AurorasDeco.id("wall_" + candleId.getPath()),
 						new WallCandleBlock(candleBlock)
 				);
-				this.aurorasdeco$ceilingBlock = RegistrationHelper.BLOCK.register(
+				this.aurorasdeco$ceilingBlock = Registry.register(
+						Registry.BLOCK,
 						AurorasDeco.id("chandelier/" + candleId.getPath().replace("_candle", "")),
 						new ChandelierBlock(candleBlock)
 				);
