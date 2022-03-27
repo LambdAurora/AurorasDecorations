@@ -78,8 +78,12 @@ public final class AurorasDecoPlants {
 			new LeavesBlock(QuiltBlockSettings.copyOf(Blocks.BIRCH_LEAVES)),
 			new FabricItemSettings().group(ItemGroup.DECORATIONS),
 			DerivedBlockItem::leaves);
-	public static final LeavesBlock FLOWERING_JACARANDA_LEAVES = registerWithItem("flowering_jacaranda_leaves",
+	public static final LeavesBlock BUDDING_JACARANDA_LEAVES = registerWithItem("budding_jacaranda_leaves",
 			new LeavesBlock(QuiltBlockSettings.copyOf(Blocks.FLOWERING_AZALEA_LEAVES)),
+			new FabricItemSettings().group(ItemGroup.DECORATIONS),
+			DerivedBlockItem::leaves);
+	public static final LeavesBlock FLOWERING_JACARANDA_LEAVES = registerWithItem("flowering_jacaranda_leaves",
+			new LeavesBlock(QuiltBlockSettings.copyOf(BUDDING_JACARANDA_LEAVES)),
 			new FabricItemSettings().group(ItemGroup.DECORATIONS),
 			DerivedBlockItem::leaves);
 

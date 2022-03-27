@@ -5,6 +5,10 @@
 Made by [unascribed](https://unascribed.com/) 
 and is licensed under the [Creative Commons CC0 license][cc0].
 
+## `textures/block/jacaranda_leaves.png`, `textures/block/jacaranda_leaves_flowers.png`, and `textures/block/jacaranda_leaves_budding_flowers.png`
+
+Made by [harpsi](https://www.curseforge.com/members/harpsi_chord/projects).
+
 ## `textures/block/tater_face.png` and `textures/block/tater_side.png`
 
 Made by [Patbox](https://github.com/Patbox).

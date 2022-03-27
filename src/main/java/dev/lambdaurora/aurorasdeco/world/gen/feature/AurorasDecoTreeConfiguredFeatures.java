@@ -112,6 +112,7 @@ public final class AurorasDecoTreeConfiguredFeatures {
 					new WeightedBlockStateProvider(
 							DataPool.<BlockState>builder()
 									.add(AurorasDecoPlants.JACARANDA_LEAVES.getDefaultState(), 2)
+									.add(AurorasDecoPlants.BUDDING_JACARANDA_LEAVES.getDefaultState(), 1)
 									.add(AurorasDecoPlants.FLOWERING_JACARANDA_LEAVES.getDefaultState(), 1)
 					),
 					new BlobFoliagePlacer(UniformIntProvider.create(3, 5), ConstantIntProvider.create(3), 3),
