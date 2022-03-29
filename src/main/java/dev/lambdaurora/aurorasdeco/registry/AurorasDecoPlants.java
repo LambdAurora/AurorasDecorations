@@ -21,6 +21,7 @@ import dev.lambdaurora.aurorasdeco.block.BurntVineBlock;
 import dev.lambdaurora.aurorasdeco.block.DirectionalFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.plant.DaffodilBlock;
 import dev.lambdaurora.aurorasdeco.block.plant.LavenderBlock;
+import dev.lambdaurora.aurorasdeco.block.sapling.JacarandaSaplingGenerator;
 import dev.lambdaurora.aurorasdeco.item.DerivedBlockItem;
 import dev.lambdaurora.aurorasdeco.util.Registrar;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -71,6 +72,17 @@ public final class AurorasDecoPlants {
 
 	public static final FlowerPotBlock POTTED_LAVENDER = registerBlock("potted/lavender",
 			new FlowerPotBlock(LAVENDER.block(), QuiltBlockSettings.of(Material.DECORATION).nonOpaque().breakInstantly()));
+
+	/* Saplings */
+
+	public static final SaplingBlock JACARANDA_SAPLING = registerWithItem("jacaranda_sapling",
+			new SaplingBlock(new JacarandaSaplingGenerator(), QuiltBlockSettings.copyOf(Blocks.OAK_SAPLING)),
+			new FabricItemSettings().group(ItemGroup.DECORATIONS),
+			DerivedBlockItem::sapling
+	);
+
+	public static final FlowerPotBlock POTTED_JACARANDA_SAPLING = registerBlock("potted/jacaranda_sapling",
+			new FlowerPotBlock(JACARANDA_SAPLING, QuiltBlockSettings.of(Material.DECORATION).nonOpaque().breakInstantly()));
 
 	/* Leaves */
 

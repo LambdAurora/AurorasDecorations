@@ -49,6 +49,7 @@
     "item.ItemMixin",
     "item.LeadItemMixin",
     "item.ShovelItemMixin",
+    "world.FoliagePlacerTypeAccessor",
     "world.OverworldBiomeCreatorAccessor",
     "world.OverworldBiomeParametersMixin",
     "world.TreeConfiguredFeaturesAccessor",

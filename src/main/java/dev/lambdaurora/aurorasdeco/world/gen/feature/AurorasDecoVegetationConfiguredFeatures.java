@@ -47,13 +47,14 @@ public final class AurorasDecoVegetationConfiguredFeatures {
 			Feature.RANDOM_SELECTOR,
 			new RandomFeatureConfig(
 					List.of(
+							new WeightedPlacedFeature(PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.JACARANDA_TREE_BEES_015), 0.5f),
 							new WeightedPlacedFeature(PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.FALLEN_OAK_TREE), 0.25f),
 							new WeightedPlacedFeature(PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.FALLEN_BIRCH_TREE), 0.20f),
-							new WeightedPlacedFeature(PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.OAK_BEES_015), 0.5f),
+							new WeightedPlacedFeature(PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.OAK_BEES_015), 0.33333334f),
 							new WeightedPlacedFeature(PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.BIRCH_BEES_015), 0.5f),
-							new WeightedPlacedFeature(PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.FANCY_OAK_BEES_015), 0.33333334F)
+							new WeightedPlacedFeature(PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.FANCY_OAK_BEES_015), 0.33333334f)
 					),
-					PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.JACARANDA_TREE)
+					PlacedFeatureUtil.placedInline(AurorasDecoTreeConfiguredFeatures.FLOWERING_JACARANDA_TREE_BEES_015)
 			)
 	);
 

@@ -14,7 +14,7 @@ is an item created from copper. It has a wide usage in crafting new light source
 
 Copper sulfate is crafted from exploding copper blocks, here's a table on the quantity yield depending on the oxidization state of the copper block:
 
-<table class="explosion-crafting">
+<table class="ls_grid_table explosion-crafting">
 <thead>
     <th>Oxidization State</th>
     <th>Quantity Yield</th>

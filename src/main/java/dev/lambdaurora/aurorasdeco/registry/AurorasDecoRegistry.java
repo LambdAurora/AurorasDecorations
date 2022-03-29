@@ -707,9 +707,6 @@ public final class AurorasDecoRegistry {
 
 		RegistrationHelper.BLOCK.init();
 
-		((SimpleRegistryAccessor<Item>) Registry.ITEM).getById()
-				.forEach((id, holder) -> Blackboard.Color.tryRegisterColorFromItem(id, holder.value()));
-
 		Registry.ITEM.getOrEmpty(new Identifier("pockettools", "pocket_cactus"))
 				.ifPresent(pocketCactus -> registerBigPotted("pocket_cactus", Blocks.POTTED_CACTUS, pocketCactus,
 						type -> new BigPottedCactusBlock(type, BigPottedCactusBlock.POCKET_CACTUS_SHAPE)));

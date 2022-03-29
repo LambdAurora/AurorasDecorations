@@ -30,7 +30,7 @@ import java.util.function.BiFunction;
 import java.util.function.ToIntBiFunction;
 
 /**
- * Represents an block item which got derived from another.
+ * Represents a block item which got derived from another.
  *
  * @author LambdAurora
  * @version 1.0.0
@@ -108,6 +108,10 @@ public class DerivedBlockItem extends BlockItem {
 
 	public static DerivedBlockItem pressurePlate(Block block, Settings settings) {
 		return new DerivedBlockItem(block, KindSearcher.PRESSURE_PLATE_SEARCHER, KindSearcher::findLastOfGroup, settings);
+	}
+
+	public static DerivedBlockItem sapling(Block block, Settings settings) {
+		return new DerivedBlockItem(block, KindSearcher.SAPLING_SEARCHER, KindSearcher::findLastOfGroup, settings);
 	}
 
 	public static DerivedBlockItem strippedLog(Block block, Settings settings) {

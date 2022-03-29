@@ -1,6 +1,12 @@
 # Aurora's Decorations
 
-Welcome to the Aurora's Decorations wiki.
+Welcome to the Aurora's Decorations website!
+
+Aurora's Decorations is a decorations-focused Minecraft mod,
+and tries to have a twist for its different features.
+
+⚠️ This website is still under construction, not every feature are listed yet! ⚠️
+
 You will find information about this mod's features here.
 
 ## Features
@@ -73,3 +79,57 @@ You will find information about this mod's features here.
     Perfect as a dispenser or dropper replacement in some contraptions!
 - Tie leads to fences  
   Leads can now be tied directly between two fences, rather than only fence-mob.
+
+## Pictures
+
+A variety of pictures of some features of this mod:
+
+[![Amethyst Lantern](../images/amethyst_lantern.png)](amethyst_lantern.html)
+
+![Big flower pot and Wall Lanterns](../images/flower_pot_and_wall_lantern.png)
+
+[![Blackboards](../images/blackboards.png)](blackboards.html)
+
+![Benches](../images/bench.png)
+
+[![Braziers](../images/braziers.png)](braziers.html)
+
+![Chandeliers](../images/chandeliers.png)
+
+![Copper Hopper](../images/copper_hopper.png)
+
+[![Copper Sulfate](../images/copper_sulfate.png)](copper_sulfate.html)
+
+![Nether Brick Fence Gate](../images/nether_brick_fence_gate.png)
+
+![Pet Beds](../images/pet_beds.png)
+
+![Placeable Pumpkin Pie](../images/placeable_pumpkin_pie.png)
+
+![Placeable books](../images/in_world_books.png)
+
+![Sawmill & Stumps](../images/sawmill_and_stumps.png)
+
+![Shelves](../images/shelves.png)
+
+![Polished Basalt Wall](../images/polished_basalt_wall.png)
+
+[![Sign Posts](../images/sign_post.png)](sign_posts.html)
+
+![Sleeping bags](../images/sleeping_bags.png)
+
+![Small Log Types](../images/small_log_piles.png)
+
+![Sturdy Stone](../images/sturdy_stone.png)
+
+![Tie leads to fences](../images/leash_tweaks.png)
+
+![Wall Candles](../images/wall_candles.png)
+
+### Plants
+
+[![Burning Vine Tips](../images/burnt_vine.png)](plants/burnt_vine.html)
+
+[![Daffodils](../images/daffodils.png)](plants/daffodil.html)
+
+[![Lavender](../images/lavender.png)](plants/lavender.html)

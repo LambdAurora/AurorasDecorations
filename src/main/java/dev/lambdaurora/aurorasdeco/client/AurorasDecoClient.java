@@ -44,6 +44,9 @@ import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.TallPlantBlock;
 import net.minecraft.client.color.world.BiomeColors;
@@ -203,6 +206,8 @@ public class AurorasDecoClient implements ClientModInitializer {
 				AurorasDecoPlants.LAVENDER.block(),
 				AurorasDecoPlants.POTTED_DAFFODIL,
 				AurorasDecoPlants.POTTED_LAVENDER,
+				AurorasDecoPlants.JACARANDA_SAPLING,
+				AurorasDecoPlants.POTTED_JACARANDA_SAPLING,
 				SAWMILL_BLOCK,
 				SOUL_BRAZIER_BLOCK,
 				WIND_CHIME_BLOCK

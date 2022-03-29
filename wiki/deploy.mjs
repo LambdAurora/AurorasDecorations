@@ -415,7 +415,15 @@ function build_navigation(pages, current_page) {
 		}
 	}
 
-	entries.sort((page1, page2) => page1.raw_title.localeCompare(page2.raw_title))
+	(function sort_entries(entries) {
+		const sorted = entries.sort((page1, page2) => page1.raw_title.localeCompare(page2.raw_title));
+		sorted.forEach(entry => {
+			if (entry.type === "dir") {
+				entry.entries = sort_entries(entry.entries);
+			}
+		})
+		return sorted;
+	})(entries)
 		.forEach(entry => build_navigational_tree(list, entry));
 
 	return html.create_element("nav").with_child(list);

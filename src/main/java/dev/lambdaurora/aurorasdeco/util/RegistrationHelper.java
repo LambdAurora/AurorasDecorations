@@ -18,27 +18,17 @@
 package dev.lambdaurora.aurorasdeco.util;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.mixin.SimpleRegistryAccessor;
 import dev.lambdaurora.aurorasdeco.mixin.StateIdTrackerAccessor;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.fabricmc.fabric.impl.registry.sync.trackers.StateIdTracker;
 import net.minecraft.block.Block;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 public final class RegistrationHelper<T> {
 	public static final RegistrationHelper<Block> BLOCK = new RegistrationHelper<>(Registry.BLOCK);
 
-	private final Map<Identifier, T> delayedRegistry = new Object2ObjectOpenHashMap<>();
-	private final List<RegistrationCallback<T>> registrationCallbacks = new ArrayList<>();
 	private final Registry<T> registry;
 	private StateIdTracker<T, ?> fabricTracker;
-	private boolean early = true;
 
 	private RegistrationHelper(Registry<T> registry) {
 		this.registry = registry;
@@ -53,65 +43,13 @@ public final class RegistrationHelper<T> {
 		return prefix + '/' + namespace + originalId.getPath().replaceAll(replacerRegex, "");
 	}
 
-	/**
-	 * Registers the given object into the registry this helper is associated with.
-	 * Registration may be delayed.
-	 *
-	 * @param name the identifier path
-	 * @param obj the object to register
-	 * @return the registered object
-	 */
-	public <V extends T> V register(String name, V obj) {
-		return this.register(AurorasDeco.id(name), obj);
-	}
-
-	/**
-	 * Registers the given object into the registry this helper is associated with.
-	 * Registration may be delayed.
-	 *
-	 * @param id the identifier
-	 * @param obj the object to register
-	 * @return the registered object
-	 */
-	public <V extends T> V register(Identifier id, V obj) {
-		if (this.early) {
-			this.delayedRegistry.put(id, obj);
-			return obj;
-		} else
-			return Registry.register(this.registry, id, obj);
-	}
-
-	public void addRegistrationCallback(RegistrationCallback<T> callback) {
-		this.registrationCallbacks.add(callback);
-		RegistryEntryAddedCallback.event(this.registry)
-				.register((rawId, id, object) -> callback.onRegistration(this, id, object));
-	}
-
 	public void setFabricTracker(StateIdTracker<T, ?> tracker) {
 		this.fabricTracker = tracker;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void init() {
 		if (this.fabricTracker != null) {
 			((StateIdTrackerAccessor) (Object) this.fabricTracker).callRecalcStateMap();
 		}
-
-		this.delayedRegistry.forEach((id, obj) -> Registry.register(this.registry, id, obj));
-		this.delayedRegistry.clear();
-
-		((SimpleRegistryAccessor<T>) this.registry).getById()
-				.forEach((id, block) -> {
-					for (var callback : this.registrationCallbacks)
-						callback.onRegistration(this, id, block.value());
-				});
-
-		this.early = false;
-
-		this.delayedRegistry.forEach((id, obj) -> Registry.register(this.registry, id, obj));
-	}
-
-	public interface RegistrationCallback<T> {
-		void onRegistration(RegistrationHelper<T> helper, Identifier id, T obj);
 	}
 }

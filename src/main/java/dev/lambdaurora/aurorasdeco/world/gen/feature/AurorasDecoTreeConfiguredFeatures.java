@@ -23,6 +23,7 @@ import dev.lambdaurora.aurorasdeco.mixin.world.TreeConfiguredFeaturesAccessor;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPlants;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.world.gen.feature.config.FallenTreeFeatureConfig;
+import dev.lambdaurora.aurorasdeco.world.gen.foliage.JacarandaFoliagePlacer;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.Holder;
@@ -38,8 +39,6 @@ import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.FeatureConfig;
 import net.minecraft.world.gen.feature.TreeFeatureConfig;
 import net.minecraft.world.gen.feature.size.TwoLayersFeatureSize;
-import net.minecraft.world.gen.foliage.BlobFoliagePlacer;
-import net.minecraft.world.gen.foliage.BushFoliagePlacer;
 import net.minecraft.world.gen.foliage.RandomSpreadFoliagePlacer;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 import net.minecraft.world.gen.stateprovider.SimpleBlockStateProvider;
@@ -48,7 +47,6 @@ import net.minecraft.world.gen.treedecorator.BeehiveTreeDecorator;
 import net.minecraft.world.gen.trunk.BendingTrunkPlacer;
 import net.minecraft.world.gen.trunk.LargeOakTrunkPlacer;
 
-import java.sql.Blob;
 import java.util.List;
 import java.util.OptionalInt;
 
@@ -105,22 +103,56 @@ public final class AurorasDecoTreeConfiguredFeatures {
 	public static final Holder<ConfiguredFeature<TreeFeatureConfig, ?>> JACARANDA_TREE = register(
 			AurorasDeco.id("jacaranda_tree"),
 			Feature.TREE,
-			new TreeFeatureConfig.Builder(
-					SimpleBlockStateProvider.of(AurorasDecoRegistry.JACARANDA_LOG_BLOCK),
-					new LargeOakTrunkPlacer(3, 11, 0)
-					/*new BendingTrunkPlacer(4, 1, 2, 3, UniformIntProvider.create(1,2))*/,
-					new WeightedBlockStateProvider(
-							DataPool.<BlockState>builder()
-									.add(AurorasDecoPlants.JACARANDA_LEAVES.getDefaultState(), 2)
-									.add(AurorasDecoPlants.BUDDING_JACARANDA_LEAVES.getDefaultState(), 1)
-									.add(AurorasDecoPlants.FLOWERING_JACARANDA_LEAVES.getDefaultState(), 1)
-					),
-					new BlobFoliagePlacer(UniformIntProvider.create(3, 5), ConstantIntProvider.create(3), 3),
-					new TwoLayersFeatureSize(1, 0, 1)
+			jacaranda(DataPool.<BlockState>builder()
+					.add(AurorasDecoPlants.JACARANDA_LEAVES.getDefaultState(), 3)
+					.add(AurorasDecoPlants.BUDDING_JACARANDA_LEAVES.getDefaultState(), 1)
 			)
-					.forceDirt()
 					.build()
 	);
+
+	public static final Holder<ConfiguredFeature<TreeFeatureConfig, ?>> JACARANDA_TREE_BEES_015 = register(
+			AurorasDeco.id("jacaranda_tree_bees_015"),
+			Feature.TREE,
+			jacaranda(DataPool.<BlockState>builder()
+					.add(AurorasDecoPlants.JACARANDA_LEAVES.getDefaultState(), 3)
+					.add(AurorasDecoPlants.BUDDING_JACARANDA_LEAVES.getDefaultState(), 1)
+			)
+					.decorators(List.of(BEES_015))
+					.build()
+	);
+
+	public static final Holder<ConfiguredFeature<TreeFeatureConfig, ?>> FLOWERING_JACARANDA_TREE = register(
+			AurorasDeco.id("flowering_jacaranda_tree"),
+			Feature.TREE,
+			jacaranda(DataPool.<BlockState>builder()
+					.add(AurorasDecoPlants.FLOWERING_JACARANDA_LEAVES.getDefaultState(), 3)
+					.add(AurorasDecoPlants.BUDDING_JACARANDA_LEAVES.getDefaultState(), 1)
+			)
+					.build()
+	);
+
+	public static final Holder<ConfiguredFeature<TreeFeatureConfig, ?>> FLOWERING_JACARANDA_TREE_BEES_015 = register(
+			AurorasDeco.id("flowering_jacaranda_tree_bees_015"),
+			Feature.TREE,
+			jacaranda(DataPool.<BlockState>builder()
+					.add(AurorasDecoPlants.FLOWERING_JACARANDA_LEAVES.getDefaultState(), 3)
+					.add(AurorasDecoPlants.BUDDING_JACARANDA_LEAVES.getDefaultState(), 1)
+			)
+					.decorators(List.of(BEES_015))
+					.build()
+	);
+
+	private static TreeFeatureConfig.Builder jacaranda(DataPool.Builder<BlockState> leaves) {
+		return new TreeFeatureConfig.Builder(
+				SimpleBlockStateProvider.of(AurorasDecoRegistry.JACARANDA_LOG_BLOCK),
+				new LargeOakTrunkPlacer(6, 7, 0),
+				new WeightedBlockStateProvider(leaves),
+				new JacarandaFoliagePlacer(null, null),
+				new TwoLayersFeatureSize(0, 0, 0, OptionalInt.of(4))
+		)
+				.dirtProvider(BlockStateProvider.of(Blocks.ROOTED_DIRT))
+				.forceDirt();
+	}
 
 	/* Fallen Trees */
 

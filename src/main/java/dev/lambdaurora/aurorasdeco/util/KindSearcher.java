@@ -245,6 +245,11 @@ public class KindSearcher<I, O> {
 	)
 			.afterMapped(Items.WARPED_PLANKS, ItemStack::getItem)
 			.build();
+	public static final KindSearcher<ItemStack, StackEntry> SAPLING_SEARCHER = itemIdentifierSearcher(
+			entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof SaplingBlock
+	)
+			.afterMapped(Items.DARK_OAK_SAPLING, ItemStack::getItem)
+			.build();
 	public static final KindSearcher<ItemStack, StackEntry> STRIPPED_LOG_SEARCHER = itemIdentifierSearcher(
 			entry -> {
 				if (entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof PillarBlock block

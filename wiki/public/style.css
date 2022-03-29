@@ -78,11 +78,7 @@ details > summary {
 	background-color: #eee;
 }
 
-.explosion-crafting {
-	border-collapse: collapse;
-}
-
-.explosion-crafting td, .crafting-grid td, .crafting-grid th {
+.crafting-grid td, .crafting-grid th {
 	border: 1px solid var(--ls_theme_border_color);
 }
 
@@ -102,6 +98,11 @@ td img, th img {
 	.crafting-grid th {
 		background-color: #333;
 	}
+}
+
+.ls_nav_dir_entry {
+	margin-top: 0.2em;
+	margin-bottom: 0.2em;
 }
 
 /* Images */

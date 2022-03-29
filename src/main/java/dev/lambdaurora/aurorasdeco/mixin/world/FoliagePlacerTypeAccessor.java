@@ -15,18 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.mixin;
+package dev.lambdaurora.aurorasdeco.mixin.world;
 
-import net.minecraft.util.Holder;
-import net.minecraft.util.registry.SimpleRegistry;
-import org.jetbrains.annotations.Nullable;
+import com.mojang.serialization.Codec;
+import net.minecraft.world.gen.foliage.FoliagePlacer;
+import net.minecraft.world.gen.foliage.FoliagePlacerType;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
-import java.util.Map;
-
-@Mixin(SimpleRegistry.class)
-public interface SimpleRegistryAccessor<T> {
-	@Accessor
-	@Nullable Map<T, Holder.Reference<T>> getIntrusiveHolderCache();
+@Mixin(FoliagePlacerType.class)
+public interface FoliagePlacerTypeAccessor {
+	@Invoker("<init>")
+	static <P extends FoliagePlacer> FoliagePlacerType<P> create(Codec<P> codec) {
+		throw new IllegalStateException("Mixin failed to inject.");
+	}
 }
