@@ -724,6 +724,31 @@ public final class AurorasDecoRegistry {
 		}
 		SleepingBagBlock.appendToPointOfInterest(PointOfInterestType.HOME);
 
+		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_LOG_BLOCK, 5, 5);
+		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_WOOD_BLOCK, 5, 5);
+		FlammableBlockRegistry.getDefaultInstance().add(FLOWERING_AZALEA_LOG_BLOCK, 5, 5);
+		FlammableBlockRegistry.getDefaultInstance().add(FLOWERING_AZALEA_WOOD_BLOCK, 5, 5);
+		FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_AZALEA_LOG_BLOCK, 5, 5);
+		FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_AZALEA_WOOD_BLOCK, 5, 5);
+		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_PLANKS_BLOCK, 5, 20);
+		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_FENCE_BLOCK, 5, 20);
+		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_FENCE_GATE_BLOCK, 5, 20);
+		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_SLAB_BLOCK, 5, 20);
+		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_STAIRS_BLOCK, 5, 20);
+		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_LOG_BLOCK, 5, 5);
+		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_WOOD_BLOCK, 5, 5);
+		FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_JACARANDA_LOG_BLOCK, 5, 5);
+		FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_JACARANDA_WOOD_BLOCK, 5, 5);
+		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_PLANKS_BLOCK, 5, 20);
+		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_FENCE_BLOCK, 5, 20);
+		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_FENCE_GATE_BLOCK, 5, 20);
+		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_SLAB_BLOCK, 5, 20);
+		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_STAIRS_BLOCK, 5, 20);
+		FlammableBlockRegistry.getDefaultInstance().add(AurorasDecoPlants.JACARANDA_LEAVES, 30, 60);
+		FlammableBlockRegistry.getDefaultInstance().add(AurorasDecoPlants.BUDDING_JACARANDA_LEAVES, 30, 60);
+		FlammableBlockRegistry.getDefaultInstance().add(AurorasDecoPlants.FLOWERING_JACARANDA_LEAVES, 30, 60);
+		FlammableBlockRegistry.getDefaultInstance().add(AurorasDecoTags.PET_BEDS, 10, 30);
+
 		WoodType.registerWoodTypeModificationCallback(woodType -> {
 			var block = registerWithItem("stump/" + woodType.getPathName(),
 					new StumpBlock(woodType),
@@ -762,21 +787,5 @@ public final class AurorasDecoRegistry {
 						.addSelfTo(BENCH_BLOCK_ENTITY_TYPE)
 						.flammable(woodType.getComponent(WoodType.ComponentType.PLANKS).getFlammableEntry()),
 				WoodType.ComponentType.PLANKS);
-
-		FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_AZALEA_LOG_BLOCK, 5, 5);
-		FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_AZALEA_WOOD_BLOCK, 5, 5);
-		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_PLANKS_BLOCK, 5, 20);
-		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_FENCE_BLOCK, 5, 20);
-		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_FENCE_GATE_BLOCK, 5, 20);
-		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_SLAB_BLOCK, 5, 20);
-		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_STAIRS_BLOCK, 5, 20);
-		FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_JACARANDA_LOG_BLOCK, 5, 5);
-		FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_JACARANDA_WOOD_BLOCK, 5, 5);
-		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_PLANKS_BLOCK, 5, 20);
-		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_FENCE_BLOCK, 5, 20);
-		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_FENCE_GATE_BLOCK, 5, 20);
-		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_SLAB_BLOCK, 5, 20);
-		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_STAIRS_BLOCK, 5, 20);
-		FlammableBlockRegistry.getDefaultInstance().add(AurorasDecoTags.PET_BEDS, 10, 30);
 	}
 }
