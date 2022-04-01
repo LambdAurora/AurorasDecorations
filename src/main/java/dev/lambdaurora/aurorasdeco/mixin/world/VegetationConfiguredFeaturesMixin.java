@@ -56,7 +56,7 @@ public class VegetationConfiguredFeaturesMixin {
 	)
 	private static List<BlockState> onCreateMeadowFlowerList(List<BlockState> states) {
 		var newStates = new ArrayList<>(states);
-		newStates.addAll(AurorasDecoPlants.DAFFODIL.block().getStateManager().getStates());
+		newStates.add(AurorasDecoPlants.DAFFODIL.block().getDefaultState());
 		return newStates;
 	}
 }
