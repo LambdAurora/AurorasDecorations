@@ -667,6 +667,8 @@ public final class AurorasDecoRegistry {
 		StrippableLogBlock.register(AZALEA_WOOD_BLOCK, STRIPPED_AZALEA_WOOD_BLOCK);
 		StrippableLogBlock.register(FLOWERING_AZALEA_LOG_BLOCK, STRIPPED_AZALEA_LOG_BLOCK);
 		StrippableLogBlock.register(FLOWERING_AZALEA_WOOD_BLOCK, STRIPPED_AZALEA_WOOD_BLOCK);
+		StrippableLogBlock.register(JACARANDA_LOG_BLOCK, STRIPPED_JACARANDA_LOG_BLOCK);
+		StrippableLogBlock.register(JACARANDA_WOOD_BLOCK, STRIPPED_JACARANDA_WOOD_BLOCK);
 		OxidizableBlocksRegistry.registerWaxableBlockPair(BLACKBOARD_BLOCK, WAXED_BLACKBOARD_BLOCK);
 		OxidizableBlocksRegistry.registerWaxableBlockPair(CHALKBOARD_BLOCK, WAXED_CHALKBOARD_BLOCK);
 		OxidizableBlocksRegistry.registerWaxableBlockPair(GLASSBOARD_BLOCK, WAXED_GLASSBOARD_BLOCK);
