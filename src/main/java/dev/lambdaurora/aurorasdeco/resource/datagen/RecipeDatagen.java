@@ -17,56 +17,13 @@
 
 package dev.lambdaurora.aurorasdeco.resource.datagen;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.gson.JsonElement;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import org.quiltmc.qsl.recipe.api.RecipeManagerHelper;
 
 public final class RecipeDatagen {
-	public static final Logger LOGGER = LogManager.getLogger("aurorasdeco:datagen/recipe");
-
-	private static final Map<RecipeType<?>, List<Recipe<?>>> RECIPES = new Object2ObjectOpenHashMap<>();
-	private static final Map<Recipe<?>, String> RECIPES_CATEGORIES = new Object2ObjectOpenHashMap<>();
-
-	private RecipeDatagen() {
-		throw new UnsupportedOperationException("RecipeDatagen only contains static definitions.");
-	}
-
-	public static void applyRecipes(Map<Identifier, JsonElement> map,
-	                                Map<RecipeType<?>, ImmutableMap.Builder<Identifier, Recipe<?>>> builderMap) {
-		var recipeCount = new int[]{0};
-		RECIPES.forEach((key, recipes) -> {
-			var recipeBuilder = builderMap.computeIfAbsent(key, o -> ImmutableMap.builder());
-
-			recipes.forEach(recipe -> {
-				if (!map.containsKey(recipe.getId())) {
-					recipeBuilder.put(recipe.getId(), recipe);
-					recipeCount[0]++;
-				}
-			});
-		});
-
-		LOGGER.info("Loaded {} additional recipes", recipeCount[0]);
-	}
-
 	public static Recipe<?> registerRecipe(Recipe<?> recipe, String category) {
-		var recipes = RECIPES.computeIfAbsent(recipe.getType(), recipeType -> new ArrayList<>());
-
-		for (var other : recipes) {
-			if (other.getId().equals(recipe.getId()))
-				return other;
-		}
-
-		recipes.add(recipe);
-		RECIPES_CATEGORIES.put(recipe, category);
+		RecipeManagerHelper.registerStaticRecipe(recipe);
 
 		var advancementId = new Identifier(recipe.getId().getNamespace(), "recipes/" + category + "/" + recipe.getId().getPath());
 		AdvancementDatagen.register(advancementId, () -> AdvancementDatagen.simpleRecipeUnlock(recipe));

@@ -24,7 +24,6 @@ import com.terraformersmc.terraform.sign.block.TerraformSignBlock;
 import com.terraformersmc.terraform.sign.block.TerraformWallSignBlock;
 import com.terraformersmc.terraform.wood.block.TerraformTrapdoorBlock;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.Blackboard;
 import dev.lambdaurora.aurorasdeco.accessor.BlockEntityTypeAccessor;
 import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
 import dev.lambdaurora.aurorasdeco.accessor.ItemExtensions;
@@ -36,7 +35,6 @@ import dev.lambdaurora.aurorasdeco.item.BlackboardItem;
 import dev.lambdaurora.aurorasdeco.item.DerivedBlockItem;
 import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
 import dev.lambdaurora.aurorasdeco.item.SignPostItem;
-import dev.lambdaurora.aurorasdeco.mixin.SimpleRegistryAccessor;
 import dev.lambdaurora.aurorasdeco.recipe.BlackboardCloneRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.ExplodingRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
@@ -46,7 +44,6 @@ import dev.lambdaurora.aurorasdeco.screen.ShelfScreenHandler;
 import dev.lambdaurora.aurorasdeco.util.Derivator;
 import dev.lambdaurora.aurorasdeco.util.Registrar;
 import dev.lambdaurora.aurorasdeco.util.RegistrationHelper;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
@@ -71,6 +68,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
+import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 import org.quiltmc.qsl.registry.api.event.RegistryMonitor;
 
 import java.util.function.BiFunction;
@@ -97,69 +95,69 @@ public final class AurorasDecoRegistry {
 	/* Blocks & Items */
 
 	public static final LanternBlock AMETHYST_LANTERN_BLOCK = registerWithItem("amethyst_lantern",
-			new AmethystLanternBlock(), new FabricItemSettings().group(ItemGroup.DECORATIONS),
+			new AmethystLanternBlock(), new QuiltItemSettings().group(ItemGroup.DECORATIONS),
 			DerivedBlockItem::lantern);
 
 	//region Azalea
 	public static final PillarBlock AZALEA_LOG_BLOCK = registerWithItem("azalea_log",
 			createStrippableLogBlock(MapColor.DULL_PINK, MapColor.DARK_DULL_PINK),
-			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::log);
 	public static final PillarBlock STRIPPED_AZALEA_LOG_BLOCK = registerWithItem("stripped_azalea_log",
 			new PillarBlock(QuiltBlockSettings.copyOf(Blocks.STRIPPED_OAK_LOG).mapColor(MapColor.DARK_DULL_PINK)),
-			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::strippedLog);
 	public static final PillarBlock STRIPPED_AZALEA_WOOD_BLOCK = registerWithItem("stripped_azalea_wood",
 			new PillarBlock(QuiltBlockSettings.copyOf(STRIPPED_AZALEA_LOG_BLOCK)),
-			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::strippedWood);
 	public static final PillarBlock AZALEA_WOOD_BLOCK = registerWithItem("azalea_wood",
 			createStrippableLogBlock(MapColor.DULL_PINK, MapColor.DARK_DULL_PINK),
-			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::wood);
 	public static final PillarBlock FLOWERING_AZALEA_LOG_BLOCK = registerWithItem("flowering_azalea_log",
 			createFloweringLogBlock(() -> AZALEA_LOG_BLOCK, MapColor.DULL_PINK, MapColor.DARK_DULL_PINK),
-			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::log);
 	public static final PillarBlock FLOWERING_AZALEA_WOOD_BLOCK = registerWithItem("flowering_azalea_wood",
 			createFloweringLogBlock(() -> AZALEA_WOOD_BLOCK, MapColor.DULL_PINK, MapColor.DARK_DULL_PINK),
-			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::wood);
 	public static final Block AZALEA_PLANKS_BLOCK = registerWithItem("azalea_planks",
 			new Block(QuiltBlockSettings.copyOf(Blocks.OAK_PLANKS).mapColor(MapColor.DULL_PINK)),
-			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::planks);
 	public static final Block AZALEA_SLAB_BLOCK = registerWithItem("azalea_slab",
-			new SlabBlock(QuiltBlockSettings.copyOf(AZALEA_PLANKS_BLOCK)), new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			new SlabBlock(QuiltBlockSettings.copyOf(AZALEA_PLANKS_BLOCK)), new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::woodenSlab
 	);
 	public static final Block AZALEA_STAIRS_BLOCK = registerWithItem("azalea_stairs",
 			new AuroraStairsBlock(AZALEA_PLANKS_BLOCK.getDefaultState(), QuiltBlockSettings.copyOf(AZALEA_PLANKS_BLOCK)),
-			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::woodenStairs
 	);
 	public static final Block AZALEA_BUTTON_BLOCK = registerWithItem("azalea_button",
-			new AuroraWoodenButtonBlock(QuiltBlockSettings.copyOf(Blocks.OAK_BUTTON)), new FabricItemSettings().group(ItemGroup.REDSTONE),
+			new AuroraWoodenButtonBlock(QuiltBlockSettings.copyOf(Blocks.OAK_BUTTON)), new QuiltItemSettings().group(ItemGroup.REDSTONE),
 			DerivedBlockItem::woodenButton
 	);
 	public static final DoorBlock AZALEA_DOOR = registerWithItem("azalea_door",
 			new AuroraDoorBlock(QuiltBlockSettings.copyOf(Blocks.OAK_DOOR).mapColor(AZALEA_PLANKS_BLOCK.getDefaultMapColor())),
-			new FabricItemSettings().group(ItemGroup.REDSTONE),
+			new QuiltItemSettings().group(ItemGroup.REDSTONE),
 			DerivedBlockItem::door
 	);
 	public static final FenceBlock AZALEA_FENCE_BLOCK = registerWithItem("azalea_fence",
 			new FenceBlock(QuiltBlockSettings.copyOf(AZALEA_PLANKS_BLOCK)),
-			new FabricItemSettings().group(ItemGroup.DECORATIONS),
+			new QuiltItemSettings().group(ItemGroup.DECORATIONS),
 			DerivedBlockItem::fence);
 	public static final FenceGateBlock AZALEA_FENCE_GATE_BLOCK = registerWithItem("azalea_fence_gate",
-			new FenceGateBlock(QuiltBlockSettings.copyOf(AZALEA_PLANKS_BLOCK)), new FabricItemSettings().group(ItemGroup.REDSTONE),
+			new FenceGateBlock(QuiltBlockSettings.copyOf(AZALEA_PLANKS_BLOCK)), new QuiltItemSettings().group(ItemGroup.REDSTONE),
 			DerivedBlockItem::fenceGate);
 	public static final Block AZALEA_PRESSURE_PLATE_BLOCK = registerWithItem("azalea_pressure_plate",
 			new AuroraPressurePlateBlock(
 					PressurePlateBlock.ActivationRule.EVERYTHING,
 					QuiltBlockSettings.copyOf(Blocks.OAK_PRESSURE_PLATE).mapColor(AZALEA_PLANKS_BLOCK.getDefaultMapColor())
 			),
-			new FabricItemSettings().group(ItemGroup.REDSTONE),
+			new QuiltItemSettings().group(ItemGroup.REDSTONE),
 			DerivedBlockItem::pressurePlate
 	);
 	public static final TerraformSignBlock AZALEA_SIGN_BLOCK = registerBlock("azalea_sign",
@@ -170,7 +168,7 @@ public final class AurorasDecoRegistry {
 	);
 	public static final TrapdoorBlock AZALEA_TRAPDOOR = registerWithItem("azalea_trapdoor",
 			new TerraformTrapdoorBlock(QuiltBlockSettings.copyOf(Blocks.OAK_TRAPDOOR).mapColor(AZALEA_PLANKS_BLOCK.getDefaultMapColor())),
-			new FabricItemSettings().group(ItemGroup.REDSTONE),
+			new QuiltItemSettings().group(ItemGroup.REDSTONE),
 			DerivedBlockItem::trapdoor
 	);
 	public static final Block AZALEA_WALL_SIGN_BLOCK = registerBlock("azalea_wall_sign",
@@ -186,7 +184,7 @@ public final class AurorasDecoRegistry {
 
 	public static final SignItem AZALEA_SIGN_ITEM = registerItem("azalea_sign",
 			new SignItem(
-					new FabricItemSettings().group(ItemGroup.DECORATIONS),
+					new QuiltItemSettings().group(ItemGroup.DECORATIONS),
 					AZALEA_SIGN_BLOCK, AZALEA_WALL_SIGN_BLOCK
 			)
 	);
@@ -199,50 +197,50 @@ public final class AurorasDecoRegistry {
 	//region Jacaranda
 	public static final PillarBlock JACARANDA_LOG_BLOCK = registerWithItem("jacaranda_log",
 			createStrippableLogBlock(MapColor.PALE_PURPLE, MapColor.TERRACOTTA_PURPLE),
-			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::log);
 	public static final PillarBlock STRIPPED_JACARANDA_LOG_BLOCK = registerWithItem("stripped_jacaranda_log",
 			new PillarBlock(QuiltBlockSettings.copyOf(Blocks.STRIPPED_OAK_LOG).mapColor(MapColor.TERRACOTTA_PURPLE)),
-			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::strippedLog);
 	public static final PillarBlock STRIPPED_JACARANDA_WOOD_BLOCK = registerWithItem("stripped_jacaranda_wood",
 			new PillarBlock(QuiltBlockSettings.copyOf(STRIPPED_JACARANDA_LOG_BLOCK)),
-			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::strippedWood);
 	public static final PillarBlock JACARANDA_WOOD_BLOCK = registerWithItem("jacaranda_wood",
 			createStrippableLogBlock(MapColor.PALE_PURPLE, MapColor.TERRACOTTA_PURPLE),
-			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::wood);
 	public static final Block JACARANDA_PLANKS_BLOCK = registerWithItem("jacaranda_planks",
 			new Block(QuiltBlockSettings.copyOf(AZALEA_PLANKS_BLOCK).mapColor(MapColor.PALE_PURPLE)),
-			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::planks);
 	public static final Block JACARANDA_SLAB_BLOCK = registerWithItem("jacaranda_slab",
-			new SlabBlock(QuiltBlockSettings.copyOf(JACARANDA_PLANKS_BLOCK)), new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			new SlabBlock(QuiltBlockSettings.copyOf(JACARANDA_PLANKS_BLOCK)), new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::woodenSlab
 	);
 	public static final Block JACARANDA_STAIRS_BLOCK = registerWithItem("jacaranda_stairs",
 			new AuroraStairsBlock(JACARANDA_PLANKS_BLOCK.getDefaultState(), QuiltBlockSettings.copyOf(JACARANDA_PLANKS_BLOCK)),
-			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::woodenStairs
 	);
 	public static final Block JACARANDA_BUTTON_BLOCK = registerWithItem("jacaranda_button",
-			new AuroraWoodenButtonBlock(QuiltBlockSettings.copyOf(Blocks.OAK_BUTTON)), new FabricItemSettings().group(ItemGroup.REDSTONE),
+			new AuroraWoodenButtonBlock(QuiltBlockSettings.copyOf(Blocks.OAK_BUTTON)), new QuiltItemSettings().group(ItemGroup.REDSTONE),
 			DerivedBlockItem::woodenButton
 	);
 	public static final FenceBlock JACARANDA_FENCE_BLOCK = registerWithItem("jacaranda_fence",
 			new FenceBlock(QuiltBlockSettings.copyOf(JACARANDA_PLANKS_BLOCK)),
-			new FabricItemSettings().group(ItemGroup.DECORATIONS),
+			new QuiltItemSettings().group(ItemGroup.DECORATIONS),
 			DerivedBlockItem::fence);
 	public static final FenceGateBlock JACARANDA_FENCE_GATE_BLOCK = registerWithItem("jacaranda_fence_gate",
-			new FenceGateBlock(QuiltBlockSettings.copyOf(JACARANDA_PLANKS_BLOCK)), new FabricItemSettings().group(ItemGroup.REDSTONE),
+			new FenceGateBlock(QuiltBlockSettings.copyOf(JACARANDA_PLANKS_BLOCK)), new QuiltItemSettings().group(ItemGroup.REDSTONE),
 			DerivedBlockItem::fenceGate);
 	public static final Block JACARANDA_PRESSURE_PLATE_BLOCK = registerWithItem("jacaranda_pressure_plate",
 			new AuroraPressurePlateBlock(
 					PressurePlateBlock.ActivationRule.EVERYTHING,
 					QuiltBlockSettings.copyOf(Blocks.OAK_PRESSURE_PLATE).mapColor(JACARANDA_PLANKS_BLOCK.getDefaultMapColor())
 			),
-			new FabricItemSettings().group(ItemGroup.REDSTONE),
+			new QuiltItemSettings().group(ItemGroup.REDSTONE),
 			DerivedBlockItem::pressurePlate
 	);
 	public static final TerraformSignBlock JACARANDA_SIGN_BLOCK = registerBlock("jacaranda_sign",
@@ -264,7 +262,7 @@ public final class AurorasDecoRegistry {
 
 	public static final SignItem JACARANDA_SIGN_ITEM = registerItem("jacaranda_sign",
 			new SignItem(
-					new FabricItemSettings().group(ItemGroup.DECORATIONS),
+					new QuiltItemSettings().group(ItemGroup.DECORATIONS),
 					JACARANDA_SIGN_BLOCK, JACARANDA_WALL_SIGN_BLOCK
 			)
 	);
@@ -278,7 +276,7 @@ public final class AurorasDecoRegistry {
 	public static final BigFlowerPotBlock BIG_FLOWER_POT_BLOCK = registerWithItem(
 			"big_flower_pot",
 			PottedPlantType.register("none", Blocks.AIR, Items.AIR),
-			new FabricItemSettings().group(ItemGroup.DECORATIONS)
+			new QuiltItemSettings().group(ItemGroup.DECORATIONS)
 	);
 	public static final BigFlowerPotBlock.PlantAirBlock PLANT_AIR_BLOCK = registerBlock(
 			"plant_air",
@@ -323,42 +321,42 @@ public final class AurorasDecoRegistry {
 					.nonOpaque()
 					.sounds(BlockSoundGroup.WOOD),
 					false),
-			new FabricItemSettings().group(ItemGroup.DECORATIONS).equipmentSlot(stack -> EquipmentSlot.HEAD),
+			new QuiltItemSettings().group(ItemGroup.DECORATIONS).equipmentSlot(stack -> EquipmentSlot.HEAD),
 			BlackboardItem::new);
 	public static final BlackboardBlock WAXED_BLACKBOARD_BLOCK = registerWithItem("waxed_blackboard",
 			new BlackboardBlock(QuiltBlockSettings.copyOf(BLACKBOARD_BLOCK), true),
-			new FabricItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
+			new QuiltItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
 			BlackboardItem::new);
 
 	public static final BlackboardBlock CHALKBOARD_BLOCK = registerWithItem("chalkboard",
 			new BlackboardBlock(QuiltBlockSettings.copyOf(BLACKBOARD_BLOCK), false),
-			new FabricItemSettings().group(ItemGroup.DECORATIONS).equipmentSlot(stack -> EquipmentSlot.HEAD),
+			new QuiltItemSettings().group(ItemGroup.DECORATIONS).equipmentSlot(stack -> EquipmentSlot.HEAD),
 			BlackboardItem::new);
 	public static final BlackboardBlock WAXED_CHALKBOARD_BLOCK = registerWithItem("waxed_chalkboard",
 			new BlackboardBlock(QuiltBlockSettings.copyOf(CHALKBOARD_BLOCK), true),
-			new FabricItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
+			new QuiltItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
 			BlackboardItem::new);
 
 	public static final BlackboardBlock GLASSBOARD_BLOCK = registerWithItem("glassboard",
 			new BlackboardBlock(QuiltBlockSettings.copyOf(BLACKBOARD_BLOCK).sounds(BlockSoundGroup.GLASS), false),
-			new FabricItemSettings().group(ItemGroup.DECORATIONS).equipmentSlot(stack -> EquipmentSlot.HEAD),
+			new QuiltItemSettings().group(ItemGroup.DECORATIONS).equipmentSlot(stack -> EquipmentSlot.HEAD),
 			BlackboardItem::new);
 	public static final BlackboardBlock WAXED_GLASSBOARD_BLOCK = registerWithItem("waxed_glassboard",
 			new BlackboardBlock(QuiltBlockSettings.copyOf(GLASSBOARD_BLOCK), true),
-			new FabricItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
+			new QuiltItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
 			BlackboardItem::new);
 	//endregion
 
 	//region Copper Sulfate
-	public static final Item COPPER_SULFATE_ITEM = registerItem("copper_sulfate", new Item(new FabricItemSettings()
+	public static final Item COPPER_SULFATE_ITEM = registerItem("copper_sulfate", new Item(new QuiltItemSettings()
 			.group(ItemGroup.MISC)));
 	public static final LanternBlock COPPER_SULFATE_LANTERN_BLOCK = registerWithItem("copper_sulfate_lantern",
 			new LanternBlock(QuiltBlockSettings.copyOf(Blocks.LANTERN)),
-			new FabricItemSettings().group(ItemGroup.DECORATIONS),
+			new QuiltItemSettings().group(ItemGroup.DECORATIONS),
 			DerivedBlockItem::lantern);
 	public static final CopperSulfateCampfireBlock COPPER_SULFATE_CAMPFIRE_BLOCK = Registrar.register("copper_sulfate_campfire",
 					new CopperSulfateCampfireBlock(QuiltBlockSettings.copyOf(Blocks.CAMPFIRE).ticksRandomly()))
-			.withItem(new FabricItemSettings().group(ItemGroup.DECORATIONS), DerivedBlockItem::campfire)
+			.withItem(new QuiltItemSettings().group(ItemGroup.DECORATIONS), DerivedBlockItem::campfire)
 			.addSelfTo(BlockEntityType.CAMPFIRE)
 			.finish().block();
 	public static final AuroraTorchBlock COPPER_SULFATE_TORCH_BLOCK = registerBlock("copper_sulfate_torch",
@@ -368,20 +366,20 @@ public final class AurorasDecoRegistry {
 					.dropsLike(COPPER_SULFATE_TORCH_BLOCK), COPPER_SULFATE_FLAME));
 	public static final WallStandingBlockItem COPPER_SULFATE_TORCH_ITEM = registerItem("copper_sulfate_torch",
 			new WallStandingBlockItem(COPPER_SULFATE_TORCH_BLOCK, COPPER_SULFATE_WALL_TORCH_BLOCK,
-					new FabricItemSettings().group(ItemGroup.DECORATIONS)));
+					new QuiltItemSettings().group(ItemGroup.DECORATIONS)));
 	//endregion
 
 	//region Redstone
 	public static final CopperHopperBlock COPPER_HOPPER_BLOCK = registerWithItem("copper_hopper",
 			new CopperHopperBlock(QuiltBlockSettings.copyOf(Blocks.HOPPER).mapColor(MapColor.ORANGE)),
-			new FabricItemSettings().group(ItemGroup.REDSTONE),
+			new QuiltItemSettings().group(ItemGroup.REDSTONE),
 			DerivedBlockItem::hopper);
 	public static final SturdyStoneBlock STURDY_STONE_BLOCK = registerWithItem("sturdy_stone",
 			new SturdyStoneBlock(QuiltBlockSettings.of(Material.STONE).requiresTool().strength(3.5f)),
-			new FabricItemSettings().group(ItemGroup.REDSTONE));
+			new QuiltItemSettings().group(ItemGroup.REDSTONE));
 	public static final FenceGateBlock NETHER_BRICK_FENCE_GATE = registerWithItem("nether_brick_fence_gate",
 			new FenceGateBlock(QuiltBlockSettings.copyOf(Blocks.NETHER_BRICK_FENCE)),
-			new FabricItemSettings().group(ItemGroup.REDSTONE),
+			new QuiltItemSettings().group(ItemGroup.REDSTONE),
 			DerivedBlockItem::fenceGate);
 	//endregion
 
@@ -396,7 +394,7 @@ public final class AurorasDecoRegistry {
 	public static final PieBlock PUMPKIN_PIE_BLOCK = registerBlock("pumpkin_pie", PieBlock.fromPieItem(Items.PUMPKIN_PIE));
 
 	public static final SawmillBlock SAWMILL_BLOCK = registerWithItem("sawmill", new SawmillBlock(),
-			new FabricItemSettings().group(ItemGroup.DECORATIONS));
+			new QuiltItemSettings().group(ItemGroup.DECORATIONS));
 
 	//region Wall lanterns
 	public static final WallLanternBlock WALL_LANTERN_BLOCK = registerBlock("wall_lantern",
@@ -421,13 +419,13 @@ public final class AurorasDecoRegistry {
 	//region Braziers
 	public static final BrazierBlock BRAZIER_BLOCK = registerWithItem("brazier",
 			new BrazierBlock(MapColor.BRIGHT_RED, 1, 15, ParticleTypes.FLAME),
-			new FabricItemSettings().group(ItemGroup.DECORATIONS));
+			new QuiltItemSettings().group(ItemGroup.DECORATIONS));
 	public static final BrazierBlock SOUL_BRAZIER_BLOCK = registerWithItem("soul_brazier",
 			new BrazierBlock(MapColor.LIGHT_BLUE, 2, 10, ParticleTypes.SOUL),
-			new FabricItemSettings().group(ItemGroup.DECORATIONS));
+			new QuiltItemSettings().group(ItemGroup.DECORATIONS));
 	public static final BrazierBlock COPPER_SULFATE_BRAZIER_BLOCK = registerWithItem("copper_sulfate_brazier",
 			new CopperSulfateBrazierBlock(MapColor.EMERALD_GREEN, 2, 14, COPPER_SULFATE_FLAME),
-			new FabricItemSettings().group(ItemGroup.DECORATIONS));
+			new QuiltItemSettings().group(ItemGroup.DECORATIONS));
 	//endregion
 
 	//region Calcite
@@ -437,7 +435,7 @@ public final class AurorasDecoRegistry {
 
 	public static final Block POLISHED_CALCITE = registerWithItem("polished_calcite",
 			new Block(QuiltBlockSettings.copyOf(Blocks.CALCITE)),
-			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem.itemWithStrictPositionFactory(Items.CALCITE));
 	private static final Derivator POLISHED_CALCITE_DERIVATOR = new Derivator(POLISHED_CALCITE.getDefaultState());
 	public static final SlabBlock POLISHED_CALCITE_SLAB = POLISHED_CALCITE_DERIVATOR.slab(Items.DEEPSLATE_TILE_SLAB);
@@ -446,7 +444,7 @@ public final class AurorasDecoRegistry {
 
 	public static final Block CALCITE_BRICKS = registerWithItem("calcite_bricks",
 			new Block(QuiltBlockSettings.copyOf(POLISHED_CALCITE)),
-			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem.itemWithStrictPositionFactory(Items.CHISELED_DEEPSLATE));
 	private static final Derivator CALCITE_BRICKS_DERIVATOR = new Derivator(CALCITE_BRICKS.getDefaultState());
 	public static final Block MOSSY_CALCITE_BRICKS = CALCITE_BRICKS_DERIVATOR.mossy();
@@ -468,7 +466,7 @@ public final class AurorasDecoRegistry {
 
 	public static final Block POLISHED_TUFF = registerWithItem("polished_tuff",
 			new Block(QuiltBlockSettings.copyOf(Blocks.TUFF)),
-			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem.itemWithStrictPositionFactory(Items.TUFF));
 	private static final Derivator POLISHED_TUFF_DERIVATOR = new Derivator(POLISHED_TUFF.getDefaultState());
 	public static final SlabBlock POLISHED_TUFF_SLAB = POLISHED_TUFF_DERIVATOR.slab(Items.DEEPSLATE_TILE_SLAB);
@@ -477,7 +475,7 @@ public final class AurorasDecoRegistry {
 
 	public static final Block TUFF_BRICKS = registerWithItem("tuff_bricks",
 			new Block(QuiltBlockSettings.copyOf(POLISHED_TUFF)),
-			new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS),
+			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem.itemWithStrictPositionFactory(CHISELED_CALCITE_BRICKS.asItem()));
 	private static final Derivator TUFF_BRICKS_DERIVATOR = new Derivator(TUFF_BRICKS.getDefaultState());
 	public static final Block MOSSY_TUFF_BRICKS = TUFF_BRICKS_DERIVATOR.mossy();
@@ -506,7 +504,7 @@ public final class AurorasDecoRegistry {
 
 	public static final FenceLikeWallBlock POLISHED_BASALT_WALL = registerWithItem("polished_basalt_wall",
 			new FenceLikeWallBlock(QuiltBlockSettings.copyOf(Blocks.POLISHED_BASALT)),
-			new FabricItemSettings().group(ItemGroup.DECORATIONS), DerivedBlockItem::wall);
+			new QuiltItemSettings().group(ItemGroup.DECORATIONS), DerivedBlockItem::wall);
 
 	/* Block Entities */
 
@@ -618,7 +616,7 @@ public final class AurorasDecoRegistry {
 		return registerWithItem("pet_bed/" + color.getName(),
 				new PetBedBlock(QuiltBlockSettings.of(Material.WOOL)
 						.mapColor(color).sounds(BlockSoundGroup.WOOD).strength(.2f)),
-				new FabricItemSettings().group(ItemGroup.DECORATIONS));
+				new QuiltItemSettings().group(ItemGroup.DECORATIONS));
 	}
 
 	private static <T extends BigFlowerPotBlock> T registerBigPotted(String name, Block plant, Item item,
@@ -722,7 +720,7 @@ public final class AurorasDecoRegistry {
 		for (var color : colors) {
 			var block = SleepingBagBlock.register(color);
 			registerItem("sleeping_bag/" + block.getColor().getName(),
-					new BlockItem(block, new FabricItemSettings().maxCount(1).group(ItemGroup.DECORATIONS)));
+					new BlockItem(block, new QuiltItemSettings().maxCount(1).group(ItemGroup.DECORATIONS)));
 		}
 		SleepingBagBlock.appendToPointOfInterest(PointOfInterestType.HOME);
 
@@ -754,7 +752,7 @@ public final class AurorasDecoRegistry {
 		WoodType.registerWoodTypeModificationCallback(woodType -> {
 			var block = registerWithItem("stump/" + woodType.getPathName(),
 					new StumpBlock(woodType),
-					new FabricItemSettings().group(ItemGroup.DECORATIONS));
+					new QuiltItemSettings().group(ItemGroup.DECORATIONS));
 
 			var entry = woodType.getComponent(WoodType.ComponentType.LOG).getFlammableEntry();
 			if (entry != null && entry.getBurnChance() != 0 && entry.getSpreadChance() != 0)
@@ -764,7 +762,7 @@ public final class AurorasDecoRegistry {
 		WoodType.registerWoodTypeModificationCallback(woodType -> {
 			var block = registerWithItem("small_log_pile/" + woodType.getPathName(),
 					new SmallLogPileBlock(woodType),
-					new FabricItemSettings().group(ItemGroup.DECORATIONS));
+					new QuiltItemSettings().group(ItemGroup.DECORATIONS));
 
 			var entry = woodType.getComponent(WoodType.ComponentType.LOG).getFlammableEntry();
 			if (entry != null && entry.getBurnChance() != 0 && entry.getSpreadChance() != 0)
@@ -772,20 +770,20 @@ public final class AurorasDecoRegistry {
 		}, WoodType.ComponentType.LOG);
 
 		WoodType.registerWoodTypeModificationCallback(woodType -> Registrar.register("shelf/" + woodType.getPathName(), new ShelfBlock(woodType))
-						.withItem(new FabricItemSettings().group(ItemGroup.DECORATIONS))
+						.withItem(new QuiltItemSettings().group(ItemGroup.DECORATIONS))
 						.addSelfTo(SHELF_BLOCK_ENTITY_TYPE)
 						.flammable(woodType.getComponent(WoodType.ComponentType.PLANKS).getFlammableEntry()),
 				WoodType.ComponentType.PLANKS);
 
 		WoodType.registerWoodTypeModificationCallback(woodType -> {
 			registerItem("seat_rest/" + woodType.getPathName(),
-					new SeatRestItem(woodType, new FabricItemSettings().group(ItemGroup.MISC)));
+					new SeatRestItem(woodType, new QuiltItemSettings().group(ItemGroup.MISC)));
 			registerItem("sign_post/" + woodType.getPathName(),
-					new SignPostItem(woodType, new FabricItemSettings().group(ItemGroup.DECORATIONS)));
+					new SignPostItem(woodType, new QuiltItemSettings().group(ItemGroup.DECORATIONS)));
 		}, WoodType.ComponentType.PLANKS);
 
 		WoodType.registerWoodTypeModificationCallback(woodType -> Registrar.register("bench/" + woodType.getPathName(), new BenchBlock(woodType))
-						.withItem(new FabricItemSettings().group(ItemGroup.DECORATIONS))
+						.withItem(new QuiltItemSettings().group(ItemGroup.DECORATIONS))
 						.addSelfTo(BENCH_BLOCK_ENTITY_TYPE)
 						.flammable(woodType.getComponent(WoodType.ComponentType.PLANKS).getFlammableEntry()),
 				WoodType.ComponentType.PLANKS);

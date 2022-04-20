@@ -21,7 +21,6 @@ import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.client.TrinketRendererRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.HeadFeatureRenderer;
@@ -34,6 +33,7 @@ import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import org.quiltmc.loader.api.QuiltLoader;
 
 /**
  * Represents hooks for Trinkets.
@@ -44,7 +44,7 @@ import net.minecraft.item.ItemStack;
  */
 @Environment(EnvType.CLIENT)
 public final class TrinketsHooks {
-	private static final boolean HAS_TRINKETS = FabricLoader.getInstance().isModLoaded("trinkets");
+	private static final boolean HAS_TRINKETS = QuiltLoader.isModLoaded("trinkets");
 
 	private TrinketsHooks() {
 		throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");

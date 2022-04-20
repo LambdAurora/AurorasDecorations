@@ -22,8 +22,8 @@ import com.google.gson.JsonParser;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resource.ResourceType;
+import org.quiltmc.loader.api.QuiltLoader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +39,7 @@ public class LangBuilder {
 	public void load() {
 		this.loadedLangs.clear();
 
-		var root = FabricLoader.getInstance().getModContainer(AurorasDeco.NAMESPACE).get().getRootPath().toAbsolutePath().normalize();
+		var root = QuiltLoader.getModContainer(AurorasDeco.NAMESPACE).get().rootPath().toAbsolutePath().normalize();
 		var separator = root.getFileSystem().getSeparator();
 
 		var langPath = root.resolve("assets" + separator + AurorasDeco.NAMESPACE + separator + "lang" + separator)
@@ -127,7 +127,7 @@ public class LangBuilder {
 		}
 
 		public static LangManifest readFromMod(String langCode) {
-			var root = FabricLoader.getInstance().getModContainer(AurorasDeco.NAMESPACE).get().getRootPath().toAbsolutePath().normalize();
+			var root = QuiltLoader.getModContainer(AurorasDeco.NAMESPACE).get().rootPath().toAbsolutePath().normalize();
 			var separator = root.getFileSystem().getSeparator();
 
 			var langPath = root.resolve("assets" + separator + AurorasDeco.NAMESPACE + separator + "lang" + separator + langCode + ".json")

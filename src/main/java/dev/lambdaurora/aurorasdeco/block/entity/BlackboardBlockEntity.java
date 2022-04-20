@@ -27,7 +27,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
 import net.fabricmc.fabric.api.util.NbtType;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
@@ -39,6 +38,7 @@ import net.minecraft.util.Nameable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.loader.api.minecraft.MinecraftQuiltLoader;
 
 import java.util.Set;
 
@@ -194,7 +194,7 @@ public class BlackboardBlockEntity extends BasicBlockEntity implements Nameable,
 	public void markRemoved() {
 		super.markRemoved();
 
-		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+		if (MinecraftQuiltLoader.getEnvironmentType() == EnvType.CLIENT) {
 			this.markBlackboardRemoved();
 		}
 	}
@@ -203,7 +203,7 @@ public class BlackboardBlockEntity extends BasicBlockEntity implements Nameable,
 	public void cancelRemoval() {
 		super.cancelRemoval();
 
-		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+		if (MinecraftQuiltLoader.getEnvironmentType() == EnvType.CLIENT) {
 			ACTIVE_BLACKBOARDS.add(this);
 		}
 	}

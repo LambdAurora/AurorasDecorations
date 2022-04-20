@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "dev.lambdaurora",
+    "id": "aurorasdeco",
+    "version": "${version}",
+    "metadata": {
+      "name": "Aurora's Decorations",
+      "description": "Some new decorations features.",
+      "contributors": {
+        "LambdAurora": "Author",
+        "april": "Artist",
+        "harpsi": "Artist",
+        "Kat": "Artist",
+        "unascribed": "Artist"
+      },
+      "contact": {
+        "homepage": "https://modrinth.com/mod/aurorasdecorations",
+        "sources": "https://github.com/LambdAurora/AurorasDecorations.git",
+        "issues": "https://github.com/LambdAurora/AurorasDecorations/issues"
+      },
+      "license": "LGPL-3.0-only",
+      "icon": "assets/aurorasdeco/icon.png"
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "entrypoints": {
+      "init": [
+        "dev.lambdaurora.aurorasdeco.AurorasDeco"
+      ],
+      "client_init": [
+        "dev.lambdaurora.aurorasdeco.client.AurorasDecoClient"
+      ]
+    },
+    "depends": [
+      {
+        "id": "minecraft",
+        "versions": ">=1.18.2"
+      },
+      {
+        "id": "quilt_loader",
+        "versions": ">=0.16.0-beta.7"
+      },
+      {
+        "id": "quilted_fabric_api",
+        "versions": ">=1.0.0-beta.5"
+      },
+      {
+        "id": "java",
+        "versions": ">=17"
+      },
+      {
+        "id": "trinkets",
+        "versions": ">=3.0.2",
+        "optional": true
+      }
+    ]
+  },
+  "mixin": "aurorasdeco.mixins.json"
+}

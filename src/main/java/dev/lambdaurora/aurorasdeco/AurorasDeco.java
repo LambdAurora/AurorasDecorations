@@ -22,16 +22,16 @@ import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPackets;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
-import dev.lambdaurora.aurorasdeco.util.RegistrationHelper;
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Blocks;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.quiltmc.loader.api.ModContainer;
+import org.quiltmc.loader.api.QuiltLoader;
+import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
+import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 import org.quiltmc.qsl.registry.api.event.RegistryMonitor;
 
 /**
@@ -47,8 +47,7 @@ public class AurorasDeco implements ModInitializer {
 	public static final AurorasDecoPack RESOURCE_PACK = new AurorasDecoPack(ResourceType.SERVER_DATA);
 
 	@Override
-	public void onInitialize() {
-		log("Aurora's Decorations is initialized, but it's way too late. Sadly Fabric API doesn't support proper initialization.");
+	public void onInitialize(ModContainer mod) {
 		AurorasDecoRegistry.init();
 
 		RegistryMonitor.create(Registry.ITEM).forAll(context -> {
@@ -70,7 +69,7 @@ public class AurorasDeco implements ModInitializer {
 	}
 
 	public static boolean isDevMode() {
-		return FabricLoader.getInstance().isDevelopmentEnvironment();
+		return QuiltLoader.isDevelopmentEnvironment();
 	}
 
 	public static void log(String message) {

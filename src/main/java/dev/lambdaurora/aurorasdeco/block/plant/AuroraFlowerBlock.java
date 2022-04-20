@@ -17,7 +17,6 @@
 
 package dev.lambdaurora.aurorasdeco.block.plant;
 
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Fertilizable;
@@ -30,6 +29,7 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.Random;
 
@@ -47,8 +47,8 @@ public class AuroraFlowerBlock extends FlowerBlock implements Fertilizable {
 		FlammableBlockRegistry.getDefaultInstance().add(this, 60, 100);
 	}
 
-	public static FabricBlockSettings defaultSettings() {
-		return FabricBlockSettings.of(Material.PLANT)
+	public static QuiltBlockSettings defaultSettings() {
+		return QuiltBlockSettings.of(Material.PLANT)
 				.noCollision()
 				.breakInstantly()
 				.sounds(BlockSoundGroup.GRASS);

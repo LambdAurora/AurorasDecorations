@@ -19,7 +19,6 @@ package dev.lambdaurora.aurorasdeco.mixin.item;
 
 import dev.lambdaurora.aurorasdeco.accessor.ItemExtensions;
 import dev.lambdaurora.aurorasdeco.mixin.SimpleRegistryAccessor;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.FoodComponent;
@@ -28,6 +27,7 @@ import net.minecraft.item.ItemUsageContext;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -49,7 +49,7 @@ public class ItemMixin implements ItemExtensions {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void makePlaceable(Block block) {
-		this.aurorasdeco$placeable = new BlockItem(block, new FabricItemSettings()
+		this.aurorasdeco$placeable = new BlockItem(block, new QuiltItemSettings()
 				.food(this.foodComponent));
 
 		var cache = ((SimpleRegistryAccessor<Item>) Registry.ITEM).getIntrusiveHolderCache();

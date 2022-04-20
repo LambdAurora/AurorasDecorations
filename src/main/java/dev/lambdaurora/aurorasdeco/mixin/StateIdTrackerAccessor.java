@@ -18,17 +18,8 @@
 package dev.lambdaurora.aurorasdeco.mixin;
 
 import net.fabricmc.fabric.impl.registry.sync.trackers.StateIdTracker;
-import net.minecraft.util.collection.IdList;
-import net.minecraft.util.registry.Registry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
-import java.util.Collection;
-import java.util.function.Function;
 
 @Mixin(StateIdTracker.class)
 public interface StateIdTrackerAccessor {

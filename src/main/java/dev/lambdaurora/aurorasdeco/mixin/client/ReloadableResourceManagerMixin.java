@@ -30,7 +30,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Mixin(ReloadableResourceManager.class)
 public abstract class ReloadableResourceManagerMixin {

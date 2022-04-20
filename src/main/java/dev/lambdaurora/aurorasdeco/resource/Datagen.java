@@ -27,7 +27,6 @@ import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
 import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
 import dev.lambdaurora.aurorasdeco.item.SignPostItem;
 import dev.lambdaurora.aurorasdeco.mixin.block.AbstractBlockAccessor;
-import dev.lambdaurora.aurorasdeco.recipe.RecipeSerializerExtended;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
@@ -35,7 +34,6 @@ import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import dev.lambdaurora.aurorasdeco.resource.datagen.*;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.util.ColorUtil;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.Blocks;
@@ -58,6 +56,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.quiltmc.loader.api.QuiltLoader;
+import org.quiltmc.qsl.recipe.api.serializer.QuiltRecipeSerializer;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -323,10 +323,10 @@ public final class Datagen {
 
 	@SuppressWarnings("unchecked")
 	public static JsonObject recipe(Recipe<?> recipe) {
-		if (!(recipe.getSerializer() instanceof RecipeSerializerExtended))
+		if (!(recipe.getSerializer() instanceof QuiltRecipeSerializer<?>))
 			throw new UnsupportedOperationException("Cannot serialize recipe " + recipe);
 
-		return ((RecipeSerializerExtended<Recipe<?>>) recipe.getSerializer()).toJson(recipe);
+		return ((QuiltRecipeSerializer<Recipe<?>>) recipe.getSerializer()).toJson(recipe);
 	}
 
 	public static void registerWoodcuttingRecipesForBlockVariants(Block block) {
@@ -339,7 +339,7 @@ public final class Datagen {
 
 			tryRegisterWoodcuttingRecipeFor(block, basePath, "wood", 1, "building_blocks");
 
-			if (FabricLoader.getInstance().isModLoaded("blockus")) {
+			if (QuiltLoader.isModLoaded("blockus")) {
 				tryRegisterWoodcuttingRecipeFor(block, "blockus", basePath,
 						"small_logs", 1, "building_blocks");
 			}
@@ -350,7 +350,7 @@ public final class Datagen {
 			basePath += separator;
 
 			tryRegisterWoodcuttingRecipeFor(block, basePath, "hyphae", 1, "building_blocks");
-			if (FabricLoader.getInstance().isModLoaded("blockus")) {
+			if (QuiltLoader.isModLoaded("blockus")) {
 				tryRegisterWoodcuttingRecipeFor(block, "blockus", basePath,
 						"small_stems", 1, "building_blocks");
 			}

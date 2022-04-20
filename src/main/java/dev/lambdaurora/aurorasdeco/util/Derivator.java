@@ -20,13 +20,13 @@ package dev.lambdaurora.aurorasdeco.util;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.AuroraStairsBlock;
 import dev.lambdaurora.aurorasdeco.item.DerivedBlockItem;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.registry.Registry;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
+import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
 import static dev.lambdaurora.aurorasdeco.AurorasDeco.id;
 
@@ -54,35 +54,35 @@ public class Derivator {
 		var derivative = new Derivative("mossy", true);
 		var item = base.getBlock().asItem();
 		return registerWithItem(this.normalBaseName, derivative,
-				new Block(FabricBlockSettings.copyOf(this.base.getBlock())),
+				new Block(QuiltBlockSettings.copyOf(this.base.getBlock())),
 				this.derivativeSearcher(new Derivative(this.normalBaseName, false)).build(),
-				new FabricItemSettings().group(item.getGroup()));
+				new QuiltItemSettings().group(item.getGroup()));
 	}
 
 	public Block cracked() {
 		var derivative = new Derivative("cracked", true);
 		var item = base.getBlock().asItem();
 		return registerWithItem(this.normalBaseName, derivative,
-				new Block(FabricBlockSettings.copyOf(this.base.getBlock())),
+				new Block(QuiltBlockSettings.copyOf(this.base.getBlock())),
 				this.derivativeSearcher(new Derivative(this.normalBaseName, false)).build(),
-				new FabricItemSettings().group(item.getGroup()));
+				new QuiltItemSettings().group(item.getGroup()));
 	}
 
 	public Block chiseled() {
 		var derivative = new Derivative("chiseled", true);
 		var item = base.getBlock().asItem();
 		return registerWithItem(this.normalBaseName, derivative,
-				new Block(FabricBlockSettings.copyOf(this.base.getBlock())),
+				new Block(QuiltBlockSettings.copyOf(this.base.getBlock())),
 				this.derivativeSearcher(new Derivative(this.normalBaseName, false)).build(),
-				new FabricItemSettings().group(item.getGroup()));
+				new QuiltItemSettings().group(item.getGroup()));
 	}
 
 	public WallBlock wall() {
 		var derivative = new Derivative("wall", false);
 		var name = derivative.apply(this.singularBaseName);
-		var block = register(name, new WallBlock(FabricBlockSettings.copyOf(this.base.getBlock())));
+		var block = register(name, new WallBlock(QuiltBlockSettings.copyOf(this.base.getBlock())));
 		register(name, new DerivedBlockItem(block, KindSearcher.WALL_SEARCHER, KindSearcher::findLastOfGroup,
-				new FabricItemSettings().group(ItemGroup.DECORATIONS)));
+				new QuiltItemSettings().group(ItemGroup.DECORATIONS)));
 		return block;
 	}
 
@@ -90,9 +90,9 @@ public class Derivator {
 		var derivative = new Derivative("slab", false);
 		var item = base.getBlock().asItem();
 		return registerWithItem(this.singularBaseName, derivative,
-				new SlabBlock(FabricBlockSettings.copyOf(this.base.getBlock())),
+				new SlabBlock(QuiltBlockSettings.copyOf(this.base.getBlock())),
 				derivativeSearcher(derivative).build(),
-				new FabricItemSettings()
+				new QuiltItemSettings()
 						.group(item.getGroup()));
 	}
 
@@ -100,9 +100,9 @@ public class Derivator {
 		var derivative = new Derivative("slab", false);
 		var item = base.getBlock().asItem();
 		return registerWithItem(this.singularBaseName, derivative,
-				new SlabBlock(FabricBlockSettings.copyOf(this.base.getBlock())),
+				new SlabBlock(QuiltBlockSettings.copyOf(this.base.getBlock())),
 				closeDerivativeSearcher(derivative).afterMapped(after, ItemStack::getItem).build(),
-				new FabricItemSettings()
+				new QuiltItemSettings()
 						.group(item.getGroup()));
 	}
 
@@ -110,9 +110,9 @@ public class Derivator {
 		var derivative = new Derivative("stairs", false);
 		var item = base.getBlock().asItem();
 		return registerWithItem(this.singularBaseName, derivative, new AuroraStairsBlock(this.base,
-						FabricBlockSettings.copyOf(this.base.getBlock())),
+						QuiltBlockSettings.copyOf(this.base.getBlock())),
 				derivativeSearcher(derivative).build(),
-				new FabricItemSettings()
+				new QuiltItemSettings()
 						.group(item.getGroup()));
 	}
 
@@ -120,9 +120,9 @@ public class Derivator {
 		var derivative = new Derivative("stairs", false);
 		var item = base.getBlock().asItem();
 		return registerWithItem(this.singularBaseName, derivative, new AuroraStairsBlock(this.base,
-						FabricBlockSettings.copyOf(this.base.getBlock())),
+						QuiltBlockSettings.copyOf(this.base.getBlock())),
 				closeDerivativeSearcher(derivative).afterMapped(after, ItemStack::getItem).build(),
-				new FabricItemSettings()
+				new QuiltItemSettings()
 						.group(item.getGroup()));
 	}
 

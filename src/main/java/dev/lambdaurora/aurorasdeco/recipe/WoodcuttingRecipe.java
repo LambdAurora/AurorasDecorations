@@ -28,6 +28,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import org.quiltmc.qsl.recipe.api.serializer.QuiltRecipeSerializer;
 
 /**
  * Represents woodcutting recipes.
@@ -54,7 +55,7 @@ public final class WoodcuttingRecipe extends CuttingRecipe {
 		return new ItemStack(AurorasDecoRegistry.SAWMILL_BLOCK);
 	}
 
-	public static class Serializer implements RecipeSerializerExtended<WoodcuttingRecipe> {
+	public static class Serializer implements QuiltRecipeSerializer<WoodcuttingRecipe> {
 		private Serializer() {
 		}
 

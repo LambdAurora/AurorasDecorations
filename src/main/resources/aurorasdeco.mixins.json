@@ -8,7 +8,6 @@
     "ModResourcePackCreatorMixin",
     "PointOfInterestTypeAccessor",
     "PointOfInterestTypeMixin",
-    "RecipeManagerMixin",
     "ServerAdvancementLoaderMixin",
     "SimpleRegistryAccessor",
     "SpawnHelperMixin",

@@ -27,21 +27,20 @@ import dev.lambdaurora.aurorasdeco.mixin.client.NativeImageAccessor;
 import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
 import dev.lambdaurora.aurorasdeco.resource.datagen.LangBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.fabricmc.fabric.api.resource.ModResourcePack;
-import net.fabricmc.fabric.impl.resource.loader.ModResourcePackUtil;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.block.Material;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.resource.pack.AbstractFileResourcePack;
+import net.minecraft.resource.pack.ResourcePack;
 import net.minecraft.resource.pack.metadata.ResourceMetadataReader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.loader.api.QuiltLoader;
+import org.quiltmc.qsl.resource.loader.impl.ModResourcePackUtil;
 
 import java.io.*;
 import java.nio.channels.Channels;
@@ -54,7 +53,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class AurorasDecoPack implements ModResourcePack {
+public class AurorasDecoPack implements ResourcePack {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private final Set<String> namespaces = new HashSet<>();
@@ -140,7 +139,7 @@ public class AurorasDecoPack implements ModResourcePack {
 	public void putResource(String resource, byte[] data) {
 		this.resources.put(resource, data);
 
-		if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+		if (QuiltLoader.isDevelopmentEnvironment()) {
 			try {
 				var path = Paths.get("debug", "aurorasdeco").resolve(resource);
 				Files.createDirectories(path.getParent());
@@ -205,14 +204,11 @@ public class AurorasDecoPack implements ModResourcePack {
 	}
 
 	@Override
-	public ModMetadata getFabricModMetadata() {
-		return FabricLoader.getInstance().getModContainer(AurorasDeco.NAMESPACE).get().getMetadata();
-	}
-
-	@Override
 	public @Nullable InputStream openRoot(String fileName) throws IOException {
-		if (ModResourcePackUtil.containsDefault(this.getFabricModMetadata(), fileName)) {
-			return ModResourcePackUtil.openDefault(this.getFabricModMetadata(),
+		var metadata = QuiltLoader.getModContainer(AurorasDeco.NAMESPACE).get().metadata();
+
+		if (ModResourcePackUtil.containsDefault(metadata, fileName)) {
+			return ModResourcePackUtil.openDefault(metadata,
 					this.type,
 					fileName);
 		}
