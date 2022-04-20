@@ -48,6 +48,8 @@
         "id": "java",
         "versions": ">=17"
       },
+      "quilt_recipe",
+      "quilt_registry",
       {
         "id": "trinkets",
         "versions": ">=3.0.2",
