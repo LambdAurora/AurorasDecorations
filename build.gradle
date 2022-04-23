@@ -62,7 +62,6 @@ dependencies {
 	modImplementation "org.quiltmc:quilt-loader:${project.loader_version}"
 
 	modImplementation("org.quiltmc.quilted-fabric-api:quilted-fabric-api:${project.fabric_api_version}-${minecraft_version}")
-	modImplementation("org.quiltmc:qsl:${project.qsl_version}+${minecraft_version}")
 	include(modImplementation("com.terraformersmc.terraform-api:terraform-wood-api-v1:3.0.0") {
 		exclude group: 'net.fabricmc'
 		exclude group: 'net.fabricmc.fabric-api'

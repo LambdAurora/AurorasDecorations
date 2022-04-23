@@ -67,14 +67,33 @@ public class AurorasDecoPack implements ResourcePack {
 	}
 
 	public AurorasDecoPack rebuild(ResourceType type, @Nullable ResourceManager resourceManager) {
+		this.resources.clear();
+		this.namespaces.clear();
+		this.namespaces.add("aurorasdeco");
+
+		this.registerTag(new String[]{"blocks"}, new Identifier("flower_pots"), HangingFlowerPotBlock.stream()
+				.map(Registry.BLOCK::getId));
+
+		this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("benches"), BenchBlock.streamBenches()
+				.map(Registry.BLOCK::getId));
+		this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("shelves"), ShelfBlock.streamShelves()
+				.map(Registry.BLOCK::getId));
+		this.registerTag(new String[]{"blocks"}, new Identifier("mineable/axe"), SignPostBlock.stream()
+				.filter(block -> block.getDefaultState().getMaterial() == Material.WOOD
+						|| block.getDefaultState().getMaterial() == Material.NETHER_WOOD)
+				.map(Registry.BLOCK::getId));
+		this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("small_log_piles"), SmallLogPileBlock.stream()
+				.map(Registry.BLOCK::getId));
+		this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("stumps"), StumpBlock.streamLogStumps()
+				.map(Registry.BLOCK::getId));
+		this.registerTag(new String[]{"blocks"}, AurorasDeco.id("wall_lanterns"), LanternRegistry.streamIds());
+
 		return type == ResourceType.CLIENT_RESOURCES ? this.rebuildClient(resourceManager) : this.rebuildData();
 	}
 
 	public AurorasDecoPack rebuildClient(ResourceManager resourceManager) {
 		var langBuilder = new LangBuilder();
 		langBuilder.load();
-
-		this.namespaces.add("aurorasdeco");
 
 		Datagen.generateClientData(resourceManager, langBuilder);
 
@@ -99,9 +118,6 @@ public class AurorasDecoPack implements ResourcePack {
 	}
 
 	public AurorasDecoPack rebuildData() {
-		this.resources.clear();
-		this.namespaces.clear();
-
 		if (!this.hasRegisteredOneTimeResources) {
 			Datagen.registerDefaultRecipes();
 			Datagen.registerDefaultWoodcuttingRecipes();
@@ -113,23 +129,6 @@ public class AurorasDecoPack implements ResourcePack {
 		ShelfBlock.streamShelves().forEach(Datagen::registerDoubleBlockLootTable);
 		SmallLogPileBlock.stream().forEach(Datagen::registerDoubleBlockLootTable);
 		StumpBlock.streamLogStumps().forEach(Datagen::dropsSelf);
-
-		this.registerTag(new String[]{"blocks"}, new Identifier("flower_pots"), HangingFlowerPotBlock.stream()
-				.map(Registry.BLOCK::getId));
-
-		this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("benches"), BenchBlock.streamBenches()
-				.map(Registry.BLOCK::getId));
-		this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("shelves"), ShelfBlock.streamShelves()
-				.map(Registry.BLOCK::getId));
-		this.registerTag(new String[]{"blocks"}, new Identifier("mineable/axe"), SignPostBlock.stream()
-				.filter(block -> block.getDefaultState().getMaterial() == Material.WOOD
-						|| block.getDefaultState().getMaterial() == Material.NETHER_WOOD)
-				.map(Registry.BLOCK::getId));
-		this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("small_log_piles"), SmallLogPileBlock.stream()
-				.map(Registry.BLOCK::getId));
-		this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("stumps"), StumpBlock.streamLogStumps()
-				.map(Registry.BLOCK::getId));
-		this.registerTag(new String[]{"blocks"}, AurorasDeco.id("wall_lanterns"), LanternRegistry.streamIds());
 
 		LOGGER.info("Registered " + this.resources.size() + " resources.");
 
@@ -222,15 +221,12 @@ public class AurorasDecoPack implements ResourcePack {
 
 	@Override
 	public InputStream open(ResourceType type, Identifier id) throws IOException {
-		if (type != this.type)
-			throw new IOException("Reading data from the wrong resource pack.");
 		return this.openRoot(type.getDirectory() + "/" + id.getNamespace() + "/" + id.getPath());
 	}
 
 	@Override
 	public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix, int maxDepth,
 	                                            Predicate<String> pathFilter) {
-		if (type != this.type) return Collections.emptyList();
 		var start = type.getDirectory() + "/" + namespace + "/" + prefix;
 		return this.resources.keySet().stream()
 				.filter(s -> s.startsWith(start) && pathFilter.test(s))
