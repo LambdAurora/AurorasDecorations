@@ -35,16 +35,21 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Injects the big flower pot dynamic models.
+ * <p>
+ * Had to use priorities to win over LBG, this sucks.
+ * An API probably should be made.
  *
  * @author LambdAurora
  * @version 1.0.0
  * @since 1.0.0
  */
-@Mixin(ModelLoader.class)
+@Mixin(value = ModelLoader.class, priority = 900)
 public abstract class ModelLoaderMixin {
 	@Shadow
 	@Final
@@ -57,6 +62,8 @@ public abstract class ModelLoaderMixin {
 	private boolean aurorasdeco$firstRun = true;
 	@Unique
 	private final RestModelManager aurorasdeco$restModelManager = new RestModelManager((ModelLoader) (Object) this);
+	@Unique
+	private final List<Identifier> aurorasdeco$visitedModels = new ArrayList<>();
 
 	@Shadow
 	protected abstract void putModel(Identifier id, UnbakedModel unbakedModel);
@@ -68,7 +75,7 @@ public abstract class ModelLoaderMixin {
 	@Inject(method = "putModel", at = @At("HEAD"), cancellable = true)
 	private void onPutModel(Identifier id, UnbakedModel unbakedModel, CallbackInfo ci) {
 		if (id instanceof ModelIdentifier modelId
-				&& !(unbakedModel instanceof AuroraUnbakedModel)) {
+				&& !this.aurorasdeco$visitedModels.contains(id)) {
 			if (!modelId.getVariant().equals("inventory")) {
 				if (this.aurorasdeco$firstRun) {
 					this.aurorasdeco$firstRun = false;
@@ -83,19 +90,23 @@ public abstract class ModelLoaderMixin {
 				if (modelId.getNamespace().equals(AurorasDeco.NAMESPACE)) {
 					if (modelId.getPath().startsWith("bench/")) {
 						var model = new UnbakedBenchModel(unbakedModel, this.aurorasdeco$restModelManager);
+						this.aurorasdeco$visitedModels.add(id);
 						this.putModel(id, model);
 						this.modelsToBake.put(id, model);
 						ci.cancel();
 					} else if (modelId.getPath().startsWith("big_flower_pot/")) {
 						var potBlock = PottedPlantType.fromId(modelId.getPath().substring("big_flower_pot/".length())).getPot();
 						if (potBlock.hasDynamicModel()) {
+							this.aurorasdeco$visitedModels.add(id);
 							this.putModel(id, new UnbakedForwardingModel(unbakedModel, BakedBigFlowerPotModel::new));
 							ci.cancel();
 						}
 					} else if (modelId.getPath().startsWith("hanging_flower_pot")) {
+						this.aurorasdeco$visitedModels.add(id);
 						this.putModel(id, new UnbakedForwardingModel(unbakedModel, BakedHangingFlowerPotModel::new));
 						ci.cancel();
 					} else if (modelId.getPath().endsWith("board")) {
+						this.aurorasdeco$visitedModels.add(id);
 						this.putModel(id, UnbakedBlackboardModel.of(modelId, unbakedModel,
 								this.resourceManager, this.variantMapDeserializationContext,
 								(partId, model) -> {
