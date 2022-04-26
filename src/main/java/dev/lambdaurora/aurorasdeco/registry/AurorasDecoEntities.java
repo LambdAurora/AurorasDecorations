@@ -64,4 +64,7 @@ public final class AurorasDecoEntities {
 					.trackRangeChunks(10)
 					.build()
 	);
+
+	static void init() {
+	}
 }

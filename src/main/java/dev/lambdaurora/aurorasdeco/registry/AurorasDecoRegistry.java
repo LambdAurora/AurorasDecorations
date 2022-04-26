@@ -659,6 +659,7 @@ public final class AurorasDecoRegistry {
 	public static void init() {
 		AurorasDecoPlants.init();
 		AurorasDecoBiomes.init();
+		AurorasDecoEntities.init();
 		AurorasDecoSounds.init();
 
 		StrippableLogBlock.register(AZALEA_LOG_BLOCK, STRIPPED_AZALEA_LOG_BLOCK);
@@ -706,10 +707,6 @@ public final class AurorasDecoRegistry {
 				});
 
 		RegistrationHelper.BLOCK.init();
-
-		Registry.ITEM.getOrEmpty(new Identifier("pockettools", "pocket_cactus"))
-				.ifPresent(pocketCactus -> registerBigPotted("pocket_cactus", Blocks.POTTED_CACTUS, pocketCactus,
-						type -> new BigPottedCactusBlock(type, BigPottedCactusBlock.POCKET_CACTUS_SHAPE)));
 
 		var colors = DyeColor.values();
 

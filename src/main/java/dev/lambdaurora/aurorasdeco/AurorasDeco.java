@@ -22,6 +22,7 @@ import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPackets;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
+import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import net.minecraft.block.Blocks;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
@@ -51,7 +52,7 @@ public class AurorasDeco implements ModInitializer {
 		AurorasDecoRegistry.init();
 
 		RegistryMonitor.create(Registry.ITEM).forAll(context -> {
-			if (context.id().toString().equals("pockettools:pocket_cactus")) {
+			if (AuroraUtil.idEqual(context.id(), "pockettools", "pocket_cactus")) {
 				Registry.register(Registry.BLOCK, id("big_flower_pot/pocket_cactus"),
 						PottedPlantType.register("pocket_cactus", Blocks.POTTED_CACTUS, context.value(),
 								type -> new BigPottedCactusBlock(type, BigPottedCactusBlock.POCKET_CACTUS_SHAPE)));
