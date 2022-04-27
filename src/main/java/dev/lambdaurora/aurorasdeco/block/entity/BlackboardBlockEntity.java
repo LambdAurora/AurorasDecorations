@@ -258,12 +258,14 @@ public class BlackboardBlockEntity extends BasicBlockEntity implements Nameable,
 	}
 
 	public void refreshRendering() {
-		this.rebuildMesh();
-		((ClientWorld) this.world).scheduleBlockRenders(
-				ChunkSectionPos.getSectionCoord(this.getPos().getX()),
-				ChunkSectionPos.getSectionCoord(this.getPos().getY()),
-				ChunkSectionPos.getSectionCoord(this.getPos().getZ())
-		);
+		if (this.world instanceof ClientWorld clientWorld) {
+			this.rebuildMesh();
+			clientWorld.scheduleBlockRenders(
+					ChunkSectionPos.getSectionCoord(this.getPos().getX()),
+					ChunkSectionPos.getSectionCoord(this.getPos().getY()),
+					ChunkSectionPos.getSectionCoord(this.getPos().getZ())
+			);
+		}
 	}
 
 	@Override
