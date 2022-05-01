@@ -1,7 +1,7 @@
 #
 # LambdAurora's ignore file
 #
-# v0.17
+# v0.18
 
 # JetBrains
 .idea/
@@ -29,7 +29,10 @@ CMakeSettings.json
 Cargo.lock
 ## CMake
 CMakeCache.txt
+CMakeLists.txt.user
 CMakeFiles/
+## QMake
+.qmake.stash
 ## Gradle
 .gradle/
 ## Node.JS

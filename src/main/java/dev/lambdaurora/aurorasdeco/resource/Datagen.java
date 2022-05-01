@@ -46,7 +46,6 @@ import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.ShapedRecipe;
-import net.minecraft.recipe.ShapelessRecipe;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.tag.TagKey;
@@ -57,6 +56,7 @@ import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quiltmc.loader.api.QuiltLoader;
+import org.quiltmc.qsl.recipe.api.builder.VanillaRecipeBuilders;
 import org.quiltmc.qsl.recipe.api.serializer.QuiltRecipeSerializer;
 
 import java.io.IOException;
@@ -361,10 +361,10 @@ public final class Datagen {
 		{
 			var sulfurItem = Registry.ITEM.get(new Identifier("sulfurpotassiummod", "sulfur"));
 			if (sulfurItem != Items.AIR) {
-				registerRecipe(new ShapelessRecipe(id("copper_sulfate_from_sulfurpotassiummod"), "",
-								new ItemStack(AurorasDecoRegistry.COPPER_SULFATE_ITEM),
-								DefaultedList.copyOf(Ingredient.EMPTY, Ingredient.ofItems(sulfurItem), Ingredient.ofItems(Items.RAW_COPPER))),
-						"misc");
+				registerRecipe(VanillaRecipeBuilders.shapelessRecipe(new ItemStack(AurorasDecoRegistry.COPPER_SULFATE_ITEM))
+						.ingredient(sulfurItem)
+						.ingredient(Items.RAW_COPPER)
+						.build(id("copper_sulfate_from_sulfurpotassiummod"), ""), "misc");
 			}
 		}
 	}
@@ -422,12 +422,11 @@ public final class Datagen {
 			if (slabComponent != null) {
 				var slab = Ingredient.ofItems(slabComponent.item());
 				var stick = Ingredient.ofItems(Items.STICK);
-				var crafting = new ShapedRecipe(
-						id("bench/" + block.getWoodType().getPathName()),
-						"bench", 3, 2,
-						DefaultedList.copyOf(Ingredient.EMPTY, slab, slab, slab, stick, Ingredient.EMPTY, stick),
-						new ItemStack(block, 2));
-				registerRecipe(crafting, "decorations");
+				registerRecipe(VanillaRecipeBuilders.shapedRecipe("---", "S S")
+						.ingredient('-', slab)
+						.ingredient('S', stick)
+						.output(new ItemStack(block, 2))
+						.build(id("bench/" + block.getWoodType().getPathName()), "bench"), "decorations");
 			}
 		});
 
@@ -459,13 +458,10 @@ public final class Datagen {
 
 			var slabComponent = block.getWoodType().getComponent(WoodType.ComponentType.SLAB);
 			if (slabComponent != null) {
-				var slab = Ingredient.ofItems(slabComponent.item());
-				var crafting = new ShapedRecipe(
-						id("shelf/" + block.getWoodType().getPathName()),
-						"shelf", 2, 1,
-						DefaultedList.copyOf(Ingredient.EMPTY, slab, slab),
-						new ItemStack(block, 2));
-				registerRecipe(crafting, "decorations");
+				registerRecipe(VanillaRecipeBuilders.shapedRecipe("SS")
+						.ingredient('S', slabComponent.item())
+						.output(new ItemStack(block, 2))
+						.build(id("shelf/" + block.getWoodType().getPathName()), "shelf"), "decorations");
 			}
 		});
 
