@@ -18,15 +18,14 @@
 package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
 import dev.lambdaurora.aurorasdeco.mixin.block.BlockAccessor;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.block.*;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.stat.Stats;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.ActionResult;
@@ -36,6 +35,7 @@ import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -203,5 +203,16 @@ public class HangingFlowerPotBlock extends Block {
 	@Override
 	public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
 		return false;
+	}
+
+	public static HangingFlowerPotBlock initEmpty() {
+		HangingFlowerPotBlock block = Registry.register(Registry.BLOCK, AurorasDeco.id("hanging_flower_pot"),
+				new HangingFlowerPotBlock((FlowerPotBlock) Blocks.FLOWER_POT)
+		);
+
+		((BlockItemAccessor) Items.FLOWER_POT).aurorasdeco$setCeilingBlock(block);
+		Item.BLOCK_ITEMS.put(block, Items.FLOWER_POT);
+
+		return block;
 	}
 }

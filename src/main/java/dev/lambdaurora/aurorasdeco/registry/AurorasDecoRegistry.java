@@ -25,7 +25,6 @@ import com.terraformersmc.terraform.sign.block.TerraformWallSignBlock;
 import com.terraformersmc.terraform.wood.block.TerraformTrapdoorBlock;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.accessor.BlockEntityTypeAccessor;
-import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
 import dev.lambdaurora.aurorasdeco.accessor.ItemExtensions;
 import dev.lambdaurora.aurorasdeco.advancement.PetUsePetBedCriterion;
 import dev.lambdaurora.aurorasdeco.block.*;
@@ -48,7 +47,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.OxidizableBlocksRegistry;
-import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -499,8 +498,7 @@ public final class AurorasDecoRegistry {
 	public static final WallBlock MOSSY_DEEPSLATE_BRICK_WALL = MOSSY_DEEPSLATE_BRICKS_DERIVATOR.wall();
 	//endregion
 
-	public static final HangingFlowerPotBlock HANGING_FLOWER_POT_BLOCK = registerBlock("hanging_flower_pot",
-			new HangingFlowerPotBlock((FlowerPotBlock) Blocks.FLOWER_POT));
+	public static final HangingFlowerPotBlock HANGING_FLOWER_POT_BLOCK = HangingFlowerPotBlock.initEmpty();
 
 	public static final FenceLikeWallBlock POLISHED_BASALT_WALL = registerWithItem("polished_basalt_wall",
 			new FenceLikeWallBlock(QuiltBlockSettings.copyOf(Blocks.POLISHED_BASALT)),
@@ -542,7 +540,7 @@ public final class AurorasDecoRegistry {
 			Registry.register(Registry.SCREEN_HANDLER, id("sawmill"), new ScreenHandlerType<>(SawmillScreenHandler::new));
 
 	public static final ScreenHandlerType<ShelfScreenHandler> SHELF_SCREEN_HANDLER_TYPE =
-			ScreenHandlerRegistry.registerExtended(id("shelf"), ShelfScreenHandler::new);
+			Registry.register(Registry.SCREEN_HANDLER, id("shelf"), new ExtendedScreenHandlerType<>(ShelfScreenHandler::new));
 
 	/* Stats */
 
@@ -672,9 +670,6 @@ public final class AurorasDecoRegistry {
 		OxidizableBlocksRegistry.registerWaxableBlockPair(CHALKBOARD_BLOCK, WAXED_CHALKBOARD_BLOCK);
 		OxidizableBlocksRegistry.registerWaxableBlockPair(GLASSBOARD_BLOCK, WAXED_GLASSBOARD_BLOCK);
 
-		((BlockItemAccessor) Items.FLOWER_POT).aurorasdeco$setCeilingBlock(HANGING_FLOWER_POT_BLOCK);
-		Item.BLOCK_ITEMS.put(HANGING_FLOWER_POT_BLOCK, Items.FLOWER_POT);
-
 		RegistryMonitor.create(Registry.BLOCK)
 				.filter(context -> {
 					var id = context.id();
@@ -687,8 +682,7 @@ public final class AurorasDecoRegistry {
 					if (context.value() instanceof FlowerPotBlock flowerPotBlock) {
 						if (flowerPotBlock == Blocks.FLOWER_POT) return;
 
-						Registry.register(
-								context.registry(),
+						context.register(
 								AurorasDeco.id(RegistrationHelper.getIdPath("hanging_flower_pot", context.id(), "^potted[_/]")),
 								new HangingFlowerPotBlock(flowerPotBlock)
 						);
