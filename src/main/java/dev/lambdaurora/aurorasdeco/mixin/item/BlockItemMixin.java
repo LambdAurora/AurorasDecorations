@@ -17,13 +17,11 @@
 
 package dev.lambdaurora.aurorasdeco.mixin.item;
 
-import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
-import dev.lambdaurora.aurorasdeco.block.ChandelierBlock;
-import dev.lambdaurora.aurorasdeco.block.WallCandleBlock;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.BlockItem;
@@ -31,7 +29,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemUsage;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -40,7 +37,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Map;
 import java.util.stream.Stream;
 
 /**
@@ -72,32 +68,6 @@ public abstract class BlockItemMixin extends Item implements BlockItemAccessor {
 	@Override
 	public void aurorasdeco$setCeilingBlock(Block block) {
 		this.aurorasdeco$ceilingBlock = block;
-	}
-
-	@Inject(method = "appendBlocks", at = @At("RETURN"))
-	private void onAppendBlocks(Map<Block, Item> map, Item item, CallbackInfo ci) {
-		if (this.getBlock() instanceof LanternBlock) {
-			var lanternBlock = LanternRegistry.fromItem(item);
-			if (lanternBlock != null)
-				this.aurorasdeco$setWallBlock(lanternBlock);
-			map.put(lanternBlock, item);
-		} else if (this.getBlock() instanceof CandleBlock candleBlock) {
-			var candleId = Registry.BLOCK.getId(this.getBlock());
-			if (candleId.getNamespace().equals("minecraft")) {
-				this.aurorasdeco$wallBlock = Registry.register(
-						Registry.BLOCK,
-						AurorasDeco.id("wall_" + candleId.getPath()),
-						new WallCandleBlock(candleBlock)
-				);
-				this.aurorasdeco$ceilingBlock = Registry.register(
-						Registry.BLOCK,
-						AurorasDeco.id("chandelier/" + candleId.getPath().replace("_candle", "")),
-						new ChandelierBlock(candleBlock)
-				);
-				map.put(this.aurorasdeco$wallBlock, item);
-				map.put(this.aurorasdeco$ceilingBlock, item);
-			}
-		}
 	}
 
 	@Inject(method = "getPlacementState", at = @At("HEAD"), cancellable = true)

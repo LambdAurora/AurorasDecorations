@@ -25,6 +25,7 @@ import com.terraformersmc.terraform.sign.block.TerraformWallSignBlock;
 import com.terraformersmc.terraform.wood.block.TerraformTrapdoorBlock;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.accessor.BlockEntityTypeAccessor;
+import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
 import dev.lambdaurora.aurorasdeco.accessor.ItemExtensions;
 import dev.lambdaurora.aurorasdeco.advancement.PetUsePetBedCriterion;
 import dev.lambdaurora.aurorasdeco.block.*;
@@ -653,7 +654,6 @@ public final class AurorasDecoRegistry {
 		return identifier;
 	}
 
-	@SuppressWarnings("unchecked")
 	public static void init() {
 		AurorasDecoPlants.init();
 		AurorasDecoBiomes.init();
@@ -697,6 +697,33 @@ public final class AurorasDecoRegistry {
 
 							((BlockEntityTypeAccessor) SIGN_POST_BLOCK_ENTITY_TYPE).aurorasdeco$addSupportedBlock(signPostBlock);
 						} else LanternRegistry.tryRegisterWallLantern(context.registry(), context.value(), context.id());
+					}
+				});
+
+		RegistryMonitor.create(Registry.ITEM).filter(context -> context.value() instanceof BlockItem item)
+				.forAll(context -> {
+					var accessor = (BlockItemAccessor) context.value();
+					var item = (BlockItem) context.value();
+
+					if (item.getBlock() instanceof LanternBlock) {
+						var lanternBlock = LanternRegistry.fromItem(item);
+						if (lanternBlock != null)
+							accessor.aurorasdeco$setWallBlock(lanternBlock);
+						Item.BLOCK_ITEMS.put(lanternBlock, item);
+					} else if (item.getBlock() instanceof CandleBlock candleBlock && context.id().getNamespace().equals("minecraft")) {
+						var wall = registerBlock(
+								"wall_" + context.id().getPath(),
+								new WallCandleBlock(candleBlock)
+						);
+						var chandelier = registerBlock(
+								"chandelier/" + context.id().getPath().replace("_candle", ""),
+								new ChandelierBlock(candleBlock)
+						);
+						accessor.aurorasdeco$setWallBlock(wall);
+						accessor.aurorasdeco$setCeilingBlock(chandelier);
+
+						Item.BLOCK_ITEMS.put(wall, context.value());
+						Item.BLOCK_ITEMS.put(chandelier, context.value());
 					}
 				});
 
