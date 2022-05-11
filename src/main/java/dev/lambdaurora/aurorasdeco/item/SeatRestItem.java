@@ -64,7 +64,7 @@ public class SeatRestItem extends Item {
 
 	@Override
 	public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
-		if (this.isIn(group)) {
+		if (this.isIn(group) || group == ItemGroup.SEARCH) {
 			stacks.add(SEAT_REST_KIND_SEARCHER.findLastOfGroup(stacks), new ItemStack(this));
 		}
 	}
