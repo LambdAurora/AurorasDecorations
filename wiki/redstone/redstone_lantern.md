@@ -69,4 +69,4 @@ Redstone Lanterns experience "burn-out" like Redstone Torches, in doubt:
 
 ![Emission Directions](../../images/render/redstone_lantern/emit_direction.png)
 
-As you can see Redstone Lanterns allow to revert the behavior of Redstone Torches and transmit a signal along an axis downward.
+As you can see Redstone Lanterns allow to invert the behavior of Redstone Torches and transmit a signal along an axis downward.
