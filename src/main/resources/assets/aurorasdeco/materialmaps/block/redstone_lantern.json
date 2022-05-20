@@ -1,0 +1,10 @@
+{
+  "defaultMaterial": {
+    "spriteMap": [
+      {
+        "sprite": "aurorasdeco:block/redstone_lantern",
+        "material": "aurorasdeco:warm_glow"
+      }
+    ]
+  }
+}

@@ -94,7 +94,7 @@ public final class AurorasDecoRegistry {
 
 	/* Blocks & Items */
 
-	public static final LanternBlock AMETHYST_LANTERN_BLOCK = registerWithItem("amethyst_lantern",
+	public static final AmethystLanternBlock AMETHYST_LANTERN_BLOCK = registerWithItem("amethyst_lantern",
 			new AmethystLanternBlock(), new QuiltItemSettings().group(ItemGroup.DECORATIONS),
 			DerivedBlockItem::lantern);
 
@@ -132,16 +132,16 @@ public final class AurorasDecoRegistry {
 			DerivedBlockItem::woodenSlab
 	);
 	public static final Block AZALEA_STAIRS_BLOCK = registerWithItem("azalea_stairs",
-			new AuroraStairsBlock(AZALEA_PLANKS_BLOCK.getDefaultState(), QuiltBlockSettings.copyOf(AZALEA_PLANKS_BLOCK)),
+			new StairsBlock(AZALEA_PLANKS_BLOCK.getDefaultState(), QuiltBlockSettings.copyOf(AZALEA_PLANKS_BLOCK)),
 			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::woodenStairs
 	);
 	public static final Block AZALEA_BUTTON_BLOCK = registerWithItem("azalea_button",
-			new AuroraWoodenButtonBlock(QuiltBlockSettings.copyOf(Blocks.OAK_BUTTON)), new QuiltItemSettings().group(ItemGroup.REDSTONE),
+			new WoodenButtonBlock(QuiltBlockSettings.copyOf(Blocks.OAK_BUTTON)), new QuiltItemSettings().group(ItemGroup.REDSTONE),
 			DerivedBlockItem::woodenButton
 	);
 	public static final DoorBlock AZALEA_DOOR = registerWithItem("azalea_door",
-			new AuroraDoorBlock(QuiltBlockSettings.copyOf(Blocks.OAK_DOOR).mapColor(AZALEA_PLANKS_BLOCK.getDefaultMapColor())),
+			new DoorBlock(QuiltBlockSettings.copyOf(Blocks.OAK_DOOR).mapColor(AZALEA_PLANKS_BLOCK.getDefaultMapColor())),
 			new QuiltItemSettings().group(ItemGroup.REDSTONE),
 			DerivedBlockItem::door
 	);
@@ -153,7 +153,7 @@ public final class AurorasDecoRegistry {
 			new FenceGateBlock(QuiltBlockSettings.copyOf(AZALEA_PLANKS_BLOCK)), new QuiltItemSettings().group(ItemGroup.REDSTONE),
 			DerivedBlockItem::fenceGate);
 	public static final Block AZALEA_PRESSURE_PLATE_BLOCK = registerWithItem("azalea_pressure_plate",
-			new AuroraPressurePlateBlock(
+			new PressurePlateBlock(
 					PressurePlateBlock.ActivationRule.EVERYTHING,
 					QuiltBlockSettings.copyOf(Blocks.OAK_PRESSURE_PLATE).mapColor(AZALEA_PLANKS_BLOCK.getDefaultMapColor())
 			),
@@ -220,12 +220,12 @@ public final class AurorasDecoRegistry {
 			DerivedBlockItem::woodenSlab
 	);
 	public static final Block JACARANDA_STAIRS_BLOCK = registerWithItem("jacaranda_stairs",
-			new AuroraStairsBlock(JACARANDA_PLANKS_BLOCK.getDefaultState(), QuiltBlockSettings.copyOf(JACARANDA_PLANKS_BLOCK)),
+			new StairsBlock(JACARANDA_PLANKS_BLOCK.getDefaultState(), QuiltBlockSettings.copyOf(JACARANDA_PLANKS_BLOCK)),
 			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::woodenStairs
 	);
 	public static final Block JACARANDA_BUTTON_BLOCK = registerWithItem("jacaranda_button",
-			new AuroraWoodenButtonBlock(QuiltBlockSettings.copyOf(Blocks.OAK_BUTTON)), new QuiltItemSettings().group(ItemGroup.REDSTONE),
+			new WoodenButtonBlock(QuiltBlockSettings.copyOf(Blocks.OAK_BUTTON)), new QuiltItemSettings().group(ItemGroup.REDSTONE),
 			DerivedBlockItem::woodenButton
 	);
 	public static final FenceBlock JACARANDA_FENCE_BLOCK = registerWithItem("jacaranda_fence",
@@ -236,7 +236,7 @@ public final class AurorasDecoRegistry {
 			new FenceGateBlock(QuiltBlockSettings.copyOf(JACARANDA_PLANKS_BLOCK)), new QuiltItemSettings().group(ItemGroup.REDSTONE),
 			DerivedBlockItem::fenceGate);
 	public static final Block JACARANDA_PRESSURE_PLATE_BLOCK = registerWithItem("jacaranda_pressure_plate",
-			new AuroraPressurePlateBlock(
+			new PressurePlateBlock(
 					PressurePlateBlock.ActivationRule.EVERYTHING,
 					QuiltBlockSettings.copyOf(Blocks.OAK_PRESSURE_PLATE).mapColor(JACARANDA_PLANKS_BLOCK.getDefaultMapColor())
 			),
@@ -359,10 +359,10 @@ public final class AurorasDecoRegistry {
 			.withItem(new QuiltItemSettings().group(ItemGroup.DECORATIONS), DerivedBlockItem::campfire)
 			.addSelfTo(BlockEntityType.CAMPFIRE)
 			.finish().block();
-	public static final AuroraTorchBlock COPPER_SULFATE_TORCH_BLOCK = registerBlock("copper_sulfate_torch",
-			new AuroraTorchBlock(QuiltBlockSettings.copyOf(Blocks.TORCH), COPPER_SULFATE_FLAME));
-	public static final AuroraWallTorchBlock COPPER_SULFATE_WALL_TORCH_BLOCK = registerBlock("copper_sulfate_wall_torch",
-			new AuroraWallTorchBlock(QuiltBlockSettings.copyOf(COPPER_SULFATE_TORCH_BLOCK)
+	public static final TorchBlock COPPER_SULFATE_TORCH_BLOCK = registerBlock("copper_sulfate_torch",
+			new TorchBlock(QuiltBlockSettings.copyOf(Blocks.TORCH), COPPER_SULFATE_FLAME));
+	public static final WallTorchBlock COPPER_SULFATE_WALL_TORCH_BLOCK = registerBlock("copper_sulfate_wall_torch",
+			new WallTorchBlock(QuiltBlockSettings.copyOf(COPPER_SULFATE_TORCH_BLOCK)
 					.dropsLike(COPPER_SULFATE_TORCH_BLOCK), COPPER_SULFATE_FLAME));
 	public static final WallStandingBlockItem COPPER_SULFATE_TORCH_ITEM = registerItem("copper_sulfate_torch",
 			new WallStandingBlockItem(COPPER_SULFATE_TORCH_BLOCK, COPPER_SULFATE_WALL_TORCH_BLOCK,
@@ -370,6 +370,9 @@ public final class AurorasDecoRegistry {
 	//endregion
 
 	//region Redstone
+	public static final RedstoneLanternBlock REDSTONE_LANTERN_BLOCK = registerWithItem("redstone_lantern",
+			new RedstoneLanternBlock(), new QuiltItemSettings().group(ItemGroup.REDSTONE),
+			DerivedBlockItem.itemWithStrictPositionFactory(Items.REDSTONE_TORCH));
 	public static final CopperHopperBlock COPPER_HOPPER_BLOCK = registerWithItem("copper_hopper",
 			new CopperHopperBlock(QuiltBlockSettings.copyOf(Blocks.HOPPER).mapColor(MapColor.ORANGE)),
 			new QuiltItemSettings().group(ItemGroup.REDSTONE),
@@ -397,18 +400,18 @@ public final class AurorasDecoRegistry {
 			new QuiltItemSettings().group(ItemGroup.DECORATIONS));
 
 	//region Wall lanterns
-	public static final WallLanternBlock WALL_LANTERN_BLOCK = registerBlock("wall_lantern",
-			new WallLanternBlock((LanternBlock) Blocks.LANTERN));
-	public static final WallLanternBlock WALL_SOUL_LANTERN_BLOCK = registerBlock("wall_lantern/soul",
-			new WallLanternBlock((LanternBlock) Blocks.SOUL_LANTERN));
+	public static final WallLanternBlock<LanternBlock> WALL_LANTERN_BLOCK = registerBlock("wall_lantern",
+			new WallLanternBlock<>((LanternBlock) Blocks.LANTERN));
+	public static final WallLanternBlock<LanternBlock> SOUL_WALL_LANTERN_BLOCK = registerBlock("wall_lantern/soul",
+			new WallLanternBlock<>((LanternBlock) Blocks.SOUL_LANTERN));
+	public static final WallLanternBlock<RedstoneLanternBlock> REDSTONE_WALL_LANTERN_BLOCK = LanternRegistry.registerWallLantern(REDSTONE_LANTERN_BLOCK);
 	public static final BlockEntityType<LanternBlockEntity> WALL_LANTERN_BLOCK_ENTITY_TYPE = Registry.register(
 			Registry.BLOCK_ENTITY_TYPE,
 			id("lantern"),
-			FabricBlockEntityTypeBuilder.create(LanternBlockEntity::new, WALL_LANTERN_BLOCK, WALL_SOUL_LANTERN_BLOCK)
+			FabricBlockEntityTypeBuilder.create(LanternBlockEntity::new, WALL_LANTERN_BLOCK, SOUL_WALL_LANTERN_BLOCK, REDSTONE_WALL_LANTERN_BLOCK)
 					.build()
 	);
-	public static final WallLanternBlock AMETHYST_WALL_LANTERN_BLOCK
-			= LanternRegistry.registerWallLantern(AMETHYST_LANTERN_BLOCK);
+	public static final WallLanternBlock<AmethystLanternBlock> AMETHYST_WALL_LANTERN_BLOCK = LanternRegistry.registerWallLantern(AMETHYST_LANTERN_BLOCK);
 	//endregion
 
 	public static final WindChimeBlock WIND_CHIME_BLOCK = registerWithItem("wind_chime",

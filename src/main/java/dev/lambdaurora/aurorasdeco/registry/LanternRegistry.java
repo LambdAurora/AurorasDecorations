@@ -19,6 +19,8 @@ package dev.lambdaurora.aurorasdeco.registry;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.accessor.BlockEntityTypeAccessor;
+import dev.lambdaurora.aurorasdeco.block.RedstoneLanternBlock;
+import dev.lambdaurora.aurorasdeco.block.RedstoneWallLanternBlock;
 import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.api.EnvType;
@@ -39,14 +41,14 @@ import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 public final class LanternRegistry {
-	private static final Map<Identifier, WallLanternBlock> WALL_LANTERNS = new Object2ObjectOpenHashMap<>();
-	private static final Map<LanternBlock, WallLanternBlock> WALL_LANTERN_BLOCK_MAP = new Object2ObjectOpenHashMap<>();
+	private static final Map<Identifier, WallLanternBlock<?>> WALL_LANTERNS = new Object2ObjectOpenHashMap<>();
+	private static final Map<LanternBlock, WallLanternBlock<?>> WALL_LANTERN_BLOCK_MAP = new Object2ObjectOpenHashMap<>();
 
 	public static Stream<Identifier> streamIds() {
 		return WALL_LANTERNS.keySet().stream();
 	}
 
-	public static void forEach(BiConsumer<Identifier, WallLanternBlock> consumer) {
+	public static void forEach(BiConsumer<Identifier, WallLanternBlock<?>> consumer) {
 		WALL_LANTERNS.forEach(consumer);
 	}
 
@@ -57,16 +59,19 @@ public final class LanternRegistry {
 	 * @param lanternId the lantern block id
 	 * @return the wall lantern block
 	 */
-	public static WallLanternBlock registerWallLantern(Registry<Block> registry, LanternBlock block, Identifier lanternId) {
+	@SuppressWarnings("unchecked")
+	public static <L extends LanternBlock> WallLanternBlock<L> registerWallLantern(Registry<Block> registry, L block, Identifier lanternId) {
 		var wallLanternId = getWallLanternId(lanternId);
 
-		WallLanternBlock wallLanternBlock;
+		WallLanternBlock<L> wallLanternBlock;
 		if (WALL_LANTERNS.containsKey(wallLanternId))
-			return WALL_LANTERNS.get(wallLanternId);
+			return (WallLanternBlock<L>) WALL_LANTERNS.get(wallLanternId);
 		else if (block == Blocks.LANTERN || block == Blocks.SOUL_LANTERN) {
-			wallLanternBlock = (WallLanternBlock) Registry.BLOCK.get(wallLanternId);
+			wallLanternBlock = (WallLanternBlock<L>) Registry.BLOCK.get(wallLanternId);
+		} else if (block instanceof RedstoneLanternBlock redstoneLanternBlock) {
+			wallLanternBlock = (WallLanternBlock<L>) Registry.register(registry, wallLanternId, new RedstoneWallLanternBlock(redstoneLanternBlock));
 		} else {
-			wallLanternBlock = Registry.register(registry, wallLanternId, new WallLanternBlock(block));
+			wallLanternBlock = Registry.register(registry, wallLanternId, new WallLanternBlock<>(block));
 			((BlockEntityTypeAccessor) AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE)
 					.aurorasdeco$addSupportedBlock(wallLanternBlock);
 		}
@@ -81,7 +86,7 @@ public final class LanternRegistry {
 		return wallLanternBlock;
 	}
 
-	public static WallLanternBlock registerWallLantern(LanternBlock block) {
+	public static <L extends LanternBlock> WallLanternBlock<L> registerWallLantern(L block) {
 		return registerWallLantern(Registry.BLOCK, block, Registry.BLOCK.getId(block));
 	}
 

@@ -15,19 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.block;
+package dev.lambdaurora.aurorasdeco.block.behavior.component;
 
-import net.minecraft.block.WoodenButtonBlock;
+import net.minecraft.block.BlockState;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
 
-/**
- * Represents {@link WoodenButtonBlock} with a public constructor.
- *
- * @author LambdAurora
- * @version 1.0.0
- * @since 1.0.0
- */
-public class AuroraWoodenButtonBlock extends WoodenButtonBlock {
-	public AuroraWoodenButtonBlock(Settings settings) {
-		super(settings);
-	}
+import java.util.Random;
+
+public interface RandomTickComponent {
+	boolean hasRandomTicks(BlockState state);
+
+	void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random);
 }

@@ -29,6 +29,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
@@ -37,6 +38,8 @@ import java.util.Collection;
 import java.util.List;
 
 public final class AuroraUtil {
+	public static final List<Direction> DIRECTIONS = List.of(Direction.values());
+
 	private AuroraUtil() {
 		throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
 	}

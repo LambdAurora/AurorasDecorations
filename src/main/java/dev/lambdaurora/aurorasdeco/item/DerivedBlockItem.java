@@ -58,7 +58,7 @@ public class DerivedBlockItem extends BlockItem {
 		}
 	}
 
-	public static BiFunction<Block, Settings, BlockItem> itemWithStrictPositionFactory(Item after) {
+	public static <B extends Block> BiFunction<B, Settings, BlockItem> itemWithStrictPositionFactory(Item after) {
 		return (block, settings) -> newItemWithStrictPosition(block, after, settings);
 	}
 
@@ -108,6 +108,10 @@ public class DerivedBlockItem extends BlockItem {
 
 	public static DerivedBlockItem pressurePlate(Block block, Settings settings) {
 		return new DerivedBlockItem(block, KindSearcher.PRESSURE_PLATE_SEARCHER, KindSearcher::findLastOfGroup, settings);
+	}
+
+	public static DerivedBlockItem redstoneTorch(Block block, Settings settings) {
+		return new DerivedBlockItem(block, KindSearcher.HOPPER_SEARCHER, KindSearcher::findLastOfGroup, settings);
 	}
 
 	public static DerivedBlockItem sapling(Block block, Settings settings) {

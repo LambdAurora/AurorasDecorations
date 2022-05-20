@@ -17,6 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.block.behavior;
 
+import dev.lambdaurora.aurorasdeco.block.behavior.component.RandomTickComponent;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -25,6 +26,7 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.state.property.Properties;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 
@@ -37,14 +39,22 @@ import java.util.Random;
  * @version 1.0.0
  * @since 1.0.0
  */
-public final class CopperSulfateBehavior {
-	private CopperSulfateBehavior() {
-		throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");
+public final class CopperSulfateBehavior implements RandomTickComponent {
+	private final int radius;
+
+	public CopperSulfateBehavior(int radius) {
+		this.radius = radius;
 	}
 
-	public static void attemptToDecompose(BlockState state, ServerWorld world, BlockPos pos, Random random, int radius) {
+	@Override
+	public boolean hasRandomTicks(BlockState state) {
+		return state.get(Properties.LIT);
+	}
+
+	@Override
+	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
 		var currentPos = pos.mutableCopy();
-		for (int y = 0; y < radius; y++) {
+		for (int y = 0; y < this.radius; y++) {
 			currentPos.move(0, 1, 0);
 
 			var currentState = world.getBlockState(currentPos);

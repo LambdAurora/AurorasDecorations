@@ -18,7 +18,6 @@
 package dev.lambdaurora.aurorasdeco.util;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.block.AuroraStairsBlock;
 import dev.lambdaurora.aurorasdeco.item.DerivedBlockItem;
 import net.minecraft.block.*;
 import net.minecraft.item.Item;
@@ -109,7 +108,7 @@ public class Derivator {
 	public StairsBlock stairs() {
 		var derivative = new Derivative("stairs", false);
 		var item = base.getBlock().asItem();
-		return registerWithItem(this.singularBaseName, derivative, new AuroraStairsBlock(this.base,
+		return registerWithItem(this.singularBaseName, derivative, new StairsBlock(this.base,
 						QuiltBlockSettings.copyOf(this.base.getBlock())),
 				derivativeSearcher(derivative).build(),
 				new QuiltItemSettings()
@@ -119,7 +118,7 @@ public class Derivator {
 	public StairsBlock stairs(Item after) {
 		var derivative = new Derivative("stairs", false);
 		var item = base.getBlock().asItem();
-		return registerWithItem(this.singularBaseName, derivative, new AuroraStairsBlock(this.base,
+		return registerWithItem(this.singularBaseName, derivative, new StairsBlock(this.base,
 						QuiltBlockSettings.copyOf(this.base.getBlock())),
 				closeDerivativeSearcher(derivative).afterMapped(after, ItemStack::getItem).build(),
 				new QuiltItemSettings()

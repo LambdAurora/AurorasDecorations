@@ -1,0 +1,24 @@
+{
+  "variants": {
+    "hanging=false,lit=false": [
+      {
+        "model": "aurorasdeco:block/redstone_lantern/unlit"
+      }
+    ],
+    "hanging=true,lit=false": [
+      {
+        "model": "aurorasdeco:block/redstone_lantern/hanging_unlit"
+      }
+    ],
+    "hanging=false,lit=true": [
+      {
+        "model": "aurorasdeco:block/redstone_lantern/lit"
+      }
+    ],
+    "hanging=true,lit=true": [
+      {
+        "model": "aurorasdeco:block/redstone_lantern/hanging_lit"
+      }
+    ]
+  }
+}

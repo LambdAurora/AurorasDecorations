@@ -18,15 +18,10 @@
 package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.block.behavior.CopperSulfateBehavior;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.MapColor;
 import net.minecraft.block.Material;
 import net.minecraft.particle.ParticleEffect;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
-
-import java.util.Random;
 
 /**
  * Represents a copper sulfate brazier brazier.
@@ -38,19 +33,6 @@ import java.util.Random;
 public class CopperSulfateBrazierBlock extends BrazierBlock {
 	public CopperSulfateBrazierBlock(MapColor color, int fireDamage, int luminance, ParticleEffect particle) {
 		super(QuiltBlockSettings.of(Material.DECORATION).ticksRandomly(), color, fireDamage, luminance, particle);
-	}
-
-
-	/* Ticking */
-
-	@Override
-	public boolean hasRandomTicks(BlockState state) {
-		return state.get(LIT);
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-		CopperSulfateBehavior.attemptToDecompose(state, world, pos, random, 20);
+		this.tickComponent = new CopperSulfateBehavior(20);
 	}
 }

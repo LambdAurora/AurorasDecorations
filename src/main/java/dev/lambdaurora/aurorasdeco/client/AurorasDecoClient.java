@@ -205,6 +205,7 @@ public class AurorasDecoClient implements ClientModInitializer {
 				AurorasDecoPlants.POTTED_LAVENDER,
 				AurorasDecoPlants.JACARANDA_SAPLING,
 				AurorasDecoPlants.POTTED_JACARANDA_SAPLING,
+				REDSTONE_LANTERN_BLOCK,
 				SAWMILL_BLOCK,
 				SOUL_BRAZIER_BLOCK,
 				WIND_CHIME_BLOCK

@@ -17,18 +17,32 @@
 
 package dev.lambdaurora.aurorasdeco.block;
 
+import dev.lambdaurora.aurorasdeco.block.behavior.component.RandomTickComponent;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.StairsBlock;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
 
-/**
- * Represents {@link StairsBlock} with a public constructor.
- *
- * @author LambdAurora
- * @version 1.0.0
- * @since 1.0.0
- */
-public class AuroraStairsBlock extends StairsBlock {
-	public AuroraStairsBlock(BlockState baseBlockState, Settings settings) {
-		super(baseBlockState, settings);
+import java.util.Random;
+
+public class AuroraBlock extends Block {
+	protected RandomTickComponent tickComponent;
+
+	public AuroraBlock(Settings settings) {
+		super(settings);
+	}
+
+	@Override
+	public boolean hasRandomTicks(BlockState state) {
+		if (this.tickComponent == null) return super.hasRandomTicks(state);
+		return this.tickComponent.hasRandomTicks(state);
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+		if (this.tickComponent != null) {
+			this.tickComponent.randomTick(state, world, pos, random);
+		}
 	}
 }

@@ -58,7 +58,7 @@ import java.util.Random;
  * @since 1.0.0
  */
 @SuppressWarnings("deprecation")
-public class BrazierBlock extends Block implements Waterloggable {
+public class BrazierBlock extends AuroraBlock implements Waterloggable {
 	public static final BooleanProperty LIT = Properties.LIT;
 	public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 

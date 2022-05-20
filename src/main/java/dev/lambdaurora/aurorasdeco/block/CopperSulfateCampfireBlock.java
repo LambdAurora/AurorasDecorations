@@ -18,6 +18,7 @@
 package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.block.behavior.CopperSulfateBehavior;
+import dev.lambdaurora.aurorasdeco.block.behavior.component.RandomTickComponent;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoParticles;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CampfireBlock;
@@ -37,6 +38,8 @@ import java.util.Random;
  * @since 1.0.0
  */
 public class CopperSulfateCampfireBlock extends CampfireBlock {
+	private final RandomTickComponent tickComponent = new CopperSulfateBehavior(15);
+
 	public CopperSulfateCampfireBlock(Settings settings) {
 		super(true, 2, settings);
 	}
@@ -45,13 +48,13 @@ public class CopperSulfateCampfireBlock extends CampfireBlock {
 
 	@Override
 	public boolean hasRandomTicks(BlockState state) {
-		return state.get(LIT);
+		return this.tickComponent.hasRandomTicks(state);
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-		CopperSulfateBehavior.attemptToDecompose(state, world, pos, random, 15);
+		this.tickComponent.randomTick(state, world, pos, random);
 	}
 
 	/* Visual */

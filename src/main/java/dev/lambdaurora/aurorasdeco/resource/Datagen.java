@@ -45,13 +45,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -93,8 +90,6 @@ public final class Datagen {
 	private static final Identifier LOG_STUMP_LEAF_TEXTURE = id("block/log_stump_leaf");
 
 	static final Identifier SHELF_BETTERGRASS_DATA = id("bettergrass/data/shelf");
-
-	private static final Direction[] DIRECTIONS = Direction.values();
 
 	private static final Pattern PLANKS_TO_BASE_ID = Pattern.compile("[_/]planks$");
 	private static final Pattern PLANKS_SEPARATOR_DETECTOR = Pattern.compile("[/]planks$");
@@ -565,7 +560,7 @@ public final class Datagen {
 					.texture("top", headTopTexture)
 					.register(id("block/sleeping_bag/" + color.getName() + "/head"));
 
-			for (var direction : DIRECTIONS) {
+			for (var direction : AuroraUtil.DIRECTIONS) {
 				if (direction.getAxis().isHorizontal()) {
 					builder.addToVariant("part=foot,facing=" + direction.getName(),
 							footModel,
@@ -589,7 +584,7 @@ public final class Datagen {
 
 		LanternRegistry.forEach((lanternId, wallLantern) -> {
 			var builder = blockStateBuilder(wallLantern);
-			for (var direction : DIRECTIONS) {
+			for (var direction : AuroraUtil.DIRECTIONS) {
 				if (direction.getAxis().isHorizontal()) {
 					int rotation = (int) (direction.getOpposite().asRotation() + 90) % 360;
 					builder.addToVariant("facing=" + direction.getName() + ",extension=none",
@@ -633,7 +628,7 @@ public final class Datagen {
 
 			var withLeftLegs = BenchBlock.LEFT_LEGS.createValue(true);
 			var withRightLegs = BenchBlock.RIGHT_LEGS.createValue(true);
-			for (var facing : DIRECTIONS) {
+			for (var facing : AuroraUtil.DIRECTIONS) {
 				if (facing.getAxis().isVertical()) continue;
 
 				var facingValue = BenchBlock.FACING.createValue(facing);
@@ -742,7 +737,7 @@ public final class Datagen {
 				if (partType == PartType.BOTTOM)
 					bottomModel = model;
 
-				for (var direction : DIRECTIONS) {
+				for (var direction : AuroraUtil.DIRECTIONS) {
 					if (direction.getAxis().isVertical())
 						continue;
 
@@ -788,7 +783,7 @@ public final class Datagen {
 						.register(id("block/small_log_pile/" + woodPathName + '/' + partType.asString()));
 			}
 
-			for (var direction : DIRECTIONS) {
+			for (var direction : AuroraUtil.DIRECTIONS) {
 				if (direction.getAxis().isVertical())
 					continue;
 
@@ -832,7 +827,7 @@ public final class Datagen {
 						.texture("log_top", logTopTexture)
 						.texture("mushroom", leavesTexture)
 						.register(block);
-				for (var direction : DIRECTIONS) {
+				for (var direction : AuroraUtil.DIRECTIONS) {
 					if (direction.getAxis().isHorizontal())
 						builder.addToVariant("", model, (int) direction.asRotation());
 				}
@@ -857,7 +852,7 @@ public final class Datagen {
 						.register(id("block/stump/"
 								+ block.getWoodType().getPathName() + "_red_mushroom"));
 
-				for (var direction : DIRECTIONS) {
+				for (var direction : AuroraUtil.DIRECTIONS) {
 					if (direction.getAxis().isHorizontal()) {
 						int rotation = (int) direction.asRotation();
 						builder.addToVariant("", model, rotation);

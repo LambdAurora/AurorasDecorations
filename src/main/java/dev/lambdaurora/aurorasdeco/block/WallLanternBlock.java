@@ -60,6 +60,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.event.GameEvent;
+import net.minecraft.world.logic.RedstoneSignalLevels;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
@@ -69,12 +70,13 @@ import java.util.Random;
 /**
  * Represents a wall lantern.
  *
+ * @param <L> the type of the underlying lantern
  * @author LambdAurora
  * @version 1.0.0
  * @since 1.0.0
  */
 @SuppressWarnings("deprecation")
-public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
+public class WallLanternBlock<L extends LanternBlock> extends BlockWithEntity implements Waterloggable {
 	public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
 	public static final EnumProperty<ExtensionType> EXTENSION = AurorasDecoProperties.EXTENSION;
 	public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
@@ -89,9 +91,9 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 
 	public static final Identifier LANTERN_BETTERGRASS_DATA = AurorasDeco.id("bettergrass/data/wall_lantern");
 
-	private final LanternBlock lanternBlock;
+	protected final L lanternBlock;
 
-	public WallLanternBlock(LanternBlock lantern) {
+	public WallLanternBlock(L lantern) {
 		super(settings(lantern));
 
 		this.lanternBlock = lantern;
@@ -175,7 +177,8 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 	}
 
 	@Override
-	public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
+	public @Nullable
+	BlockState getPlacementState(ItemPlacementContext ctx) {
 		var state = this.getDefaultState();
 		var world = ctx.getWorld();
 		var pos = ctx.getBlockPos();
@@ -210,6 +213,17 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 	}
 
 	/* Updates */
+
+	@Override
+	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
+		this.lanternBlock.onBlockAdded(state, world, pos, oldState, notify);
+	}
+
+	@Override
+	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+		this.lanternBlock.onStateReplaced(state, world, pos, newState, moved);
+		super.onStateReplaced(state, world, pos, newState, moved);
+	}
 
 	@Override
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world,
@@ -318,7 +332,8 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 	}
 
 	@Override
-	public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+	public @Nullable
+	BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
 		return AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE.instantiate(pos, state);
 	}
 
@@ -353,6 +368,11 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 	/* Redstone */
 
 	@Override
+	public boolean emitsRedstonePower(BlockState state) {
+		return this.lanternBlock.emitsRedstonePower(state);
+	}
+
+	@Override
 	public boolean hasComparatorOutput(BlockState state) {
 		return true;
 	}
@@ -362,14 +382,15 @@ public class WallLanternBlock extends BlockWithEntity implements Waterloggable {
 		var lantern = AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE.get(world, pos);
 		if (lantern != null) {
 			if (lantern.isColliding()) {
-				return 15;
+				return RedstoneSignalLevels.SIGNAL_MAX;
 			} else if (lantern.isSwinging()) {
 				int max = lantern.getMaxSwingTicks();
 				float progress = (max - lantern.getSwingTicks()) / (float) max;
 				return (int) (progress * 14);
 			}
 		}
-		return 0;
+
+		return RedstoneSignalLevels.SIGNAL_NONE;
 	}
 
 	/* Visual */

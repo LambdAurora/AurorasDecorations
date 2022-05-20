@@ -59,7 +59,7 @@ public class LanternBlockEntity extends SwayingBlockEntity {
 	 */
 	public BlockState getLanternState() {
 		var cachedState = this.getCachedState();
-		return ((WallLanternBlock) cachedState.getBlock()).getLanternState(cachedState);
+		return ((WallLanternBlock<?>) cachedState.getBlock()).getLanternState(cachedState);
 	}
 
 	@Override
