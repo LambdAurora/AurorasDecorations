@@ -30,6 +30,7 @@ import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
@@ -92,12 +93,19 @@ public final class PottedPlantType {
 	}
 
 	public static BigFlowerPotBlock register(String id, Block plant, Item item) {
-		if (id.equals("ecotones/blueberry_bush") || plant instanceof SweetBerryBushBlock) // Love ecotones <3
-			return register(id, plant, item, BigPottedSweetBerryBushBlock::new);
-		else if (plant instanceof NetherWartBlock)
-			return register(id, plant, item, BigPottedNetherWartBlock::new);
-		else if (plant instanceof DaffodilBlock)
+		for (var category : Category.CATEGORIES) {
+			if (category.filter(id, plant, item)) {
+				if (category.getFactory() != null) {
+					return register(id, plant, item, category.getFactory());
+				}
+
+				break;
+			}
+		}
+		if (plant instanceof DaffodilBlock)
 			return register(id, plant, item, BigPottedDaffodilBlock::new);
+		else if (id.startsWith("floral_flair/"))
+			return register(id, plant, item, BigPottedProxyBlock::new);
 		//else if (plant instanceof SeaPickleBlock)
 		//    return register(id, plant, item, BigPottedSeaPickleBlock::new);
 		return register(id, plant, item, BigFlowerPotBlock::new);
@@ -208,26 +216,36 @@ public final class PottedPlantType {
 	 * @since 1.0.0
 	 */
 	public enum Category {
-		AZALEA((id, plant, item) -> plant instanceof AzaleaBlock, false),
-		BAMBOO((id, plant, item) -> item == Items.BAMBOO, false),
-		CACTUS((id, plant, item) -> plant instanceof CactusBlock || id.equals("pocket_cactus"), false),
-		FLOWER((id, plant, item) -> plant instanceof FlowerBlock, true),
-		MASCOT((id, plant, item) -> item == Items.POTATO || item == Items.PUMPKIN, false),
-		MUSHROOM((id, plant, item) -> plant instanceof MushroomPlantBlock || plant instanceof FungusBlock, true),
-		SAPLING((id, plant, item) -> plant instanceof SaplingBlock, true),
-		SWEET_BERRY_BUSH((id, plant, item) -> plant instanceof SweetBerryBushBlock || id.equals("ecotones/blueberry_bush"), false),
-		UNKNOWN((id, plant, item) -> true, true);
+		AZALEA((id, plant, item) -> plant instanceof AzaleaBlock, false, BigPottedAzaleaBlock::new),
+		BAMBOO((id, plant, item) -> item == Items.BAMBOO, false, null),
+		CACTUS((id, plant, item) -> plant instanceof CactusBlock || id.equals("pocket_cactus"), false, null),
+		FLOWER((id, plant, item) -> plant instanceof FlowerBlock, true, null),
+		MASCOT((id, plant, item) -> item == Items.POTATO || item == Items.PUMPKIN, false, null),
+		MUSHROOM((id, plant, item) -> plant instanceof MushroomPlantBlock || plant instanceof FungusBlock, true, null),
+		NETHER_WART((id, plant, item) -> plant instanceof NetherWartBlock, true, BigPottedNetherWartBlock::new),
+		SAPLING((id, plant, item) -> plant instanceof SaplingBlock, true, BigFlowerPotBlock::new),
+		SWEET_BERRY_BUSH((id, plant, item) -> plant instanceof SweetBerryBushBlock || id.equals("ecotones/blueberry_bush"), false,
+				BigPottedSweetBerryBushBlock::new),
+		UNKNOWN((id, plant, item) -> true, true, null);
+
+		public static final List<Category> CATEGORIES = List.of(values());
 
 		private final CategoryFilter filter;
 		private final boolean allowBlocksOnTop;
+		private final Function<PottedPlantType, BigFlowerPotBlock> factory;
 
-		Category(CategoryFilter filter, boolean allowBlocksOnTop) {
+		Category(CategoryFilter filter, boolean allowBlocksOnTop, Function<PottedPlantType, BigFlowerPotBlock> factory) {
 			this.filter = filter;
 			this.allowBlocksOnTop = allowBlocksOnTop;
+			this.factory = factory;
 		}
 
 		public boolean allowBlocksOnTop() {
 			return this.allowBlocksOnTop;
+		}
+
+		public @Nullable Function<PottedPlantType, BigFlowerPotBlock> getFactory() {
+			return this.factory;
 		}
 
 		private boolean filter(String id, Block plant, Item item) {

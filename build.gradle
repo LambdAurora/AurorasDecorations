@@ -25,12 +25,19 @@ String getMCVersionString() {
 	return version[0] + '.' + version[1]
 }
 
+sourceSets {
+	testmod {
+		compileClasspath += sourceSets.main.compileClasspath
+		runtimeClasspath += sourceSets.main.runtimeClasspath
+	}
+}
+
 loom {
 	runs {
 		autoTestServer {
 			server()
 			configName = "Auto test server"
-			source(project.sourceSets.main)
+			source(sourceSets.testmod)
 			property("quilt.auto_test")
 			programArg("--nogui")
 		}
@@ -70,6 +77,8 @@ dependencies {
 		exclude group: 'net.fabricmc'
 		exclude group: 'net.fabricmc.fabric-api'
 	}
+
+	testmodImplementation sourceSets.main.output
 }
 
 java {
@@ -101,7 +110,7 @@ jar {
 }
 
 license {
-	rule file('HEADER')
+	rule file('codeformat/HEADER')
 	include '**/*.java'
 }
 

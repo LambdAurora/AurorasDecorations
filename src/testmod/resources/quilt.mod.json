@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "dev.lambdaurora",
+    "id": "aurorasdeco_debug",
+    "version": "${version}",
+    "metadata": {
+      "name": "Aurora's Decorations - Debug Utilities",
+      "description": "Debug and development utilities for Aurora's Decorations",
+      "contributors": {
+        "LambdAurora": "Author"
+      },
+      "contact": {
+        "homepage": "https://modrinth.com/mod/aurorasdecorations",
+        "sources": "https://github.com/LambdAurora/AurorasDecorations.git",
+        "issues": "https://github.com/LambdAurora/AurorasDecorations/issues"
+      },
+      "license": "LGPL-3.0-only"
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "entrypoints": {
+      "init": [
+        "dev.lambdaurora.aurorasdeco.debug.AurorasDecoDebug"
+      ]
+    },
+    "depends": [
+      "aurorasdeco"
+    ]
+  },
+  "mixin": "aurorasdeco.debug.mixins.json"
+}

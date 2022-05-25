@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "dev.lambdaurora.aurorasdeco.debug.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "ArrayPaletteMixin",
+    "HolderReferenceMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

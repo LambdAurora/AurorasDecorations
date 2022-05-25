@@ -29,7 +29,10 @@ import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
 import dev.lambdaurora.aurorasdeco.accessor.ItemExtensions;
 import dev.lambdaurora.aurorasdeco.advancement.PetUsePetBedCriterion;
 import dev.lambdaurora.aurorasdeco.block.*;
-import dev.lambdaurora.aurorasdeco.block.big_flower_pot.*;
+import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
+import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigPottedCactusBlock;
+import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigStaticFlowerPotBlock;
+import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.block.entity.*;
 import dev.lambdaurora.aurorasdeco.item.BlackboardItem;
 import dev.lambdaurora.aurorasdeco.item.DerivedBlockItem;
@@ -297,16 +300,6 @@ public final class AurorasDecoRegistry {
 					7.f, 14.f, 7.f,
 					9.f, 29.f, 9.f
 			)));
-	public static final BigPottedAzaleaBlock BIG_POTTED_AZALEA_BLOCK = registerBigPotted("azalea",
-			Blocks.AZALEA, Items.AZALEA,
-			BigPottedAzaleaBlock::new);
-	public static final BigPottedAzaleaBlock BIG_POTTED_FLOWERING_AZALEA_BLOCK = registerBigPotted("flowering_azalea",
-			Blocks.FLOWERING_AZALEA, Items.FLOWERING_AZALEA,
-			BigPottedAzaleaBlock::new);
-	public static final BigPottedSweetBerryBushBlock BIG_POTTED_SWEET_BERRY_BUSH_BLOCK =
-			registerBigPotted("sweet_berry_bush",
-					Blocks.SWEET_BERRY_BUSH, Items.SWEET_BERRIES,
-					BigPottedSweetBerryBushBlock::new);
 	public static final BigStaticFlowerPotBlock BIG_POTTED_TATER_BLOCK = registerBigPotted("tater",
 			Blocks.AIR, Items.POTATO,
 			type -> new BigStaticFlowerPotBlock(type, Block.createCuboidShape(

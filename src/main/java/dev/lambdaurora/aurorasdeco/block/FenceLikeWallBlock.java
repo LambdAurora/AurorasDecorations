@@ -67,6 +67,7 @@ public class FenceLikeWallBlock extends HorizontalConnectingBlock {
 
 	/* Placement */
 
+	@Override
 	public BlockState getPlacementState(ItemPlacementContext ctx) {
 		var world = ctx.getWorld();
 		var blockPos = ctx.getBlockPos();

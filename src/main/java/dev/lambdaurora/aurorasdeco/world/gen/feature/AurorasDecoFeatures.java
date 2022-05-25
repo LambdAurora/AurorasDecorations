@@ -23,9 +23,11 @@ import net.minecraft.util.Holder;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.FeatureConfig;
+import net.minecraft.world.gen.feature.PlacedFeature;
 
 public final class AurorasDecoFeatures {
 	private AurorasDecoFeatures() {
@@ -33,6 +35,10 @@ public final class AurorasDecoFeatures {
 	}
 
 	public static final FallenTreeFeature FALLEN_TREE = register("fallen_tree", new FallenTreeFeature(FallenTreeFeatureConfig.CODEC));
+
+	public static final RegistryKey<PlacedFeature> SWAMP_GIANT_MUSHROOMS = RegistryKey.of(
+			Registry.PLACED_FEATURE_KEY, AurorasDeco.id("swamp/giant_mushrooms")
+	);
 
 	private static <C extends FeatureConfig, F extends Feature<C>> F register(String name, F feature) {
 		return Registry.register(Registry.FEATURE, AurorasDeco.id(name), feature);

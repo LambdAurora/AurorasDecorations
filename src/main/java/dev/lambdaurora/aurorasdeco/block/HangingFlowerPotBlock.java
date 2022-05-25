@@ -26,6 +26,7 @@ import net.minecraft.block.*;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.ActionResult;
@@ -49,6 +50,7 @@ import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Stream;
 
 /**
@@ -63,6 +65,7 @@ public class HangingFlowerPotBlock extends Block {
 	private static final List<HangingFlowerPotBlock> HANGING_FLOWER_POT_BLOCKS = new ArrayList<>();
 	private static final Map<Block, Block> CONTENT_TO_POTTED = new Object2ObjectOpenHashMap<>();
 	protected static final VoxelShape SHAPE = Block.createCuboidShape(5.0, 0.0, 5.0, 11.0, 6.0, 11.0);
+	private static final ThreadLocal<FlowerPotBlock> CURRENT_PROXY = new ThreadLocal<>();
 	private static HangingFlowerPotBlock DEFAULT;
 
 	public static final Identifier HANGING_FLOWER_POT_ATTACHMENT_MODEL = AurorasDeco.id("block/hanging_flower_pot_attachment");
@@ -71,19 +74,12 @@ public class HangingFlowerPotBlock extends Block {
 	private final FlowerPotBlock flowerPot;
 
 	public HangingFlowerPotBlock(FlowerPotBlock flowerPot) {
-		super(QuiltBlockSettings.copyOf(flowerPot).dropsLike(flowerPot));
+		super(settings(flowerPot));
 		this.flowerPot = flowerPot;
 		CONTENT_TO_POTTED.put(flowerPot.getContent(), this);
 		HANGING_FLOWER_POT_BLOCKS.add(this);
 
-		if (flowerPot instanceof DirectionalFlowerPotBlock) {
-			var builder = new StateManager.Builder<Block, BlockState>(this);
-			this.appendProperties(builder);
-			((BlockAccessor) flowerPot).aurorasdeco$appendProperties(builder);
-			((BlockAccessor) this).setStateManager(builder.build(Block::getDefaultState, BlockState::new));
-
-			this.setDefaultState(AuroraUtil.remapBlockState(flowerPot.getDefaultState(), this.stateManager.getDefaultState()));
-		}
+		this.setDefaultState(AuroraUtil.remapBlockState(flowerPot.getDefaultState(), this.stateManager.getDefaultState()));
 
 		if (flowerPot == Blocks.FLOWER_POT)
 			DEFAULT = this;
@@ -124,6 +120,13 @@ public class HangingFlowerPotBlock extends Block {
 
 	private boolean isEmpty() {
 		return this.flowerPot.getContent() == Blocks.AIR;
+	}
+
+	@Override
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+		super.appendProperties(builder);
+
+		((BlockAccessor) CURRENT_PROXY.get()).aurorasdeco$appendProperties(builder);
 	}
 
 	/* Shapes */
@@ -198,6 +201,18 @@ public class HangingFlowerPotBlock extends Block {
 		return this.isEmpty() ? super.getPickStack(world, pos, state) : new ItemStack(this.getContent());
 	}
 
+	/* Ticking */
+
+	@Override
+	public boolean hasRandomTicks(BlockState state) {
+		return this.flowerPot.hasRandomTicks(state);
+	}
+
+	@Override
+	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+		this.flowerPot.randomTick(state, world, pos, random);
+	}
+
 	/* Entity Stuff */
 
 	@Override
@@ -214,5 +229,10 @@ public class HangingFlowerPotBlock extends Block {
 		Item.BLOCK_ITEMS.put(block, Items.FLOWER_POT);
 
 		return block;
+	}
+
+	private static QuiltBlockSettings settings(FlowerPotBlock block) {
+		CURRENT_PROXY.set(block);
+		return QuiltBlockSettings.copyOf(block).dropsLike(block);
 	}
 }

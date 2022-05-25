@@ -1,7 +1,7 @@
 #
 # LambdAurora's ignore file
 #
-# v0.19
+# v0.20
 
 # JetBrains
 .idea/
@@ -81,6 +81,8 @@ bin/
 build/
 dist/
 lib/
+!src/lib/
+!src/**/lib/
 obj/
 run/
 target/

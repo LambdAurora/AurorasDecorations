@@ -17,7 +17,9 @@
 
 package dev.lambdaurora.aurorasdeco.block.big_flower_pot;
 
+import dev.lambdaurora.aurorasdeco.mixin.block.AbstractBlockAccessor;
 import dev.lambdaurora.aurorasdeco.mixin.block.BlockAccessor;
+import dev.lambdaurora.aurorasdeco.mixin.block.BlockSettingsAccessor;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.block.Block;
@@ -46,10 +48,13 @@ import java.util.function.Consumer;
  */
 @SuppressWarnings("deprecation")
 public class BigPottedProxyBlock extends BigFlowerPotBlock {
-	private final Map<BlockState, VoxelShape> shapeCache = new Object2ObjectOpenHashMap<>();
+	private final Map<BlockState, VoxelShape> outlineShapeCache = new Object2ObjectOpenHashMap<>();
 
 	public BigPottedProxyBlock(PottedPlantType type) {
 		super(type);
+
+		((AbstractBlockAccessor) this).getSettings()
+				.luminance(((BlockSettingsAccessor) ((AbstractBlockAccessor) type.getPlant()).getSettings()).getLuminance());
 
 		var builder = new StateManager.Builder<Block, BlockState>(this);
 		this.appendProperties(builder);
@@ -67,8 +72,21 @@ public class BigPottedProxyBlock extends BigFlowerPotBlock {
 	/* Shapes */
 
 	@Override
+	public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+		var plantShape = this.getPlantState(state).getCollisionShape(world, pos, context);
+
+		if (plantShape == VoxelShapes.empty()) {
+			return BIG_FLOWER_POT_SHAPE;
+		} else {
+			float ratio = .65f;
+			float offset = (1.f - ratio) / 2.f;
+			return VoxelShapes.union(BIG_FLOWER_POT_SHAPE, AuroraUtil.resizeVoxelShape(plantShape, ratio).offset(offset, .8f, offset));
+		}
+	}
+
+	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-		return this.shapeCache.computeIfAbsent(state, s -> this.shape(s, world, pos));
+		return this.outlineShapeCache.computeIfAbsent(state, s -> this.shape(s, world, pos));
 	}
 
 	private VoxelShape shape(BlockState state, BlockView world, BlockPos pos) {

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.mixin;
+package dev.lambdaurora.aurorasdeco.debug.mixin;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import net.minecraft.network.PacketByteBuf;
@@ -34,9 +34,6 @@ public abstract class ArrayPaletteMixin<T> {
 	@Shadow
 	@Final
 	private T[] array;
-
-	@Shadow
-	public abstract T getEntry(int id);
 
 	@Shadow
 	@Final

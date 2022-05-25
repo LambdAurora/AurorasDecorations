@@ -15,23 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.mixin.block;
+package dev.lambdaurora.aurorasdeco.debug;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Material;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import org.quiltmc.loader.api.ModContainer;
+import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 
-@Mixin(AbstractBlock.class)
-public interface AbstractBlockAccessor {
-	@Accessor
-	Material getMaterial();
-
-	@Accessor
-	AbstractBlock.Settings getSettings();
-
-	@Mutable
-	@Accessor
-	void setSettings(AbstractBlock.Settings settings);
+public class AurorasDecoDebug implements ModInitializer {
+	@Override
+	public void onInitialize(ModContainer mod) {
+	}
 }

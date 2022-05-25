@@ -25,6 +25,8 @@ import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import net.minecraft.block.Blocks;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.text.LiteralText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
@@ -34,6 +36,8 @@ import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 import org.quiltmc.qsl.registry.api.event.RegistryMonitor;
+import org.quiltmc.qsl.resource.loader.api.ResourceLoader;
+import org.quiltmc.qsl.resource.loader.api.ResourcePackActivationType;
 
 /**
  * Represents the Aurora's Decorations mod.
@@ -67,6 +71,12 @@ public class AurorasDeco implements ModInitializer {
 
 		ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_OPEN_GUI_FAIL, AurorasDecoPackets::handleSignPostOpenGuiFailPacket);
 		ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_SET_TEXT, AurorasDecoPackets::handleSignPostSetTextPacket);
+
+		ResourceLoader.registerBuiltinResourcePack(id("swamp_worldgen"), ResourcePackActivationType.NORMAL,
+				new LiteralText("Aurora's Deco").formatted(Formatting.GOLD)
+						.append(new LiteralText(" - ").formatted(Formatting.GRAY))
+						.append(new LiteralText("Swamp Tweaks").formatted(Formatting.DARK_GREEN))
+		);
 	}
 
 	public static boolean isDevMode() {
