@@ -17,7 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.mixin;
 
-import dev.lambdaurora.aurorasdeco.resource.ServerConfig;
+import dev.lambdaurora.aurorasdeco.world.gen.DynamicWorldGen;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.server.ServerReloadableResources;
 import net.minecraft.server.command.CommandManager;
@@ -37,6 +37,6 @@ public class ServerReloadableResourcesMixin {
 	                           CommandManager.RegistrationEnvironment environment,
 	                           int level, Executor prepareExecutor, Executor applyExecutor,
 	                           CallbackInfoReturnable<CompletableFuture<ServerReloadableResources>> cir) {
-		ServerConfig.get().setupRegistries(registry);
+		DynamicWorldGen.setupRegistries(registry);
 	}
 }

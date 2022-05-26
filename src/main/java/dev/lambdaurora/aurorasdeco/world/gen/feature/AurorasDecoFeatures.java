@@ -40,6 +40,9 @@ public final class AurorasDecoFeatures {
 	public static final RegistryKey<PlacedFeature> SWAMP_GIANT_MUSHROOMS = RegistryKey.of(
 			Registry.PLACED_FEATURE_KEY, AurorasDeco.id("swamp/giant_mushrooms")
 	);
+	public static final RegistryKey<PlacedFeature> SWAMP_SMALL_DRIPLEAF = RegistryKey.of(
+			Registry.PLACED_FEATURE_KEY, AurorasDeco.id("swamp/small_dripleaf")
+	);
 
 	private static <C extends FeatureConfig, F extends Feature<C>> F register(String name, F feature) {
 		return Registry.register(Registry.FEATURE, AurorasDeco.id(name), feature);
