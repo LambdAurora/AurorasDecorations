@@ -34,6 +34,7 @@ public final class AurorasDecoFeatures {
 		throw new UnsupportedOperationException("AurorasDecoFeatures only contains static definitions.");
 	}
 
+	public static final SimplePlantFeature SIMPLE_PLANT = register("simple_plant", new SimplePlantFeature(SimplePlantFeature.Config.CODEC));
 	public static final FallenTreeFeature FALLEN_TREE = register("fallen_tree", new FallenTreeFeature(FallenTreeFeatureConfig.CODEC));
 
 	public static final RegistryKey<PlacedFeature> SWAMP_GIANT_MUSHROOMS = RegistryKey.of(

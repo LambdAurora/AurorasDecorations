@@ -1,0 +1,47 @@
+{
+  "type": "aurorasdeco:simple_plant",
+  "config": {
+    "to_place": {
+      "type": "minecraft:weighted_state_provider",
+      "entries": [
+        {
+          "data": {
+            "Name": "minecraft:small_dripleaf",
+            "Properties": {
+              "facing": "north"
+            }
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "minecraft:small_dripleaf",
+            "Properties": {
+              "facing": "east"
+            }
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "minecraft:small_dripleaf",
+            "Properties": {
+              "facing": "south"
+            }
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "minecraft:small_dripleaf",
+            "Properties": {
+              "facing": "west"
+            }
+          },
+          "weight": 1
+        }
+      ]
+    },
+    "should_have_air_above": true
+  }
+}
