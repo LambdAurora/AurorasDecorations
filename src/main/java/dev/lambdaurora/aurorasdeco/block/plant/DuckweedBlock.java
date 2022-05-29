@@ -17,6 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.block.plant;
 
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoTags;
 import net.minecraft.block.*;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -69,7 +70,10 @@ public final class DuckweedBlock extends Block implements FluidFillable {
 
 	@Override
 	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-		return world.getFluidState(pos).isEqualAndStill(Fluids.WATER) && world.getBlockState(pos.up()).isAir();
+		if (!world.getFluidState(pos).isEqualAndStill(Fluids.WATER))
+			return false;
+		BlockState aboveState = world.getBlockState(pos.up());
+		return aboveState.isAir() || aboveState.isIn(AurorasDecoTags.VEGETATION_ON_WATER_SURFACE);
 	}
 
 	@Override

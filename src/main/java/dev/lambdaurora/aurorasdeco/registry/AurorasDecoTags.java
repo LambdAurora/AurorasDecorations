@@ -20,6 +20,7 @@ package dev.lambdaurora.aurorasdeco.registry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.tag.TagKey;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 import static dev.lambdaurora.aurorasdeco.AurorasDeco.id;
@@ -48,4 +49,6 @@ public final class AurorasDecoTags {
 	public static final TagKey<Block> SHELVES = TagKey.of(Registry.BLOCK_KEY, id("shelves"));
 	public static final TagKey<Block> SMALL_LOG_PILES = TagKey.of(Registry.BLOCK_KEY, id("small_log_piles"));
 	public static final TagKey<Block> STUMPS = TagKey.of(Registry.BLOCK_KEY, id("stumps"));
+
+	public static final TagKey<Block> VEGETATION_ON_WATER_SURFACE = TagKey.of(Registry.BLOCK_KEY, new Identifier("c", "vegetation/on_water_surface"));
 }
