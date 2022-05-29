@@ -2,7 +2,7 @@
   "feature": "aurorasdeco:vegetation/small_dripleaf",
   "placement": [
     {
-      "type": "count",
+      "type": "minecraft:count",
       "count": 37
     },
     {

@@ -18,6 +18,7 @@
 package dev.lambdaurora.aurorasdeco.block.big_flower_pot;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import dev.lambdaurora.aurorasdeco.block.plant.AuroraPlantBlock;
 import dev.lambdaurora.aurorasdeco.block.plant.DaffodilBlock;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -185,6 +186,10 @@ public final class PottedPlantType {
 				&& !(block instanceof LilyPadBlock)
 				&& !(block instanceof StemBlock)
 				&& !(block instanceof AttachedStemBlock)) {
+			if (block instanceof AuroraPlantBlock special) {
+				return special.canBePotted();
+			}
+
 			return true;
 		} else return block instanceof CactusBlock;
 	}

@@ -4,6 +4,8 @@
 - Lamp post (like in Dungeons)
 - Palo Verde Tree
 
+- Find new ways for duckweed to be obtained and found
+
 - they want it
   - blackboards on floor/ceiling
 

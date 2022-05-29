@@ -397,7 +397,7 @@ public class WallLanternBlock<L extends LanternBlock> extends BlockWithEntity im
 
 	@Override
 	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-		this.getLanternBlock().randomDisplayTick(state, world, pos, random);
+		this.getLanternBlock().randomDisplayTick(this.getLanternState(state), world, pos, random);
 	}
 
 	private static Settings settings(LanternBlock lanternBlock) {

@@ -51,6 +51,7 @@ public class DynamicWorldGen {
 
 	private DynamicWorldGen() {
 		this.register(new Entry(AurorasDeco.id("swamp"), BiomeSelectors.includeByKey(BiomeKeys.SWAMP), List.of(
+				AurorasDecoFeatures.SWAMP_DUCKWEED,
 				AurorasDecoFeatures.SWAMP_GIANT_MUSHROOMS,
 				AurorasDecoFeatures.SWAMP_SMALL_DRIPLEAF
 		)));

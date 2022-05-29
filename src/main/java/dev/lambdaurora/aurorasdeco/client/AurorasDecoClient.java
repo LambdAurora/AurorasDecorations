@@ -200,6 +200,7 @@ public class AurorasDecoClient implements ClientModInitializer {
 				GLASSBOARD_BLOCK,
 				WAXED_GLASSBOARD_BLOCK,
 				AurorasDecoPlants.DAFFODIL.block(),
+				AurorasDecoPlants.DUCKWEED.block(),
 				AurorasDecoPlants.LAVENDER.block(),
 				AurorasDecoPlants.POTTED_DAFFODIL,
 				AurorasDecoPlants.POTTED_LAVENDER,

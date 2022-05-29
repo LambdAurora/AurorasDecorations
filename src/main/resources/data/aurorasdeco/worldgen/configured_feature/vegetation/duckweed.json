@@ -1,0 +1,17 @@
+{
+  "type": "aurorasdeco:aquatic_surface_patch",
+  "config": {
+    "circle_amount": 1,
+    "radius": 7,
+    "spread": 25,
+    "y_offset": -1,
+    "removal_factor": 0.30,
+    "addition_factor": 0.10,
+    "to_place": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "aurorasdeco:duckweed"
+      }
+    }
+  }
+}

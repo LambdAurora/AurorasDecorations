@@ -20,9 +20,11 @@ package dev.lambdaurora.aurorasdeco.registry;
 import dev.lambdaurora.aurorasdeco.block.BurntVineBlock;
 import dev.lambdaurora.aurorasdeco.block.DirectionalFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.plant.DaffodilBlock;
+import dev.lambdaurora.aurorasdeco.block.plant.DuckweedBlock;
 import dev.lambdaurora.aurorasdeco.block.plant.LavenderBlock;
 import dev.lambdaurora.aurorasdeco.block.sapling.JacarandaSaplingGenerator;
 import dev.lambdaurora.aurorasdeco.item.DerivedBlockItem;
+import dev.lambdaurora.aurorasdeco.item.DuckweedItem;
 import dev.lambdaurora.aurorasdeco.util.Registrar;
 import net.minecraft.block.*;
 import net.minecraft.item.ItemGroup;
@@ -59,6 +61,10 @@ public final class AurorasDecoPlants {
 
 	public static final Registrar.BlockEntry<LavenderBlock> LAVENDER = Registrar.register("lavender", new LavenderBlock())
 			.withItem(new QuiltItemSettings().group(ItemGroup.DECORATIONS), DerivedBlockItem::flower)
+			.finish();
+
+	public static final Registrar.BlockEntry<DuckweedBlock> DUCKWEED = Registrar.register("duckweed", new DuckweedBlock())
+			.withItem(new QuiltItemSettings().group(ItemGroup.DECORATIONS), DuckweedItem::new)
 			.finish();
 
 	/* Burnt Plants */

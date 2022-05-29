@@ -17,6 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.block.big_flower_pot;
 
+import dev.lambdaurora.aurorasdeco.block.state.CustomStateManagerBuilder;
 import dev.lambdaurora.aurorasdeco.mixin.block.AbstractBlockAccessor;
 import dev.lambdaurora.aurorasdeco.mixin.block.BlockAccessor;
 import dev.lambdaurora.aurorasdeco.mixin.block.BlockSettingsAccessor;
@@ -25,11 +26,12 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -56,7 +58,8 @@ public class BigPottedProxyBlock extends BigFlowerPotBlock {
 		((AbstractBlockAccessor) this).getSettings()
 				.luminance(((BlockSettingsAccessor) ((AbstractBlockAccessor) type.getPlant()).getSettings()).getLuminance());
 
-		var builder = new StateManager.Builder<Block, BlockState>(this);
+		var builder = new CustomStateManagerBuilder<Block, BlockState>(this);
+		builder.provides(Properties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.LOWER);
 		this.appendProperties(builder);
 		((BlockAccessor) this.getPlant()).aurorasdeco$appendProperties(builder);
 		((BlockAccessor) this).setStateManager(builder.build(Block::getDefaultState, BlockState::new));

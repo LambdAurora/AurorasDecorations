@@ -35,8 +35,13 @@ public final class AurorasDecoFeatures {
 	}
 
 	public static final SimplePlantFeature SIMPLE_PLANT = register("simple_plant", new SimplePlantFeature(SimplePlantFeature.Config.CODEC));
+	public static final AquaticSurfacePatchFeature AQUATIC_SURFACE_PATCH = register("aquatic_surface_patch",
+			new AquaticSurfacePatchFeature(AquaticSurfacePatchFeature.Config.CODEC));
 	public static final FallenTreeFeature FALLEN_TREE = register("fallen_tree", new FallenTreeFeature(FallenTreeFeatureConfig.CODEC));
 
+	public static final RegistryKey<PlacedFeature> SWAMP_DUCKWEED = RegistryKey.of(
+			Registry.PLACED_FEATURE_KEY, AurorasDeco.id("swamp/duckweed")
+	);
 	public static final RegistryKey<PlacedFeature> SWAMP_GIANT_MUSHROOMS = RegistryKey.of(
 			Registry.PLACED_FEATURE_KEY, AurorasDeco.id("swamp/giant_mushrooms")
 	);

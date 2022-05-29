@@ -1,0 +1,17 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "aurorasdeco:block/duckweed",
+    "texture": "aurorasdeco:block/duckweed"
+  },
+  "elements": [
+    {
+      "from": [  0, 15,  0 ],
+      "to": [ 16, 15, 16 ],
+      "faces": {
+        "down": { "uv": [ 0, 16, 16,  0 ], "texture": "#texture", "tintindex": 0 },
+        "up":   { "uv": [ 0,  0, 16, 16 ], "texture": "#texture", "tintindex": 0 }
+      }
+    }
+  ]
+}

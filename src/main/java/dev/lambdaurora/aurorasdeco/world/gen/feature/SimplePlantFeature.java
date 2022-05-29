@@ -83,8 +83,8 @@ public class SimplePlantFeature extends Feature<SimplePlantFeature.Config> {
 	public record Config(BlockStateProvider toPlace, boolean shouldHaveAirAbove) implements FeatureConfig {
 		public static final Codec<Config> CODEC = RecordCodecBuilder.create(
 				instance -> instance.group(
-						BlockStateProvider.TYPE_CODEC.fieldOf("to_place").forGetter(config -> config.toPlace),
-						Codec.BOOL.fieldOf("should_have_air_above").forGetter(config -> config.shouldHaveAirAbove)
+						BlockStateProvider.TYPE_CODEC.fieldOf("to_place").forGetter(Config::toPlace),
+						Codec.BOOL.fieldOf("should_have_air_above").forGetter(Config::shouldHaveAirAbove)
 				).apply(instance, Config::new)
 		);
 	}
