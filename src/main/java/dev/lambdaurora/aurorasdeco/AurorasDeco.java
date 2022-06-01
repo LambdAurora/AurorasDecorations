@@ -17,6 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco;
 
+import dev.lambdaurora.aurorasdeco.blackboard.BlackboardColor;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigPottedCactusBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPackets;
@@ -66,7 +67,7 @@ public class AurorasDeco implements ModInitializer {
 					Registry.register(Registry.BLOCK, id("big_flower_pot/" + potBlock.getPlantType().getId()), potBlock);
 			}
 
-			Blackboard.Color.tryRegisterColorFromItem(context.id(), context.value());
+			BlackboardColor.tryRegisterColorFromItem(context.id(), context.value());
 		});
 
 		ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_OPEN_GUI_FAIL, AurorasDecoPackets::handleSignPostOpenGuiFailPacket);

@@ -17,7 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.client.renderer;
 
-import dev.lambdaurora.aurorasdeco.Blackboard;
+import dev.lambdaurora.aurorasdeco.blackboard.Blackboard;
 import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
 import dev.lambdaurora.aurorasdeco.client.BlackboardTexture;
 import net.fabricmc.api.EnvType;

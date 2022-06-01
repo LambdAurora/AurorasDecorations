@@ -17,7 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.client.model;
 
-import dev.lambdaurora.aurorasdeco.Blackboard;
+import dev.lambdaurora.aurorasdeco.blackboard.Blackboard;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;

@@ -17,7 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.item;
 
-import dev.lambdaurora.aurorasdeco.Blackboard;
+import dev.lambdaurora.aurorasdeco.blackboard.Blackboard;
 import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.tooltip.BlackboardTooltipData;

@@ -18,7 +18,8 @@
 package dev.lambdaurora.aurorasdeco.block;
 
 import com.google.common.collect.ImmutableMap;
-import dev.lambdaurora.aurorasdeco.Blackboard;
+import dev.lambdaurora.aurorasdeco.blackboard.Blackboard;
+import dev.lambdaurora.aurorasdeco.blackboard.BlackboardColor;
 import dev.lambdaurora.aurorasdeco.block.entity.BlackboardBlockEntity;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
@@ -222,7 +223,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 					blackboard.lastUser = null;
 				}
 
-				var color = Blackboard.getColorFromItem(stack.getItem());
+				var color = BlackboardColor.fromItem(stack.getItem());
 				boolean isBoneMeal = stack.isOf(Items.BONE_MEAL);
 				boolean isCoal = stack.isIn(ItemTags.COALS);
 				if (stack.isOf(Items.WATER_BUCKET) && this.tryClear(world, blackboard, player)) {
@@ -317,22 +318,22 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 	}
 
 	private void line(BlackboardBlockEntity blackboard, PlayerEntity player, int x, int y,
-	                  @Nullable Blackboard.Color color, boolean isBoneMeal, boolean isCoal) {
+	                  @Nullable BlackboardColor color, boolean isBoneMeal, boolean isCoal) {
 		if (blackboard.lastUser != player) {
 			blackboard.lastUser = player;
 			blackboard.lastX = x;
 			blackboard.lastY = y;
 		} else {
-			byte colorData = blackboard.getPixel(x, y);
-			int shade = colorData & 3;
+			short colorData = blackboard.getPixel(x, y);
+			int shade = BlackboardColor.getShadeFromRaw(colorData);
 			if (color != null) {
 				blackboard.line(blackboard.lastX, blackboard.lastY, x, y, color, 0);
 			} else if (isBoneMeal) {
 				if (shade > 0)
-					blackboard.line(blackboard.lastX, blackboard.lastY, x, y, Blackboard.getColor(colorData / 4), shade - 1);
+					blackboard.line(blackboard.lastX, blackboard.lastY, x, y, BlackboardColor.fromRaw(colorData), shade - 1);
 			} else if (isCoal) {
 				if (shade < 3)
-					blackboard.line(blackboard.lastX, blackboard.lastY, x, y, Blackboard.getColor(colorData / 4), shade + 1);
+					blackboard.line(blackboard.lastX, blackboard.lastY, x, y, BlackboardColor.fromRaw(colorData), shade + 1);
 			}
 			blackboard.lastUser = null;
 		}

@@ -17,7 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.recipe;
 
-import dev.lambdaurora.aurorasdeco.Blackboard;
+import dev.lambdaurora.aurorasdeco.blackboard.Blackboard;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoTags;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;

@@ -17,7 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.tooltip;
 
-import dev.lambdaurora.aurorasdeco.Blackboard;
+import dev.lambdaurora.aurorasdeco.blackboard.Blackboard;
 import dev.lambdaurora.aurorasdeco.client.tooltip.BlackboardTooltipComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

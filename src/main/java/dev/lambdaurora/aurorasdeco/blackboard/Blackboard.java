@@ -15,13 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco;
+package dev.lambdaurora.aurorasdeco.blackboard;
 
-import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPlants;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
@@ -29,13 +24,10 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.item.DyeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,12 +42,10 @@ import java.util.List;
  * @since 1.0.0
  */
 public class Blackboard implements BlackboardHandler {
-	public static final Int2ObjectMap<Color> COLORS = new Int2ObjectOpenHashMap<>();
-	private static final Object2ObjectMap<Item, Color> ITEM_TO_COLOR = new Object2ObjectOpenHashMap<>();
 	@Environment(EnvType.CLIENT)
 	private static Sprite WHITE_SPRITE;
 
-	private final byte[] pixels = new byte[256];
+	private final short[] pixels = new short[256];
 	private boolean lit;
 
 	public Blackboard() {
@@ -66,23 +56,23 @@ public class Blackboard implements BlackboardHandler {
 	 *
 	 * @return the pixels
 	 */
-	public byte[] getPixels() {
+	public short[] getPixels() {
 		return this.pixels;
 	}
 
 	@Override
-	public byte getPixel(int x, int y) {
+	public short getPixel(int x, int y) {
 		return this.pixels[y * 16 + x];
 	}
 
 	public int getColor(int x, int y) {
 		int id = this.getPixel(x, y);
-		return getColor(id / 4).getRenderColor(id & 3);
+		return BlackboardColor.getRenderColor(id);
 	}
 
 	@Override
-	public boolean setPixel(int x, int y, Color color, int shade) {
-		byte id = color.toRawId(shade);
+	public boolean setPixel(int x, int y, int color) {
+		short id = (short) color;
 		if (this.pixels[y * 16 + x] != id) {
 			this.pixels[y * 16 + x] = id;
 			return true;
@@ -91,8 +81,8 @@ public class Blackboard implements BlackboardHandler {
 	}
 
 	@Override
-	public boolean brush(int x, int y, Color color, int shade) {
-		byte id = color.toRawId(shade);
+	public boolean brush(int x, int y, BlackboardColor color, int shade) {
+		short id = color.toRawId(shade, false);
 
 		x = x - 1;
 		y = y - 1;
@@ -109,9 +99,9 @@ public class Blackboard implements BlackboardHandler {
 	}
 
 	@Override
-	public boolean replace(int x, int y, Color color, int shade) {
-		byte id = this.getPixel(x, y);
-		byte repl = color.toRawId(shade);
+	public boolean replace(int x, int y, int color) {
+		short id = this.getPixel(x, y);
+		short repl = (short) color;
 
 		for (int i = 0; i < this.pixels.length; i++) {
 			if (this.pixels[i] == id) {
@@ -122,8 +112,8 @@ public class Blackboard implements BlackboardHandler {
 	}
 
 	@Override
-	public boolean line(int x1, int y1, int x2, int y2, Color color, int shade) {
-		byte id = color.toRawId(shade);
+	public boolean line(int x1, int y1, int x2, int y2, BlackboardColor color, int shade) {
+		short id = color.toRawId(shade, false);
 
 		int d = 0;
 
@@ -168,19 +158,19 @@ public class Blackboard implements BlackboardHandler {
 	}
 
 	@Override
-	public boolean fill(int x, int y, Color color, int shade) {
-		byte replacement = color.toRawId(shade);
-		byte target = this.getPixel(x, y);
+	public boolean fill(int x, int y, BlackboardColor color, int shade) {
+		int replacement = color.toRawId(shade, false);
+		int target = this.getPixel(x, y);
 		if (target != replacement) {
 			this.flood(x, y, target, replacement);
 		}
 		return true;
 	}
 
-	private void flood(int x, int y, byte target, byte replacement) {
-		byte pixel = this.getPixel(x, y);
+	private void flood(int x, int y, int target, int replacement) {
+		short pixel = this.getPixel(x, y);
 		if (pixel == target) {
-			this.pixels[y * 16 + x] = replacement;
+			this.pixels[y * 16 + x] = (short) replacement;
 			this.flood((x <= 0 ? x : x - 1), y, target, replacement);
 			this.flood((x >= 15 ? x : x + 1), y, target, replacement);
 			this.flood(x, (y <= 0 ? y : y - 1), target, replacement);
@@ -216,7 +206,7 @@ public class Blackboard implements BlackboardHandler {
 	 * Clears the blackboard.
 	 */
 	public void clear() {
-		Arrays.fill(this.pixels, (byte) 0);
+		Arrays.fill(this.pixels, (short) 0);
 	}
 
 	/**
@@ -225,7 +215,7 @@ public class Blackboard implements BlackboardHandler {
 	 * @return {@code true} if empty, else {@code false}
 	 */
 	public boolean isEmpty() {
-		for (byte b : this.pixels) {
+		for (short b : this.pixels) {
 			if (b != 0)
 				return false;
 		}
@@ -289,21 +279,58 @@ public class Blackboard implements BlackboardHandler {
 
 	public void readNbt(NbtCompound nbt) {
 		byte[] pixels = nbt.getByteArray("pixels");
-		if (pixels.length == 256) {
-			System.arraycopy(pixels, 0, this.pixels, 0, 256);
+
+		if (!nbt.contains("version", NbtType.INT)) {
+			convert01(pixels);
+		} else {
+			switch (nbt.getInt("version")) {
+				case 1 -> pixels = convert02(pixels);
+				default -> {
+				}
+			}
+		}
+
+		int boardIndex = 0;
+		for (int i = 0; i < pixels.length; i++) {
+			if (pixels[i] == 0) {
+				this.pixels[boardIndex] = 0;
+			} else {
+				this.pixels[boardIndex] = (short) (pixels[i] << 8 | pixels[++i]);
+			}
+
+			boardIndex++;
+			if (boardIndex >= this.pixels.length) break;
 		}
 
 		this.lit = nbt.getBoolean("lit");
-
-		if (!nbt.contains("version", NbtType.INT)) {
-			convert01(this);
-		}
 	}
 
 	public NbtCompound writeNbt(NbtCompound nbt) {
-		nbt.putByteArray("pixels", this.pixels);
+		if (!this.isEmpty()) {
+			int length = 0;
+			for (short pixel : this.pixels) {
+				if (pixel == 0) length++;
+				else length += 2;
+			}
+
+			var pixels = new byte[length];
+
+			int rawIndex = 0;
+			for (short pixel : this.pixels) {
+				if (pixel == 0) {
+					pixels[rawIndex++] = 0;
+				} else {
+					pixels[rawIndex] = (byte) (pixel >> 8);
+					pixels[rawIndex + 1] = (byte) (pixel & 0xff);
+					rawIndex += 2;
+				}
+			}
+
+			nbt.putByteArray("pixels", pixels);
+		}
+
 		nbt.putBoolean("lit", this.isLit());
-		nbt.putInt("version", 1);
+		nbt.putInt("version", 2);
 		return nbt;
 	}
 
@@ -317,194 +344,95 @@ public class Blackboard implements BlackboardHandler {
 		return !nbt.contains("version", NbtElement.INT_TYPE);
 	}
 
-	private static void convert01(Blackboard blackboard) {
-		for (int i = 0; i < blackboard.pixels.length; i++) {
-			blackboard.pixels[i] *= 4;
+	private static void convert01(byte[] pixels) {
+		for (int i = 0; i < pixels.length; i++) {
+			pixels[i] *= 4;
 		}
 	}
 
-	public static Color getColor(int color) {
-		return COLORS.getOrDefault(color, Color.EMPTY);
-	}
+	private static byte[] convert02(byte[] pixels) {
+		var converted = new byte[256 * 2];
 
-	public static @Nullable Color getColorFromItem(Item item) {
-		return ITEM_TO_COLOR.get(item);
-	}
-
-	/**
-	 * Represents a blackboard color.
-	 */
-	public static class Color {
-		public static final Color EMPTY = new Color(0, 0x00000000, Items.PAPER);
-		public static final byte FREE_COLOR_SPACE = (byte) (DyeColor.values().length + 1);
-		public static final Color SWEET_BERRIES = new Color(FREE_COLOR_SPACE, 0xffbb0000, Items.SWEET_BERRIES);
-		public static final Color GLOW_BERRIES = new Color(FREE_COLOR_SPACE + 1, 0xffff9737, Items.GLOW_BERRIES);
-		public static final Color LAVENDER = new Color(FREE_COLOR_SPACE + 3, 0xffb886db, AurorasDecoPlants.LAVENDER.item());
-
-		public static final int BLUEBERRIES_COLOR = 0xff006ac6;
-
-		private final byte id;
-		private final int color;
-		private final Item item;
-
-		private Color(int id, int color, Item item) {
-			this.id = (byte) id;
-			this.color = color;
-			this.item = item;
-
-			COLORS.put(id, this);
-			ITEM_TO_COLOR.put(item, this);
-		}
-
-		public byte getId() {
-			return this.id;
-		}
-
-		/**
-		 * Returns the raw id with shading of this color.
-		 *
-		 * @param shade the shade
-		 * @return the raw id
-		 */
-		public byte toRawId(int shade) {
-			if (this == EMPTY) return 0;
-			return (byte) (this.getId() * 4 + shade);
-		}
-
-		/**
-		 * Returns the color in the ABGR format.
-		 *
-		 * @return the color in the ABGR format
-		 */
-		public int getColor() {
-			return this.color;
-		}
-
-		/**
-		 * Returns the render color in the ABGR format.
-		 *
-		 * @param shade the shade
-		 * @return the render color in the ABGR format
-		 */
-		public int getRenderColor(int shade) {
-			if (this.getId() == 0)
-				return this.getColor();
-
-			int factor = 220;
-			if (shade == 3) {
-				factor = 135;
-			}
-
-			if (shade == 2) {
-				factor = 180;
-			}
-
-			if (shade == 1) {
-				factor = 220;
-			}
-
-			if (shade == 0) {
-				factor = 255;
-			}
-
-			int color = this.getColor();
-			int red = (color >> 16 & 255) * factor / 255;
-			int green = (color >> 8 & 255) * factor / 255;
-			int blue = (color & 255) * factor / 255;
-			return 0xff000000 | blue << 16 | green << 8 | red;
-		}
-
-		public Item getItem() {
-			return this.item;
-		}
-
-		public static Color fromDye(DyeItem dyeItem) {
-			var color = dyeItem.getColor();
-
-			if (COLORS.containsKey(color.getId() + 1)) {
-				return COLORS.get(color.getId() + 1);
-			}
-
-			int red = (int) (color.getColorComponents()[0] * 255.f);
-			int green = (int) (color.getColorComponents()[1] * 255.f);
-			int blue = (int) (color.getColorComponents()[2] * 255.f);
-			return new Color(color.getId() + 1, 0xff000000 | (red << 16) | (green << 8) | blue, dyeItem);
-		}
-
-		public static void tryRegisterColorFromItem(Identifier id, Item item) {
-			if (item instanceof DyeItem dyeItem) {
-				fromDye(dyeItem);
-			} else if (id.getNamespace().equals("ecotones") && id.getPath().equals("blueberries")) {
-				new Color(FREE_COLOR_SPACE + 2, BLUEBERRIES_COLOR, item);
+		int newIndex = 0;
+		for (byte pixel : pixels) {
+			if (pixel == 0) {
+				converted[newIndex] = 0;
+				newIndex++;
+			} else {
+				converted[newIndex] = (byte) (pixel / 4);
+				converted[newIndex + 1] = (byte) ((pixel & 3) << 4);
+				newIndex += 2;
 			}
 		}
+
+		return converted;
 	}
 
 	public enum DrawAction {
 		DEFAULT(null) {
 			@Override
-			public boolean execute(BlackboardHandler blackboard, int x, int y, @Nullable Color color, boolean isBoneMeal, boolean isCoal) {
-				byte colorData = blackboard.getPixel(x, y);
-				int shade = colorData & 3;
+			public boolean execute(BlackboardHandler blackboard, int x, int y, @Nullable BlackboardColor color, boolean isBoneMeal, boolean isCoal) {
+				short colorData = blackboard.getPixel(x, y);
+				int shade = BlackboardColor.getShadeFromRaw(colorData);
 				if (color != null) {
-					return blackboard.setPixel(x, y, color, 0);
+					return blackboard.setPixel(x, y, color);
 				} else if (isBoneMeal) {
 					if (shade > 0)
-						return blackboard.setPixel(x, y, Blackboard.getColor(colorData / 4), shade - 1);
+						return blackboard.setPixel(x, y, BlackboardColor.fromRaw(colorData), shade - 1, false);
 				} else if (isCoal) {
 					if (shade < 3)
-						return blackboard.setPixel(x, y, Blackboard.getColor(colorData / 4), shade + 1);
+						return blackboard.setPixel(x, y, BlackboardColor.fromRaw(colorData), shade + 1, false);
 				}
 				return false;
 			}
 		},
 		BRUSH(Items.WHITE_WOOL) {
 			@Override
-			public boolean execute(BlackboardHandler blackboard, int x, int y, @Nullable Color color, boolean isBoneMeal, boolean isCoal) {
-				byte colorData = blackboard.getPixel(x, y);
-				int shade = colorData & 3;
+			public boolean execute(BlackboardHandler blackboard, int x, int y, @Nullable BlackboardColor color, boolean isBoneMeal, boolean isCoal) {
+				short colorData = blackboard.getPixel(x, y);
+				int shade = BlackboardColor.getShadeFromRaw(colorData);
 				if (color != null) {
 					return blackboard.brush(x, y, color, 0);
 				} else if (isBoneMeal) {
 					if (shade > 0)
-						return blackboard.brush(x, y, Blackboard.getColor(colorData / 4), shade - 1);
+						return blackboard.brush(x, y, BlackboardColor.fromRaw(colorData), shade - 1);
 				} else if (isCoal) {
 					if (shade < 3)
-						return blackboard.brush(x, y, Blackboard.getColor(colorData / 4), shade + 1);
+						return blackboard.brush(x, y, BlackboardColor.fromRaw(colorData), shade + 1);
 				}
 				return false;
 			}
 		},
 		FILL(Items.BUCKET) {
 			@Override
-			public boolean execute(BlackboardHandler blackboard, int x, int y, @Nullable Color color, boolean isBoneMeal, boolean isCoal) {
-				byte colorData = blackboard.getPixel(x, y);
-				int shade = colorData & 3;
+			public boolean execute(BlackboardHandler blackboard, int x, int y, @Nullable BlackboardColor color, boolean isBoneMeal, boolean isCoal) {
+				short colorData = blackboard.getPixel(x, y);
+				int shade = BlackboardColor.getShadeFromRaw(colorData);
 				if (color != null) {
 					return blackboard.fill(x, y, color, 0);
 				} else if (isBoneMeal) {
 					if (shade > 0)
-						return blackboard.fill(x, y, Blackboard.getColor(colorData / 4), shade - 1);
+						return blackboard.fill(x, y, BlackboardColor.fromRaw(colorData), shade - 1);
 				} else if (isCoal) {
 					if (shade < 3)
-						return blackboard.fill(x, y, Blackboard.getColor(colorData / 4), shade + 1);
+						return blackboard.fill(x, y, BlackboardColor.fromRaw(colorData), shade + 1);
 				}
 				return false;
 			}
 		},
 		REPLACE(Items.ENDER_PEARL) {
 			@Override
-			public boolean execute(BlackboardHandler blackboard, int x, int y, @Nullable Color color, boolean isBoneMeal, boolean isCoal) {
-				byte colorData = blackboard.getPixel(x, y);
-				int shade = colorData & 3;
+			public boolean execute(BlackboardHandler blackboard, int x, int y, @Nullable BlackboardColor color, boolean isBoneMeal, boolean isCoal) {
+				short colorData = blackboard.getPixel(x, y);
+				int shade = BlackboardColor.getShadeFromRaw(colorData);
 				if (color != null) {
 					return blackboard.replace(x, y, color, 0);
 				} else if (isBoneMeal) {
 					if (shade > 0)
-						return blackboard.replace(x, y, Blackboard.getColor(colorData / 4), shade - 1);
+						return blackboard.replace(x, y, BlackboardColor.fromRaw(colorData), shade - 1);
 				} else if (isCoal) {
 					if (shade < 3)
-						return blackboard.replace(x, y, Blackboard.getColor(colorData / 4), shade + 1);
+						return blackboard.replace(x, y, BlackboardColor.fromRaw(colorData), shade + 1);
 				}
 				return false;
 			}
@@ -522,6 +450,6 @@ public class Blackboard implements BlackboardHandler {
 			return this.offhandTool;
 		}
 
-		public abstract boolean execute(BlackboardHandler blackboard, int x, int y, @Nullable Color color, boolean isBoneMeal, boolean isCoal);
+		public abstract boolean execute(BlackboardHandler blackboard, int x, int y, @Nullable BlackboardColor color, boolean isBoneMeal, boolean isCoal);
 	}
 }

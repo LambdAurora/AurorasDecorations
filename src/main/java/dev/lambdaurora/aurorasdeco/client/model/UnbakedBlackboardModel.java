@@ -19,7 +19,7 @@ package dev.lambdaurora.aurorasdeco.client.model;
 
 import com.mojang.datafixers.util.Pair;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.Blackboard;
+import dev.lambdaurora.aurorasdeco.blackboard.Blackboard;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

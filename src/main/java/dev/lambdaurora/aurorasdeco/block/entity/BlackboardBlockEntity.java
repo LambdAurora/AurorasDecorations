@@ -17,8 +17,9 @@
 
 package dev.lambdaurora.aurorasdeco.block.entity;
 
-import dev.lambdaurora.aurorasdeco.Blackboard;
-import dev.lambdaurora.aurorasdeco.BlackboardHandler;
+import dev.lambdaurora.aurorasdeco.blackboard.Blackboard;
+import dev.lambdaurora.aurorasdeco.blackboard.BlackboardColor;
+import dev.lambdaurora.aurorasdeco.blackboard.BlackboardHandler;
 import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -70,13 +71,13 @@ public class BlackboardBlockEntity extends BasicBlockEntity implements Nameable,
 	}
 
 	@Override
-	public byte getPixel(int x, int y) {
+	public short getPixel(int x, int y) {
 		return this.blackboard.getPixel(x, y);
 	}
 
 	@Override
-	public boolean setPixel(int x, int y, Blackboard.Color color, int shade) {
-		if (this.blackboard.setPixel(x, y, color, shade)) {
+	public boolean setPixel(int x, int y, int color) {
+		if (this.blackboard.setPixel(x, y, color)) {
 			if (this.getWorld() instanceof ServerWorld) {
 				this.sync();
 				this.markDirty();
@@ -87,7 +88,7 @@ public class BlackboardBlockEntity extends BasicBlockEntity implements Nameable,
 	}
 
 	@Override
-	public boolean brush(int x, int y, Blackboard.Color color, int shade) {
+	public boolean brush(int x, int y, BlackboardColor color, int shade) {
 		if (this.blackboard.brush(x, y, color, shade)) {
 			if (this.getWorld() instanceof ServerWorld) {
 				this.sync();
@@ -99,8 +100,8 @@ public class BlackboardBlockEntity extends BasicBlockEntity implements Nameable,
 	}
 
 	@Override
-	public boolean replace(int x, int y, Blackboard.Color color, int shade) {
-		if (this.blackboard.replace(x, y, color, shade)) {
+	public boolean replace(int x, int y, int color) {
+		if (this.blackboard.replace(x, y, color)) {
 			if (this.getWorld() instanceof ServerWorld) {
 				this.sync();
 				this.markDirty();
@@ -111,7 +112,7 @@ public class BlackboardBlockEntity extends BasicBlockEntity implements Nameable,
 	}
 
 	@Override
-	public boolean fill(int x, int y, Blackboard.Color color, int shade) {
+	public boolean fill(int x, int y, BlackboardColor color, int shade) {
 		if (this.blackboard.fill(x, y, color, shade)) {
 			if (this.getWorld() instanceof ServerWorld) {
 				this.sync();
@@ -123,7 +124,7 @@ public class BlackboardBlockEntity extends BasicBlockEntity implements Nameable,
 	}
 
 	@Override
-	public boolean line(int x1, int y1, int x2, int y2, Blackboard.Color color, int shade) {
+	public boolean line(int x1, int y1, int x2, int y2, BlackboardColor color, int shade) {
 		if (this.blackboard.line(x1, y1, x2, y2, color, shade)) {
 			if (this.getWorld() instanceof ServerWorld) {
 				this.sync();
