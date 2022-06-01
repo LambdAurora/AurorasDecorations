@@ -328,12 +328,10 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 			int shade = BlackboardColor.getShadeFromRaw(colorData);
 			if (color != null) {
 				blackboard.line(blackboard.lastX, blackboard.lastY, x, y, color, 0);
-			} else if (isBoneMeal) {
-				if (shade > 0)
-					blackboard.line(blackboard.lastX, blackboard.lastY, x, y, BlackboardColor.fromRaw(colorData), shade - 1);
-			} else if (isCoal) {
-				if (shade < 3)
-					blackboard.line(blackboard.lastX, blackboard.lastY, x, y, BlackboardColor.fromRaw(colorData), shade + 1);
+			} else if (isBoneMeal || isCoal) {
+				int newShade = isCoal ? BlackboardColor.increaseDarkness(shade) : BlackboardColor.decreaseDarkness(shade);
+				if (shade != newShade)
+					blackboard.line(blackboard.lastX, blackboard.lastY, x, y, BlackboardColor.fromRaw(colorData), newShade);
 			}
 			blackboard.lastUser = null;
 		}

@@ -121,13 +121,15 @@ public class BlackboardColor {
 			case 1 -> 220;
 			case 2 -> 180;
 			case 3 -> 135;
+			case 4 -> 285;
+			case 5 -> 320;
 			default -> 255;
 		};
 
 		int color = saturated ? this.getSaturated() : this.getColor();
-		int red = (color >> 16 & 255) * factor / 255;
-		int green = (color >> 8 & 255) * factor / 255;
-		int blue = (color & 255) * factor / 255;
+		int red = MathHelper.clamp((color >> 16 & 255) * factor / 255, 0, 255);
+		int green = MathHelper.clamp((color >> 8 & 255) * factor / 255, 0, 255);
+		int blue = MathHelper.clamp((color & 255) * factor / 255, 0, 255);
 		return 0xff000000 | blue << 16 | green << 8 | red;
 	}
 
@@ -141,6 +143,24 @@ public class BlackboardColor {
 
 	public static boolean getSaturationFromRaw(int color) {
 		return (color & SATURATION_MASK) != 0;
+	}
+
+	public static int increaseDarkness(int shade) {
+		return switch (shade) {
+			case 0, 1, 2 -> shade + 1;
+			case 4 -> 0;
+			case 5 -> shade - 1;
+			default -> shade;
+		};
+	}
+
+	public static int decreaseDarkness(int shade) {
+		return switch (shade) {
+			case 1, 2, 3 -> shade - 1;
+			case 0 -> 4;
+			case 4 -> shade + 1;
+			default -> shade;
+		};
 	}
 
 	private int getSaturated() {

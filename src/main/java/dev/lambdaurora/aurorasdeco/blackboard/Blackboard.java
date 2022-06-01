@@ -376,12 +376,10 @@ public class Blackboard implements BlackboardHandler {
 				int shade = BlackboardColor.getShadeFromRaw(colorData);
 				if (color != null) {
 					return blackboard.setPixel(x, y, color);
-				} else if (isBoneMeal) {
-					if (shade > 0)
-						return blackboard.setPixel(x, y, BlackboardColor.fromRaw(colorData), shade - 1, false);
-				} else if (isCoal) {
-					if (shade < 3)
-						return blackboard.setPixel(x, y, BlackboardColor.fromRaw(colorData), shade + 1, false);
+				} else if (isBoneMeal || isCoal) {
+					int newShade = isCoal ? BlackboardColor.increaseDarkness(shade) : BlackboardColor.decreaseDarkness(shade);
+					if (shade != newShade)
+						return blackboard.setPixel(x, y, BlackboardColor.fromRaw(colorData), newShade, false);
 				}
 				return false;
 			}
@@ -393,12 +391,10 @@ public class Blackboard implements BlackboardHandler {
 				int shade = BlackboardColor.getShadeFromRaw(colorData);
 				if (color != null) {
 					return blackboard.brush(x, y, color, 0);
-				} else if (isBoneMeal) {
-					if (shade > 0)
-						return blackboard.brush(x, y, BlackboardColor.fromRaw(colorData), shade - 1);
-				} else if (isCoal) {
-					if (shade < 3)
-						return blackboard.brush(x, y, BlackboardColor.fromRaw(colorData), shade + 1);
+				} else if (isBoneMeal || isCoal) {
+					int newShade = isCoal ? BlackboardColor.increaseDarkness(shade) : BlackboardColor.decreaseDarkness(shade);
+					if (shade != newShade)
+						return blackboard.brush(x, y, BlackboardColor.fromRaw(colorData), newShade);
 				}
 				return false;
 			}
@@ -410,12 +406,10 @@ public class Blackboard implements BlackboardHandler {
 				int shade = BlackboardColor.getShadeFromRaw(colorData);
 				if (color != null) {
 					return blackboard.fill(x, y, color, 0);
-				} else if (isBoneMeal) {
-					if (shade > 0)
-						return blackboard.fill(x, y, BlackboardColor.fromRaw(colorData), shade - 1);
-				} else if (isCoal) {
-					if (shade < 3)
-						return blackboard.fill(x, y, BlackboardColor.fromRaw(colorData), shade + 1);
+				} else if (isBoneMeal || isCoal) {
+					int newShade = isCoal ? BlackboardColor.increaseDarkness(shade) : BlackboardColor.decreaseDarkness(shade);
+					if (shade != newShade)
+						return blackboard.fill(x, y, BlackboardColor.fromRaw(colorData), newShade);
 				}
 				return false;
 			}
@@ -427,12 +421,10 @@ public class Blackboard implements BlackboardHandler {
 				int shade = BlackboardColor.getShadeFromRaw(colorData);
 				if (color != null) {
 					return blackboard.replace(x, y, color, 0);
-				} else if (isBoneMeal) {
-					if (shade > 0)
-						return blackboard.replace(x, y, BlackboardColor.fromRaw(colorData), shade - 1);
-				} else if (isCoal) {
-					if (shade < 3)
-						return blackboard.replace(x, y, BlackboardColor.fromRaw(colorData), shade + 1);
+				} else if (isBoneMeal || isCoal) {
+					int newShade = isCoal ? BlackboardColor.increaseDarkness(shade) : BlackboardColor.decreaseDarkness(shade);
+					if (shade != newShade)
+						return blackboard.replace(x, y, BlackboardColor.fromRaw(colorData), newShade);
 				}
 				return false;
 			}
