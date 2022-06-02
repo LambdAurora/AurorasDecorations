@@ -72,6 +72,8 @@ public class Blackboard implements BlackboardHandler {
 
 	@Override
 	public boolean setPixel(int x, int y, int color) {
+		if ((color & BlackboardColor.COLOR_MASK) == 0) color = 0; // There's no color, make sure to erase any extra metadata.
+
 		short id = (short) color;
 		if (this.pixels[y * 16 + x] != id) {
 			this.pixels[y * 16 + x] = id;
@@ -186,20 +188,6 @@ public class Blackboard implements BlackboardHandler {
 	public void copy(Blackboard source) {
 		System.arraycopy(source.pixels, 0, this.pixels, 0, this.pixels.length);
 		this.setLit(source.isLit());
-	}
-
-	/**
-	 * Clears the pixel at the specified coordinates.
-	 *
-	 * @param x the X coordinate
-	 * @param y the Y coordinate
-	 */
-	public boolean clearPixel(int x, int y) {
-		if (this.pixels[y * 16 + x] != 0) {
-			this.pixels[y * 16 + x] = 0;
-			return true;
-		}
-		return false;
 	}
 
 	/**
@@ -344,12 +332,23 @@ public class Blackboard implements BlackboardHandler {
 		return !nbt.contains("version", NbtElement.INT_TYPE);
 	}
 
+	/**
+	 * Converts the raw pixel data from version 0 to version 1.
+	 *
+	 * @param pixels the raw pixel data
+	 */
 	private static void convert01(byte[] pixels) {
 		for (int i = 0; i < pixels.length; i++) {
 			pixels[i] *= 4;
 		}
 	}
 
+	/**
+	 * Converts the raw pixel data from version 1 to version 2.
+	 *
+	 * @param pixels the raw pixel data
+	 * @return the converted raw pixel data
+	 */
 	private static byte[] convert02(byte[] pixels) {
 		var converted = new byte[256 * 2];
 

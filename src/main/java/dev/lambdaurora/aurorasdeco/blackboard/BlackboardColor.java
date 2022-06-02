@@ -41,10 +41,22 @@ public class BlackboardColor {
 	private static final Int2ObjectMap<BlackboardColor> COLORS = new Int2ObjectOpenHashMap<>();
 	private static final Object2ObjectMap<Item, BlackboardColor> ITEM_TO_COLOR = new Object2ObjectOpenHashMap<>();
 
+	/**
+	 * The color identifier mask ({@value}) for the raw color format.
+	 */
 	public static final int COLOR_MASK /**/ = 0b1111111100000000;
+	/**
+	 * The saturation mask ({@value}) for the raw color format.
+	 */
 	public static final int SATURATION_MASK = 0b0000000010000000;
+	/**
+	 * The shade mask ({@value}) for the raw color format.
+	 */
 	public static final int SHADE_MASK /**/ = 0b0000000001110000;
 
+	/**
+	 * Represents the absence of color.
+	 */
 	public static final BlackboardColor EMPTY = new BlackboardColor(0, 0x00000000, Items.PAPER);
 	public static final byte FREE_COLOR_SPACE = (byte) (DyeColor.values().length + 1);
 	public static final BlackboardColor SWEET_BERRIES = new BlackboardColor(FREE_COLOR_SPACE, 0xffbb0000, Items.SWEET_BERRIES);
@@ -66,10 +78,21 @@ public class BlackboardColor {
 		ITEM_TO_COLOR.put(item, this);
 	}
 
+	/**
+	 * {@return the color instance from its identifier}
+	 *
+	 * @param color the color identifier
+	 */
 	public static BlackboardColor byId(int color) {
 		return COLORS.getOrDefault(color, EMPTY);
 	}
 
+	/**
+	 * Extracts the color instance out of the given raw color format.
+	 *
+	 * @param color the raw color format
+	 * @return the extracted color instance
+	 */
 	public static BlackboardColor fromRaw(int color) {
 		return byId((color & COLOR_MASK) >> 8);
 	}
@@ -78,15 +101,19 @@ public class BlackboardColor {
 		return ITEM_TO_COLOR.get(item);
 	}
 
+	/**
+	 * {@return the identifier of the color}
+	 */
 	public byte getId() {
 		return this.id;
 	}
 
 	/**
-	 * Returns the raw id with shading of this color.
+	 * Returns the raw color format with shading and saturation of this color.
 	 *
 	 * @param shade the shade
-	 * @return the raw id
+	 * @param saturated {@code true} if the color is saturated, otherwise {@code false}
+	 * @return the raw color format
 	 */
 	public short toRawId(int shade, boolean saturated) {
 		if (this == EMPTY) return 0;
@@ -112,6 +139,7 @@ public class BlackboardColor {
 	 * {@return the render color in the ABGR format}
 	 *
 	 * @param shade the shade
+	 * @param saturated {@code true} if the color is saturated, otherwise {@code false}
 	 */
 	public int getRenderColor(int shade, boolean saturated) {
 		if (this.getId() == 0)
@@ -133,6 +161,11 @@ public class BlackboardColor {
 		return 0xff000000 | blue << 16 | green << 8 | red;
 	}
 
+	/**
+	 * {@return the render color in the ABGR format}
+	 *
+	 * @param color the raw color format
+	 */
 	public static int getRenderColor(int color) {
 		return fromRaw(color).getRenderColor(getShadeFromRaw(color), getSaturationFromRaw(color));
 	}
