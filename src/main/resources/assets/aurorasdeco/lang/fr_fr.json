@@ -142,7 +142,7 @@
 
   "block.aurorasdeco.stump": "Souche de %s",
 
-  "block.aurorasdeco.sturdy_stone": "Roche renforcé",
+  "block.aurorasdeco.sturdy_stone": "Roche renforcée",
 
   "block.aurorasdeco.tuff_slab": "Dalle en tuf",
   "block.aurorasdeco.tuff_stairs": "Escalier en tuf",
@@ -176,6 +176,20 @@
   "subtitles.aurorasdeco.block.shelf.add_item": "Remplissage d'étagère",
   "subtitles.aurorasdeco.block.shelf.swing": "Vidage d'étagère",
   "subtitles.aurorasdeco.entity.armor_stand.hide_base_plate": "Cache la plaque d'un porte-armure",
+
+  "tag.aurorasdeco.azalea_logs": "Bûches d'azalée",
+  "tag.aurorasdeco.blackboards": "Tableaux noirs",
+  "tag.aurorasdeco.braziers": "Braseros",
+  "tag.aurorasdeco.copper_sulfate_decomposable": "Décomposables avec du sulfate de cuivre",
+  "tag.aurorasdeco.feature.fallen_trees.birch_forest": "Forêts de bouleaux",
+  "tag.aurorasdeco.glassboards": "Tableux en verre",
+  "tag.aurorasdeco.hoppers": "Entonnoirs",
+  "tag.aurorasdeco.jacaranda_leaves": "Feuilles de Jacaranda",
+  "tag.aurorasdeco.jacaranda_logs": "Bûches de Jacaranda",
+  "tag.aurorasdeco.pet_beds": "Petits lits",
+  "tag.aurorasdeco.sleeping_bags": "Sacs de couchage",
+  "tag.aurorasdeco.sturdy_stone_components": "Composants pour de roche renforcée",
+  "tag.c.vegetation.on_water_surface": "Végétations vivants sur la surface de l'eau",
 
   "aurorasdeco.wood_type.oak": "chêne",
   "aurorasdeco.wood_type.spruce": "sapin",
