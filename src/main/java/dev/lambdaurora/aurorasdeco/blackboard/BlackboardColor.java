@@ -24,11 +24,15 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a blackboard color.
@@ -37,9 +41,10 @@ import org.jetbrains.annotations.Nullable;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class BlackboardColor {
+public class BlackboardColor implements BlackboardDrawModifier {
 	private static final Int2ObjectMap<BlackboardColor> COLORS = new Int2ObjectOpenHashMap<>();
 	private static final Object2ObjectMap<Item, BlackboardColor> ITEM_TO_COLOR = new Object2ObjectOpenHashMap<>();
+	static final List<BlackboardDrawModifier> MODIFIERS = new ArrayList<>();
 
 	/**
 	 * The color identifier mask ({@value}) for the raw color format.
@@ -76,6 +81,7 @@ public class BlackboardColor {
 
 		COLORS.put(id, this);
 		ITEM_TO_COLOR.put(item, this);
+		MODIFIERS.add(this);
 	}
 
 	/**
@@ -119,8 +125,8 @@ public class BlackboardColor {
 		if (this == EMPTY) return 0;
 
 		short id = (short) (this.getId() << 8);
-		if (saturated) id |= SATURATION_MASK;
 		id |= MathHelper.clamp(shade, 0, 7) << 4;
+		if (saturated) id |= SATURATION_MASK;
 		return id;
 	}
 
@@ -232,5 +238,21 @@ public class BlackboardColor {
 		} else if (id.getNamespace().equals("ecotones") && id.getPath().equals("blueberries")) {
 			new BlackboardColor(FREE_COLOR_SPACE + 2, BLUEBERRIES_COLOR, item);
 		}
+	}
+
+	@Override
+	public boolean matchItem(ItemStack item) {
+		return this.item == item.getItem();
+	}
+
+	@Override
+	public short apply(short colorData) {
+		return this.toRawId(0, false);
+	}
+
+	static {
+		MODIFIERS.add(BlackboardDrawModifier.SHADE_INCREASE);
+		MODIFIERS.add(BlackboardDrawModifier.SHADE_DECREASE);
+		MODIFIERS.add(BlackboardDrawModifier.SATURATION);
 	}
 }

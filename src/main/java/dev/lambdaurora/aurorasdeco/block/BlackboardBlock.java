@@ -20,6 +20,7 @@ package dev.lambdaurora.aurorasdeco.block;
 import com.google.common.collect.ImmutableMap;
 import dev.lambdaurora.aurorasdeco.blackboard.Blackboard;
 import dev.lambdaurora.aurorasdeco.blackboard.BlackboardColor;
+import dev.lambdaurora.aurorasdeco.blackboard.BlackboardDrawModifier;
 import dev.lambdaurora.aurorasdeco.block.entity.BlackboardBlockEntity;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
@@ -49,7 +50,6 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.tag.ItemTags;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -223,9 +223,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 					blackboard.lastUser = null;
 				}
 
-				var color = BlackboardColor.fromItem(stack.getItem());
-				boolean isBoneMeal = stack.isOf(Items.BONE_MEAL);
-				boolean isCoal = stack.isIn(ItemTags.COALS);
+				var modifier = BlackboardDrawModifier.fromItem(stack);
 				if (stack.isOf(Items.WATER_BUCKET) && this.tryClear(world, blackboard, player)) {
 					world.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS,
 							2.f, 1.f);
@@ -245,7 +243,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 					world.playSound(null, pos, SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS,
 							2.f, 1.f);
 					return ActionResult.success(world.isClient());
-				} else if (offhand.isOf(Items.STICK) && (color != null || isBoneMeal || isCoal) && !state.get(WATERLOGGED)) {
+				} else if (offhand.isOf(Items.STICK) && (modifier != null) && !state.get(WATERLOGGED)) {
 					int x;
 					int y = (int) (AuroraUtil.posMod(hit.getPos().getY(), 1) * 16.0);
 					y = 15 - y;
@@ -261,11 +259,11 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 
 					player.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
 
-					this.line(blackboard, player, x, y, color, isBoneMeal, isCoal);
+					this.line(blackboard, player, x, y, modifier);
 
 					world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
 					return ActionResult.success(world.isClient());
-				} else if ((color != null || isBoneMeal || isCoal) && !state.get(WATERLOGGED)) {
+				} else if ((modifier != null) && !state.get(WATERLOGGED)) {
 					int x;
 					int y = (int) (AuroraUtil.posMod(hit.getPos().getY(), 1) * 16.0);
 					y = 15 - y;
@@ -287,7 +285,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 						}
 					}
 
-					if (action.execute(blackboard, x, y, color, isBoneMeal, isCoal)) {
+					if (action.execute(blackboard, x, y, modifier)) {
 						player.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
 						world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
 						return ActionResult.success(world.isClient());
@@ -318,21 +316,13 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 	}
 
 	private void line(BlackboardBlockEntity blackboard, PlayerEntity player, int x, int y,
-	                  @Nullable BlackboardColor color, boolean isBoneMeal, boolean isCoal) {
+	                  BlackboardDrawModifier modifier) {
 		if (blackboard.lastUser != player) {
 			blackboard.lastUser = player;
 			blackboard.lastX = x;
 			blackboard.lastY = y;
 		} else {
-			short colorData = blackboard.getPixel(x, y);
-			int shade = BlackboardColor.getShadeFromRaw(colorData);
-			if (color != null) {
-				blackboard.line(blackboard.lastX, blackboard.lastY, x, y, color, 0);
-			} else if (isBoneMeal || isCoal) {
-				int newShade = isCoal ? BlackboardColor.increaseDarkness(shade) : BlackboardColor.decreaseDarkness(shade);
-				if (shade != newShade)
-					blackboard.line(blackboard.lastX, blackboard.lastY, x, y, BlackboardColor.fromRaw(colorData), newShade);
-			}
+			blackboard.line(blackboard.lastX, blackboard.lastY, x, y, modifier);
 			blackboard.lastUser = null;
 		}
 	}

@@ -83,8 +83,8 @@ public class Blackboard implements BlackboardHandler {
 	}
 
 	@Override
-	public boolean brush(int x, int y, BlackboardColor color, int shade) {
-		short id = color.toRawId(shade, false);
+	public boolean brush(int x, int y, int color) {
+		short id = (short) color;
 
 		x = x - 1;
 		y = y - 1;
@@ -114,9 +114,7 @@ public class Blackboard implements BlackboardHandler {
 	}
 
 	@Override
-	public boolean line(int x1, int y1, int x2, int y2, BlackboardColor color, int shade) {
-		short id = color.toRawId(shade, false);
-
+	public boolean line(int x1, int y1, int x2, int y2, BlackboardDrawModifier modifier) {
 		int d = 0;
 
 		int dx = Math.abs(x2 - x1);
@@ -133,7 +131,7 @@ public class Blackboard implements BlackboardHandler {
 
 		if (dx >= dy) {
 			while (true) {
-				this.pixels[y * 16 + x] = id;
+				this.pixels[y * 16 + x] = modifier.apply(this.getPixel(x, y));
 				if (x == x2)
 					break;
 				x += ix;
@@ -145,7 +143,7 @@ public class Blackboard implements BlackboardHandler {
 			}
 		} else {
 			while (true) {
-				this.pixels[y * 16 + x] = id;
+				this.pixels[y * 16 + x] = modifier.apply(this.getPixel(x, y));
 				if (y == y2)
 					break;
 				y += iy;
@@ -160,8 +158,8 @@ public class Blackboard implements BlackboardHandler {
 	}
 
 	@Override
-	public boolean fill(int x, int y, BlackboardColor color, int shade) {
-		int replacement = color.toRawId(shade, false);
+	public boolean fill(int x, int y, int color) {
+		int replacement = (short) color;
 		int target = this.getPixel(x, y);
 		if (target != replacement) {
 			this.flood(x, y, target, replacement);
@@ -283,7 +281,7 @@ public class Blackboard implements BlackboardHandler {
 			if (pixels[i] == 0) {
 				this.pixels[boardIndex] = 0;
 			} else {
-				this.pixels[boardIndex] = (short) (pixels[i] << 8 | pixels[++i]);
+				this.pixels[boardIndex] = (short) (pixels[i] << 8 | pixels[++i] & 0xff);
 			}
 
 			boardIndex++;
@@ -370,62 +368,30 @@ public class Blackboard implements BlackboardHandler {
 	public enum DrawAction {
 		DEFAULT(null) {
 			@Override
-			public boolean execute(BlackboardHandler blackboard, int x, int y, @Nullable BlackboardColor color, boolean isBoneMeal, boolean isCoal) {
+			public boolean execute(BlackboardHandler blackboard, int x, int y, BlackboardDrawModifier modifier) {
 				short colorData = blackboard.getPixel(x, y);
-				int shade = BlackboardColor.getShadeFromRaw(colorData);
-				if (color != null) {
-					return blackboard.setPixel(x, y, color);
-				} else if (isBoneMeal || isCoal) {
-					int newShade = isCoal ? BlackboardColor.increaseDarkness(shade) : BlackboardColor.decreaseDarkness(shade);
-					if (shade != newShade)
-						return blackboard.setPixel(x, y, BlackboardColor.fromRaw(colorData), newShade, false);
-				}
-				return false;
+				return blackboard.setPixel(x, y, modifier.apply(colorData));
 			}
 		},
 		BRUSH(Items.WHITE_WOOL) {
 			@Override
-			public boolean execute(BlackboardHandler blackboard, int x, int y, @Nullable BlackboardColor color, boolean isBoneMeal, boolean isCoal) {
+			public boolean execute(BlackboardHandler blackboard, int x, int y, BlackboardDrawModifier modifier) {
 				short colorData = blackboard.getPixel(x, y);
-				int shade = BlackboardColor.getShadeFromRaw(colorData);
-				if (color != null) {
-					return blackboard.brush(x, y, color, 0);
-				} else if (isBoneMeal || isCoal) {
-					int newShade = isCoal ? BlackboardColor.increaseDarkness(shade) : BlackboardColor.decreaseDarkness(shade);
-					if (shade != newShade)
-						return blackboard.brush(x, y, BlackboardColor.fromRaw(colorData), newShade);
-				}
-				return false;
+				return blackboard.brush(x, y, modifier.apply(colorData));
 			}
 		},
 		FILL(Items.BUCKET) {
 			@Override
-			public boolean execute(BlackboardHandler blackboard, int x, int y, @Nullable BlackboardColor color, boolean isBoneMeal, boolean isCoal) {
+			public boolean execute(BlackboardHandler blackboard, int x, int y, BlackboardDrawModifier modifier) {
 				short colorData = blackboard.getPixel(x, y);
-				int shade = BlackboardColor.getShadeFromRaw(colorData);
-				if (color != null) {
-					return blackboard.fill(x, y, color, 0);
-				} else if (isBoneMeal || isCoal) {
-					int newShade = isCoal ? BlackboardColor.increaseDarkness(shade) : BlackboardColor.decreaseDarkness(shade);
-					if (shade != newShade)
-						return blackboard.fill(x, y, BlackboardColor.fromRaw(colorData), newShade);
-				}
-				return false;
+				return blackboard.fill(x, y, modifier.apply(colorData));
 			}
 		},
 		REPLACE(Items.ENDER_PEARL) {
 			@Override
-			public boolean execute(BlackboardHandler blackboard, int x, int y, @Nullable BlackboardColor color, boolean isBoneMeal, boolean isCoal) {
+			public boolean execute(BlackboardHandler blackboard, int x, int y, BlackboardDrawModifier modifier) {
 				short colorData = blackboard.getPixel(x, y);
-				int shade = BlackboardColor.getShadeFromRaw(colorData);
-				if (color != null) {
-					return blackboard.replace(x, y, color, 0);
-				} else if (isBoneMeal || isCoal) {
-					int newShade = isCoal ? BlackboardColor.increaseDarkness(shade) : BlackboardColor.decreaseDarkness(shade);
-					if (shade != newShade)
-						return blackboard.replace(x, y, BlackboardColor.fromRaw(colorData), newShade);
-				}
-				return false;
+				return blackboard.replace(x, y, modifier.apply(colorData));
 			}
 		};
 
@@ -441,6 +407,6 @@ public class Blackboard implements BlackboardHandler {
 			return this.offhandTool;
 		}
 
-		public abstract boolean execute(BlackboardHandler blackboard, int x, int y, @Nullable BlackboardColor color, boolean isBoneMeal, boolean isCoal);
+		public abstract boolean execute(BlackboardHandler blackboard, int x, int y, BlackboardDrawModifier modifier);
 	}
 }

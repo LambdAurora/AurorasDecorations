@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.block.entity;
 
 import dev.lambdaurora.aurorasdeco.blackboard.Blackboard;
 import dev.lambdaurora.aurorasdeco.blackboard.BlackboardColor;
+import dev.lambdaurora.aurorasdeco.blackboard.BlackboardDrawModifier;
 import dev.lambdaurora.aurorasdeco.blackboard.BlackboardHandler;
 import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
@@ -88,8 +89,8 @@ public class BlackboardBlockEntity extends BasicBlockEntity implements Nameable,
 	}
 
 	@Override
-	public boolean brush(int x, int y, BlackboardColor color, int shade) {
-		if (this.blackboard.brush(x, y, color, shade)) {
+	public boolean brush(int x, int y, int color) {
+		if (this.blackboard.brush(x, y, color)) {
 			if (this.getWorld() instanceof ServerWorld) {
 				this.sync();
 				this.markDirty();
@@ -112,8 +113,8 @@ public class BlackboardBlockEntity extends BasicBlockEntity implements Nameable,
 	}
 
 	@Override
-	public boolean fill(int x, int y, BlackboardColor color, int shade) {
-		if (this.blackboard.fill(x, y, color, shade)) {
+	public boolean fill(int x, int y, int color) {
+		if (this.blackboard.fill(x, y, color)) {
 			if (this.getWorld() instanceof ServerWorld) {
 				this.sync();
 				this.markDirty();
@@ -124,8 +125,8 @@ public class BlackboardBlockEntity extends BasicBlockEntity implements Nameable,
 	}
 
 	@Override
-	public boolean line(int x1, int y1, int x2, int y2, BlackboardColor color, int shade) {
-		if (this.blackboard.line(x1, y1, x2, y2, color, shade)) {
+	public boolean line(int x1, int y1, int x2, int y2, BlackboardDrawModifier modifier) {
+		if (this.blackboard.line(x1, y1, x2, y2, modifier)) {
 			if (this.getWorld() instanceof ServerWorld) {
 				this.sync();
 				this.markDirty();

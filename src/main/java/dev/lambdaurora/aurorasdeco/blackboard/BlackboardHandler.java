@@ -87,7 +87,11 @@ public interface BlackboardHandler {
 		return true;
 	}
 
-	boolean brush(int x, int y, BlackboardColor color, int shade);
+	boolean brush(int x, int y, int color);
+
+	default boolean brush(int x, int y, BlackboardColor color, int shade) {
+		return this.brush(x, y, color.toRawId(shade, BlackboardColor.getSaturationFromRaw(this.getPixel(x, y))));
+	}
 
 	boolean replace(int x, int y, int color);
 
@@ -95,7 +99,11 @@ public interface BlackboardHandler {
 		return this.replace(x, y, color.getRenderColor(shade, false));
 	}
 
-	boolean line(int x1, int y1, int x2, int y2, BlackboardColor color, int shade);
+	boolean line(int x1, int y1, int x2, int y2, BlackboardDrawModifier modifier);
 
-	boolean fill(int x, int y, BlackboardColor color, int shade);
+	boolean fill(int x, int y, int color);
+
+	default boolean fill(int x, int y, BlackboardColor color, int shade) {
+		return this.fill(x, y, color.toRawId(shade, BlackboardColor.getSaturationFromRaw(this.getPixel(x, y))));
+	}
 }
