@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.client.model;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Blocks;
@@ -32,13 +33,12 @@ import net.minecraft.util.registry.Registry;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
 @Environment(EnvType.CLIENT)
 public class RestModelManager {
-	private final Map<WoodType, RestModelEntry> models = new HashMap<>();
+	private final Map<WoodType, RestModelEntry> models = new Reference2ObjectOpenHashMap<>();
 	private final ModelLoader modelLoader;
 
 	public RestModelManager(ModelLoader modelLoader) {
@@ -56,7 +56,7 @@ public class RestModelManager {
 			var planksComponent = woodType.getComponent(WoodType.ComponentType.PLANKS);
 			if (planksComponent == null) return;
 
-			var entry = loadModelEntry(woodType, resourceManager, deserializationContext);
+			var entry = this.loadModelEntry(woodType, resourceManager, deserializationContext);
 			this.models.put(woodType, entry);
 			entry.register(modelRegister);
 		});
@@ -71,18 +71,14 @@ public class RestModelManager {
 		var benchBlock = Registry.BLOCK.get(AurorasDeco.id("bench/" + pathName));
 		var benchRestId = AurorasDeco.id("blockstates/bench/" + pathName + "_rest.json");
 		if (benchBlock != Blocks.AIR) {
-			try {
-				var resource = resourceManager.method_14486(benchRestId);
-
+			try (var resource = resourceManager.method_14486(benchRestId)) {
 				var stateFactory = deserializationContext.getStateFactory();
 				deserializationContext.setStateFactory(benchBlock.getStateManager());
 				var map = ModelVariantMap.fromJson(deserializationContext, new InputStreamReader(resource.getInputStream()));
 				benchRest = map.getMultipartModel();
 				deserializationContext.setStateFactory(stateFactory);
-
-				resource.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				AurorasDeco.warn("Failed to load the bench rest models for the {} wood type.", woodType, e);
 			}
 		}
 

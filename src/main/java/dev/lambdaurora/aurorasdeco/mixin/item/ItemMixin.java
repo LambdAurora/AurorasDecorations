@@ -45,12 +45,15 @@ public class ItemMixin implements ItemExtensions {
 
 	@Unique
 	private BlockItem aurorasdeco$placeable;
+	@Unique
+	private boolean aurorasdeco$requireSneaking;
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void makePlaceable(Block block) {
+	public void makePlaceable(Block block, boolean requireSneaking) {
 		this.aurorasdeco$placeable = new BlockItem(block, new QuiltItemSettings()
 				.food(this.foodComponent));
+		this.aurorasdeco$requireSneaking = requireSneaking;
 
 		var cache = ((SimpleRegistryAccessor<Item>) Registry.ITEM).getIntrusiveHolderCache();
 
@@ -61,7 +64,7 @@ public class ItemMixin implements ItemExtensions {
 
 	@Inject(method = "useOnBlock", at = @At("HEAD"), cancellable = true)
 	private void onUseOnBlock(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir) {
-		if (this.aurorasdeco$placeable != null) {
+		if (this.aurorasdeco$placeable != null && (!this.aurorasdeco$requireSneaking || context.shouldCancelInteraction())) {
 			// This item is placeable despite it not being an actual BlockItem.
 			cir.setReturnValue(this.aurorasdeco$placeable.useOnBlock(context));
 		}

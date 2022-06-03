@@ -86,13 +86,13 @@ public class PieBlock extends Block {
 
 		Item.BLOCK_ITEMS.put(block, item);
 
-		((ItemExtensions) item).makePlaceable(block);
+		((ItemExtensions) item).makePlaceable(block, true);
 
 		return block;
 	}
 
 	/**
-	 * Represents the total food component when the pie is fully eaten.
+	 * Gets the total food component when the pie is fully eaten.
 	 *
 	 * @return the food component
 	 */

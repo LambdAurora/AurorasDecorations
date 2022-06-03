@@ -33,6 +33,7 @@ public interface ItemExtensions {
 	 * Replaces {@link net.minecraft.item.BlockItem} in the case of an already existing item.
 	 *
 	 * @param block the block
+	 * @param requireSneaking {@code true} if sneaking is required to place the block, otherwise {@code false}
 	 */
-	void makePlaceable(Block block);
+	void makePlaceable(Block block, boolean requireSneaking);
 }

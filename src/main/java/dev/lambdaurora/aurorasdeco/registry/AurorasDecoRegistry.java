@@ -383,8 +383,8 @@ public final class AurorasDecoRegistry {
 					new BookPileBlock(QuiltBlockSettings.of(Material.DECORATION).strength(.2f)
 							.nonOpaque()))
 			.then(block -> {
-				((ItemExtensions) Items.BOOK).makePlaceable(block);
-				((ItemExtensions) Items.ENCHANTED_BOOK).makePlaceable(block);
+				((ItemExtensions) Items.BOOK).makePlaceable(block, false);
+				((ItemExtensions) Items.ENCHANTED_BOOK).makePlaceable(block, false);
 			}).finish().block();
 
 	public static final PieBlock PUMPKIN_PIE_BLOCK = registerBlock("pumpkin_pie", PieBlock.fromPieItem(Items.PUMPKIN_PIE));
