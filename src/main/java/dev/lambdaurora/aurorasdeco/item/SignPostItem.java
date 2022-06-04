@@ -121,13 +121,10 @@ public class SignPostItem extends Item {
 			if (blockEntity instanceof SignPostBlockEntity signPostBlockEntity) {
 				int r = MathHelper.floor((double) ((180.f + context.getPlayerYaw()) * 16.f / 360.f) + 0.5) & 15;
 
-				double y = context.getHitPos().getY();
-				boolean up = y % ((int) y) > 0.5;
-
 				var text = stack.hasCustomName()
 						? Text.Serializer.fromJson(stack.getSubNbt(ItemStack.DISPLAY_KEY).getString(ItemStack.NAME_KEY))
 						: LiteralText.EMPTY;
-				if (up) {
+				if (SignPostBlock.isUp(context.getHitPos().getY())) {
 					if (signPostBlockEntity.getUp() == null) {
 						signPostBlockEntity.putSignUp(this, text, 90 + r * -22.5f);
 						success = true;

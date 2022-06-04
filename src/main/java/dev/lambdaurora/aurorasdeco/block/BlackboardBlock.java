@@ -19,7 +19,6 @@ package dev.lambdaurora.aurorasdeco.block;
 
 import com.google.common.collect.ImmutableMap;
 import dev.lambdaurora.aurorasdeco.blackboard.Blackboard;
-import dev.lambdaurora.aurorasdeco.blackboard.BlackboardColor;
 import dev.lambdaurora.aurorasdeco.blackboard.BlackboardDrawModifier;
 import dev.lambdaurora.aurorasdeco.block.entity.BlackboardBlockEntity;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
@@ -312,6 +311,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 				}
 			}
 		}
+
 		return super.onUse(state, world, pos, player, hand, hit);
 	}
 

@@ -59,7 +59,7 @@ import java.util.function.Consumer;
  */
 @SuppressWarnings("deprecation")
 public class BigFlowerPotBlock extends Block/* implements FluidFillable*/ {
-	private static final Identifier PLANT = AurorasDeco.id("plant");
+	private static final Identifier PLANT_LOOT_ID = AurorasDeco.id("plant");
 
 	public static final VoxelShape BIG_FLOWER_POT_SHAPE = createCuboidShape(
 			1.f, 0.f, 1.f,
@@ -227,7 +227,7 @@ public class BigFlowerPotBlock extends Block/* implements FluidFillable*/ {
 		if (this.isEmpty())
 			return super.getDroppedStacks(state, builder);
 
-		builder.putDrop(PLANT, (context, consumer) -> this.acceptPlantDrops(state, builder, consumer));
+		builder.putDrop(PLANT_LOOT_ID, (context, consumer) -> this.acceptPlantDrops(state, builder, consumer));
 
 		return AurorasDecoRegistry.BIG_FLOWER_POT_BLOCK.getDroppedStacks(state, builder);
 	}

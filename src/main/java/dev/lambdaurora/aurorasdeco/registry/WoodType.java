@@ -20,7 +20,7 @@ package dev.lambdaurora.aurorasdeco.registry;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.mixin.block.AbstractBlockAccessor;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
@@ -57,7 +57,7 @@ public final class WoodType {
 
 	private static final List<ModificationCallbackEntry> CALLBACKS = new ArrayList<>();
 	private static final List<WoodType> TYPES;
-	private final Map<ComponentType, Component> components = new Object2ObjectOpenHashMap<>();
+	private final Map<ComponentType, Component> components = new Reference2ObjectOpenHashMap<>();
 	private final List<ModificationCallbackEntry> toTrigger = new ArrayList<>();
 	private final Identifier id;
 	private final String pathName;

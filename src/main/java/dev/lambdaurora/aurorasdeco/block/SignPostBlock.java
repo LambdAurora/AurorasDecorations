@@ -171,18 +171,17 @@ public class SignPostBlock extends BlockWithEntity {
 		boolean compass = stack.isOf(Items.COMPASS);
 		boolean canFlipSign = !dye && !glowInkSac && !inkSac && !compass && player.getMainHandStack().isEmpty()
 				&& player.shouldCancelInteraction();
-		boolean success = (handEmpty || dye || glowInkSac || inkSac || compass || canFlipSign) && player.getAbilities().allowModifyWorld;
+		boolean shouldSucceed = handEmpty || dye || glowInkSac || inkSac || compass || canFlipSign;
+		boolean success = shouldSucceed && player.getAbilities().allowModifyWorld;
 		if (world.isClient()) {
-			return success ? ActionResult.SUCCESS : ActionResult.CONSUME;
+			return success ? ActionResult.SUCCESS : ActionResult.FAIL;
 		}
 
-		double y = hit.getPos().getY();
-		boolean up = y % ((int) y) > 0.5d;
-
+		boolean up = isUp(hit.getPos().getY());
 		var sign = signPost.getSign(up);
 
-		if ((sign == null || !player.getAbilities().allowModifyWorld) && !(handEmpty && !canFlipSign))
-			return ActionResult.SUCCESS;
+		if (sign == null || !player.getAbilities().allowModifyWorld)
+			return shouldSucceed ? ActionResult.SUCCESS : ActionResult.FAIL;
 
 		if (canFlipSign) {
 			sign.setLeft(!sign.isLeft());
@@ -224,6 +223,19 @@ public class SignPostBlock extends BlockWithEntity {
 		}
 
 		return ActionResult.success(world.isClient());
+	}
+
+	/**
+	 * {@return {@code true} if the hit result is on the upper side, otherwise {@code false}}
+	 *
+	 * @param y the Y-coordinate of the hit result
+	 */
+	public static boolean isUp(double y) {
+		double absY = Math.abs(y);
+		boolean up = absY % ((int) absY) > 0.5;
+
+		if (y < 0) return !up;
+		else return up;
 	}
 
 	private @Nullable BlockPos getLodestonePos(World world, NbtCompound nbt) {

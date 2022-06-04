@@ -59,7 +59,7 @@ import java.util.List;
  */
 @SuppressWarnings("deprecation")
 public class BookPileBlock extends BlockWithEntity implements Waterloggable {
-	private static final Identifier BOOKS = AurorasDeco.id("books");
+	private static final Identifier BOOKS_LOOT_ID = AurorasDeco.id("books");
 
 	public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
@@ -179,7 +179,7 @@ public class BookPileBlock extends BlockWithEntity implements Waterloggable {
 	public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
 		var blockEntity = builder.get(LootContextParameters.BLOCK_ENTITY);
 		if (blockEntity instanceof BookPileBlockEntity bookPile) {
-			builder.putDrop(BOOKS, (context, consumer) -> {
+			builder.putDrop(BOOKS_LOOT_ID, (context, consumer) -> {
 				for (var stack : bookPile.getBooks()) {
 					if (!stack.isEmpty()) consumer.accept(stack.copy());
 				}
