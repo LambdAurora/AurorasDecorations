@@ -29,6 +29,9 @@
       ],
       "client_init": [
         "dev.lambdaurora.aurorasdeco.client.AurorasDecoClient"
+      ],
+      "emi": [
+        "dev.lambdaurora.aurorasdeco.hook.EmiHooks"
       ]
     },
     "depends": [
