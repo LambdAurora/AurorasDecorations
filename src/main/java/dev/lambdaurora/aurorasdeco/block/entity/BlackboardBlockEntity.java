@@ -18,7 +18,6 @@
 package dev.lambdaurora.aurorasdeco.block.entity;
 
 import dev.lambdaurora.aurorasdeco.blackboard.Blackboard;
-import dev.lambdaurora.aurorasdeco.blackboard.BlackboardColor;
 import dev.lambdaurora.aurorasdeco.blackboard.BlackboardDrawModifier;
 import dev.lambdaurora.aurorasdeco.blackboard.BlackboardHandler;
 import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
@@ -150,8 +149,10 @@ public class BlackboardBlockEntity extends BasicBlockEntity implements Nameable,
 	public void clear() {
 		this.blackboard.clear();
 		this.lastUser = null;
-		this.sync();
-		this.markDirty();
+		if (this.getWorld() instanceof ServerWorld) {
+			this.sync();
+			this.markDirty();
+		}
 	}
 
 	/**
