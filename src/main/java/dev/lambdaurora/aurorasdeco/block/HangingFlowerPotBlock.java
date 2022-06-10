@@ -168,6 +168,10 @@ public class HangingFlowerPotBlock extends Block {
 
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+		if (!player.getAbilities().allowModifyWorld) {
+			return ActionResult.PASS;
+		}
+
 		var handStack = player.getStackInHand(hand);
 		var blockState = (handStack.getItem() instanceof BlockItem blockItem ?
 				CONTENT_TO_POTTED.getOrDefault(blockItem.getBlock(), Blocks.AIR)

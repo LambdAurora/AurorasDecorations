@@ -141,6 +141,20 @@ public class BigFlowerPotBlock extends Block/* implements FluidFillable*/ {
 
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+		boolean canDoCustomUsage = this.shouldAllowCustomUsageInAdventureMode() || player.getAbilities().allowModifyWorld;
+
+		if (canDoCustomUsage) {
+			var action = this.onCustomUse(state, world, pos, player, hand, hit);
+
+			if (action.isAccepted() || action == ActionResult.FAIL) {
+				return action;
+			}
+		}
+
+		if (!player.getAbilities().allowModifyWorld) {
+			return ActionResult.FAIL;
+		}
+
 		var handStack = player.getStackInHand(hand);
 		var toPlace = PottedPlantType.getFlowerPotFromItem(handStack.getItem());
 		boolean empty = this.isEmpty();
@@ -169,6 +183,25 @@ public class BigFlowerPotBlock extends Block/* implements FluidFillable*/ {
 		} else {
 			return toPlaceEmpty ? ActionResult.PASS : ActionResult.CONSUME;
 		}
+	}
+
+	protected boolean shouldAllowCustomUsageInAdventureMode() {
+		return false;
+	}
+
+	/**
+	 * Triggered for custom usage of this block.
+	 *
+	 * @param state the block state interacted with
+	 * @param world the world the interaction interacted in
+	 * @param pos the block position of the interaction
+	 * @param player the player who interacted
+	 * @param hand the hand used to interact
+	 * @param hit the hit result of the interaction
+	 * @return the action result
+	 */
+	protected ActionResult onCustomUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+		return ActionResult.PASS;
 	}
 
 	private void removePlant(World world, BlockPos pos, BlockState state, @Nullable PlayerEntity player, @Nullable Hand hand, boolean removeUp) {
