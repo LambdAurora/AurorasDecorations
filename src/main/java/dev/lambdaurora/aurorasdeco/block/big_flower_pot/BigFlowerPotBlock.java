@@ -165,17 +165,19 @@ public class BigFlowerPotBlock extends Block/* implements FluidFillable*/ {
 				if (!toPlace.allowBlocksOnTop() && !world.getBlockState(up).isAir())
 					return ActionResult.PASS;
 
-				world.setBlockState(pos, toPlace.getPlacementState(new ItemPlacementContext(player, hand, handStack, hit)),
-						Block.NOTIFY_ALL);
-				player.incrementStat(Stats.POT_FLOWER);
-				if (!player.getAbilities().creativeMode) {
-					handStack.decrement(1);
-				}
+				if (!world.isClient()) {
+					world.setBlockState(pos, toPlace.getPlacementState(new ItemPlacementContext(player, hand, handStack, hit)),
+							Block.NOTIFY_ALL);
+					player.incrementStat(Stats.POT_FLOWER);
+					if (!player.getAbilities().creativeMode) {
+						handStack.decrement(1);
+					}
 
-				if (!toPlace.allowBlocksOnTop())
-					world.setBlockState(up, AurorasDecoRegistry.PLANT_AIR_BLOCK.getDefaultState());
-				world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-			} else {
+					if (!toPlace.allowBlocksOnTop())
+						world.setBlockState(up, AurorasDecoRegistry.PLANT_AIR_BLOCK.getDefaultState());
+					world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+				}
+			} else if (!world.isClient()) {
 				this.removePlant(world, pos, state, player, hand, true);
 			}
 

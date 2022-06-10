@@ -179,24 +179,27 @@ public class HangingFlowerPotBlock extends Block {
 		).getPlacementState(new ItemPlacementContext(player, hand, handStack, hit));
 		boolean empty = this.isEmpty();
 		if ((blockState == null || blockState.isOf(Blocks.AIR)) != empty) {
-			if (empty) {
-				world.setBlockState(pos, blockState, Block.NOTIFY_ALL);
-				player.incrementStat(Stats.POT_FLOWER);
-				if (!player.getAbilities().creativeMode) {
-					handStack.decrement(1);
-				}
-			} else {
-				var contentStack = new ItemStack(this.getContent());
-				if (handStack.isEmpty())
-					player.setStackInHand(hand, contentStack);
-				else if (!player.giveItemStack(contentStack))
-					player.dropItem(contentStack, false);
+			if (!world.isClient()) {
+				if (empty) {
+					world.setBlockState(pos, blockState, Block.NOTIFY_ALL);
+					player.incrementStat(Stats.POT_FLOWER);
+					if (!player.getAbilities().creativeMode) {
+						handStack.decrement(1);
+					}
+				} else {
+					var contentStack = new ItemStack(this.getContent());
+					if (handStack.isEmpty())
+						player.setStackInHand(hand, contentStack);
+					else if (!player.giveItemStack(contentStack))
+						player.dropItem(contentStack, false);
 
-				world.setBlockState(pos, DEFAULT.getDefaultState(), Block.NOTIFY_ALL);
+					world.setBlockState(pos, DEFAULT.getDefaultState(), Block.NOTIFY_ALL);
+				}
+
+				world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
 			}
 
-			world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-			return ActionResult.success(world.isClient);
+			return ActionResult.success(world.isClient());
 		} else return ActionResult.CONSUME;
 	}
 

@@ -107,8 +107,10 @@ public class BigPottedSeaPickleBlock extends BigFlowerPotBlock implements Waterl
 			world.playSound(player, pos, this.getPlant().getSoundGroup(this.getPlantState(state)).getPlaceSound(), SoundCategory.BLOCKS,
 					1.f, 1.f);
 
-			world.setBlockState(pos, state.with(PICKLES, state.get(PICKLES) + 1), Block.NOTIFY_ALL);
-			world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+			if (!world.isClient()) {
+				world.setBlockState(pos, state.with(PICKLES, state.get(PICKLES) + 1), Block.NOTIFY_ALL);
+				world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+			}
 			return ActionResult.success(world.isClient());
 		} else if (state.get(PICKLES) > 1) {
 			if (handStack.isEmpty()) {
@@ -117,8 +119,10 @@ public class BigPottedSeaPickleBlock extends BigFlowerPotBlock implements Waterl
 				world.playSound(player, pos, this.getPlant().getSoundGroup(this.getPlantState(state)).getBreakSound(), SoundCategory.BLOCKS,
 						1.f, 1.f);
 
-				world.setBlockState(pos, state.with(PICKLES, state.get(PICKLES) - 1), Block.NOTIFY_ALL);
-				world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+				if (!world.isClient()) {
+					world.setBlockState(pos, state.with(PICKLES, state.get(PICKLES) - 1), Block.NOTIFY_ALL);
+					world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+				}
 				return ActionResult.success(world.isClient());
 			}
 		}
