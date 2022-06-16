@@ -258,5 +258,10 @@
   "aurorasdeco.wood_type.soul_ice.black": "Black Plank",
   
   "emi.category.aurorasdeco.woodcutting": "Woodcutting",
-  "emi.category.aurorasdeco.exploding": "Exploding"
+  "emi.category.aurorasdeco.exploding": "Exploding",
+  
+  "tag.aurorasdeco.small_log_piles": "Small Log Piles",
+  "tag.aurorasdeco.stumps": "Stumps",
+  "tag.aurorasdeco.shelves": "Shelves",
+  "tag.aurorasdeco.benches": "Benches"
 }
