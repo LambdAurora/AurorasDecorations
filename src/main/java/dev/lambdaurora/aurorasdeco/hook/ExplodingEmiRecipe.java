@@ -9,16 +9,18 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import dev.lambdaurora.aurorasdeco.recipe.ExplodingRecipe;
-import net.minecraft.block.Blocks;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 public class ExplodingEmiRecipe implements EmiRecipe {
 	
 	//TODO: would be nice to have this abstracted a little
 	private final Identifier id;
-	//private final EmiStack tnt = EmiStack.of(Blocks.TNT);
 	private final EmiIngredient input;
 	private final EmiStack output;
+	private final Text tooltip = new TranslatableText("tooltip.aurorasdeco.emi.as_item_entity").formatted(Formatting.GREEN);
 	
 	public ExplodingEmiRecipe(ExplodingRecipe recipe) {
 		this.id = recipe.getId();
@@ -35,7 +37,7 @@ public class ExplodingEmiRecipe implements EmiRecipe {
 	@Override
 	public List<EmiIngredient> getInputs() {
 		return List.of(input);
-		// Should also be appending an explosive somehow... hmm
+		// Could also be appending an explosive somehow... hmm
 	}
 
 	@Override
@@ -67,7 +69,7 @@ public class ExplodingEmiRecipe implements EmiRecipe {
 	public void addWidgets(WidgetHolder widgets) {
 		// Flair: Should render a fake lit TNT entity and fake item entity; maybe a fake entity widget? 
 		widgets.addTexture(EmiTexture.EMPTY_ARROW, 26, 1);
-		widgets.addSlot(input, 0, 0);
+		widgets.addSlot(input, 0, 0).appendTooltip(tooltip);
 		widgets.addSlot(output, 58, 0).recipeContext(this);
 	}
 
