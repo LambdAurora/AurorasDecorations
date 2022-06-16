@@ -60,14 +60,19 @@ public class BigPottedSweetBerryBushBlock extends BigPottedProxyBlock implements
 	/* Interaction */
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+	protected boolean shouldAllowCustomUsageInAdventureMode() {
+		return true;
+	}
+
+	@Override
+	public ActionResult onCustomUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 		var result = this.getPlant().onUse(state, world, pos, player, hand, hit);
 		if (result.isAccepted())
 			return result;
 		else if (player.getStackInHand(hand).isOf(Items.BONE_MEAL))
-			return ActionResult.PASS;
+			return ActionResult.FAIL;
 		else
-			return super.onUse(state, world, pos, player, hand, hit);
+			return ActionResult.PASS;
 	}
 
 	@Override

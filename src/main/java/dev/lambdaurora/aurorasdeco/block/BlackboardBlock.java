@@ -329,8 +329,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 
 	private boolean tryClear(World world, BlackboardBlockEntity blackboard, @Nullable PlayerEntity player) {
 		if (!blackboard.isEmpty()) {
-			if (!world.isClient())
-				blackboard.clear();
+			blackboard.clear();
 
 			world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, blackboard.getPos());
 			return true;

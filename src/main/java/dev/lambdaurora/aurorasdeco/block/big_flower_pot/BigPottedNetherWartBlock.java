@@ -59,14 +59,23 @@ public class BigPottedNetherWartBlock extends BigPottedProxyBlock {
 	/* Interaction */
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+	protected boolean shouldAllowCustomUsageInAdventureMode() {
+		return true;
+	}
+
+	@Override
+	protected ActionResult onCustomUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 		var handStack = player.getStackInHand(hand);
 		if ((handStack.isEmpty() || handStack.getItem() instanceof HoeItem) && state.get(NetherWartBlock.AGE) >= 3) {
-			dropStacks(this.getPlantState(state), world, pos, null, player, handStack);
-			world.setBlockState(pos, state.with(NetherWartBlock.AGE, 0), NOTIFY_ALL);
-			world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos);
+			if (!world.isClient()) {
+				dropStacks(this.getPlantState(state), world, pos, null, player, handStack);
+				world.setBlockState(pos, state.with(NetherWartBlock.AGE, 0), NOTIFY_ALL);
+				world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos);
+			}
+
 			return ActionResult.success(world.isClient());
-		} else
-			return super.onUse(state, world, pos, player, hand, hit);
+		}
+
+		return ActionResult.PASS;
 	}
 }

@@ -96,7 +96,7 @@ public class BigPottedSeaPickleBlock extends BigFlowerPotBlock implements Waterl
 	/* Interaction */
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+	public ActionResult onCustomUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 		var handStack = player.getStackInHand(hand);
 		if (handStack.isOf(this.getPlantType().getItem()) && state.get(PICKLES) < 4) {
 			player.incrementStat(Stats.POT_FLOWER);
@@ -107,8 +107,10 @@ public class BigPottedSeaPickleBlock extends BigFlowerPotBlock implements Waterl
 			world.playSound(player, pos, this.getPlant().getSoundGroup(this.getPlantState(state)).getPlaceSound(), SoundCategory.BLOCKS,
 					1.f, 1.f);
 
-			world.setBlockState(pos, state.with(PICKLES, state.get(PICKLES) + 1), Block.NOTIFY_ALL);
-			world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+			if (!world.isClient()) {
+				world.setBlockState(pos, state.with(PICKLES, state.get(PICKLES) + 1), Block.NOTIFY_ALL);
+				world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+			}
 			return ActionResult.success(world.isClient());
 		} else if (state.get(PICKLES) > 1) {
 			if (handStack.isEmpty()) {
@@ -117,14 +119,15 @@ public class BigPottedSeaPickleBlock extends BigFlowerPotBlock implements Waterl
 				world.playSound(player, pos, this.getPlant().getSoundGroup(this.getPlantState(state)).getBreakSound(), SoundCategory.BLOCKS,
 						1.f, 1.f);
 
-				world.setBlockState(pos, state.with(PICKLES, state.get(PICKLES) - 1), Block.NOTIFY_ALL);
-				world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+				if (!world.isClient()) {
+					world.setBlockState(pos, state.with(PICKLES, state.get(PICKLES) - 1), Block.NOTIFY_ALL);
+					world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+				}
 				return ActionResult.success(world.isClient());
 			}
+		}
 
-			return ActionResult.PASS;
-		} else
-			return super.onUse(state, world, pos, player, hand, hit);
+		return ActionResult.PASS;
 	}
 
 	/* Updates */

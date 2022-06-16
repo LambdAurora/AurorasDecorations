@@ -52,7 +52,7 @@ public class FlintAndSteelItemMixin {
 	)
 	private void onUseOnBlock(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir,
 	                          PlayerEntity player, World world, BlockPos pos, BlockState state) {
-		if (state.isOf(Blocks.VINE)) { // Burn vine tip interaction.
+		if (state.isOf(Blocks.VINE) && (player == null || player.getAbilities().allowModifyWorld)) { // Burn vine tip interaction.
 			world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS,
 					1.f, world.getRandom().nextFloat() * .4f + .8f);
 			world.setBlockState(pos, BurntVineBlock.fromVine(state), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
