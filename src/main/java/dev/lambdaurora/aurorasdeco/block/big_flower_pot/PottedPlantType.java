@@ -156,7 +156,7 @@ public final class PottedPlantType {
 	/**
 	 * Returns whether this plant type is tall or not.
 	 *
-	 * @return {@code true} if this plant is tall, else {@code false}
+	 * @return {@code true} if this plant is tall, or {@code false} otherwise
 	 */
 	public boolean isTall() {
 		return this.getPlant() instanceof TallPlantBlock;
@@ -174,7 +174,7 @@ public final class PottedPlantType {
 	/**
 	 * Returns whether this plant type is empty or not.
 	 *
-	 * @return {@code true} if empty, else {@code false}
+	 * @return {@code true} if empty, or {@code false} otherwise
 	 */
 	public boolean isEmpty() {
 		return this.plant == Blocks.AIR && this.item == Items.AIR;

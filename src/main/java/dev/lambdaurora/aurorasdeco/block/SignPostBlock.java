@@ -226,7 +226,7 @@ public class SignPostBlock extends BlockWithEntity {
 	}
 
 	/**
-	 * {@return {@code true} if the hit result is on the upper side, otherwise {@code false}}
+	 * {@return {@code true} if the hit result is on the upper side, or {@code false} otherwise}
 	 *
 	 * @param y the Y-coordinate of the hit result
 	 */

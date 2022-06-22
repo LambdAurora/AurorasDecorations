@@ -47,7 +47,7 @@ public abstract class SwayingBlockEntity extends BlockEntity {
 	/**
 	 * Returns whether this block entity can naturally sway.
 	 *
-	 * @return {@code true} if this block entity can naturally sway, else {@code false}
+	 * @return {@code true} if this block entity can naturally sway, or {@code false} otherwise
 	 */
 	public boolean canNaturallySway() {
 		return this.naturalSway;
@@ -85,7 +85,7 @@ public abstract class SwayingBlockEntity extends BlockEntity {
 	/**
 	 * Returns whether this swaying block entity is being force to sway or not.
 	 *
-	 * @return {@code true} if this swaying block entity is swaying, else {@code false}
+	 * @return {@code true} if this swaying block entity is swaying, or {@code false} otherwise
 	 */
 	public boolean isSwinging() {
 		return this.swinging;
@@ -98,7 +98,7 @@ public abstract class SwayingBlockEntity extends BlockEntity {
 	/**
 	 * Returns whether this swaying block entity is colliding with an entity or not.
 	 *
-	 * @return {@code true} if this swaying block entity is colliding with an entity, else {@code false}
+	 * @return {@code true} if this swaying block entity is colliding with an entity, or {@code false} otherwise
 	 */
 	public boolean isColliding() {
 		return this.colliding;

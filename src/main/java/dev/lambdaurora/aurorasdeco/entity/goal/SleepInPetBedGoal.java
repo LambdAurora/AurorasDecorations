@@ -43,7 +43,7 @@ public abstract class SleepInPetBedGoal extends MoveToTargetPosGoal {
 	/**
 	 * Sets the entity in sleeping position.
 	 *
-	 * @param value {@code true} if the entity is in sleeping position, else {@code false}
+	 * @param value {@code true} if the entity is in sleeping position, or {@code false} otherwise
 	 */
 	public abstract void setInSleepingPosition(boolean value);
 

@@ -69,7 +69,7 @@ public final class AuroraUtil {
 	 * @param id the identifier to compare
 	 * @param namespace the namespace to compare to the identifier
 	 * @param path the path to compare to the identifier
-	 * @return {@code true} if both identifiers are equal, otherwise {@code false}
+	 * @return {@code true} if both identifiers are equal, or {@code false} otherwise
 	 */
 	public static boolean idEqual(Identifier id, String namespace, String path) {
 		return id.getNamespace().equals(namespace) && id.getPath().equals(path);

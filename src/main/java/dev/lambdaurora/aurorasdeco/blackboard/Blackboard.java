@@ -198,7 +198,7 @@ public class Blackboard implements BlackboardHandler {
 	/**
 	 * Returns whether this blackboard is empty or not.
 	 *
-	 * @return {@code true} if empty, else {@code false}
+	 * @return {@code true} if empty, or {@code false} otherwise
 	 */
 	public boolean isEmpty() {
 		for (short b : this.pixels) {

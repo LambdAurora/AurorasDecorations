@@ -80,7 +80,7 @@ public final class RedstoneLanternBehavior {
 	}
 
 	/**
-	 * {@return {@code true} if the given redstone lantern state should power off, otherwise {@code false}}
+	 * {@return {@code true} if the given redstone lantern state should power off, or {@code false} otherwise}
 	 *
 	 * @param world the world the redstone lantern is in
 	 * @param pos the position of the redstone lantern

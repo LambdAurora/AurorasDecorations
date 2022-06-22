@@ -96,7 +96,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 	/**
 	 * Returns whether this blackboard block is locked or not.
 	 *
-	 * @return {@code true} if locked, else {@code false}
+	 * @return {@code true} if locked, or {@code false} otherwise
 	 */
 	public boolean isLocked() {
 		return this.locked;

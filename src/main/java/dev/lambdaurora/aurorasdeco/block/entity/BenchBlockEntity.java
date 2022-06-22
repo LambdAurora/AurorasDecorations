@@ -78,7 +78,7 @@ public class BenchBlockEntity extends BasicBlockEntity implements RenderAttachme
 	/**
 	 * Returns whether this bench has a rest or not.
 	 *
-	 * @return {@code true} if this bench has a rest, else {@code false}
+	 * @return {@code true} if this bench has a rest, or {@code false} otherwise
 	 */
 	public boolean hasRest() {
 		return this.rest != null;
