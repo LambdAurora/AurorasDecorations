@@ -39,6 +39,7 @@ import java.util.List;
 
 public final class AuroraUtil {
 	public static final List<Direction> DIRECTIONS = List.of(Direction.values());
+	public static final List<Direction> HORIZONTAL_DIRECTIONS = DIRECTIONS.stream().filter(d -> d.getAxis().isHorizontal()).toList();
 
 	private AuroraUtil() {
 		throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
