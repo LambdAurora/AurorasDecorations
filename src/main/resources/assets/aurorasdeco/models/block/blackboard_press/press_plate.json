@@ -1,0 +1,20 @@
+{
+	"credit": "Made by april",
+	"parent": "aurorasdeco:block/blackboard_press/base",
+	"elements": [
+		{
+			"name": "press_plate",
+			"from": [ 2, 6, 2 ],
+			"to": [ 14, 7, 14 ],
+			"rotation": {"angle": 0, "axis": "y", "origin": [ 8, 8.25, 8 ]},
+			"faces": {
+				"north": {"uv": [ 0, 12, 12, 13 ], "texture": "#press_plate"},
+				"east":  {"uv": [ 0, 12, 12, 13 ], "texture": "#press_plate"},
+				"south": {"uv": [ 0, 12, 12, 13 ], "texture": "#press_plate"},
+				"west":  {"uv": [ 0, 12, 12, 13 ], "texture": "#press_plate"},
+				"up":    {"uv": [ 0,  0, 12, 12 ], "texture": "#press_plate"},
+				"down":  {"uv": [ 0,  0, 12, 12 ], "texture": "#press_plate"}
+			}
+		}
+	]
+}

@@ -164,6 +164,7 @@
   "block.aurorasdeco.wind_chime": "Carillon",
 
   "item.aurorasdeco.copper_sulfate": "Sulfate de cuivre",
+  "item.aurorasdeco.painter_palette": "Palette de peintre",
   "item.aurorasdeco.seat_rest": "Repose-siège en %s",
   "item.aurorasdeco.sign_post": "Panneau directionnel en %s",
 
@@ -189,6 +190,7 @@
   "tag.aurorasdeco.pet_beds": "Petits lits",
   "tag.aurorasdeco.sleeping_bags": "Sacs de couchage",
   "tag.aurorasdeco.sturdy_stone_components": "Composants pour de roche renforcée",
+  "tag.c.copper_sulfates": "Sulfates de cuivre",
   "tag.c.vegetation.on_water_surface": "Végétations vivants sur la surface de l'eau",
 
   "aurorasdeco.wood_type.oak": "chêne",

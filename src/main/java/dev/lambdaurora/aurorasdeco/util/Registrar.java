@@ -18,7 +18,6 @@
 package dev.lambdaurora.aurorasdeco.util;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.accessor.BlockEntityTypeAccessor;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -134,7 +133,7 @@ public final class Registrar {
 		 * @return the instance of this completer
 		 */
 		public BlockRegistrationCompleter<T> addSelfTo(BlockEntityType<?> type) {
-			((BlockEntityTypeAccessor) type).aurorasdeco$addSupportedBlock(this.registeredObject);
+			type.addSupportedBlock(this.registeredObject);
 			return this;
 		}
 

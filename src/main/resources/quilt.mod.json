@@ -45,6 +45,14 @@
         "versions": ">=1.0.0-beta.12"
       },
       {
+        "id": "quilt_biome",
+        "versions": ">=1.1.0-beta.22"
+      },
+      {
+        "id": "quilt_block_entity",
+        "versions": ">=1.1.0-beta.22"
+      },
+      {
         "id": "java",
         "versions": ">=17"
       },

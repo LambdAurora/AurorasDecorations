@@ -163,6 +163,8 @@ public class AurorasDecoClient implements ClientModInitializer {
 	}
 
 	private void initBlockEntityRenderers() {
+		BlockEntityRendererRegistry.register(BLACKBOARD_PRESS_BLOCK_ENTITY,
+				BlackboardPressBlockEntityRenderer::new);
 		BlockEntityRendererRegistry.register(AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE,
 				BookPileEntityRenderer::new);
 		BlockEntityRendererRegistry.register(AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE,

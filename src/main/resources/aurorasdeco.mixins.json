@@ -16,7 +16,6 @@
     "block.AbstractBlockAccessor",
     "block.BedBlockMixin",
     "block.BlockAccessor",
-    "block.BlockEntityTypeMixin",
     "block.BlockSettingsAccessor",
     "block.CandleBlockMixin",
     "block.FlowerPotBlockMixin",
@@ -61,6 +60,7 @@
     "client.MinecraftClientMixin",
     "client.MobEntityRendererAccessor",
     "client.ModelLoaderMixin",
+    "client.MouseMixin",
     "client.NativeImageAccessor",
     "client.ReloadableResourceManagerMixin"
   ],

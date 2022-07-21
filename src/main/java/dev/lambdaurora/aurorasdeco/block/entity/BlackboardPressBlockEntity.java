@@ -15,14 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.accessor;
+package dev.lambdaurora.aurorasdeco.block.entity;
 
-import net.minecraft.block.Block;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.util.math.BlockPos;
 
-import java.util.Set;
-
-public interface BlockEntityTypeAccessor {
-	Set<Block> aurorasdeco$getMutableSupportedBlocks();
-
-	void aurorasdeco$addSupportedBlock(Block block);
+public class BlackboardPressBlockEntity extends BlockEntity implements BlockEntityHelper {
+	public BlackboardPressBlockEntity(BlockPos blockPos, BlockState blockState) {
+		super(AurorasDecoRegistry.BLACKBOARD_PRESS_BLOCK_ENTITY, blockPos, blockState);
+	}
 }

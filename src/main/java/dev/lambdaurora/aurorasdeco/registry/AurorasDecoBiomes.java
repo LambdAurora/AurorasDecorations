@@ -21,12 +21,12 @@ import dev.lambdaurora.aurorasdeco.world.biome.AurorasDecoBiome;
 import dev.lambdaurora.aurorasdeco.world.biome.LavenderPlainsBiome;
 import dev.lambdaurora.aurorasdeco.world.gen.feature.AurorasDecoVegetationPlacedFeatures;
 import dev.lambdaurora.aurorasdeco.world.gen.feature.PlacedFeatureMetadata;
-import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStep;
+import org.quiltmc.qsl.worldgen.biome.api.BiomeModifications;
+import org.quiltmc.qsl.worldgen.biome.api.BiomeSelectors;
 
 /**
  * Contains the different biomes definitions added in Aurora's Decorations.

@@ -17,8 +17,6 @@
 
 package dev.lambdaurora.aurorasdeco.world.gen.feature;
 
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.Holder;
 import net.minecraft.util.Identifier;
@@ -29,6 +27,8 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.PlacedFeature;
 import net.minecraft.world.gen.feature.PlacementModifier;
+import org.quiltmc.qsl.worldgen.biome.api.BiomeSelectionContext;
+import org.quiltmc.qsl.worldgen.biome.api.BiomeSelectors;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -125,7 +125,7 @@ public class PlacedFeatureMetadata {
 
 	public Predicate<BiomeSelectionContext> getTagPredicate() {
 		if (this.allowedTag != null)
-			return BiomeSelectors.tag(this.allowedTag);
+			return BiomeSelectors.isIn(this.allowedTag);
 		else
 			return biomeSelectionContext -> false;
 	}

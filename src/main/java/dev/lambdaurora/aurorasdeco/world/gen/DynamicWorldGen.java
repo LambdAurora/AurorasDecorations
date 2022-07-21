@@ -19,20 +19,18 @@ package dev.lambdaurora.aurorasdeco.world.gen;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.world.gen.feature.AurorasDecoFeatures;
-import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
-import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.DynamicRegistryManager;
-import net.minecraft.util.registry.MutableRegistry;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.PlacedFeature;
+import org.jetbrains.annotations.TestOnly;
+import org.quiltmc.qsl.worldgen.biome.api.BiomeModifications;
+import org.quiltmc.qsl.worldgen.biome.api.BiomeSelectionContext;
+import org.quiltmc.qsl.worldgen.biome.api.BiomeSelectors;
+import org.quiltmc.qsl.worldgen.biome.api.ModificationPhase;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -47,60 +45,31 @@ import java.util.function.Predicate;
  */
 public class DynamicWorldGen {
 	private static final DynamicWorldGen INSTANCE = new DynamicWorldGen();
-	private final List<Entry> dynamicWorldGenerations = new ArrayList<>();
 
 	private DynamicWorldGen() {
-		this.register(new Entry(AurorasDeco.id("swamp"), BiomeSelectors.includeByKey(BiomeKeys.SWAMP), List.of(
+		this.registerDynamicModifications(AurorasDeco.id("swamp"), BiomeSelectors.includeByKey(BiomeKeys.SWAMP), List.of(
 				AurorasDecoFeatures.SWAMP_DUCKWEED,
 				AurorasDecoFeatures.SWAMP_GIANT_MUSHROOMS,
 				AurorasDecoFeatures.SWAMP_SMALL_DRIPLEAF
-		)));
+		));
 	}
 
-	private void register(Entry entry) {
-		this.dynamicWorldGenerations.add(entry);
-	}
-
-	public static void setupRegistries(DynamicRegistryManager registryManager) {
-		AurorasDeco.debug("Setting up dynamic registries...");
-
-		for (var entry : INSTANCE.dynamicWorldGenerations) {
-			entry.setupRegistries(registryManager);
-		}
-	}
-
-	private static class Entry {
-		private final Identifier modificationsId;
-		private final Predicate<BiomeSelectionContext> biomeSelector;
-		private final List<RegistryKey<PlacedFeature>> toCheck;
-		private final List<RegistryKey<PlacedFeature>> toAdd = new ArrayList<>();
-
-		public Entry(Identifier modificationsId, Predicate<BiomeSelectionContext> biomeSelector, List<RegistryKey<PlacedFeature>> toCheck) {
-			this.modificationsId = modificationsId;
-			this.biomeSelector = biomeSelector;
-			this.toCheck = toCheck;
-			this.setupApplication();
-		}
-
-		private void setupRegistries(DynamicRegistryManager registryManager) {
-			this.toAdd.clear();
-
-			var placedFeatureRegistry = (MutableRegistry<PlacedFeature>) registryManager.get(Registry.PLACED_FEATURE_KEY);
-
-			for (var feature : this.toCheck) {
-				if (placedFeatureRegistry.contains(feature)) {
-					this.toAdd.add(feature);
-				}
-			}
-		}
-
-		private void setupApplication() {
-			BiomeModifications.create(this.modificationsId)
-					.add(ModificationPhase.ADDITIONS, this.biomeSelector, context -> {
-						for (var feature : this.toAdd) {
+	private void registerDynamicModifications(Identifier modificationsId, Predicate<BiomeSelectionContext> selector, List<RegistryKey<PlacedFeature>> toPlace) {
+		BiomeModifications.create(modificationsId)
+				.add(ModificationPhase.ADDITIONS, selector, (selectionContext, context) -> {
+					for (var feature : toPlace) {
+						if (selectionContext.doesPlacedFeatureExist(feature)) {
 							context.getGenerationSettings().addFeature(GenerationStep.Feature.VEGETAL_DECORATION, feature);
 						}
-					});
-		}
+					}
+				});
+	}
+
+	@TestOnly
+	public static void setupRegistries(DynamicRegistryManager registryManager) {
+		//AurorasDeco.debug("Setting up dynamic registries...");
+	}
+
+	public static void init() {
 	}
 }
