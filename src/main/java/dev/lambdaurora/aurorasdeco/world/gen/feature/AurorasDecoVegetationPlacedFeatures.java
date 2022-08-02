@@ -47,7 +47,7 @@ public final class AurorasDecoVegetationPlacedFeatures {
 			id("patch_lavender"),
 			AurorasDecoVegetationConfiguredFeatures.PATCH_LAVENDER,
 			List.of(
-					CountPlacementModifier.create(ClampedIntProvider.create(UniformIntProvider.create(-1, 5), 0, 5)),
+					CountPlacementModifier.create(ClampedIntProvider.create(UniformIntProvider.create(-1, 6), 0, 6)),
 					InSquarePlacementModifier.getInstance(),
 					PlacedFeatureUtil.MOTION_BLOCKING_HEIGHTMAP,
 					BiomePlacementModifier.getInstance()
@@ -58,7 +58,7 @@ public final class AurorasDecoVegetationPlacedFeatures {
 			id("trees_lavender_plains"),
 			AurorasDecoVegetationConfiguredFeatures.TREES_LAVENDER_PLAINS,
 			List.of(
-					PlacedFeatureUtil.createCountExtraModifier(0, 0.05f, 1),
+					PlacedFeatureUtil.createCountExtraModifier(0, 0.2f, 1),
 					InSquarePlacementModifier.getInstance(),
 					VegetationPlacedFeatures.TREE_THRESHOLD,
 					PlacedFeatureUtil.OCEAN_FLOOR_HEIGHTMAP,
