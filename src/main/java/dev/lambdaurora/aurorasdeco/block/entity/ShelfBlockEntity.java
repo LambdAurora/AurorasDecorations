@@ -32,9 +32,9 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import org.quiltmc.qsl.block.entity.api.QuiltBlockEntity;
 
 /**
  * Represents the shelf block entity.
@@ -44,7 +44,7 @@ import net.minecraft.util.math.BlockPos;
  * @since 1.0.0
  */
 public class ShelfBlockEntity extends LootableContainerBlockEntity
-		implements ExtendedScreenHandlerFactory, BlockEntityHelper {
+		implements ExtendedScreenHandlerFactory, QuiltBlockEntity {
 	private DefaultedList<ItemStack> inventory;
 
 	public ShelfBlockEntity(BlockPos pos, BlockState state) {
@@ -54,7 +54,7 @@ public class ShelfBlockEntity extends LootableContainerBlockEntity
 
 	@Override
 	protected Text getContainerName() {
-		return new TranslatableText(this.getCachedState().getBlock().getTranslationKey());
+		return Text.translatable(this.getCachedState().getBlock().getTranslationKey());
 	}
 
 	@Override

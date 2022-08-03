@@ -76,7 +76,7 @@ public class BlackboardTooltipComponent implements TooltipComponent {
 		matrices.scale(128.f, 128.f, 1);
 
 		int light = 15728880;
-		var model = matrices.peek().getModel();
+		var model = matrices.peek().getPosition();
 
 		this.quad(this.background, 0.f, 0.f, 1.f, 1.f, model, vertexConsumers, light);
 
@@ -85,7 +85,7 @@ public class BlackboardTooltipComponent implements TooltipComponent {
 		if (this.blackboard.isLit()) {
 			matrices.push();
 			matrices.translate(0, 0, 1);
-			model = matrices.peek().getModel();
+			model = matrices.peek().getPosition();
 
 			var glow = RenderLayer.getText(GLOW_TEXTURE);
 
@@ -103,7 +103,7 @@ public class BlackboardTooltipComponent implements TooltipComponent {
 		if (this.locked) {
 			matrices.translate(.5f, .5f, 1);
 			matrices.scale(.5f, .5f, 1.f);
-			model = matrices.peek().getModel();
+			model = matrices.peek().getPosition();
 			RenderLayer locked = RenderLayer.getText(LOCK_ICON_TEXTURE);
 			this.quad(locked, 0.f, .6484375f, .2421875f, .890625f, model, vertexConsumers, light);
 		}
@@ -116,12 +116,12 @@ public class BlackboardTooltipComponent implements TooltipComponent {
 	                  Matrix4f model, VertexConsumerProvider vertexConsumers, int light) {
 		var vertices = vertexConsumers.getBuffer(renderLayer);
 		vertices.vertex(model, 0.f, 1.f, 0.f).color(255, 255, 255, 255)
-				.texture(uMin, vMax).light(light).next();
+				.uv(uMin, vMax).light(light).next();
 		vertices.vertex(model, 1.f, 1.f, 0.f).color(255, 255, 255, 255)
-				.texture(uMax, vMax).light(light).next();
+				.uv(uMax, vMax).light(light).next();
 		vertices.vertex(model, 1.f, 0.f, 0.f).color(255, 255, 255, 255)
-				.texture(uMax, vMin).light(light).next();
+				.uv(uMax, vMin).light(light).next();
 		vertices.vertex(model, 0.f, 0.f, 0.f).color(255, 255, 255, 255)
-				.texture(uMin, vMin).light(light).next();
+				.uv(uMin, vMin).light(light).next();
 	}
 }

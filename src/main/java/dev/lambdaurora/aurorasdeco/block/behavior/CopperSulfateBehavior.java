@@ -29,8 +29,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
-
-import java.util.Random;
+import net.minecraft.util.random.RandomGenerator;
 
 /**
  * Contains common behavior with copper-sulfate-based blocks.
@@ -52,7 +51,7 @@ public final class CopperSulfateBehavior implements RandomTickComponent {
 	}
 
 	@Override
-	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, RandomGenerator random) {
 		var currentPos = pos.mutableCopy();
 		for (int y = 0; y < this.radius; y++) {
 			currentPos.move(0, 1, 0);

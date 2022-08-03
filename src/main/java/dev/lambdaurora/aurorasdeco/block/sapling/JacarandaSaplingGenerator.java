@@ -20,17 +20,16 @@ package dev.lambdaurora.aurorasdeco.block.sapling;
 import dev.lambdaurora.aurorasdeco.world.gen.feature.AurorasDecoTreeConfiguredFeatures;
 import net.minecraft.block.sapling.SaplingGenerator;
 import net.minecraft.util.Holder;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Random;
 
 /**
  * Represents the Jacaranda sapling generator.
  */
 public class JacarandaSaplingGenerator extends SaplingGenerator {
 	@Override
-	protected @Nullable Holder<? extends ConfiguredFeature<?, ?>> getTreeFeature(Random random, boolean bees) {
+	protected @Nullable Holder<? extends ConfiguredFeature<?, ?>> getTreeFeature(RandomGenerator random, boolean bees) {
 		if (random.nextBoolean()) {
 			return bees ? AurorasDecoTreeConfiguredFeatures.JACARANDA_TREE_BEES_015 : AurorasDecoTreeConfiguredFeatures.JACARANDA_TREE;
 		} else {

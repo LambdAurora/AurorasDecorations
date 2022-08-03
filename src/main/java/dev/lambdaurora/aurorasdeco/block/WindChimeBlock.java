@@ -174,7 +174,7 @@ public class WindChimeBlock extends BlockWithEntity implements Waterloggable {
 			if (!blockEntity.isColliding()) {
 				/*world.playSound(null, pos, AurorasDecoSounds.LANTERN_SWING_SOUND_EVENT, SoundCategory.BLOCKS,
 						2.f, 1.f);*/
-				world.emitGameEvent(entity, GameEvent.RING_BELL, pos);
+				world.emitGameEvent(entity, GameEvent.BLOCK_CHANGE, pos);
 			}
 
 			if (!collision)

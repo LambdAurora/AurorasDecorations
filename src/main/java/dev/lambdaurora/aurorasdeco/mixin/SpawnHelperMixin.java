@@ -21,10 +21,10 @@ import dev.lambdaurora.aurorasdeco.block.AmethystLanternBlock;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.structure.StructureManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.biome.SpawnSettings;
-import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.poi.PointOfInterestStorage;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,16 +35,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(SpawnHelper.class)
 public class SpawnHelperMixin {
 	@Inject(
-			method = "canSpawn(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/SpawnGroup;Lnet/minecraft/world/gen/StructureAccessor;Lnet/minecraft/world/gen/chunk/ChunkGenerator;Lnet/minecraft/world/biome/SpawnSettings$SpawnEntry;Lnet/minecraft/util/math/BlockPos$Mutable;D)Z",
+			method = "canSpawn(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/SpawnGroup;Lnet/minecraft/structure/StructureManager;Lnet/minecraft/world/gen/chunk/ChunkGenerator;Lnet/minecraft/world/biome/SpawnSettings$SpawnEntry;Lnet/minecraft/util/math/BlockPos$Mutable;D)Z",
 			at = @At("RETURN"),
 			cancellable = true
 	)
-	private static void onCanSpawn(ServerWorld world, SpawnGroup group, StructureAccessor structureAccessor,
+	private static void onCanSpawn(ServerWorld world, SpawnGroup group, StructureManager structureAccessor,
 	                               ChunkGenerator chunkGenerator, SpawnSettings.SpawnEntry spawnEntry,
 	                               BlockPos.Mutable pos, double squaredDistance, CallbackInfoReturnable<Boolean> cir) {
 		if (cir.getReturnValueZ()) {
 			if (!group.isPeaceful() && world.getPointOfInterestStorage().getInSquare(
-					poiType -> poiType == AurorasDecoRegistry.AMETHYST_LANTERN_POI,
+					poiType -> poiType.value() == AurorasDecoRegistry.AMETHYST_LANTERN_POI,
 					pos,
 					AmethystLanternBlock.EFFECT_RADIUS,
 					PointOfInterestStorage.OccupationStatus.ANY

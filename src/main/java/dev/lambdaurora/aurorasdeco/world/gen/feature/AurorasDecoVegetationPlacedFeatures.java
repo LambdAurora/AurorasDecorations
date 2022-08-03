@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.world.gen.feature;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import net.minecraft.block.Blocks;
+import net.minecraft.tag.BiomeTags;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.Holder;
 import net.minecraft.util.Identifier;
@@ -77,7 +78,7 @@ public final class AurorasDecoVegetationPlacedFeatures {
 					BlockPredicateFilterPlacementModifier.create(BlockPredicate.wouldSurvive(Blocks.OAK_SAPLING.getDefaultState(), BlockPos.ORIGIN)),
 					BiomePlacementModifier.getInstance()
 			))
-			.addAllowedBiomeCategory(Biome.Category.FOREST)
+			.addAllowedBiomeCategoryTag(BiomeTags.IS_FOREST)
 			.addAllowedNeighborFeature(new Identifier("trees_birch_and_oak"))
 			.addAllowedNeighborFeature(new Identifier("trees_flower_forest"))
 			.setAllowedTag(TagKey.of(Registry.BIOME_KEY, AurorasDeco.id("feature/fallen_trees/forest")))
@@ -93,7 +94,7 @@ public final class AurorasDecoVegetationPlacedFeatures {
 					BlockPredicateFilterPlacementModifier.create(BlockPredicate.wouldSurvive(Blocks.BIRCH_SAPLING.getDefaultState(), BlockPos.ORIGIN)),
 					BiomePlacementModifier.getInstance()
 			))
-			.addAllowedBiomeCategory(Biome.Category.FOREST)
+			.addAllowedBiomeCategoryTag(BiomeTags.IS_FOREST)
 			.addAllowedNeighborFeature(new Identifier("birch_tall"))
 			.setAllowedTag(TagKey.of(Registry.BIOME_KEY, AurorasDeco.id("feature/fallen_trees/birch_forest")))
 			.register();
@@ -108,7 +109,7 @@ public final class AurorasDecoVegetationPlacedFeatures {
 					BlockPredicateFilterPlacementModifier.create(BlockPredicate.wouldSurvive(Blocks.SPRUCE_SAPLING.getDefaultState(), BlockPos.ORIGIN)),
 					BiomePlacementModifier.getInstance()
 			))
-			.addAllowedBiomeCategory(Biome.Category.TAIGA)
+			.addAllowedBiomeCategoryTag(BiomeTags.IS_TAIGA)
 			.addAllowedPrecipitation(Biome.Precipitation.RAIN)
 			.addAllowedNeighborFeature(new Identifier("trees_taiga"))
 			.setAllowedTag(TagKey.of(Registry.BIOME_KEY, AurorasDeco.id("feature/fallen_trees/spruce_taiga")))
@@ -124,7 +125,7 @@ public final class AurorasDecoVegetationPlacedFeatures {
 					BlockPredicateFilterPlacementModifier.create(BlockPredicate.wouldSurvive(Blocks.SPRUCE_SAPLING.getDefaultState(), BlockPos.ORIGIN)),
 					BiomePlacementModifier.getInstance()
 			))
-			.addAllowedBiomeCategory(Biome.Category.TAIGA)
+			.addAllowedBiomeCategoryTag(BiomeTags.IS_TAIGA)
 			.addAllowedPrecipitation(Biome.Precipitation.SNOW)
 			.addAllowedNeighborFeature(new Identifier("trees_taiga"))
 			.setAllowedTag(TagKey.of(Registry.BIOME_KEY, AurorasDeco.id("feature/fallen_trees/snowy_spruce_taiga")))
@@ -141,7 +142,7 @@ public final class AurorasDecoVegetationPlacedFeatures {
 					BlockPredicateFilterPlacementModifier.create(BlockPredicate.wouldSurvive(Blocks.SPRUCE_SAPLING.getDefaultState(), BlockPos.ORIGIN)),
 					BiomePlacementModifier.getInstance()
 			))
-			.addAllowedBiomeCategory(Biome.Category.TAIGA)
+			.addAllowedBiomeCategoryTag(BiomeTags.IS_TAIGA)
 			.addAllowedNeighborFeature(new Identifier("trees_old_growth_spruce_taiga"))
 			.addAllowedNeighborFeature(new Identifier("trees_old_growth_pine_taiga"))
 			.setAllowedTag(TagKey.of(Registry.BIOME_KEY, AurorasDeco.id("feature/fallen_trees/old_growth_spruce_taiga")))
@@ -157,7 +158,7 @@ public final class AurorasDecoVegetationPlacedFeatures {
 					BlockPredicateFilterPlacementModifier.create(BlockPredicate.wouldSurvive(Blocks.JUNGLE_SAPLING.getDefaultState(), BlockPos.ORIGIN)),
 					BiomePlacementModifier.getInstance()
 			))
-			.addAllowedBiomeCategory(Biome.Category.JUNGLE)
+			.addAllowedBiomeCategoryTag(BiomeTags.IS_JUNGLE)
 			.addAllowedPrecipitation(Biome.Precipitation.RAIN)
 			.addAllowedNeighborFeature(new Identifier("trees_sparse_jungle"))
 			.setAllowedTag(TagKey.of(Registry.BIOME_KEY, AurorasDeco.id("feature/fallen_trees/sparse_jungle")))

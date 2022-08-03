@@ -38,11 +38,6 @@ public final class LavenderPlainsBiome extends AurorasDecoBiome {
 	}
 
 	@Override
-	public Biome.Category getCategory() {
-		return Biome.Category.PLAINS;
-	}
-
-	@Override
 	public float getTemperature() {
 		return 0.7f;
 	}

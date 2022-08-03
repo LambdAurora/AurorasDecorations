@@ -34,7 +34,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Nameable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
@@ -186,7 +185,7 @@ public class BlackboardBlockEntity extends BasicBlockEntity implements Nameable,
 	@Override
 	public Text getName() {
 		return this.customName != null ? this.customName
-				: new TranslatableText(this.getCachedState().getBlock().getTranslationKey());
+				: Text.translatable(this.getCachedState().getBlock().getTranslationKey());
 	}
 
 	public boolean isLocked() {

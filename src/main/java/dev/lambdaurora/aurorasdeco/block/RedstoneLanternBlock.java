@@ -28,11 +28,10 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
-
-import java.util.Random;
 
 @SuppressWarnings("deprecation")
 public class RedstoneLanternBlock extends LanternBlock {
@@ -77,7 +76,7 @@ public class RedstoneLanternBlock extends LanternBlock {
 	/* Ticking */
 
 	@Override
-	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, RandomGenerator random) {
 		super.scheduledTick(state, world, pos, random);
 		this.behavior.scheduledTick(state, world, pos);
 	}
@@ -102,7 +101,7 @@ public class RedstoneLanternBlock extends LanternBlock {
 	/* Visual */
 
 	@Override
-	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+	public void randomDisplayTick(BlockState state, World world, BlockPos pos, RandomGenerator random) {
 		if (RedstoneLanternBehavior.isLit(state)) {
 			double x = (double) pos.getX() + 0.5 + (random.nextDouble() - 0.5) * 0.75;
 			double y = (double) pos.getY() + 0.25 + (random.nextDouble() - 0.5) * 0.4;

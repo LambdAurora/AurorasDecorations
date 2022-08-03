@@ -27,11 +27,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
-
-import java.util.Random;
 
 /**
  * Represents an Aurora's Decorations flower block. This mod's flower blocks can be reproduced using bone meal.
@@ -62,12 +61,12 @@ public class AuroraFlowerBlock extends FlowerBlock implements Fertilizable {
 	}
 
 	@Override
-	public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) {
+	public boolean canGrow(World world, RandomGenerator random, BlockPos pos, BlockState state) {
 		return true;
 	}
 
 	@Override
-	public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
+	public void grow(ServerWorld world, RandomGenerator random, BlockPos pos, BlockState state) {
 		dropStack(world, pos, new ItemStack(this));
 	}
 }

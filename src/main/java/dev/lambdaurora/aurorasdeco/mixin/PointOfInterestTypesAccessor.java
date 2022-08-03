@@ -15,19 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.block.entity;
+package dev.lambdaurora.aurorasdeco.mixin;
 
-import com.google.common.base.Preconditions;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.World;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.Holder;
+import net.minecraft.world.poi.PointOfInterestType;
+import net.minecraft.world.poi.PointOfInterestTypes;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-public interface BlockEntityHelper {
-	default void sync() {
-		World world = ((BlockEntity) this).getWorld();
-		Preconditions.checkNotNull(world); //Maintain distinct failure case from below
-		if (!(world instanceof ServerWorld)) throw new IllegalStateException("Cannot call sync() on the logical client! Did you check world.isClient first?");
+import java.util.Map;
 
-		((ServerWorld) world).getChunkManager().markForUpdate(((BlockEntity) this).getPos());
+@Mixin(PointOfInterestTypes.class)
+public interface PointOfInterestTypesAccessor {
+	@Accessor("STATE_TO_TYPE")
+	static Map<BlockState, Holder<PointOfInterestType>> aurorasdeco$getStateToType() {
+		throw new IllegalStateException("Injection failed.");
 	}
 }

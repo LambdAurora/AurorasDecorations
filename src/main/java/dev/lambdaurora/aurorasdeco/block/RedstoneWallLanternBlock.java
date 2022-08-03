@@ -23,10 +23,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-
-import java.util.Random;
 
 @SuppressWarnings("deprecation")
 public class RedstoneWallLanternBlock extends WallLanternBlock<RedstoneLanternBlock> {
@@ -47,7 +46,7 @@ public class RedstoneWallLanternBlock extends WallLanternBlock<RedstoneLanternBl
 	/* Ticking */
 
 	@Override
-	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, RandomGenerator random) {
 		super.scheduledTick(state, world, pos, random);
 		this.behavior.scheduledTick(state, world, pos);
 	}

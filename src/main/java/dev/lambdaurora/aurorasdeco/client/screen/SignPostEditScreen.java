@@ -17,8 +17,10 @@
 
 package dev.lambdaurora.aurorasdeco.client.screen;
 
+import com.mojang.blaze3d.lighting.DiffuseLighting;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import dev.lambdaurora.aurorasdeco.block.entity.SignPostBlockEntity;
 import dev.lambdaurora.aurorasdeco.client.renderer.SignPostBlockEntityRenderer;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPackets;
@@ -26,16 +28,19 @@ import dev.lambdaurora.aurorasdeco.util.ColorUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.LightmapTextureManager;
+import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.SelectionManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.OrderedText;
+import net.minecraft.text.ScreenTexts;
 import net.minecraft.text.Style;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
 import org.lwjgl.glfw.GLFW;
@@ -59,7 +64,7 @@ public class SignPostEditScreen extends Screen {
 	private final String[] text;
 
 	public SignPostEditScreen(SignPostBlockEntity signPost) {
-		super(new TranslatableText("sign.edit"));
+		super(Text.translatable("sign.edit"));
 		var upSign = signPost.getUp();
 		var downSign = signPost.getDown();
 		this.text = new String[]{
@@ -119,7 +124,7 @@ public class SignPostEditScreen extends Screen {
 	}
 
 	@Override
-	public void onClose() {
+	public void closeScreen() {
 		this.finishEditing();
 	}
 
@@ -165,7 +170,7 @@ public class SignPostEditScreen extends Screen {
 		var upData = this.signPost.getUp();
 		var downData = this.signPost.getDown();
 
-		DiffuseLighting.disableGuiDepthLighting();
+		DiffuseLighting.setupFlatGuiLighting();
 		this.renderBackground(matrices);
 		drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 40, ColorUtil.TEXT_COLOR);
 		matrices.push();
@@ -185,7 +190,7 @@ public class SignPostEditScreen extends Screen {
 					LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
 
 		matrices.pop();
-		DiffuseLighting.enableGuiDepthLighting();
+		DiffuseLighting.setup3DGuiLighting();
 		super.render(matrices, mouseX, mouseY, delta);
 	}
 
@@ -228,9 +233,9 @@ public class SignPostEditScreen extends Screen {
 			var text = OrderedText.styledForwardsVisitedString(rowText, Style.EMPTY);
 			float x = -this.textRenderer.getWidth(text) / 2.f;
 			if (glowing) {
-				this.textRenderer.drawWithOutline(text, x, 0, color, backgroundColor, matrices.peek().getModel(), vertexConsumers, light);
+				this.textRenderer.drawWithOutline(text, x, 0, color, backgroundColor, matrices.peek().getPosition(), vertexConsumers, light);
 			} else {
-				this.textRenderer.draw(text, x, 0, color, false, matrices.peek().getModel(), vertexConsumers,
+				this.textRenderer.draw(text, x, 0, color, false, matrices.peek().getPosition(), vertexConsumers,
 						false, 0, light);
 			}
 
@@ -246,9 +251,9 @@ public class SignPostEditScreen extends Screen {
 					int cursorX = o + (int) x;
 					if (selectionStart >= rowText.length()) {
 						if (glowing) {
-							this.textRenderer.drawWithOutline(END_CURSOR, cursorX, 0, color, backgroundColor, matrices.peek().getModel(), vertexConsumers, light);
+							this.textRenderer.drawWithOutline(END_CURSOR, cursorX, 0, color, backgroundColor, matrices.peek().getPosition(), vertexConsumers, light);
 						} else {
-							this.textRenderer.draw(END_CURSOR, cursorX, 0, color, false, matrices.peek().getModel(), vertexConsumers,
+							this.textRenderer.draw(END_CURSOR, cursorX, 0, color, false, matrices.peek().getPosition(), vertexConsumers,
 									false, 0, light);
 						}
 						vertexConsumers.draw();
@@ -261,7 +266,7 @@ public class SignPostEditScreen extends Screen {
 				}
 
 				if (selectionStart != selectionEnd) {
-					var model = matrices.peek().getModel();
+					var model = matrices.peek().getPosition();
 
 					int start = Math.min(selectionStart, selectionEnd);
 					int end = Math.max(selectionStart, selectionEnd);
@@ -270,7 +275,7 @@ public class SignPostEditScreen extends Screen {
 					int startX = Math.min(v, w) - 1;
 					int endX = Math.max(v, w);
 					Tessellator tessellator = Tessellator.getInstance();
-					BufferBuilder buffer = tessellator.getBuffer();
+					BufferBuilder buffer = tessellator.getBufferBuilder();
 					RenderSystem.setShader(GameRenderer::getPositionColorShader);
 					RenderSystem.disableTexture();
 					RenderSystem.enableColorLogicOp();
@@ -280,8 +285,7 @@ public class SignPostEditScreen extends Screen {
 					buffer.vertex(model, endX, 9.f, 0.f).color(0, 0, 255, 255).next();
 					buffer.vertex(model, endX, -2.f, 0.f).color(0, 0, 255, 255).next();
 					buffer.vertex(model, startX, -2.f, 0.f).color(0, 0, 255, 255).next();
-					buffer.end();
-					BufferRenderer.draw(buffer);
+					BufferRenderer.draw(buffer.end());
 					RenderSystem.disableColorLogicOp();
 					RenderSystem.enableTexture();
 				}

@@ -31,11 +31,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.tag.FluidTags;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
@@ -44,10 +45,7 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Represents duckweed as a block.
@@ -142,14 +140,13 @@ public final class DuckweedBlock extends Block implements FluidFillable, Fertili
 	}
 
 	@Override
-	public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) {
+	public boolean canGrow(World world, RandomGenerator random, BlockPos pos, BlockState state) {
 		return true;
 	}
 
 	@Override
-	public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
-		var list = new ArrayList<>(AuroraUtil.HORIZONTAL_DIRECTIONS);
-		Collections.shuffle(list, random);
+	public void grow(ServerWorld world, RandomGenerator random, BlockPos pos, BlockState state) {
+		var list = Util.toShuffledList(AuroraUtil.HORIZONTAL_DIRECTIONS.stream(), random);
 
 		for (var direction : list) {
 			BlockPos neighborPos = pos.offset(direction);
@@ -166,6 +163,6 @@ public final class DuckweedBlock extends Block implements FluidFillable, Fertili
 	@Override
 	public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
 		super.appendTooltip(stack, world, tooltip, options);
-		tooltip.add(new LiteralText("Lemnoideae").formatted(Formatting.GOLD, Formatting.ITALIC));
+		tooltip.add(Text.literal("Lemnoideae").formatted(Formatting.GOLD, Formatting.ITALIC));
 	}
 }

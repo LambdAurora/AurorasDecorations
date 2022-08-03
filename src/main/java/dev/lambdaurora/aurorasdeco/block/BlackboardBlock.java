@@ -419,8 +419,10 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 		if (!state.get(Properties.WATERLOGGED) && fluidState.getFluid() == Fluids.WATER) {
 			boolean shouldEmitEvent = false;
 
+			var newState = state.with(Properties.WATERLOGGED, true);
+
 			if (!world.isClient()) {
-				world.setBlockState(pos, state.with(Properties.WATERLOGGED, true), Block.NOTIFY_ALL);
+				world.setBlockState(pos, newState, Block.NOTIFY_ALL);
 				world.scheduleFluidTick(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
 
 				var blackboard = this.getBlackboardEntity(world, pos);
@@ -433,7 +435,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 			}
 
 			if (shouldEmitEvent) {
-				world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos);
+				world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.create(newState));
 			}
 
 			return true;

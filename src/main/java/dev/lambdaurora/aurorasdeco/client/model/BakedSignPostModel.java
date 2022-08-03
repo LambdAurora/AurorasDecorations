@@ -33,11 +33,11 @@ import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockRenderView;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Random;
 import java.util.function.Supplier;
 
 /**
@@ -59,7 +59,7 @@ public class BakedSignPostModel extends ForwardingBakedModel {
 	}
 
 	@Override
-	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier,
+	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<RandomGenerator> randomSupplier,
 	                           RenderContext context) {
 		if (state.getBlock() instanceof SignPostBlock signPostBlock) {
 			((FabricBakedModel) this.wrapped).emitBlockQuads(blockView, signPostBlock.getFenceState(state), pos, randomSupplier, context);

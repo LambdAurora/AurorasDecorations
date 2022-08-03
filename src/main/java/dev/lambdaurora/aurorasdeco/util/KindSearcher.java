@@ -221,10 +221,16 @@ public class KindSearcher<I, O> {
 
 	public static final KindSearcher<ItemStack, StackEntry> LOG_SEARCHER = itemIdentifierSearcher(
 			entry -> {
-				if (entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof PillarBlock block
-						&& (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.NETHER_WOOD)) {
-					Identifier id = Registry.ITEM.getId(blockItem);
-					return !id.getPath().startsWith("stripped") && (id.getPath().endsWith("log") || id.getPath().endsWith("stem"));
+				if (entry.stack().getItem() instanceof BlockItem blockItem) {
+					if (blockItem.getBlock() instanceof PillarBlock block) {
+						Identifier id = Registry.ITEM.getId(blockItem);
+
+						if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.NETHER_WOOD) {
+							return !id.getPath().startsWith("stripped") && (id.getPath().endsWith("log") || id.getPath().endsWith("stem"));
+						} else if (block.getDefaultState().getMaterial() == Material.SOIL) {
+							return !id.getPath().startsWith("stripped") && id.getPath().endsWith("roots");
+						}
+					} else return blockItem.getBlock() instanceof MangroveRootsBlock;
 				}
 
 				return false;

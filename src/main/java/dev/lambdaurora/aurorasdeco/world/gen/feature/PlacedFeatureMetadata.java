@@ -41,7 +41,7 @@ import java.util.function.Predicate;
 public class PlacedFeatureMetadata {
 	private final RegistryKey<PlacedFeature> key;
 	private final PlacedFeature feature;
-	private final List<Biome.Category> allowedCategories = new ArrayList<>();
+	private final List<TagKey<Biome>> allowedCategoryTags = new ArrayList<>();
 	private final List<Biome.Precipitation> allowedPrecipitations = new ArrayList<>();
 	private final List<RegistryKey<ConfiguredFeature<?, ?>>> allowedNeighborFeatures = new ArrayList<>();
 	private TagKey<Biome> allowedTag;
@@ -61,19 +61,30 @@ public class PlacedFeatureMetadata {
 		return this.feature;
 	}
 
-	public PlacedFeatureMetadata addAllowedBiomeCategory(Biome.Category... categories) {
-		this.allowedCategories.addAll(Arrays.asList(categories));
+	@SafeVarargs
+	public final PlacedFeatureMetadata addAllowedBiomeCategoryTag(TagKey<Biome>... categories) {
+		this.allowedCategoryTags.addAll(Arrays.asList(categories));
 		return this;
 	}
 
-	public Biome.Category[] getAllowedBiomeCategories() {
-		return this.allowedCategories.toArray(Biome.Category[]::new);
-	}
-
 	public Predicate<BiomeSelectionContext> getAllowedBiomeCategoriesPredicate() {
-		if (this.allowedCategories.isEmpty())
+		if (this.allowedCategoryTags.isEmpty())
 			return biomeSelectionContext -> true;
-		return BiomeSelectors.categories(this.getAllowedBiomeCategories());
+
+		Predicate<BiomeSelectionContext> last = null;
+
+		for (var tag : this.allowedCategoryTags) {
+			var p = BiomeSelectors.isIn(tag);
+
+			if (last == null) {
+				last = p;
+				continue;
+			}
+
+			last = last.or(p);
+		}
+
+		return last;
 	}
 
 	public PlacedFeatureMetadata addAllowedPrecipitation(Biome.Precipitation... precipitations) {
@@ -131,7 +142,7 @@ public class PlacedFeatureMetadata {
 	}
 
 	public Predicate<BiomeSelectionContext> getBiomeSelectionPredicate() {
-		if (this.allowedCategories.isEmpty() && this.allowedPrecipitations.isEmpty() && this.allowedNeighborFeatures.isEmpty())
+		if (this.allowedCategoryTags.isEmpty() && this.allowedPrecipitations.isEmpty() && this.allowedNeighborFeatures.isEmpty())
 			return this.getTagPredicate();
 
 		return this.getAllowedBiomeCategoriesPredicate()

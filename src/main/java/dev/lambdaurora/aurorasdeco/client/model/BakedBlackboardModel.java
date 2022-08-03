@@ -32,9 +32,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.BlockRenderView;
 
-import java.util.Random;
 import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
@@ -49,7 +49,7 @@ public class BakedBlackboardModel extends ForwardingBakedModel {
 	}
 
 	@Override
-	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<RandomGenerator> randomSupplier, RenderContext context) {
 		super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 
 		this.emitBlockMesh(blockView, pos, context);
@@ -63,7 +63,7 @@ public class BakedBlackboardModel extends ForwardingBakedModel {
 	}
 
 	@Override
-	public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+	public void emitItemQuads(ItemStack stack, Supplier<RandomGenerator> randomSupplier, RenderContext context) {
 		super.emitItemQuads(stack, randomSupplier, context);
 
 		var nbt = BlockItem.getBlockEntityNbtFromStack(stack);

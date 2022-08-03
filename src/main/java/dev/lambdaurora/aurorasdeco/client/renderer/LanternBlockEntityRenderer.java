@@ -30,13 +30,14 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
-
-import java.util.Random;
+import net.minecraft.util.random.LegacySimpleRandom;
+import net.minecraft.util.random.RandomGenerator;
+import net.minecraft.util.random.RandomSeed;
 
 @Environment(EnvType.CLIENT)
 public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<LanternBlockEntity> {
 	private final MinecraftClient client = MinecraftClient.getInstance();
-	private final Random random = new Random();
+	private final RandomGenerator random = new LegacySimpleRandom(RandomSeed.generateUniqueSeed());
 
 	public LanternBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
 	}

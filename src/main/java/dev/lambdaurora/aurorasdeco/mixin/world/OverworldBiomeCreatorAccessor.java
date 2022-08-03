@@ -33,10 +33,9 @@ public interface OverworldBiomeCreatorAccessor {
 		throw new IllegalStateException("Mixin injection failed");
 	}
 
-	@Invoker
+	@Invoker("method_39152")
 	static Biome invokeCreateBiome(
 			Biome.Precipitation precipitation,
-			Biome.Category category,
 			float temperature,
 			float downfall,
 			SpawnSettings.Builder spawnSettings,

@@ -23,6 +23,7 @@
   "block.aurorasdeco.stripped_azalea_log": "Stripped Azalea Log",
   "block.aurorasdeco.stripped_azalea_wood": "Stripped Azalea Wood",
   "item.aurorasdeco.azalea_boat": "Azalea Boat",
+  "item.aurorasdeco.azalea_chest_boat": "Azalea Boat with Chest",
 
   "block.aurorasdeco.jacaranda_button": "Jacaranda Button",
   "block.aurorasdeco.jacaranda_door": "Jacaranda Door",
@@ -43,6 +44,7 @@
   "block.aurorasdeco.stripped_jacaranda_log": "Stripped Jacaranda Log",
   "block.aurorasdeco.stripped_jacaranda_wood": "Stripped Jacaranda Wood",
   "item.aurorasdeco.jacaranda_boat": "Jacaranda Boat",
+  "item.aurorasdeco.jacaranda_chest_boat": "Jacaranda Boat with Chest",
 
   "block.aurorasdeco.big_flower_pot": "Big Flower Pot",
   "block.aurorasdeco.brazier": "Brazier",
@@ -200,6 +202,7 @@
   "aurorasdeco.wood_type.jungle": "Jungle",
   "aurorasdeco.wood_type.acacia": "Acacia",
   "aurorasdeco.wood_type.dark_oak": "Dark Oak",
+  "aurorasdeco.wood_type.mangrove": "Mangrove",
   "aurorasdeco.wood_type.azalea": "Azalea",
   "aurorasdeco.wood_type.flowering_azalea": "Flowering Azalea",
   "aurorasdeco.wood_type.mushroom": "Mushroom",

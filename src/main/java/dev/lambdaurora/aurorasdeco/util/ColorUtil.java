@@ -17,11 +17,11 @@
 
 package dev.lambdaurora.aurorasdeco.util;
 
+import com.mojang.blaze3d.texture.NativeImage;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
-import net.minecraft.client.texture.NativeImage;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Range;
 

@@ -53,6 +53,7 @@ import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -65,7 +66,6 @@ import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.Map;
-import java.util.Random;
 
 /**
  * Represents a wall lantern.
@@ -287,7 +287,7 @@ public class WallLanternBlock<L extends LanternBlock> extends BlockWithEntity im
 			if (!blockEntity.isColliding()) {
 				world.playSound(null, pos, AurorasDecoSounds.LANTERN_SWING_SOUND_EVENT, SoundCategory.BLOCKS,
 						2.f, 1.f);
-				world.emitGameEvent(entity, GameEvent.RING_BELL, pos);
+				world.emitGameEvent(entity, GameEvent.BLOCK_CHANGE, pos);
 			}
 
 			if (!collision)
@@ -396,7 +396,7 @@ public class WallLanternBlock<L extends LanternBlock> extends BlockWithEntity im
 	/* Visual */
 
 	@Override
-	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+	public void randomDisplayTick(BlockState state, World world, BlockPos pos, RandomGenerator random) {
 		this.getLanternBlock().randomDisplayTick(this.getLanternState(state), world, pos, random);
 	}
 

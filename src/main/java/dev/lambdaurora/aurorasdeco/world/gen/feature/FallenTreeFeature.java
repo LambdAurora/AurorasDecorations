@@ -25,13 +25,13 @@ import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.util.FeatureContext;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Represents a fallen tree.
@@ -84,7 +84,7 @@ public class FallenTreeFeature extends Feature<FallenTreeFeatureConfig> {
 		);
 	}
 
-	private boolean generate(StructureWorldAccess world, Random random, BlockPos origin, int length, Direction direction,
+	private boolean generate(StructureWorldAccess world, RandomGenerator random, BlockPos origin, int length, Direction direction,
 	                         FallenTreeFeatureConfig config) {
 		Direction.Axis axis = direction.getAxis();
 		BlockPos.Mutable pos = origin.mutableCopy();

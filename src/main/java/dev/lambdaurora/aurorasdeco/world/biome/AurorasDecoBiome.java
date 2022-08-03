@@ -45,8 +45,6 @@ public abstract class AurorasDecoBiome {
 		return this.key;
 	}
 
-	public abstract Biome.Category getCategory();
-
 	public Biome.Precipitation getPrecipitation() {
 		return Biome.Precipitation.RAIN;
 	}
@@ -80,7 +78,6 @@ public abstract class AurorasDecoBiome {
 
 		return OverworldBiomeCreatorAccessor.invokeCreateBiome(
 				this.getPrecipitation(),
-				this.getCategory(),
 				this.getTemperature(),
 				this.getDownfall(),
 				spawnSettings,

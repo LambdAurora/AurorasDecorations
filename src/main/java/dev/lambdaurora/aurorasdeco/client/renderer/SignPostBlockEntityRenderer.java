@@ -17,6 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.client.renderer;
 
+import com.mojang.blaze3d.texture.NativeImage;
 import dev.lambdaurora.aurorasdeco.block.entity.SignPostBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -27,7 +28,6 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.OrderedText;
@@ -109,9 +109,9 @@ public class SignPostBlockEntityRenderer implements BlockEntityRenderer<SignPost
 			var text = list.isEmpty() ? OrderedText.EMPTY : list.get(0);
 			float x = -this.textRenderer.getWidth(text) / 2.f;
 			if (shouldRenderGlow) {
-				this.textRenderer.drawWithOutline(text, x, 0, color, backgroundColor, matrices.peek().getModel(), vertexConsumers, textLight);
+				this.textRenderer.drawWithOutline(text, x, 0, color, backgroundColor, matrices.peek().getPosition(), vertexConsumers, textLight);
 			} else {
-				this.textRenderer.draw(text, x, 0, color, false, matrices.peek().getModel(), vertexConsumers,
+				this.textRenderer.draw(text, x, 0, color, false, matrices.peek().getPosition(), vertexConsumers,
 						false, 0, textLight);
 			}
 		}

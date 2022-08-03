@@ -24,10 +24,9 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.LanternBlock;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.World;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
-
-import java.util.Random;
 
 /**
  * Represents an amethyst lantern.
@@ -48,7 +47,7 @@ public class AmethystLanternBlock extends LanternBlock {
 	/* Visual */
 
 	@Override
-	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+	public void randomDisplayTick(BlockState state, World world, BlockPos pos, RandomGenerator random) {
 		if (random.nextBoolean()) {
 			double x = pos.getX() + random.nextFloat();
 			double y = pos.getY() + random.nextFloat();

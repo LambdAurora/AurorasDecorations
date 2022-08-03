@@ -21,8 +21,9 @@ import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
+import org.quiltmc.qsl.block.entity.api.QuiltBlockEntity;
 
-public class BlackboardPressBlockEntity extends BlockEntity implements BlockEntityHelper {
+public class BlackboardPressBlockEntity extends BlockEntity implements QuiltBlockEntity {
 	public BlackboardPressBlockEntity(BlockPos blockPos, BlockState blockState) {
 		super(AurorasDecoRegistry.BLACKBOARD_PRESS_BLOCK_ENTITY, blockPos, blockState);
 	}

@@ -32,7 +32,7 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
@@ -122,7 +122,7 @@ public final class SawmillBlock extends Block {
 	public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
 		return new SimpleNamedScreenHandlerFactory((syncId, playerInventory, player) ->
 				new SawmillScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(world, pos)),
-				new TranslatableText(this.getTranslationKey()));
+				Text.translatable(this.getTranslationKey()));
 	}
 
 	static {

@@ -71,14 +71,20 @@ public class RestModelManager {
 		var benchBlock = Registry.BLOCK.get(AurorasDeco.id("bench/" + pathName));
 		var benchRestId = AurorasDeco.id("blockstates/bench/" + pathName + "_rest.json");
 		if (benchBlock != Blocks.AIR) {
-			try (var resource = resourceManager.getResource(benchRestId)) {
-				var stateFactory = deserializationContext.getStateFactory();
-				deserializationContext.setStateFactory(benchBlock.getStateManager());
-				var map = ModelVariantMap.fromJson(deserializationContext, new InputStreamReader(resource.getInputStream()));
-				benchRest = map.getMultipartModel();
-				deserializationContext.setStateFactory(stateFactory);
-			} catch (IOException e) {
-				AurorasDeco.warn("Failed to load the bench rest models for the {} wood type.", woodType, e);
+			var resource = resourceManager.getResource(benchRestId);
+
+			if (resource.isEmpty()) {
+				AurorasDeco.warn("Failed to load the bench rest models for the {} wood type. Could not locate the model.", woodType);
+			} else {
+				try (var reader = new InputStreamReader(resource.get().open())) {
+					var stateFactory = deserializationContext.getStateFactory();
+					deserializationContext.setStateFactory(benchBlock.getStateManager());
+					var map = ModelVariantMap.fromJson(deserializationContext, reader);
+					benchRest = map.getMultipartModel();
+					deserializationContext.setStateFactory(stateFactory);
+				} catch (IOException e) {
+					AurorasDeco.warn("Failed to load the bench rest models for the {} wood type.", woodType, e);
+				}
 			}
 		}
 

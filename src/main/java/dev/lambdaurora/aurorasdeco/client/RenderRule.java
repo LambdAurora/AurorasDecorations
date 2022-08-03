@@ -65,7 +65,7 @@ public record RenderRule(List<Model> models) {
 			Model model = this.models.get(0);
 			return model.test(stack, state) ? model : null;
 		} else {
-			final int i = Math.abs(Objects.hash(stack.getCount(), stack.getName().asString(), seed) % this.models.size());
+			final int i = Math.abs(Objects.hash(stack.getCount(), stack.getName().getString(), seed) % this.models.size());
 			int actualI = i;
 
 			Model model;
@@ -121,10 +121,9 @@ public record RenderRule(List<Model> models) {
 		ITEM_RULES.clear();
 		TAG_RULES.clear();
 
-		manager.findResources("aurorasdeco_render_rules", path -> path.endsWith(".json")).forEach(id -> {
-			try {
-				var resource = manager.getResource(id);
-				var element = JsonParser.parseReader(new InputStreamReader(resource.getInputStream()));
+		manager.findResources("aurorasdeco_render_rules", path -> path.getPath().endsWith(".json")).forEach((id, resource) -> {
+			try (var reader = new InputStreamReader(resource.open())) {
+				var element = JsonParser.parseReader(reader);
 				if (element.isJsonObject()) {
 					var root = element.getAsJsonObject();
 

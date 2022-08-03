@@ -21,6 +21,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
+import com.mojang.blaze3d.texture.NativeImage;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.*;
 import dev.lambdaurora.aurorasdeco.mixin.client.NativeImageAccessor;
@@ -28,7 +29,6 @@ import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
 import dev.lambdaurora.aurorasdeco.resource.datagen.LangBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.block.Material;
-import net.minecraft.client.texture.NativeImage;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.resource.pack.AbstractFileResourcePack;
@@ -48,7 +48,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -225,12 +228,13 @@ public class AurorasDecoPack implements ResourcePack {
 	}
 
 	@Override
-	public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix, int maxDepth,
-	                                            Predicate<String> pathFilter) {
+	public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix,
+	                                            Predicate<Identifier> pathFilter) {
 		var start = type.getDirectory() + "/" + namespace + "/" + prefix;
 		return this.resources.keySet().stream()
-				.filter(s -> s.startsWith(start) && pathFilter.test(s))
+				.filter(s -> s.startsWith(start))
 				.map(AurorasDecoPack::fromPath)
+				.filter(pathFilter)
 				.collect(Collectors.toList());
 	}
 
@@ -245,9 +249,8 @@ public class AurorasDecoPack implements ResourcePack {
 		return this.namespaces;
 	}
 
-	@Nullable
 	@Override
-	public <T> T parseMetadata(ResourceMetadataReader<T> metaReader) throws IOException {
+	public <T> @Nullable T parseMetadata(ResourceMetadataReader<T> metaReader) throws IOException {
 		InputStream inputStream = this.openRoot("pack.mcmeta");
 		Throwable error = null;
 

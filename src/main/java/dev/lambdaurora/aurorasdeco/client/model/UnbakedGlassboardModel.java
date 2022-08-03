@@ -82,23 +82,25 @@ public class UnbakedGlassboardModel extends UnbakedBlackboardModel {
 
 				if (block != Blocks.AIR) {
 					var resourceId = AurorasDeco.id("blockstates/" + identifier.getPath() + ".json");
+					var resource = resourceManager.getResource(resourceId);
 
-					try {
-						var resource = resourceManager.getResource(resourceId);
+					if (resource.isEmpty()) {
+						LOGGER.warn("Could not load glassboard model part (" + corner + ", " + type + "): could not locate the blockstate file.");
+					} else {
+						try (var reader = new InputStreamReader(resource.get().open())) {
 
-						var stateFactory = deserializationContext.getStateFactory();
-						deserializationContext.setStateFactory(block.getStateManager());
-						var map = ModelVariantMap.fromJson(deserializationContext, new InputStreamReader(resource.getInputStream()));
-						deserializationContext.setStateFactory(stateFactory);
+							var stateFactory = deserializationContext.getStateFactory();
+							deserializationContext.setStateFactory(block.getStateManager());
+							var map = ModelVariantMap.fromJson(deserializationContext, reader);
+							deserializationContext.setStateFactory(stateFactory);
 
-						map.getVariantMap().forEach((variant, model) -> modelConsumer.accept(
-								new ModelIdentifier(identifier.getNamespace(), identifier.getPath(), this.variant.replaceFirst("facing=\\w+", variant)),
-								model
-						));
-
-						resource.close();
-					} catch (IOException e) {
-						LOGGER.warn("Could not load glassboard model part (" + corner + ", " + type + "):", e);
+							map.getVariantMap().forEach((variant, model) -> modelConsumer.accept(
+									new ModelIdentifier(identifier.getNamespace(), identifier.getPath(), this.variant.replaceFirst("facing=\\w+", variant)),
+									model
+							));
+						} catch (IOException e) {
+							LOGGER.warn("Could not load glassboard model part (" + corner + ", " + type + "):", e);
+						}
 					}
 				}
 			}

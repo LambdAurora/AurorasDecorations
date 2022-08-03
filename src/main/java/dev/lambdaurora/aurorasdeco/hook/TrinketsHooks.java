@@ -77,7 +77,7 @@ public final class TrinketsHooks {
 			withHead.getHead().rotate(matrices);
 
 		HeadFeatureRenderer.translate(matrices, villager);
-		MinecraftClient.getInstance().getHeldItemRenderer().renderItem(entity, stack, ModelTransformation.Mode.HEAD,
+		MinecraftClient.getInstance().getEntityRenderDispatcher().getHeldItemRenderer().renderItem(entity, stack, ModelTransformation.Mode.HEAD,
 				false,
 				matrices, vertexConsumers, light);
 	}

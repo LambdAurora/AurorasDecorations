@@ -19,7 +19,8 @@ package dev.lambdaurora.aurorasdeco.block;
 
 import com.google.common.collect.ImmutableMap;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.mixin.PointOfInterestTypeAccessor;
+import dev.lambdaurora.aurorasdeco.accessor.PointOfInterestTypeExtensions;
+import dev.lambdaurora.aurorasdeco.mixin.PointOfInterestTypesAccessor;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BedPart;
@@ -35,7 +36,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
@@ -44,6 +45,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -57,7 +59,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * Represents a sleeping bag.
@@ -182,11 +184,11 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
 					world.addParticle(ParticleTypes.ANGRY_VILLAGER, x, y, z, 0.f, 0.f, 0.f);
 				}
 
-				player.sendMessage(new TranslatableText("lore.aurorasdeco.not_sleepy.place"), false);
+				player.sendMessage(Text.translatable("lore.aurorasdeco.not_sleepy.place"), false);
 				return ActionResult.SUCCESS;
 			} else if (state.get(OCCUPIED)) {
 				if (!this.isFree(world, pos)) {
-					player.sendMessage(new TranslatableText("block.minecraft.bed.occupied"), true);
+					player.sendMessage(Text.translatable("block.minecraft.bed.occupied"), true);
 				}
 
 				return ActionResult.SUCCESS;
@@ -255,8 +257,8 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
 		}
 	}
 
-	public static void forEach(Consumer<SleepingBagBlock> sleepingBagConsumer) {
-		SLEEPING_BAGS.forEach(sleepingBagConsumer);
+	public static Stream<SleepingBagBlock> stream() {
+		return SLEEPING_BAGS.stream();
 	}
 
 	public static SleepingBagBlock register(DyeColor color) {
@@ -269,17 +271,22 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
 		return block;
 	}
 
-	public static void appendToPointOfInterest(PointOfInterestType poiType) {
-		var states = ((PointOfInterestTypeAccessor) poiType).getBlockStates();
-		SleepingBagBlock.forEach(sleepingBag -> {
-			sleepingBag.getStateManager().getStates().stream()
-					.filter(state -> state.get(SleepingBagBlock.PART) == BedPart.HEAD)
-					.forEach(state -> {
-						states.add(state);
-						PointOfInterestTypeAccessor.aurorasdeco$getBlockStateToPointOfInterestType()
-								.putIfAbsent(state, poiType);
-					});
+	public static void appendToPointOfInterest(RegistryKey<PointOfInterestType> poiType) {
+		var type = Registry.POINT_OF_INTEREST_TYPE.getHolder(poiType);
+
+		if (type.isEmpty()) {
+			return;
+		}
+
+		Stream<BlockState> states = SleepingBagBlock.stream().flatMap(sleepingBag -> {
+			return sleepingBag.getStateManager().getStates().stream()
+					.filter(state -> state.get(SleepingBagBlock.PART) == BedPart.HEAD);
 		});
+
+		((PointOfInterestTypeExtensions) (Object) type.get().value()).aurorasdeco$addBlockStates(states
+				.peek(state -> PointOfInterestTypesAccessor.aurorasdeco$getStateToType().putIfAbsent(state, type.get()))
+				.toList()
+		);
 	}
 
 	static {

@@ -22,8 +22,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-
-import java.util.Random;
+import net.minecraft.util.random.RandomGenerator;
 
 public class AuroraBlock extends Block {
 	protected RandomTickComponent tickComponent;
@@ -40,7 +39,7 @@ public class AuroraBlock extends Block {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, RandomGenerator random) {
 		if (this.tickComponent != null) {
 			this.tickComponent.randomTick(state, world, pos, random);
 		}

@@ -26,7 +26,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.HopperScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
@@ -72,7 +71,7 @@ public abstract class FilteredHopperBlockEntity extends HopperBlockEntity implem
 
 	@Override
 	protected Text getContainerName() {
-		return new TranslatableText(this.getCachedState().getBlock().getTranslationKey());
+		return Text.translatable(this.getCachedState().getBlock().getTranslationKey());
 	}
 
 	@Override

@@ -33,12 +33,12 @@ import net.minecraft.loot.context.LootContext;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
 import java.util.Map;
-import java.util.Random;
 import java.util.function.Consumer;
 
 /**
@@ -107,7 +107,7 @@ public class BigPottedProxyBlock extends BigFlowerPotBlock {
 	}
 
 	@Override
-	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, RandomGenerator random) {
 		this.getPlant().randomTick(state, world, pos, random);
 	}
 

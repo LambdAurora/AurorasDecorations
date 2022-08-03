@@ -27,9 +27,9 @@ import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachedBlockView;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.BlockRenderView;
 
-import java.util.Random;
 import java.util.function.Supplier;
 
 /**
@@ -54,7 +54,7 @@ public class BakedBenchModel extends ForwardingBakedModel {
 	}
 
 	@Override
-	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<RandomGenerator> randomSupplier, RenderContext context) {
 		super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 
 		var attachment = ((RenderAttachedBlockView) blockView).getBlockEntityRenderAttachment(pos);

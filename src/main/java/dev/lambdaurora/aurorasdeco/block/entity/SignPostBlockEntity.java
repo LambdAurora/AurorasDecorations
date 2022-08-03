@@ -27,7 +27,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
@@ -118,13 +117,13 @@ public class SignPostBlockEntity extends BasicBlockEntity {
 				if (upText != null) {
 					var sign = this.getUp();
 					if (sign != null)
-						sign.setText(new LiteralText(upText));
+						sign.setText(Text.literal(upText));
 				}
 
 				if (downText != null) {
 					var sign = this.getDown();
 					if (sign != null)
-						sign.setText(new LiteralText(downText));
+						sign.setText(Text.literal(downText));
 				}
 
 				this.editor = null;
@@ -183,7 +182,7 @@ public class SignPostBlockEntity extends BasicBlockEntity {
 		} catch (Exception ignored) {
 		}
 
-		return LiteralText.EMPTY;
+		return Text.empty();
 	}
 
 	private Sign getSignFromNbt(NbtCompound nbt) {

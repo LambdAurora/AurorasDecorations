@@ -80,16 +80,16 @@ public class BlackboardTexture {
 		var vertices = vertexConsumers.getBuffer(this.renderLayer);
 		vertices.vertex(model, mirror ? 1.f : 0.f, 1.f, 0.f)
 				.color(255, 255, 255, 255)
-				.texture(mirror ? 1.f : 0.f, 1.f).light(light).next();
+				.uv(mirror ? 1.f : 0.f, 1.f).light(light).next();
 		vertices.vertex(model, mirror ? 0.f : 1.f, 1.f, 0.f)
 				.color(255, 255, 255, 255)
-				.texture(mirror ? 0.f : 1.f, 1.f).light(light).next();
+				.uv(mirror ? 0.f : 1.f, 1.f).light(light).next();
 		vertices.vertex(model, mirror ? 0.f : 1.f, 0.f, 0.f)
 				.color(255, 255, 255, 255)
-				.texture(mirror ? 0.f : 1.f, 0.f).light(light).next();
+				.uv(mirror ? 0.f : 1.f, 0.f).light(light).next();
 		vertices.vertex(model, mirror ? 1.f : 0.f, 0.f, 0.f)
 				.color(255, 255, 255, 255)
-				.texture(mirror ? 1.f : 0.f, 0.f).light(light).next();
+				.uv(mirror ? 1.f : 0.f, 0.f).light(light).next();
 	}
 
 	public void update(Blackboard blackboard) {

@@ -17,35 +17,29 @@
 
 package dev.lambdaurora.aurorasdeco.mixin;
 
-import com.google.common.collect.ImmutableSet;
+import dev.lambdaurora.aurorasdeco.accessor.PointOfInterestTypeExtensions;
 import net.minecraft.block.BlockState;
 import net.minecraft.world.poi.PointOfInterestType;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 @Mixin(PointOfInterestType.class)
-public class PointOfInterestTypeMixin {
+public class PointOfInterestTypeMixin implements PointOfInterestTypeExtensions {
 	@Mutable
 	@Shadow
 	@Final
 	private Set<BlockState> blockStates;
 
-	@Inject(
-			method = "<init>(Ljava/lang/String;Ljava/util/Set;II)V",
-			at = @At("RETURN")
-	)
-	private void onInit(String id, Set<BlockState> blockStates, int ticketCount, int searchDistance, CallbackInfo ci) {
-		if (id.equals("home") && blockStates instanceof ImmutableSet) {
-			// We need this one to be mutable.
-			this.blockStates = new HashSet<>(blockStates);
-		}
+	@Override
+	public void aurorasdeco$addBlockStates(Collection<BlockState> states) {
+		var set = new HashSet<>(this.blockStates);
+		set.addAll(states);
+		this.blockStates = Set.copyOf(set);
 	}
 }

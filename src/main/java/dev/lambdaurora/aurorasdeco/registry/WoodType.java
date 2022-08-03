@@ -330,24 +330,24 @@ public final class WoodType {
 		}, (resourceManager, component) -> {
 			var componentId = component.id();
 			var texture = getBetterNetherEndPaths(component.texture(), false);
-			if (resourceManager.containsResource(AuroraUtil.toAbsoluteTexturesId(texture)))
+			if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(texture)).isPresent())
 				return texture;
 			else {
 				// For mods that don't use standard texture paths like Promenade
 				var sideId = new Identifier(componentId.getNamespace(), "block/" + componentId.getPath() + "/side");
-				if (resourceManager.containsResource(AuroraUtil.toAbsoluteTexturesId(sideId)))
+				if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(sideId)).isPresent())
 					return sideId;
 			}
 			return texture;
 		}, (resourceManager, component) -> {
 			var componentId = component.id();
 			var texture = getBetterNetherEndPaths(component.topTexture(), true);
-			if (resourceManager.containsResource(AuroraUtil.toAbsoluteTexturesId(texture)))
+			if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(texture)).isPresent())
 				return texture;
 			else {
 				// For mods that don't use standard texture paths like Promenade
 				var topId = new Identifier(componentId.getNamespace(), "block/" + componentId.getPath() + "/top");
-				if (resourceManager.containsResource(AuroraUtil.toAbsoluteTexturesId(topId)))
+				if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(topId)).isPresent())
 					return topId;
 			}
 			return texture;

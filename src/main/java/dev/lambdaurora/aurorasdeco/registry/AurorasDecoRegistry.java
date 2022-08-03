@@ -22,7 +22,6 @@ import com.terraformersmc.terraform.boat.api.TerraformBoatTypeRegistry;
 import com.terraformersmc.terraform.boat.api.item.TerraformBoatItemHelper;
 import com.terraformersmc.terraform.sign.block.TerraformSignBlock;
 import com.terraformersmc.terraform.sign.block.TerraformWallSignBlock;
-import com.terraformersmc.terraform.wood.block.TerraformTrapdoorBlock;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
 import dev.lambdaurora.aurorasdeco.accessor.ItemExtensions;
@@ -65,6 +64,7 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
+import net.minecraft.world.poi.PointOfInterestTypes;
 import org.quiltmc.qsl.block.entity.api.QuiltBlockEntityTypeBuilder;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
@@ -166,7 +166,7 @@ public final class AurorasDecoRegistry {
 			)
 	);
 	public static final TrapdoorBlock AZALEA_TRAPDOOR = registerWithItem("azalea_trapdoor",
-			new TerraformTrapdoorBlock(QuiltBlockSettings.copyOf(Blocks.OAK_TRAPDOOR).mapColor(AZALEA_PLANKS_BLOCK.getDefaultMapColor())),
+			new TrapdoorBlock(QuiltBlockSettings.copyOf(Blocks.OAK_TRAPDOOR).mapColor(AZALEA_PLANKS_BLOCK.getDefaultMapColor())),
 			new QuiltItemSettings().group(ItemGroup.REDSTONE),
 			DerivedBlockItem::trapdoor
 	);
@@ -175,10 +175,13 @@ public final class AurorasDecoRegistry {
 	);
 
 	public static final Item AZALEA_BOAT_ITEM = TerraformBoatItemHelper.registerBoatItem(
-			id("azalea_boat"), AurorasDecoRegistry::provideAzaleaBoatType
+			id("azalea_boat"), AurorasDecoRegistry::provideAzaleaBoatType, false
+	);
+	public static final Item AZALEA_CHEST_BOAT_ITEM = TerraformBoatItemHelper.registerBoatItem(
+			id("azalea_chest_boat"), AurorasDecoRegistry::provideAzaleaBoatType, true
 	);
 	public static final TerraformBoatType AZALEA_BOAT_TYPE = Registry.register(TerraformBoatTypeRegistry.INSTANCE, id("azalea"),
-			new TerraformBoatType.Builder().item(AZALEA_BOAT_ITEM).build()
+			new TerraformBoatType.Builder().item(AZALEA_BOAT_ITEM).chestItem(AZALEA_CHEST_BOAT_ITEM).build()
 	);
 
 	public static final SignItem AZALEA_SIGN_ITEM = registerItem("azalea_sign",
@@ -253,10 +256,13 @@ public final class AurorasDecoRegistry {
 	);
 
 	public static final Item JACARANDA_BOAT_ITEM = TerraformBoatItemHelper.registerBoatItem(
-			id("jacaranda_boat"), AurorasDecoRegistry::provideJacarandaBoatType
+			id("jacaranda_boat"), AurorasDecoRegistry::provideJacarandaBoatType, false
+	);
+	public static final Item JACARANDA_CHEST_BOAT_ITEM = TerraformBoatItemHelper.registerBoatItem(
+			id("jacaranda_chest_boat"), AurorasDecoRegistry::provideJacarandaBoatType, true
 	);
 	public static final TerraformBoatType JACARANDA_BOAT_TYPE = Registry.register(TerraformBoatTypeRegistry.INSTANCE, id("jacaranda"),
-			new TerraformBoatType.Builder().item(JACARANDA_BOAT_ITEM).build()
+			new TerraformBoatType.Builder().item(JACARANDA_BOAT_ITEM).chestItem(JACARANDA_BOAT_ITEM).build()
 	);
 
 	public static final SignItem JACARANDA_SIGN_ITEM = registerItem("jacaranda_sign",
@@ -745,7 +751,7 @@ public final class AurorasDecoRegistry {
 			registerItem("sleeping_bag/" + block.getColor().getName(),
 					new BlockItem(block, new QuiltItemSettings().maxCount(1).group(ItemGroup.DECORATIONS)));
 		}
-		SleepingBagBlock.appendToPointOfInterest(PointOfInterestType.HOME);
+		SleepingBagBlock.appendToPointOfInterest(PointOfInterestTypes.HOME);
 
 		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_LOG_BLOCK, 5, 5);
 		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_WOOD_BLOCK, 5, 5);

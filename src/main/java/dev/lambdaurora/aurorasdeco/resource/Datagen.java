@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.resource;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.mojang.blaze3d.texture.NativeImage;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.*;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
@@ -38,7 +39,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
-import net.minecraft.client.texture.NativeImage;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
@@ -57,6 +57,7 @@ import org.quiltmc.qsl.recipe.api.builder.VanillaRecipeBuilders;
 import org.quiltmc.qsl.recipe.api.serializer.QuiltRecipeSerializer;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -540,7 +541,7 @@ public final class Datagen {
 			Datagen.registerBetterGrassLayer(id, HangingFlowerPotBlock.BETTER_GRASS_DATA);
 		});
 
-		SleepingBagBlock.forEach(sleepingBag -> {
+		SleepingBagBlock.stream().forEach(sleepingBag -> {
 			var color = sleepingBag.getColor();
 			var builder = blockStateBuilder(sleepingBag);
 
@@ -664,14 +665,15 @@ public final class Datagen {
 	}
 
 	private static void generateDirectionalSignsClientData(ResourceManager resourceManager, LangBuilder langBuilder) {
-		NativeImage oakTexture = null;
-		try (var resource = resourceManager.getResource(SignPostItem.ABSOLUTE_OAK_SIGN_POST_TEXTURE)) {
-			oakTexture = NativeImage.read(resource.getInputStream());
-		} catch (IOException e) {
-			LOGGER.error("Cannot read the default texture of the directional sign.", e);
-		}
-
-		final var defaultTexture = oakTexture;
+		final NativeImage defaultTexture = resourceManager.getResource(SignPostItem.ABSOLUTE_OAK_SIGN_POST_TEXTURE)
+				.map(resource1 -> {
+					try (InputStream is = resource1.open()) {
+						return NativeImage.read(is);
+					} catch (IOException e1) {
+						LOGGER.error("Cannot read the default texture of the directional sign.", e1);
+						return null;
+					}
+				}).orElse(null);
 		final var defaultPalette = ColorUtil.getPaletteFromImage(defaultTexture);
 
 		SignPostItem.stream().forEach(item -> {
@@ -691,30 +693,36 @@ public final class Datagen {
 
 			var planksTextureId = planks.texture();
 			var texturePath = new Identifier(planksTextureId.getNamespace(), "textures/" + planksTextureId.getPath() + ".png");
-			try (var resource = resourceManager.getResource(texturePath)) {
-				var image = NativeImage.read(resource.getInputStream());
+			var resource = resourceManager.getResource(texturePath);
 
-				var woodPalette = ColorUtil.getPaletteFromImage(image, 8);
-				var outputImage = new NativeImage(defaultTexture.getWidth(), defaultTexture.getHeight(), true);
+			if (resource.isPresent()) {
+				try (InputStream is = resource.get().open()) {
+					var image = NativeImage.read(is);
 
-				for (int y = 0; y < defaultTexture.getHeight(); y++) {
-					for (int x = 0; x < defaultTexture.getWidth(); x++) {
-						var paletteIndex = defaultPalette.indexOf(defaultTexture.getPixelColor(x, y));
+					var woodPalette = ColorUtil.getPaletteFromImage(image, 8);
+					var outputImage = new NativeImage(defaultTexture.getWidth(), defaultTexture.getHeight(), true);
 
-						if (paletteIndex < 0)
-							continue;
-						else if (paletteIndex >= woodPalette.size())
-							paletteIndex = woodPalette.size() - 1;
+					for (int y = 0; y < defaultTexture.getHeight(); y++) {
+						for (int x = 0; x < defaultTexture.getWidth(); x++) {
+							var paletteIndex = defaultPalette.indexOf(defaultTexture.getPixelColor(x, y));
 
-						outputImage.setPixelColor(x, y, woodPalette.getInt(paletteIndex));
+							if (paletteIndex < 0)
+								continue;
+							else if (paletteIndex >= woodPalette.size())
+								paletteIndex = woodPalette.size() - 1;
+
+							outputImage.setPixelColor(x, y, woodPalette.getInt(paletteIndex));
+						}
 					}
-				}
 
-				image.close();
-				AurorasDecoClient.RESOURCE_PACK.putImage(textureId, outputImage);
-				outputImage.close();
-			} catch (IOException e) {
-				LOGGER.error("Cannot read the planks texture to generate the directional sign texture.", e);
+					image.close();
+					AurorasDecoClient.RESOURCE_PACK.putImage(textureId, outputImage);
+					outputImage.close();
+				} catch (IOException e) {
+					LOGGER.error("Cannot read the planks texture to generate the directional sign texture.", e);
+				}
+			} else {
+				LOGGER.error("Cannot read the planks texture to generate the directional sign texture: could not find the texture.");
 			}
 		});
 

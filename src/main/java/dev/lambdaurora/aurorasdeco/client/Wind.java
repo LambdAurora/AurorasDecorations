@@ -96,10 +96,10 @@ public class Wind {
 
 		DimensionType dimensionType = world.getDimension();
 
-		if (!dimensionType.isNatural() || dimensionType.hasCeiling()) {
+		if (!dimensionType.natural() || dimensionType.hasCeiling()) {
 			this.originalState = this.state;
 
-			if (dimensionType.isUltrawarm()) {
+			if (dimensionType.ultraWarm()) {
 				// Nether-like
 				this.state = State.WINDY;
 			} else {

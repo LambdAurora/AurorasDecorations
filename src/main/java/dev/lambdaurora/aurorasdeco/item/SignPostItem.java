@@ -26,7 +26,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.item.*;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
@@ -87,7 +86,7 @@ public class SignPostItem extends Item {
 
 	@Override
 	public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
-		if (this.isIn(group) || group == ItemGroup.SEARCH) {
+		if (this.isInGroup(group) || group == ItemGroup.SEARCH) {
 			stacks.add(SIGN_POST_KIND_SEARCHER.findLastOfGroup(stacks), new ItemStack(this));
 		}
 	}
@@ -123,7 +122,7 @@ public class SignPostItem extends Item {
 
 				var text = stack.hasCustomName()
 						? Text.Serializer.fromJson(stack.getSubNbt(ItemStack.DISPLAY_KEY).getString(ItemStack.NAME_KEY))
-						: LiteralText.EMPTY;
+						: Text.empty();
 				if (SignPostBlock.isUp(context.getHitPos().getY())) {
 					if (signPostBlockEntity.getUp() == null) {
 						signPostBlockEntity.putSignUp(this, text, 90 + r * -22.5f);

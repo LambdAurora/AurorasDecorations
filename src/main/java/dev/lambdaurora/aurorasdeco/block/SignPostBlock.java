@@ -41,7 +41,6 @@ import net.minecraft.item.*;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -50,6 +49,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.dynamic.GlobalPos;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -239,20 +239,16 @@ public class SignPostBlock extends BlockWithEntity {
 	}
 
 	private @Nullable BlockPos getLodestonePos(World world, NbtCompound nbt) {
-		boolean hasLodestonePos = nbt.contains(CompassItem.LODESTONE_POS_KEY);
-		boolean hasLodestoneDimension = nbt.contains(CompassItem.LODESTONE_DIMENSION_KEY);
-		if (hasLodestonePos && hasLodestoneDimension) {
-			var lodestoneDimension = CompassItem.getLodestoneDimension(nbt);
-			if (lodestoneDimension.isPresent() && world.getRegistryKey() == lodestoneDimension.get()) {
-				return NbtHelper.toBlockPos(nbt.getCompound(CompassItem.LODESTONE_POS_KEY));
-			}
+		GlobalPos lodestonePos = CompassItem.getLodestonePosition(nbt);
+		if (lodestonePos != null && world.getRegistryKey() == lodestonePos.getDimension()) {
+			return lodestonePos.getPos();
 		}
 		return null;
 	}
 
 	private @Nullable BlockPos getWorldSpawnPos(World world) {
 		var properties = world.getLevelProperties();
-		return world.getDimension().isNatural()
+		return world.getDimension().natural()
 				? new BlockPos(properties.getSpawnX(), properties.getSpawnY(), properties.getSpawnZ())
 				: null;
 	}

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": {
+    "aurorasdeco:duckweed": 0.3,
+    "aurorasdeco:daffodil": 0.65,
+    "#aurorasdeco:jacaranda_leaves": 0.3,
+    "aurorasdeco:jacaranda_sapling": 0.3,
+    "aurorasdeco:lavender": 0.65
+  }
+}

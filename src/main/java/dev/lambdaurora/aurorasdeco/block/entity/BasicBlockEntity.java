@@ -25,6 +25,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
+import org.quiltmc.qsl.block.entity.api.QuiltBlockEntity;
 
 /**
  * Represents a basic block entity with common serialization and update packet code.
@@ -33,7 +34,7 @@ import net.minecraft.util.math.BlockPos;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class BasicBlockEntity extends BlockEntity implements BlockEntityHelper {
+public class BasicBlockEntity extends BlockEntity implements QuiltBlockEntity {
 	public BasicBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
 		super(blockEntityType, blockPos, blockState);
 	}

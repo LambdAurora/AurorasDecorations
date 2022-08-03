@@ -26,9 +26,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.World;
-
-import java.util.Random;
 
 /**
  * Represents a copper sulfate campfire block.
@@ -53,14 +52,14 @@ public class CopperSulfateCampfireBlock extends CampfireBlock {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, RandomGenerator random) {
 		this.tickComponent.randomTick(state, world, pos, random);
 	}
 
 	/* Visual */
 
 	@Override
-	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+	public void randomDisplayTick(BlockState state, World world, BlockPos pos, RandomGenerator random) {
 		if (state.get(LIT)) {
 			if (random.nextInt(10) == 0) {
 				world.playSound(pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5,

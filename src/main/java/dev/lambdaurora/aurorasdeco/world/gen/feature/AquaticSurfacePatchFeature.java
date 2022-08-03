@@ -22,13 +22,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.intprovider.IntProvider;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.FeatureConfig;
 import net.minecraft.world.gen.feature.util.FeatureContext;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
-
-import java.util.Random;
 
 /**
  * Represents a feature whose goal is to place a patch of something onto a liquid surface in a way it looks like a cluster.
@@ -104,7 +103,7 @@ public class AquaticSurfacePatchFeature extends Feature<AquaticSurfacePatchFeatu
 		return success;
 	}
 
-	private int pickNextSpread(Random random, int spread) {
+	private int pickNextSpread(RandomGenerator random, int spread) {
 		return random.nextInt(spread) - random.nextInt(spread);
 	}
 

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "aurorasdeco:item/azalea_chest_boat"
+  }
+}

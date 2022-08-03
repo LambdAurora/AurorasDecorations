@@ -24,7 +24,6 @@ import dev.lambdaurora.aurorasdeco.client.model.UnbakedVariantModel;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -37,14 +36,14 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.random.LegacySimpleRandom;
+import net.minecraft.util.random.RandomGenerator;
+import net.minecraft.util.random.RandomSeed;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
-import java.util.Random;
 import java.util.function.BiConsumer;
 
 public class BlackboardPressBlockEntityRenderer implements BlockEntityRenderer<BlackboardPressBlockEntity> {
@@ -52,7 +51,7 @@ public class BlackboardPressBlockEntityRenderer implements BlockEntityRenderer<B
 	public static final Identifier SCREW_ID = AurorasDeco.id("blockstates/blackboard_press/screw.json");
 	public static final ModelIdentifier PRESS_PLATE_MODEL_ID = new ModelIdentifier(AurorasDeco.id("blackboard_press/press_plate"), "special");
 	public static final ModelIdentifier SCREW_MODEL_ID = new ModelIdentifier(AurorasDeco.id("blackboard_press/screw"), "special");
-	private static final Random RANDOM = new Random();
+	private static final RandomGenerator RANDOM = new LegacySimpleRandom(RandomSeed.generateUniqueSeed());
 	private final MinecraftClient client = MinecraftClient.getInstance();
 
 	public BlackboardPressBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
@@ -111,13 +110,15 @@ public class BlackboardPressBlockEntityRenderer implements BlockEntityRenderer<B
 
 	private static void initModel(Identifier resourceId, Identifier modelId, ResourceManager resourceManager,
 	                              ModelVariantMap.DeserializationContext deserializationContext, BiConsumer<Identifier, UnbakedModel> modelRegister) {
-		try (var resource = resourceManager.getResource(resourceId)) {
-			var map = ModelVariantMap.fromJson(deserializationContext, new InputStreamReader(resource.getInputStream()));
-			modelRegister.accept(modelId,
-					new UnbakedVariantModel<>(AurorasDecoRegistry.BLACKBOARD_PRESS_BLOCK, map.getVariantMap(), List.of(BlackboardPressBlock.WATERLOGGED))
-			);
-		} catch (IOException e) {
-			AurorasDeco.warn("Failed to load the blackboard \"{}\" model.", modelId, e);
-		}
+		resourceManager.getResource(resourceId).ifPresentOrElse(resource -> {
+			try (var reader = new InputStreamReader(resource.open())) {
+				var map = ModelVariantMap.fromJson(deserializationContext, reader);
+				modelRegister.accept(modelId,
+						new UnbakedVariantModel<>(AurorasDecoRegistry.BLACKBOARD_PRESS_BLOCK, map.getVariantMap(), List.of(BlackboardPressBlock.WATERLOGGED))
+				);
+			} catch (IOException e) {
+				AurorasDeco.warn("Failed to load the blackboard \"{}\" model.", modelId, e);
+			}
+		}, () -> AurorasDeco.warn("Failed to load the blackboard \"{}\" model: missing file.", modelId));
 	}
 }

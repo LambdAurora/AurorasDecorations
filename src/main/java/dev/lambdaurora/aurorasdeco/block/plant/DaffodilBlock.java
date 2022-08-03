@@ -26,7 +26,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
@@ -83,6 +82,6 @@ public final class DaffodilBlock extends AuroraFlowerBlock {
 	@Override
 	public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
 		super.appendTooltip(stack, world, tooltip, options);
-		tooltip.add(new LiteralText("Narcissus pseudonarcissus").formatted(Formatting.GOLD, Formatting.ITALIC));
+		tooltip.add(Text.literal("Narcissus pseudonarcissus").formatted(Formatting.GOLD, Formatting.ITALIC));
 	}
 }

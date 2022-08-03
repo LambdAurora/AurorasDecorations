@@ -23,11 +23,12 @@ import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPackets;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
+import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPackCreator;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.world.gen.DynamicWorldGen;
 import net.minecraft.block.Blocks;
 import net.minecraft.resource.ResourceType;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -78,10 +79,11 @@ public class AurorasDeco implements ModInitializer {
 		DynamicWorldGen.init();
 
 		ResourceLoader.registerBuiltinResourcePack(id("swamp_worldgen"), ResourcePackActivationType.NORMAL,
-				new LiteralText("Aurora's Deco").formatted(Formatting.GOLD)
-						.append(new LiteralText(" - ").formatted(Formatting.GRAY))
-						.append(new LiteralText("Swamp Tweaks").formatted(Formatting.DARK_GREEN))
+				Text.literal("Aurora's Deco").formatted(Formatting.GOLD)
+						.append(Text.literal(" - ").formatted(Formatting.GRAY))
+						.append(Text.literal("Swamp Tweaks").formatted(Formatting.DARK_GREEN))
 		);
+		ResourceLoader.get(ResourceType.SERVER_DATA).registerResourcePackProfileProvider(new AurorasDecoPackCreator());
 	}
 
 	public static boolean isDevMode() {
