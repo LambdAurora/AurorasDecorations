@@ -69,12 +69,6 @@ dependencies {
 	modImplementation "org.quiltmc:quilt-loader:${project.loader_version}"
 
 	modImplementation("org.quiltmc.quilted-fabric-api:quilted-fabric-api:${project.fabric_api_version}-${minecraft_version}")
-	include("org.quiltmc.qsl.core:qsl_base:1.1.0-beta.22+${minecraft_version}")
-	include("org.quiltmc.qsl.core:lifecycle_events:1.1.0-beta.22+${minecraft_version}")
-	include("org.quiltmc.qsl.core:registry:1.1.0-beta.22+${minecraft_version}")
-	include("org.quiltmc.qsl.core:resource_loader:1.1.0-beta.22+${minecraft_version}")
-	include(modImplementation("org.quiltmc.qsl.worldgen:biome:1.1.0-beta.22+${minecraft_version}"))
-	include(modImplementation("org.quiltmc.qsl.block:block_entity:1.1.0-beta.22+${minecraft_version}"))
 	include(modImplementation("com.terraformersmc.terraform-api:terraform-wood-api-v1:3.0.0") {
 		exclude group: 'net.fabricmc'
 		exclude group: 'net.fabricmc.fabric-api'

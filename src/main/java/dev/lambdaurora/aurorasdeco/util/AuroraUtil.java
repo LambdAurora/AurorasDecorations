@@ -93,6 +93,15 @@ public final class AuroraUtil {
 		return AurorasDeco.id(prefix + '/' + path);
 	}
 
+	public static String getIdPath(String prefix, Identifier originalId, String replacerRegex) {
+		var namespace = originalId.getNamespace();
+		namespace = switch (namespace) {
+			case "minecraft", AurorasDeco.NAMESPACE -> "";
+			default -> namespace + '/';
+		};
+		return prefix + '/' + namespace + originalId.getPath().replaceAll(replacerRegex, "");
+	}
+
 	/* NBT */
 
 	public static void writeBlockEntityNbtToStack(ItemStack stack, BlockEntityType<?> type, NbtCompound nbt, boolean force) {

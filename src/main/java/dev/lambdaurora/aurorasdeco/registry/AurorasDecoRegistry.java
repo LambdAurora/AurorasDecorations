@@ -40,9 +40,9 @@ import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
 import dev.lambdaurora.aurorasdeco.screen.CopperHopperScreenHandler;
 import dev.lambdaurora.aurorasdeco.screen.SawmillScreenHandler;
 import dev.lambdaurora.aurorasdeco.screen.ShelfScreenHandler;
+import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.util.Derivator;
 import dev.lambdaurora.aurorasdeco.util.Registrar;
-import dev.lambdaurora.aurorasdeco.util.RegistrationHelper;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.OxidizableBlocksRegistry;
@@ -688,7 +688,7 @@ public final class AurorasDecoRegistry {
 						if (flowerPotBlock == Blocks.FLOWER_POT) return;
 
 						context.register(
-								AurorasDeco.id(RegistrationHelper.getIdPath("hanging_flower_pot", context.id(), "^potted[_/]")),
+								AurorasDeco.id(AuroraUtil.getIdPath("hanging_flower_pot", context.id(), "^potted[_/]")),
 								new HangingFlowerPotBlock(flowerPotBlock)
 						);
 					} else {
@@ -696,7 +696,7 @@ public final class AurorasDecoRegistry {
 						if (context.value() instanceof FenceBlock fenceBlock) {
 							var signPostBlock = Registry.register(
 									context.registry(),
-									AurorasDeco.id(RegistrationHelper.getIdPath("sign_post", context.id(), "_fence$")),
+									AurorasDeco.id(AuroraUtil.getIdPath("sign_post", context.id(), "_fence$")),
 									new SignPostBlock(fenceBlock)
 							);
 
@@ -731,8 +731,6 @@ public final class AurorasDecoRegistry {
 						Item.BLOCK_ITEMS.put(chandelier, context.value());
 					}
 				});
-
-		RegistrationHelper.BLOCK.init();
 
 		var colors = DyeColor.values();
 
