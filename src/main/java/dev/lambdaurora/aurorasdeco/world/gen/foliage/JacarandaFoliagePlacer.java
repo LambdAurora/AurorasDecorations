@@ -51,7 +51,7 @@ public class JacarandaFoliagePlacer extends FoliagePlacer {
 	}
 
 	@Override
-	protected void m_fdoszgvu(TestableWorld world, BiConsumer<BlockPos, BlockState> replacer, RandomGenerator random, TreeFeatureConfig config, int trunkHeight, TreeNode treeNode, int foliageHeight, int radius, int offset) {
+	protected void generate(TestableWorld world, BiConsumer<BlockPos, BlockState> replacer, RandomGenerator random, TreeFeatureConfig config, int trunkHeight, TreeNode treeNode, int foliageHeight, int radius, int offset) {
 		this.addCanopy(world, replacer, treeNode.getCenter(), config, treeNode.isGiantTrunk(), random);
 	}
 

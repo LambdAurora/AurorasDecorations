@@ -10,8 +10,6 @@
     "ServerReloadableResourcesMixin",
     "SimpleRegistryAccessor",
     "SpawnHelperMixin",
-    "StateIdTrackerAccessor",
-    "StateIdTrackerMixin",
     "StateManagerBuilderAccessor",
     "block.AbstractBlockAccessor",
     "block.BedBlockMixin",
