@@ -24,7 +24,6 @@ import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
@@ -38,6 +37,8 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.block.content.registry.api.BlockContentRegistries;
+import org.quiltmc.qsl.block.content.registry.api.FlammableBlockEntry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -290,13 +291,16 @@ public final class WoodType {
 			return new Identifier(id.getNamespace(), "block/" + id.getPath() + "_top");
 		}
 
-		public @Nullable FlammableBlockRegistry.Entry getFlammableEntry() {
-			return FlammableBlockRegistry.getDefaultInstance().get(this.block());
+		public @Nullable FlammableBlockEntry getFlammableEntry() {
+			return BlockContentRegistries.FLAMMABLE_BLOCK.getNullable(this.block());
 		}
 
-		public boolean isFlammable() {
-			var entry = this.getFlammableEntry();
-			return entry != null && entry.getBurnChance() != 0 && entry.getSpreadChance() != 0;
+		public void syncFlammabilityWith(Block other) {
+			BlockContentRegistries.FLAMMABLE_BLOCK.valueAddedEvent().register((entry, value) -> {
+				if (entry == this.block) {
+					BlockContentRegistries.FLAMMABLE_BLOCK.put(other, value);
+				}
+			});
 		}
 
 		@Environment(EnvType.CLIENT)

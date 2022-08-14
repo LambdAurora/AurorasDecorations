@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": {
+    "aurorasdeco:blackboard": {
+      "block": "aurorasdeco:waxed_blackboard",
+      "reversible": false
+    },
+    "aurorasdeco:chalkboard": {
+      "block": "aurorasdeco:waxed_chalkboard",
+      "reversible": false
+    },
+    "aurorasdeco:glassboard": {
+      "block": "aurorasdeco:waxed_glassboard",
+      "reversible": false
+    }
+  }
+}

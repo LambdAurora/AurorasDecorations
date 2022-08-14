@@ -1,0 +1,65 @@
+{
+  "replace": false,
+  "values": {
+    "aurorasdeco:azalea_fence": {
+      "burn": 5,
+      "spread": 20
+    },
+    "aurorasdeco:azalea_fence_gate": {
+      "burn": 5,
+      "spread": 20
+    },
+    "#aurorasdeco:azalea_logs": {
+      "burn": 5,
+      "spread": 5
+    },
+    "aurorasdeco:azalea_planks": {
+      "burn": 5,
+      "spread": 20
+    },
+    "aurorasdeco:azalea_slab": {
+      "burn": 5,
+      "spread": 20
+    },
+    "aurorasdeco:azalea_stairs": {
+      "burn": 5,
+      "spread": 20
+    },
+    "aurorasdeco:burnt_vine": {
+      "burn": 15,
+      "spread": 100
+    },
+    "aurorasdeco:jacaranda_fence": {
+      "burn": 5,
+      "spread": 20
+    },
+    "aurorasdeco:jacaranda_fence_gate": {
+      "burn": 5,
+      "spread": 20
+    },
+    "#aurorasdeco:jacaranda_leaves": {
+      "burn": 30,
+      "spread": 60
+    },
+    "#aurorasdeco:jacaranda_logs": {
+      "burn": 5,
+      "spread": 5
+    },
+    "aurorasdeco:jacaranda_planks": {
+      "burn": 5,
+      "spread": 20
+    },
+    "aurorasdeco:jacaranda_slab": {
+      "burn": 5,
+      "spread": 20
+    },
+    "aurorasdeco:jacaranda_stairs": {
+      "burn": 5,
+      "spread": 20
+    },
+    "#aurorasdeco:pet_beds": {
+      "burn": 10,
+      "spread": 30
+    }
+  }
+}

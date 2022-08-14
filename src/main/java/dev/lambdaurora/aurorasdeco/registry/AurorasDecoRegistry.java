@@ -43,8 +43,6 @@ import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.util.Derivator;
 import dev.lambdaurora.aurorasdeco.util.Registrar;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
-import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
-import net.fabricmc.fabric.api.registry.OxidizableBlocksRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.*;
@@ -65,6 +63,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
 import net.minecraft.world.poi.PointOfInterestTypes;
+import org.quiltmc.qsl.block.content.registry.api.BlockContentRegistries;
 import org.quiltmc.qsl.block.entity.api.QuiltBlockEntityTypeBuilder;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
@@ -99,7 +98,7 @@ public final class AurorasDecoRegistry {
 
 	//region Azalea
 	public static final PillarBlock AZALEA_LOG_BLOCK = registerWithItem("azalea_log",
-			createStrippableLogBlock(MapColor.DULL_PINK, MapColor.DARK_DULL_PINK),
+			createLogBlock(MapColor.DULL_PINK, MapColor.DARK_DULL_PINK),
 			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::log);
 	public static final PillarBlock STRIPPED_AZALEA_LOG_BLOCK = registerWithItem("stripped_azalea_log",
@@ -111,7 +110,7 @@ public final class AurorasDecoRegistry {
 			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::strippedWood);
 	public static final PillarBlock AZALEA_WOOD_BLOCK = registerWithItem("azalea_wood",
-			createStrippableLogBlock(MapColor.DULL_PINK, MapColor.DARK_DULL_PINK),
+			createLogBlock(MapColor.DARK_DULL_PINK, MapColor.DARK_DULL_PINK),
 			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::wood);
 	public static final PillarBlock FLOWERING_AZALEA_LOG_BLOCK = registerWithItem("flowering_azalea_log",
@@ -198,7 +197,7 @@ public final class AurorasDecoRegistry {
 
 	//region Jacaranda
 	public static final PillarBlock JACARANDA_LOG_BLOCK = registerWithItem("jacaranda_log",
-			createStrippableLogBlock(MapColor.PALE_PURPLE, MapColor.TERRACOTTA_PURPLE),
+			createLogBlock(MapColor.PALE_PURPLE, MapColor.TERRACOTTA_PURPLE),
 			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::log);
 	public static final PillarBlock STRIPPED_JACARANDA_LOG_BLOCK = registerWithItem("stripped_jacaranda_log",
@@ -210,7 +209,7 @@ public final class AurorasDecoRegistry {
 			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::strippedWood);
 	public static final PillarBlock JACARANDA_WOOD_BLOCK = registerWithItem("jacaranda_wood",
-			createStrippableLogBlock(MapColor.PALE_PURPLE, MapColor.TERRACOTTA_PURPLE),
+			createLogBlock(MapColor.TERRACOTTA_PURPLE, MapColor.TERRACOTTA_PURPLE),
 			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
 			DerivedBlockItem::wood);
 	public static final Block JACARANDA_PLANKS_BLOCK = registerWithItem("jacaranda_planks",
@@ -598,13 +597,6 @@ public final class AurorasDecoRegistry {
 		);
 	}
 
-	private static PillarBlock createStrippableLogBlock(MapColor topMapColor, MapColor sideMapColor) {
-		return new StrippableLogBlock(
-				QuiltBlockSettings.copyOf(Blocks.OAK_LOG)
-						.mapColorProvider(state -> state.get(PillarBlock.AXIS).isVertical() ? topMapColor : sideMapColor)
-		);
-	}
-
 	private static PillarBlock createLogBlock(MapColor topMapColor, MapColor sideMapColor) {
 		return new PillarBlock(
 				QuiltBlockSettings.copyOf(Blocks.OAK_LOG)
@@ -670,16 +662,6 @@ public final class AurorasDecoRegistry {
 		AurorasDecoBiomes.init();
 		AurorasDecoEntities.init();
 		AurorasDecoSounds.init();
-
-		StrippableLogBlock.register(AZALEA_LOG_BLOCK, STRIPPED_AZALEA_LOG_BLOCK);
-		StrippableLogBlock.register(AZALEA_WOOD_BLOCK, STRIPPED_AZALEA_WOOD_BLOCK);
-		StrippableLogBlock.register(FLOWERING_AZALEA_LOG_BLOCK, STRIPPED_AZALEA_LOG_BLOCK);
-		StrippableLogBlock.register(FLOWERING_AZALEA_WOOD_BLOCK, STRIPPED_AZALEA_WOOD_BLOCK);
-		StrippableLogBlock.register(JACARANDA_LOG_BLOCK, STRIPPED_JACARANDA_LOG_BLOCK);
-		StrippableLogBlock.register(JACARANDA_WOOD_BLOCK, STRIPPED_JACARANDA_WOOD_BLOCK);
-		OxidizableBlocksRegistry.registerWaxableBlockPair(BLACKBOARD_BLOCK, WAXED_BLACKBOARD_BLOCK);
-		OxidizableBlocksRegistry.registerWaxableBlockPair(CHALKBOARD_BLOCK, WAXED_CHALKBOARD_BLOCK);
-		OxidizableBlocksRegistry.registerWaxableBlockPair(GLASSBOARD_BLOCK, WAXED_GLASSBOARD_BLOCK);
 
 		RegistryMonitor.create(Registry.BLOCK)
 				.filter(context -> {
@@ -751,39 +733,12 @@ public final class AurorasDecoRegistry {
 		}
 		SleepingBagBlock.appendToPointOfInterest(PointOfInterestTypes.HOME);
 
-		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_LOG_BLOCK, 5, 5);
-		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_WOOD_BLOCK, 5, 5);
-		FlammableBlockRegistry.getDefaultInstance().add(FLOWERING_AZALEA_LOG_BLOCK, 5, 5);
-		FlammableBlockRegistry.getDefaultInstance().add(FLOWERING_AZALEA_WOOD_BLOCK, 5, 5);
-		FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_AZALEA_LOG_BLOCK, 5, 5);
-		FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_AZALEA_WOOD_BLOCK, 5, 5);
-		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_PLANKS_BLOCK, 5, 20);
-		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_FENCE_BLOCK, 5, 20);
-		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_FENCE_GATE_BLOCK, 5, 20);
-		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_SLAB_BLOCK, 5, 20);
-		FlammableBlockRegistry.getDefaultInstance().add(AZALEA_STAIRS_BLOCK, 5, 20);
-		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_LOG_BLOCK, 5, 5);
-		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_WOOD_BLOCK, 5, 5);
-		FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_JACARANDA_LOG_BLOCK, 5, 5);
-		FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_JACARANDA_WOOD_BLOCK, 5, 5);
-		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_PLANKS_BLOCK, 5, 20);
-		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_FENCE_BLOCK, 5, 20);
-		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_FENCE_GATE_BLOCK, 5, 20);
-		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_SLAB_BLOCK, 5, 20);
-		FlammableBlockRegistry.getDefaultInstance().add(JACARANDA_STAIRS_BLOCK, 5, 20);
-		FlammableBlockRegistry.getDefaultInstance().add(AurorasDecoPlants.JACARANDA_LEAVES, 30, 60);
-		FlammableBlockRegistry.getDefaultInstance().add(AurorasDecoPlants.BUDDING_JACARANDA_LEAVES, 30, 60);
-		FlammableBlockRegistry.getDefaultInstance().add(AurorasDecoPlants.FLOWERING_JACARANDA_LEAVES, 30, 60);
-		FlammableBlockRegistry.getDefaultInstance().add(AurorasDecoTags.PET_BEDS, 10, 30);
-
 		WoodType.registerWoodTypeModificationCallback(woodType -> {
 			var block = registerWithItem("stump/" + woodType.getPathName(),
 					new StumpBlock(woodType),
 					new QuiltItemSettings().group(ItemGroup.DECORATIONS));
 
-			var entry = woodType.getComponent(WoodType.ComponentType.LOG).getFlammableEntry();
-			if (entry != null && entry.getBurnChance() != 0 && entry.getSpreadChance() != 0)
-				FlammableBlockRegistry.getDefaultInstance().add(block, entry.getBurnChance(), entry.getSpreadChance());
+			woodType.getComponent(WoodType.ComponentType.LOG).syncFlammabilityWith(block);
 		}, WoodType.ComponentType.LOG);
 
 		WoodType.registerWoodTypeModificationCallback(woodType -> {
@@ -791,15 +746,12 @@ public final class AurorasDecoRegistry {
 					new SmallLogPileBlock(woodType),
 					new QuiltItemSettings().group(ItemGroup.DECORATIONS));
 
-			var entry = woodType.getComponent(WoodType.ComponentType.LOG).getFlammableEntry();
-			if (entry != null && entry.getBurnChance() != 0 && entry.getSpreadChance() != 0)
-				FlammableBlockRegistry.getDefaultInstance().add(block, entry.getBurnChance(), entry.getSpreadChance());
+			woodType.getComponent(WoodType.ComponentType.LOG).syncFlammabilityWith(block);
 		}, WoodType.ComponentType.LOG);
 
 		WoodType.registerWoodTypeModificationCallback(woodType -> Registrar.register("shelf/" + woodType.getPathName(), new ShelfBlock(woodType))
 						.withItem(new QuiltItemSettings().group(ItemGroup.DECORATIONS))
-						.addSelfTo(SHELF_BLOCK_ENTITY_TYPE)
-						.flammable(woodType.getComponent(WoodType.ComponentType.PLANKS).getFlammableEntry()),
+						.addSelfTo(SHELF_BLOCK_ENTITY_TYPE),
 				WoodType.ComponentType.PLANKS);
 
 		WoodType.registerWoodTypeModificationCallback(woodType -> {
@@ -812,7 +764,7 @@ public final class AurorasDecoRegistry {
 		WoodType.registerWoodTypeModificationCallback(woodType -> Registrar.register("bench/" + woodType.getPathName(), new BenchBlock(woodType))
 						.withItem(new QuiltItemSettings().group(ItemGroup.DECORATIONS))
 						.addSelfTo(BENCH_BLOCK_ENTITY_TYPE)
-						.flammable(woodType.getComponent(WoodType.ComponentType.PLANKS).getFlammableEntry()),
+						.syncFlammabilityWith(woodType.getComponent(WoodType.ComponentType.PLANKS)),
 				WoodType.ComponentType.PLANKS);
 	}
 }

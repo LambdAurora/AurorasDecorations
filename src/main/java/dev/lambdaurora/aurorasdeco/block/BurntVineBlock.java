@@ -19,7 +19,6 @@ package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.mixin.block.VineBlockAccessor;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPlants;
-import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
@@ -55,7 +54,6 @@ public final class BurntVineBlock extends VineBlock {
 						.sounds(BlockSoundGroup.VINE)
 		);
 
-		FlammableBlockRegistry.getDefaultInstance().add(this, 15, 100);
 		Item.BLOCK_ITEMS.put(this, Items.VINE);
 	}
 

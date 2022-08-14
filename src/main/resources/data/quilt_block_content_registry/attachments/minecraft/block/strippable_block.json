@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": {
+    "aurorasdeco:azalea_log": "aurorasdeco:stripped_azalea_log",
+    "aurorasdeco:azalea_wood": "aurorasdeco:stripped_azalea_wood",
+    "aurorasdeco:flowering_azalea_log": "aurorasdeco:stripped_azalea_log",
+    "aurorasdeco:flowering_azalea_wood": "aurorasdeco:stripped_azalea_wood",
+    "aurorasdeco:jacaranda_log": "aurorasdeco:stripped_jacaranda_log",
+    "aurorasdeco:jacaranda_wood": "aurorasdeco:stripped_jacaranda_wood"
+  }
+}

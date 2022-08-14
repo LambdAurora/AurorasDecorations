@@ -18,7 +18,7 @@
 package dev.lambdaurora.aurorasdeco.util;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
+import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
@@ -137,15 +137,9 @@ public final class Registrar {
 			return this;
 		}
 
-		public BlockRegistrationCompleter<T> flammable(int burn, int spread) {
-			FlammableBlockRegistry.getDefaultInstance().add(this.registeredObject, burn, spread);
+		public BlockRegistrationCompleter<T> syncFlammabilityWith(WoodType.Component woodComponent) {
+			woodComponent.syncFlammabilityWith(this.registeredObject);
 			return this;
-		}
-
-		public BlockRegistrationCompleter<T> flammable(FlammableBlockRegistry.Entry entry) {
-			if (entry != null && entry.getBurnChance() != 0 && entry.getSpreadChance() != 0)
-				return this.flammable(entry.getBurnChance(), entry.getSpreadChance());
-			else return this;
 		}
 	}
 
