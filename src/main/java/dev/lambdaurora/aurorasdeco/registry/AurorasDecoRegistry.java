@@ -229,6 +229,11 @@ public final class AurorasDecoRegistry {
 			new WoodenButtonBlock(QuiltBlockSettings.copyOf(Blocks.OAK_BUTTON)), new QuiltItemSettings().group(ItemGroup.REDSTONE),
 			DerivedBlockItem::woodenButton
 	);
+	public static final DoorBlock JACARANDA_DOOR = registerWithItem("jacaranda_door",
+			new DoorBlock(QuiltBlockSettings.copyOf(Blocks.OAK_DOOR).mapColor(JACARANDA_PLANKS_BLOCK.getDefaultMapColor())),
+			new QuiltItemSettings().group(ItemGroup.REDSTONE),
+			DerivedBlockItem::door
+	);
 	public static final FenceBlock JACARANDA_FENCE_BLOCK = registerWithItem("jacaranda_fence",
 			new FenceBlock(QuiltBlockSettings.copyOf(JACARANDA_PLANKS_BLOCK)),
 			new QuiltItemSettings().group(ItemGroup.DECORATIONS),
@@ -249,6 +254,11 @@ public final class AurorasDecoRegistry {
 					id("entity/sign/jacaranda"),
 					QuiltBlockSettings.copyOf(JACARANDA_PLANKS_BLOCK).strength(1.f).noCollision()
 			)
+	);
+	public static final TrapdoorBlock JACARANDA_TRAPDOOR = registerWithItem("jacaranda_trapdoor",
+			new TrapdoorBlock(QuiltBlockSettings.copyOf(Blocks.OAK_TRAPDOOR).mapColor(JACARANDA_PLANKS_BLOCK.getDefaultMapColor())),
+			new QuiltItemSettings().group(ItemGroup.REDSTONE),
+			DerivedBlockItem::trapdoor
 	);
 	public static final Block JACARANDA_WALL_SIGN_BLOCK = registerBlock("jacaranda_wall_sign",
 			new TerraformWallSignBlock(id("entity/sign/jacaranda"), QuiltBlockSettings.copyOf(JACARANDA_SIGN_BLOCK))
@@ -340,15 +350,15 @@ public final class AurorasDecoRegistry {
 			new QuiltItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
 			BlackboardItem::new);
 
-	public static final BlackboardPressBlock BLACKBOARD_PRESS_BLOCK = registerWithItem("blackboard_press",
-			new BlackboardPressBlock(QuiltBlockSettings.of(Material.METAL)),
+	public static final BlackboardPressBlock BLACKBOARD_PRESS_BLOCK = registerBlock("blackboard_press",
+			new BlackboardPressBlock(QuiltBlockSettings.of(Material.METAL)));/*,
 			new QuiltItemSettings().group(ItemGroup.DECORATIONS)
 	);
 
 	public static final PainterPaletteItem PAINTER_PALETTE_ITEM = registerItem("painter_palette", new PainterPaletteItem(new QuiltItemSettings()
 			.group(ItemGroup.TOOLS)
 			.maxCount(1)
-	));
+	));*/
 	//endregion
 
 	//region Copper Sulfate

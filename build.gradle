@@ -3,6 +3,8 @@ plugins {
 	id 'java-library'
 	id 'maven-publish'
 	id 'org.quiltmc.gradle.licenser' version '1.+'
+	id 'com.modrinth.minotaur' version '2.+'
+	id 'com.matthewprenger.cursegradle' version '1.4.+'
 }
 
 group = project.maven_group
@@ -23,6 +25,48 @@ String getMCVersionString() {
 	}
 	def version = project.minecraft_version.split('\\.')
 	return version[0] + '.' + version[1]
+}
+
+String parseReadme() {
+	def linkRegex = /!\[([A-z_ ]+)]\((images\/[A-z.\/_]+)\)/
+
+	def readme = (String) file('README.md').text
+	readme = readme.replaceAll(linkRegex, '![$1](https://lambdaurora.dev/AurorasDecorations/$2)')
+	return readme
+}
+
+String fetchChangelog() {
+	def changelogText = file('CHANGELOG.md').text
+	def regexVersion = ((String) project.mod_version).replaceAll('\\.', /\\./).replaceAll('\\+', '\\+')
+	def changelogRegex = ~"###? ${regexVersion}\\n\\n(( *- .+\\n)+)"
+	def matcher = changelogText =~ changelogRegex
+
+	if (matcher.find()) {
+		String changelogContent = matcher.group(1)
+
+		def changelogLines = changelogText.split('\n')
+		def linkRefRegex = ~'^\\[([A-z0-9 _\\-/+.]+)]: '
+		for (int i = changelogLines.length - 1; i > 0; i--) {
+			def line = changelogLines[i]
+			if ((line =~ linkRefRegex).find())
+				changelogContent += '\n' + line
+			else break
+		}
+
+		return changelogContent
+	} else {
+		return null
+	}
+}
+
+String getVersionType() {
+	if (isMCVersionNonRelease() || version.contains("-alpha.")) {
+		return "alpha"
+	} else if (version.contains("-beta.")) {
+		return "beta"
+	} else {
+		return "release"
+	}
 }
 
 sourceSets {
@@ -115,6 +159,75 @@ license {
 	rule file('codeformat/HEADER')
 	include '**/*.java'
 }
+
+modrinth {
+	projectId = project.modrinth_id
+	versionName = "Aurora's Decorations ${project.mod_version} (${getMCVersionString()})"
+	gameVersions = [project.minecraft_version]
+	loaders = ["quilt"]
+	versionType = getVersionType()
+	uploadFile = tasks.remapJar
+	syncBodyFrom = parseReadme()
+
+	dependencies {
+		required.project "qsl"
+		optional.project "trinkets"
+	}
+
+	// Changelog fetching
+	def changelogContent = fetchChangelog()
+
+	if (changelogContent) {
+		changelog = changelogContent
+	} else {
+		afterEvaluate {
+			tasks.modrinth.setEnabled(false)
+		}
+	}
+}
+tasks.modrinth.dependsOn(tasks.modrinthSyncBody)
+
+curseforge {
+	if (System.getenv("CURSEFORGE_TOKEN")) {
+		apiKey = System.getenv("CURSEFORGE_TOKEN")
+	}
+
+	project {
+		id = project.curseforge_id
+		releaseType = getVersionType()
+		addGameVersion project.minecraft_version
+		addGameVersion "Quilt"
+		addGameVersion "Java 17"
+		addGameVersion "Java 18"
+
+		// Changelog fetching
+		def changelogContent = fetchChangelog()
+
+		if (changelogContent) {
+			changelogType = "markdown"
+			changelog = "Changelog:\n\n${changelogContent}"
+		} else {
+			afterEvaluate {
+				uploadTask.setEnabled(false)
+			}
+		}
+
+		mainArtifact(remapJar) {
+			displayName = "Aurora's Decorations ${project.mod_version} (${getMCVersionString()})"
+
+			relations {
+				requiredDependency "qsl"
+				optionalDependency "trinkets"
+			}
+		}
+
+		afterEvaluate {
+			uploadTask.setGroup("publishing")
+			uploadTask.dependsOn("remapJar")
+		}
+	}
+}
+tasks.curseforge.setGroup("publishing")
 
 // configure the maven publication
 publishing {

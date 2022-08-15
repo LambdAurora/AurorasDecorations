@@ -24,7 +24,6 @@ import net.minecraft.client.world.ClientWorld;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MinecraftClient.class)
@@ -33,21 +32,5 @@ public class MinecraftClientMixin {
 	private void onSetWorld(ClientWorld world, CallbackInfo ci) {
 		BlackboardBlockEntity.onWorldChange(world);
 		Wind.get().reset();
-	}
-
-	@ModifyVariable(
-			method = "startIntegratedServer(Ljava/lang/String;Ljava/util/function/Function;Ljava/util/function/Function;ZLnet/minecraft/client/MinecraftClient$WorldLoadAction;)V",
-			at = @At(
-					value = "FIELD",
-					target = "Lnet/minecraft/client/MinecraftClient$WorldLoadAction;NONE:Lnet/minecraft/client/MinecraftClient$WorldLoadAction;",
-					ordinal = 0
-			),
-			ordinal = 2,
-			index = 11,
-			name = "bl2",
-			require = 0
-	)
-	private boolean replaceIsExperimental(boolean isExperimental) {
-		return false;
 	}
 }

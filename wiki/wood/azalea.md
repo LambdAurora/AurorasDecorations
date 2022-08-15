@@ -35,7 +35,7 @@ Flowering Azalea Log and Flowering Azalea Wood can also be crafted from regular 
 </thead>
 <tbody>
     <tr>
-        <td>Azalea Log</td>
+        <td><img title="Azalea Log" alt="Azalea Log" src="../../images/render/azalea/log.png" width="64" height="64" /></td>
         <td>Flowering Azalea Leaves</td>
     </tr>
 </tbody>
@@ -48,7 +48,7 @@ Flowering Azalea Log and Flowering Azalea Wood can also be crafted from regular 
 </thead>
 <tbody>
     <tr>
-        <td>Azalea Wood</td>
+        <td><img title="Azalea Wood" alt="Azalea Wood" src="../../images/render/azalea/wood.png" width="64" height="64" /></td>
         <td>Flowering Azalea Leaves</td>
     </tr>
 </tbody>

@@ -2,31 +2,42 @@
 <!-- modrinth_exclude.start -->
 ![Java 17](https://img.shields.io/badge/language-Java%2017-9B599A.svg?style=flat-square) <!-- modrinth_exclude.end -->
 [![GitHub license](https://img.shields.io/github/license/LambdAurora/AurorasDecorations?style=flat-square)](https://raw.githubusercontent.com/LambdAurora/AurorasDecorations/1.19/LICENSE)
-![Environment: Any](https://img.shields.io/badge/environment-any-4caf50?style=flat-square)
+![Environment: Both](https://img.shields.io/badge/environment-both-4caf50?style=flat-square)
 [![Mod loader: Quilt]][quilt] <!-- modrinth_exclude.start -->
 ![Version](https://img.shields.io/github/v/tag/LambdAurora/AurorasDecorations?label=version&style=flat-square) <!-- modrinth_exclude.end -->
 
-Decorations-focused Quilt mod.
+A decorations-focused Minecraft mod.
 
 ## What's this mod?
 
-Aurora's Decorations adds new decorations features like wall lantern or big flower pot.
+Aurora's Decorations is a very diverse decorations mod and more.
+The features ranges from simple building blocks, new light sources, etc, to extensions of existing blocks, biomes, plants, and much more!
 
-[Please visit the website for a detailed walk through all the features.](https://lambdaurora.dev/AurorasDecorations/)
+One of the goal of the mod is not only to add nice blocks to include in your builds, but also to give them some purposes further than their decorative purposes where possible, new light sources may come with some specific game mechanisms, new workstations, new redstone blocks, variants of blocks to ease building, biomes with good atmosphere and some gameplay-specific features, or even new world generation features that come with new ways of obtaining some existing blocks!
+
+The other goal of this mod is to be as compatible with other mods as possible, nothing's more frustrating of having a new wooden block and playing with a mod that adds a new wood type but you can't make that wooden block with the new wood type. This mods aim to solve this, every variants added by this mod should be automatically compatible with most mods due to Registry analysis at runtime!
+
+Want a much more complete rundown of all the features of the mod? [There's a very detailed website for this!](https://lambdaurora.dev/AurorasDecorations/)
 
 ## Pictures
 
-![Amethyst Lantern](images/amethyst_lantern.png)
-
-![Big flower pot and Wall Lanterns](images/flower_pot_and_wall_lantern.png)
-
-![Lavender](images/lavender.png)
+Here's some quick screenshots to see what some features are available, for a more complete list, please look at the wiki.
 
 ![Blackboards](images/blackboards.png)
 
-![Benches](images/bench.png)
+![Sign Posts](images/sign_post.png)
 
-![Braziers](images/braziers.png)
+![Fallen Trees](images/worldgen/features/fallen_spruce_tree.png)
+
+![Lavender](images/biome/lavender_plains.png)
+
+![Placeable Books](images/in_world_books.png)
+
+![Shelves](images/shelves.png)
+
+![Big Flower Pots & Wall Lanterns](images/flower_pot_and_wall_lantern.png)
+
+![Benches](images/bench.png)
 
 ![Chandeliers](images/chandeliers.png)
 
@@ -40,15 +51,9 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 
 ![Placeable Pumpkin Pie](images/placeable_pumpkin_pie.png)
 
-![Placeable books](images/in_world_books.png)
-
 ![Sawmill & Stumps](images/sawmill_and_stumps.png)
 
-![Shelves](images/shelves.png)
-
 ![Polished Basalt Wall](images/polished_basalt_wall.png)
-
-![Sign Posts](images/sign_post.png)
 
 ![Sleeping bags](images/sleeping_bags.png)
 

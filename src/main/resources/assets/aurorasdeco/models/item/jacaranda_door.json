@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "aurorasdeco:item/jacaranda_door"
+  }
+}

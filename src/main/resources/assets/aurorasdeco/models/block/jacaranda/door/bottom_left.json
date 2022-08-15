@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_bottom_left",
+  "textures": {
+    "top": "aurorasdeco:block/jacaranda_door_top",
+    "bottom": "aurorasdeco:block/jacaranda_door_bottom"
+  }
+}

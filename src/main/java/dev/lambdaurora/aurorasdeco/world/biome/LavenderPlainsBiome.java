@@ -55,7 +55,6 @@ public final class LavenderPlainsBiome extends AurorasDecoBiome {
 	public void initSettings(GenerationSettings.Builder generationSettings, SpawnSettings.Builder spawnSettings) {
 		this.addBasicFeatures(generationSettings);
 		DefaultBiomeFeatures.addPlainsMobs(spawnSettings);
-		DefaultBiomeFeatures.addPlainsTallGrass(generationSettings);
 		generationSettings.feature(GenerationStep.Feature.VEGETAL_DECORATION, AurorasDecoVegetationPlacedFeatures.PATCH_LAVENDER);
 
 		DefaultBiomeFeatures.addDefaultOres(generationSettings);

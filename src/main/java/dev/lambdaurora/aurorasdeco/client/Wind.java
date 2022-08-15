@@ -103,7 +103,7 @@ public class Wind {
 				// Nether-like
 				this.state = State.WINDY;
 			} else {
-				// Tere's no wind
+				// There's no wind
 				this.state = State.CALM;
 			}
 

@@ -80,6 +80,7 @@ public class BlackboardTooltipComponent implements TooltipComponent {
 
 		this.quad(this.background, 0.f, 0.f, 1.f, 1.f, model, vertexConsumers, light);
 
+		matrices.translate(0, 0, 1);
 		this.texture.render(model, vertexConsumers, light, false);
 
 		if (this.blackboard.isLit()) {
