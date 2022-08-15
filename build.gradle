@@ -165,7 +165,7 @@ modrinth {
 	versionName = "Aurora's Decorations ${project.mod_version} (${getMCVersionString()})"
 	gameVersions = [project.minecraft_version]
 	loaders = ["quilt"]
-	versionType = getVersionType()
+	versionType = this.getVersionType()
 	uploadFile = tasks.remapJar
 	syncBodyFrom = parseReadme()
 
@@ -194,7 +194,7 @@ curseforge {
 
 	project {
 		id = project.curseforge_id
-		releaseType = getVersionType()
+		releaseType = this.getVersionType()
 		addGameVersion project.minecraft_version
 		addGameVersion "Quilt"
 		addGameVersion "Java 17"

@@ -1,6 +1,9 @@
 name: 'Wiki Deploy'
 
-on: [ push ]
+on:
+  push:
+    branches:
+      - '*'
 
 jobs:
   build:
