@@ -3,9 +3,8 @@
   "package": "dev.lambdaurora.aurorasdeco.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ServerReloadableResourcesMixin",
-    "PointOfInterestTypesAccessor",
     "PointOfInterestTypeMixin",
+    "PointOfInterestTypesAccessor",
     "ServerAdvancementLoaderMixin",
     "ServerReloadableResourcesMixin",
     "SimpleRegistryAccessor",
@@ -60,7 +59,8 @@
     "client.ModelLoaderMixin",
     "client.MouseMixin",
     "client.NativeImageAccessor",
-    "client.ReloadableResourceManagerMixin"
+    "client.ReloadableResourceManagerMixin",
+    "client.TranslationStorageMixin"
   ],
   "injectors": {
     "defaultRequire": 1

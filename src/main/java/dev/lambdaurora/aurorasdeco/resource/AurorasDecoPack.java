@@ -26,7 +26,6 @@ import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.*;
 import dev.lambdaurora.aurorasdeco.mixin.client.NativeImageAccessor;
 import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
-import dev.lambdaurora.aurorasdeco.resource.datagen.LangBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.block.Material;
 import net.minecraft.resource.ResourceManager;
@@ -95,12 +94,7 @@ public class AurorasDecoPack implements ResourcePack {
 	}
 
 	public AurorasDecoPack rebuildClient(ResourceManager resourceManager) {
-		var langBuilder = new LangBuilder();
-		langBuilder.load();
-
-		Datagen.generateClientData(resourceManager, langBuilder);
-
-		langBuilder.write(this);
+		Datagen.generateClientData(resourceManager);
 
 		return this;
 	}

@@ -514,12 +514,12 @@ public final class Datagen {
 		}
 	}
 
-	public static void generateClientData(ResourceManager resourceManager, LangBuilder langBuilder) {
-		generateBenchesClientData(resourceManager, langBuilder);
-		generateDirectionalSignsClientData(resourceManager, langBuilder);
-		generateShelvesClientData(resourceManager, langBuilder);
-		generateSmallLogPilesClientData(resourceManager, langBuilder);
-		generateStumpsClientData(resourceManager, langBuilder);
+	public static void generateClientData(ResourceManager resourceManager) {
+		generateBenchesClientData(resourceManager);
+		generateDirectionalSignsClientData(resourceManager);
+		generateShelvesClientData(resourceManager);
+		generateSmallLogPilesClientData(resourceManager);
+		generateStumpsClientData(resourceManager);
 
 		PottedPlantType.stream().filter(type -> !type.isEmpty() && type.getPot().hasDynamicModel())
 				.forEach(type -> {
@@ -602,14 +602,14 @@ public final class Datagen {
 		});
 	}
 
-	private static void generateBenchesClientData(ResourceManager resourceManager, LangBuilder langBuilder) {
+	private static void generateBenchesClientData(ResourceManager resourceManager) {
 		BenchBlock.streamBenches().forEach(block -> {
 			var builder = multipartBlockStateBuilder(block);
 			var restBuilder = new MultipartBlockStateBuilder(AurorasDeco.id(Registry.BLOCK.getId(block).getPath() + "_rest"));
 
 			var pathName = block.getWoodType().getPathName();
 			var blockPathName = "block/bench/" + pathName;
-			var planksTexture = block.getWoodType().getComponent(WoodType.ComponentType.PLANKS).texture();
+			var planksTexture = block.getWoodType().getPlanksTexture(resourceManager);
 			var logSideTexture = block.getWoodType().getLogSideTexture(resourceManager);
 			var seatModel = modelBuilder(BenchBlock.BENCH_SEAT_MODEL)
 					.texture("planks", planksTexture)
@@ -657,14 +657,12 @@ public final class Datagen {
 
 			registerBetterGrassLayer(block, BenchBlock.BENCH_BETTERGRASS_DATA);
 
-			langBuilder.addEntry("item.aurorasdeco.seat_rest." + block.getWoodType().getAbsoluteLangPath(),
-					"item.aurorasdeco.seat_rest", "aurorasdeco.wood_type." + block.getWoodType().getLangPath());
-			langBuilder.addEntry("block.aurorasdeco.bench." + block.getWoodType().getAbsoluteLangPath(),
-					"block.aurorasdeco.bench", "aurorasdeco.wood_type." + block.getWoodType().getLangPath());
+			DynamicLang.registerWooded("item.aurorasdeco.seat_rest", block.getWoodType());
+			DynamicLang.registerWooded("block.aurorasdeco.bench", block.getWoodType());
 		});
 	}
 
-	private static void generateDirectionalSignsClientData(ResourceManager resourceManager, LangBuilder langBuilder) {
+	private static void generateDirectionalSignsClientData(ResourceManager resourceManager) {
 		final NativeImage defaultTexture = resourceManager.getResource(SignPostItem.ABSOLUTE_OAK_SIGN_POST_TEXTURE)
 				.map(resource1 -> {
 					try (InputStream is = resource1.open()) {
@@ -685,13 +683,12 @@ public final class Datagen {
 					.texture("sign", textureId)
 					.register(item);
 
-			langBuilder.addEntry("item.aurorasdeco.sign_post." + item.getWoodType().getAbsoluteLangPath(),
-					"item.aurorasdeco.sign_post", "aurorasdeco.wood_type." + item.getWoodType().getLangPath());
+			DynamicLang.registerWooded("item.aurorasdeco.sign_post", item.getWoodType());
 
 			if (planks.block() == Blocks.OAK_PLANKS || defaultTexture == null)
 				return;
 
-			var planksTextureId = planks.texture();
+			var planksTextureId = item.getWoodType().getPlanksTexture(resourceManager);
 			var texturePath = new Identifier(planksTextureId.getNamespace(), "textures/" + planksTextureId.getPath() + ".png");
 			var resource = resourceManager.getResource(texturePath);
 
@@ -729,12 +726,12 @@ public final class Datagen {
 		defaultTexture.close();
 	}
 
-	private static void generateShelvesClientData(ResourceManager resourceManager, LangBuilder langBuilder) {
+	private static void generateShelvesClientData(ResourceManager resourceManager) {
 		ShelfBlock.streamShelves().forEach(block -> {
 			var woodPathName = block.getWoodType().getPathName();
 			var builder = blockStateBuilder(block);
 
-			var planksTexture = block.getWoodType().getComponent(WoodType.ComponentType.PLANKS).texture();
+			var planksTexture = block.getWoodType().getPlanksTexture(resourceManager);
 			var logTexture = block.getWoodType().getLogSideTexture(resourceManager);
 			Identifier bottomModel = null;
 			for (var partType : PartType.getValues()) {
@@ -764,12 +761,11 @@ public final class Datagen {
 
 			Datagen.registerBetterGrassLayer(AurorasDeco.id("shelf/" + woodPathName), Datagen.SHELF_BETTERGRASS_DATA);
 
-			langBuilder.addEntry("block.aurorasdeco.shelf." + block.getWoodType().getAbsoluteLangPath(),
-					"block.aurorasdeco.shelf", "aurorasdeco.wood_type." + block.getWoodType().getLangPath());
+			DynamicLang.registerWooded("block.aurorasdeco.shelf", block.getWoodType());
 		});
 	}
 
-	private static void generateSmallLogPilesClientData(ResourceManager resourceManager, LangBuilder langBuilder) {
+	private static void generateSmallLogPilesClientData(ResourceManager resourceManager) {
 		SmallLogPileBlock.stream().forEach(block -> {
 			if (AuroraUtil.idEqual(block.getWoodType().getId(), "minecraft", "oak"))
 				return;
@@ -812,13 +808,15 @@ public final class Datagen {
 
 			registerBetterGrassLayer(block, SmallLogPileBlock.BETTERGRASS_DATA);
 
-			langBuilder.addEntry("block.aurorasdeco.small_log_pile." + block.getWoodType().getAbsoluteLangPath(),
-					"block.aurorasdeco.small_" + block.getWoodType().getLogType() + "_pile",
-					"aurorasdeco.wood_type." + block.getWoodType().getLangPath());
+			DynamicLang.registerProvider(
+					"block.aurorasdeco.small_log_pile." + block.getWoodType().getAbsoluteLangPath(),
+					entry -> entries -> entries.get("block.aurorasdeco.small_" + block.getWoodType().getLogType() + "_pile")
+							.formatted(entries.get(block.getWoodType().getFullLangPath()))
+			);
 		});
 	}
 
-	private static void generateStumpsClientData(ResourceManager resourceManager, LangBuilder langBuilder) {
+	private static void generateStumpsClientData(ResourceManager resourceManager) {
 		StumpBlock.streamLogStumps().forEach(block -> {
 			var builder = blockStateBuilder(block);
 
@@ -829,7 +827,7 @@ public final class Datagen {
 				Identifier leavesTexture;
 				var component = block.getWoodType().getComponent(WoodType.ComponentType.LEAVES);
 				if (component == null) leavesTexture = new Identifier("block/red_mushroom_block");
-				else leavesTexture = component.texture();
+				else leavesTexture = block.getWoodType().getLeavesTexture(resourceManager);
 				model = modelBuilder(StumpBlock.STEM_STUMP_MODEL)
 						.texture("log_side", logSideTexture)
 						.texture("log_top", logTopTexture)
@@ -876,8 +874,7 @@ public final class Datagen {
 
 			registerBetterGrassLayer(block, StumpBlock.STUMP_BETTERGRASS_DATA);
 
-			langBuilder.addEntry("block.aurorasdeco.stump." + block.getWoodType().getAbsoluteLangPath(),
-					"block.aurorasdeco.stump", "aurorasdeco.wood_type." + block.getWoodType().getLangPath());
+			DynamicLang.registerWooded("block.aurorasdeco.stump", block.getWoodType());
 		});
 	}
 
