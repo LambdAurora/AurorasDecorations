@@ -37,7 +37,7 @@ String parseReadme() {
 
 String fetchChangelog() {
 	def changelogText = file('CHANGELOG.md').text
-	def regexVersion = ((String) project.mod_version).replaceAll('\\.', /\\./).replaceAll('\\+', '\\+')
+	def regexVersion = ((String) project.mod_version).replace('.', '\\.').replace('+', '\\+')
 	def changelogRegex = ~"###? ${regexVersion}(?: - .+)?\\n\\n(( *- .+\\n)+)"
 	def matcher = changelogText =~ changelogRegex
 
