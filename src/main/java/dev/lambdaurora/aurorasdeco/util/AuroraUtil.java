@@ -39,6 +39,7 @@ import java.util.List;
 
 public final class AuroraUtil {
 	public static final List<Direction> DIRECTIONS = List.of(Direction.values());
+	public static final List<Direction> HORIZONTAL_DIRECTIONS = DIRECTIONS.stream().filter(d -> d.getAxis().isHorizontal()).toList();
 
 	private AuroraUtil() {
 		throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
@@ -68,7 +69,7 @@ public final class AuroraUtil {
 	 * @param id the identifier to compare
 	 * @param namespace the namespace to compare to the identifier
 	 * @param path the path to compare to the identifier
-	 * @return {@code true} if both identifiers are equal, otherwise {@code false}
+	 * @return {@code true} if both identifiers are equal, or {@code false} otherwise
 	 */
 	public static boolean idEqual(Identifier id, String namespace, String path) {
 		return id.getNamespace().equals(namespace) && id.getPath().equals(path);
@@ -90,6 +91,15 @@ public final class AuroraUtil {
 		if (!id.getNamespace().equals("minecraft") && !id.getNamespace().equals("aurorasdeco"))
 			path = id.getNamespace() + '/' + path;
 		return AurorasDeco.id(prefix + '/' + path);
+	}
+
+	public static String getIdPath(String prefix, Identifier originalId, String replacerRegex) {
+		var namespace = originalId.getNamespace();
+		namespace = switch (namespace) {
+			case "minecraft", AurorasDeco.NAMESPACE -> "";
+			default -> namespace + '/';
+		};
+		return prefix + '/' + namespace + originalId.getPath().replaceAll(replacerRegex, "");
 	}
 
 	/* NBT */

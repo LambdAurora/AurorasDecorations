@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableMap;
 import dev.lambdaurora.aurorasdeco.blackboard.Blackboard;
 import dev.lambdaurora.aurorasdeco.blackboard.BlackboardDrawModifier;
 import dev.lambdaurora.aurorasdeco.block.entity.BlackboardBlockEntity;
+import dev.lambdaurora.aurorasdeco.item.PainterPaletteItem;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import net.fabricmc.api.EnvType;
@@ -96,7 +97,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 	/**
 	 * Returns whether this blackboard block is locked or not.
 	 *
-	 * @return {@code true} if locked, else {@code false}
+	 * @return {@code true} if locked, or {@code false} otherwise
 	 */
 	public boolean isLocked() {
 		return this.locked;
@@ -220,6 +221,12 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 			if (blackboard != null) {
 				if (blackboard.lastUser != null && blackboard.lastUser.isRemoved()) {
 					blackboard.lastUser = null;
+				}
+
+				if (stack.getItem() instanceof PainterPaletteItem paletteItem) {
+					if (offhand.isEmpty()) {
+						offhand = paletteItem.getCurrentModifierAsItem(stack);
+					}
 				}
 
 				var modifier = BlackboardDrawModifier.fromItem(stack);

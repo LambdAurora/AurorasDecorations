@@ -51,7 +51,7 @@ public class BlackboardTooltipComponent implements TooltipComponent {
 	private final boolean locked;
 
 	public BlackboardTooltipComponent(String background, Blackboard blackboard, boolean locked) {
-		this.background = RenderLayer.getText(AurorasDeco.id("textures/block/" + background + ".png"));
+		this.background = RenderLayer.getText(AurorasDeco.id("textures/block/blackboard/" + background + ".png"));
 		this.blackboard = blackboard;
 		this.locked = locked;
 		this.texture = BlackboardTexture.fromBlackboard(blackboard);

@@ -24,6 +24,7 @@ import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPackets;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
+import dev.lambdaurora.aurorasdeco.world.gen.DynamicWorldGen;
 import net.minecraft.block.Blocks;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.text.LiteralText;
@@ -72,6 +73,9 @@ public class AurorasDeco implements ModInitializer {
 
 		ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_OPEN_GUI_FAIL, AurorasDecoPackets::handleSignPostOpenGuiFailPacket);
 		ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_SET_TEXT, AurorasDecoPackets::handleSignPostSetTextPacket);
+		ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.PAINTER_PALETTE_SCROLL, AurorasDecoPackets::handlePainterPaletteScroll);
+
+		DynamicWorldGen.init();
 
 		ResourceLoader.registerBuiltinResourcePack(id("swamp_worldgen"), ResourcePackActivationType.NORMAL,
 				new LiteralText("Aurora's Deco").formatted(Formatting.GOLD)

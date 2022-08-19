@@ -138,7 +138,7 @@ public final class WoodType {
 	 * Returns the component associated to the given component type.
 	 *
 	 * @param type the component type
-	 * @return the component if associated to the given component type, otherwise {@code null}
+	 * @return the component if associated to the given component type, or {@code null} otherwise
 	 */
 	public Component getComponent(ComponentType type) {
 		return this.components.get(type);
@@ -218,7 +218,7 @@ public final class WoodType {
 	 * Returns the wood type of the specified identifier.
 	 *
 	 * @param id the identifier of the wood type
-	 * @return the wood type if it exists, otherwise {@code null}
+	 * @return the wood type if it exists, or {@code null} otherwise
 	 */
 	public static @Nullable WoodType fromId(Identifier id) {
 		for (var type : TYPES) {

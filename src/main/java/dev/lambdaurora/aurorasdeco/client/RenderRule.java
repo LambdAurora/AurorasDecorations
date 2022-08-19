@@ -123,7 +123,7 @@ public record RenderRule(List<Model> models) {
 
 		manager.findResources("aurorasdeco_render_rules", path -> path.endsWith(".json")).forEach(id -> {
 			try {
-				var resource = manager.method_14486(id);
+				var resource = manager.getResource(id);
 				var element = JsonParser.parseReader(new InputStreamReader(resource.getInputStream()));
 				if (element.isJsonObject()) {
 					var root = element.getAsJsonObject();

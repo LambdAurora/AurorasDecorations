@@ -83,7 +83,7 @@ public class BigPottedSweetBerryBushBlock extends BigPottedProxyBlock implements
 		}
 	}
 
-	/* Fertilizable stuff */
+	/* Fertilization */
 
 	@Override
 	public boolean isFertilizable(BlockView world, BlockPos pos, BlockState state, boolean isClient) {

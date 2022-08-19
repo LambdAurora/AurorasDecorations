@@ -66,7 +66,7 @@ public class AquaticSurfacePatchFeature extends Feature<AquaticSurfacePatchFeatu
 	 *
 	 * @param context the feature context
 	 * @param origin the origin of this "circle"
-	 * @return {@code true} if the circle successfully generated, otherwise {@code false}
+	 * @return {@code true} if the circle successfully generated, or {@code false} otherwise
 	 */
 	private boolean generateCircle(FeatureContext<Config> context, BlockPos origin) {
 		var config = context.getConfig();

@@ -33,7 +33,7 @@ public interface BlackboardHandler {
 	 * @param x the X coordinate
 	 * @param y the Y coordinate
 	 * @param color the raw color
-	 * @return {@code true} if the pixel has been changed, otherwise {@code false}
+	 * @return {@code true} if the pixel has been changed, or {@code false} otherwise
 	 */
 	boolean setPixel(int x, int y, int color);
 
@@ -44,8 +44,8 @@ public interface BlackboardHandler {
 	 * @param y the Y coordinate
 	 * @param color the color
 	 * @param shade the shade of the color
-	 * @param saturated {@code true} if the color is saturated, otherwise {@code false}
-	 * @return {@code true} if the pixel has been changed, otherwise {@code false}
+	 * @param saturated {@code true} if the color is saturated, or {@code false} otherwise
+	 * @return {@code true} if the pixel has been changed, or {@code false} otherwise
 	 * @see #setPixel(int, int, int)
 	 */
 	default boolean setPixel(int x, int y, BlackboardColor color, int shade, boolean saturated) {
@@ -58,7 +58,7 @@ public interface BlackboardHandler {
 	 * @param x the X coordinate
 	 * @param y the Y coordinate
 	 * @param color the color
-	 * @return {@code true} if the pixel has been changed, otherwise {@code false}
+	 * @return {@code true} if the pixel has been changed, or {@code false} otherwise
 	 */
 	default boolean setPixel(int x, int y, BlackboardColor color) {
 		return this.setPixel(x, y, color, 0, false);
@@ -69,8 +69,8 @@ public interface BlackboardHandler {
 	 *
 	 * @param x the X coordinate
 	 * @param y the Y coordinate
-	 * @param saturated {@code true} if the color is saturated, otherwise {@code false}
-	 * @return {@code true} if the pixel has been changed, otherwise {@code false}
+	 * @param saturated {@code true} if the color is saturated, or {@code false} otherwise
+	 * @return {@code true} if the pixel has been changed, or {@code false} otherwise
 	 * @see #setPixel(int, int, int)
 	 * @see #setPixel(int, int, BlackboardColor, int, boolean)
 	 */

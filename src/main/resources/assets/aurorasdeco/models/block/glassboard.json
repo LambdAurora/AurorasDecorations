@@ -3,8 +3,8 @@
   "parent": "aurorasdeco:block/template/board",
   "ambientocclusion": false,
   "textures": {
-    "board": "aurorasdeco:block/glassboard",
-    "wood": "aurorasdeco:block/glassboard_side"
+    "board": "aurorasdeco:block/blackboard/glassboard",
+    "wood": "aurorasdeco:block/blackboard/glassboard_side"
   },
   "elements": [
     {

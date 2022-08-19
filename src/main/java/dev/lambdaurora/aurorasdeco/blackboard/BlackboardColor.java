@@ -118,7 +118,7 @@ public class BlackboardColor implements BlackboardDrawModifier {
 	 * Returns the raw color format with shading and saturation of this color.
 	 *
 	 * @param shade the shade
-	 * @param saturated {@code true} if the color is saturated, otherwise {@code false}
+	 * @param saturated {@code true} if the color is saturated, or {@code false} otherwise
 	 * @return the raw color format
 	 */
 	public short toRawId(int shade, boolean saturated) {
@@ -145,7 +145,7 @@ public class BlackboardColor implements BlackboardDrawModifier {
 	 * {@return the render color in the ABGR format}
 	 *
 	 * @param shade the shade
-	 * @param saturated {@code true} if the color is saturated, otherwise {@code false}
+	 * @param saturated {@code true} if the color is saturated, or {@code false} otherwise
 	 */
 	public int getRenderColor(int shade, boolean saturated) {
 		if (this.getId() == 0)

@@ -28,7 +28,6 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -39,9 +38,6 @@ import java.util.Map;
 
 @Mixin(PistonBlock.class)
 public abstract class PistonBlockMixin {
-	@Shadow
-	protected abstract boolean move(World world, BlockPos pos, Direction dir, boolean retract);
-
 	@Inject(
 			method = "move",
 			at = @At(value = "INVOKE", target = "Ljava/util/Map;remove(Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0),

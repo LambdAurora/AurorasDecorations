@@ -18,7 +18,7 @@
       "item": "minecraft:stick"
     },
     "B": {
-      "item": "aurorasdeco:copper_sulfate"
+      "tag": "c:copper_sulfates"
     }
   },
   "result": {

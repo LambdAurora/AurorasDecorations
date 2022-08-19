@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.registry;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.client.screen.SignPostEditScreen;
+import dev.lambdaurora.aurorasdeco.item.PainterPaletteItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -47,6 +48,7 @@ public final class AurorasDecoPackets {
 	public static final Identifier SIGN_POST_OPEN_GUI = AurorasDeco.id("sign_post/open_gui");
 	public static final Identifier SIGN_POST_OPEN_GUI_FAIL = AurorasDeco.id("sign_post/open_gui/fail");
 	public static final Identifier SIGN_POST_SET_TEXT = AurorasDeco.id("sign_post/set_text");
+	public static final Identifier PAINTER_PALETTE_SCROLL = AurorasDeco.id("painter_palette/scroll");
 
 	public static void handleSignPostOpenGuiFailPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
 	                                                   PacketByteBuf buf, PacketSender responseSender) {
@@ -82,6 +84,17 @@ public final class AurorasDecoPackets {
 			}
 
 			signPost.finishEditing(player, upText, downText);
+		});
+	}
+
+	public static void handlePainterPaletteScroll(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
+	                                              PacketByteBuf buf, PacketSender responseSender) {
+		double scrollDelta = buf.readDouble();
+
+		server.execute(() -> {
+			if (player.getMainHandStack().getItem() instanceof PainterPaletteItem paletteItem) {
+				paletteItem.onScroll(player, player.getMainHandStack(), scrollDelta);
+			}
 		});
 	}
 

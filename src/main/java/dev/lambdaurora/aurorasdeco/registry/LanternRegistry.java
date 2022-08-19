@@ -18,7 +18,6 @@
 package dev.lambdaurora.aurorasdeco.registry;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.accessor.BlockEntityTypeAccessor;
 import dev.lambdaurora.aurorasdeco.block.RedstoneLanternBlock;
 import dev.lambdaurora.aurorasdeco.block.RedstoneWallLanternBlock;
 import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
@@ -72,8 +71,7 @@ public final class LanternRegistry {
 			wallLanternBlock = (WallLanternBlock<L>) Registry.register(registry, wallLanternId, new RedstoneWallLanternBlock(redstoneLanternBlock));
 		} else {
 			wallLanternBlock = Registry.register(registry, wallLanternId, new WallLanternBlock<>(block));
-			((BlockEntityTypeAccessor) AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE)
-					.aurorasdeco$addSupportedBlock(wallLanternBlock);
+			AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE.addSupportedBlock(wallLanternBlock);
 		}
 
 		WALL_LANTERNS.put(wallLanternId, wallLanternBlock);

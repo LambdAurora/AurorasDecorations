@@ -2,7 +2,7 @@ plugins {
 	id 'org.quiltmc.loom' version '0.12.+'
 	id 'java-library'
 	id 'maven-publish'
-	id 'org.quiltmc.gradle.licenser' version '1.1.+'
+	id 'org.quiltmc.gradle.licenser' version '1.+'
 }
 
 group = project.maven_group

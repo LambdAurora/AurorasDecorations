@@ -1,6 +1,6 @@
 {
-    "pack": {
-        "pack_format": 8,
-        "description": "Enables Aurora's Decorations Swamp world generation."
-    }
+	"pack": {
+		"pack_format": 8,
+		"description": "Enables Aurora's Decorations Swamp world generation."
+	}
 }

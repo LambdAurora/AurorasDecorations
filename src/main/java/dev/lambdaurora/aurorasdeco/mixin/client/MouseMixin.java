@@ -15,30 +15,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.mixin;
+package dev.lambdaurora.aurorasdeco.mixin.client;
 
-import dev.lambdaurora.aurorasdeco.util.RegistrationHelper;
-import net.fabricmc.fabric.impl.registry.sync.trackers.StateIdTracker;
-import net.minecraft.block.Block;
-import net.minecraft.util.collection.IdList;
-import net.minecraft.util.registry.Registry;
+import dev.lambdaurora.aurorasdeco.item.PainterPaletteItem;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Mouse;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.Collection;
-import java.util.function.Function;
+@Mixin(Mouse.class)
+public class MouseMixin {
+	@Shadow
+	@Final
+	private MinecraftClient client;
 
-@Mixin(StateIdTracker.class)
-public class StateIdTrackerMixin {
-	@SuppressWarnings("unchecked")
-	@Inject(method = "register", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD, remap = false)
-	private static <T, S> void onRegister(Registry<T> registry, IdList<S> stateList, Function<T, Collection<S>> stateGetter, CallbackInfo ci,
-	                                      StateIdTracker<T, S> tracker) {
-		if (registry == Registry.BLOCK) {
-			RegistrationHelper.BLOCK.setFabricTracker((StateIdTracker<Block, ?>) tracker);
+	@Inject(
+			method = "onMouseScroll",
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;isSpectator()Z"),
+			locals = LocalCapture.CAPTURE_FAILHARD,
+			cancellable = true
+	)
+	private void onScroll(long window, double scrollDeltaX, double scrollDeltaY, CallbackInfo ci, double scrollDelta) {
+		if (this.client.player != null) {
+			if (this.client.player.getMainHandStack().getItem() instanceof PainterPaletteItem paletteItem) {
+				if (paletteItem.onScroll(this.client.player, this.client.player.getMainHandStack(), scrollDelta)) {
+					ci.cancel();
+				}
+			}
 		}
 	}
 }

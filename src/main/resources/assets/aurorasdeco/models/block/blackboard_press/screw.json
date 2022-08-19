@@ -1,0 +1,60 @@
+{
+	"credit": "Made by april",
+	"parent": "aurorasdeco:block/blackboard_press/base",
+	"elements": [
+		{
+			"name": "screw",
+			"from": [ 6, 7, 6 ],
+			"to": [ 10, 16, 10 ],
+			"rotation": {"angle": 0, "axis": "y", "origin": [ 8, 8.25, 8 ]},
+			"faces": {
+				"north": {"uv": [ 0, 4, 4, 13 ], "texture": "#screw"},
+				"east":  {"uv": [ 0, 4, 4, 13 ], "texture": "#screw"},
+				"south": {"uv": [ 0, 4, 4, 13 ], "texture": "#screw"},
+				"west":  {"uv": [ 0, 4, 4, 13 ], "texture": "#screw"},
+				"up":    {"uv": [ 0, 0, 4, 4  ], "texture": "#screw", "cullface": "up"}
+			}
+		},
+		{
+			"name": "handle_left",
+			"from": [ 3, 13, 7 ],
+			"to": [ 6, 15, 8 ],
+			"faces": {
+				"north": {"uv": [ 4, 1, 7, 3 ], "texture": "#screw"},
+				"south": {"uv": [ 4, 1, 7, 3 ], "texture": "#screw"},
+				"west":  {"uv": [ 7, 1, 8, 3 ], "texture": "#screw"},
+				"up":    {"uv": [ 4, 0, 7, 1 ], "texture": "#screw"},
+				"down":  {"uv": [ 4, 3, 7, 4 ], "texture": "#screw"}
+			}
+		},
+		{
+			"name": "handle_right",
+			"from": [ 10, 13, 8 ],
+			"to": [ 13, 15, 9 ],
+			"faces": {
+				"north": {"uv": [ 4, 1, 7, 3 ], "texture": "#screw"},
+				"east":  {"uv": [ 7, 1, 8, 3 ], "texture": "#screw"},
+				"south": {"uv": [ 4, 1, 7, 3 ], "texture": "#screw"},
+				"up":    {"uv": [ 4, 0, 7, 1 ], "texture": "#screw"},
+				"down":  {"uv": [ 4, 3, 7, 4 ], "texture": "#screw"}
+			}
+		}
+	],
+	"display": {},
+	"groups": [
+		{
+			"name": "screw",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [
+				0,
+				{
+					"name": "handles",
+					"origin": [0, 0, 0],
+					"color": 0,
+					"children": [1, 2]
+				}
+			]
+		}
+	]
+}

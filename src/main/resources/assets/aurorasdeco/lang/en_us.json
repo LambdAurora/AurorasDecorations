@@ -53,6 +53,7 @@
   "block.aurorasdeco.waxed_chalkboard": "Waxed Chalkboard",
   "block.aurorasdeco.glassboard": "Glassboard",
   "block.aurorasdeco.waxed_glassboard": "Waxed Glassboard",
+  "block.aurorasdeco.blackboard_press": "Blackboard Press",
 
   "block.aurorasdeco.bench": "%s Bench",
 
@@ -164,6 +165,7 @@
   "block.aurorasdeco.wind_chime": "Wind Chime",
 
   "item.aurorasdeco.copper_sulfate": "Copper Sulfate",
+  "item.aurorasdeco.painter_palette": "Painter's Palette",
   "item.aurorasdeco.seat_rest": "%s Seat Rest",
   "item.aurorasdeco.sign_post": "%s Sign Post",
 
@@ -193,6 +195,7 @@
   "tag.aurorasdeco.sturdy_stone_components": "Components of Sturdy Stone",
   "tag.aurorasdeco.small_log_piles": "Small Log Piles",
   "tag.aurorasdeco.stumps": "Stumps",
+  "tag.c.copper_sulfates": "Copper Sulfates",
   "tag.c.vegetation.on_water_surface": "Vegetation on top of water surface",
 
   "aurorasdeco.wood_type.oak": "Oak",

@@ -24,7 +24,6 @@ import com.terraformersmc.terraform.sign.block.TerraformSignBlock;
 import com.terraformersmc.terraform.sign.block.TerraformWallSignBlock;
 import com.terraformersmc.terraform.wood.block.TerraformTrapdoorBlock;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.accessor.BlockEntityTypeAccessor;
 import dev.lambdaurora.aurorasdeco.accessor.BlockItemAccessor;
 import dev.lambdaurora.aurorasdeco.accessor.ItemExtensions;
 import dev.lambdaurora.aurorasdeco.advancement.PetUsePetBedCriterion;
@@ -34,20 +33,16 @@ import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigPottedCactusBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigStaticFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.block.entity.*;
-import dev.lambdaurora.aurorasdeco.item.BlackboardItem;
-import dev.lambdaurora.aurorasdeco.item.DerivedBlockItem;
-import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
-import dev.lambdaurora.aurorasdeco.item.SignPostItem;
+import dev.lambdaurora.aurorasdeco.item.*;
 import dev.lambdaurora.aurorasdeco.recipe.BlackboardCloneRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.ExplodingRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
 import dev.lambdaurora.aurorasdeco.screen.CopperHopperScreenHandler;
 import dev.lambdaurora.aurorasdeco.screen.SawmillScreenHandler;
 import dev.lambdaurora.aurorasdeco.screen.ShelfScreenHandler;
+import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.util.Derivator;
 import dev.lambdaurora.aurorasdeco.util.Registrar;
-import dev.lambdaurora.aurorasdeco.util.RegistrationHelper;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.OxidizableBlocksRegistry;
@@ -70,6 +65,7 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
+import org.quiltmc.qsl.block.entity.api.QuiltBlockEntityTypeBuilder;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 import org.quiltmc.qsl.registry.api.event.RegistryMonitor;
@@ -338,6 +334,16 @@ public final class AurorasDecoRegistry {
 			new BlackboardBlock(QuiltBlockSettings.copyOf(GLASSBOARD_BLOCK), true),
 			new QuiltItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
 			BlackboardItem::new);
+
+	public static final BlackboardPressBlock BLACKBOARD_PRESS_BLOCK = registerWithItem("blackboard_press",
+			new BlackboardPressBlock(QuiltBlockSettings.of(Material.METAL)),
+			new QuiltItemSettings().group(ItemGroup.DECORATIONS)
+	);
+
+	public static final PainterPaletteItem PAINTER_PALETTE_ITEM = registerItem("painter_palette", new PainterPaletteItem(new QuiltItemSettings()
+			.group(ItemGroup.TOOLS)
+			.maxCount(1)
+	));
 	//endregion
 
 	//region Copper Sulfate
@@ -401,7 +407,7 @@ public final class AurorasDecoRegistry {
 	public static final BlockEntityType<LanternBlockEntity> WALL_LANTERN_BLOCK_ENTITY_TYPE = Registry.register(
 			Registry.BLOCK_ENTITY_TYPE,
 			id("lantern"),
-			FabricBlockEntityTypeBuilder.create(LanternBlockEntity::new, WALL_LANTERN_BLOCK, SOUL_WALL_LANTERN_BLOCK, REDSTONE_WALL_LANTERN_BLOCK)
+			QuiltBlockEntityTypeBuilder.create(LanternBlockEntity::new, WALL_LANTERN_BLOCK, SOUL_WALL_LANTERN_BLOCK, REDSTONE_WALL_LANTERN_BLOCK)
 					.build()
 	);
 	public static final WallLanternBlock<AmethystLanternBlock> AMETHYST_WALL_LANTERN_BLOCK = LanternRegistry.registerWallLantern(AMETHYST_LANTERN_BLOCK);
@@ -511,6 +517,9 @@ public final class AurorasDecoRegistry {
 			BlackboardBlockEntity::new,
 			BLACKBOARD_BLOCK, CHALKBOARD_BLOCK, GLASSBOARD_BLOCK,
 			WAXED_BLACKBOARD_BLOCK, WAXED_CHALKBOARD_BLOCK, WAXED_GLASSBOARD_BLOCK
+	);
+	public static final BlockEntityType<BlackboardPressBlockEntity> BLACKBOARD_PRESS_BLOCK_ENTITY = registerBlockEntity(
+			"blackboard_press", BlackboardPressBlockEntity::new, BLACKBOARD_PRESS_BLOCK
 	);
 	public static final BlockEntityType<BookPileBlockEntity> BOOK_PILE_BLOCK_ENTITY_TYPE = registerBlockEntity(
 			"book_pile", BookPileBlockEntity::new, BOOK_PILE_BLOCK
@@ -626,9 +635,9 @@ public final class AurorasDecoRegistry {
 	}
 
 	private static <T extends BlockEntity> BlockEntityType<T> registerBlockEntity(String name,
-	                                                                              FabricBlockEntityTypeBuilder.Factory<T> factory,
+	                                                                              BlockEntityType.BlockEntityFactory<T> factory,
 	                                                                              Block... blocks) {
-		return Registry.register(Registry.BLOCK_ENTITY_TYPE, id(name), FabricBlockEntityTypeBuilder.create(factory, blocks).build());
+		return Registry.register(Registry.BLOCK_ENTITY_TYPE, id(name), QuiltBlockEntityTypeBuilder.create(factory, blocks).build());
 	}
 
 	private static <R extends Recipe<?>, T extends RecipeSerializer<R>> T register(String name, T recipe) {
@@ -679,7 +688,7 @@ public final class AurorasDecoRegistry {
 						if (flowerPotBlock == Blocks.FLOWER_POT) return;
 
 						context.register(
-								AurorasDeco.id(RegistrationHelper.getIdPath("hanging_flower_pot", context.id(), "^potted[_/]")),
+								AurorasDeco.id(AuroraUtil.getIdPath("hanging_flower_pot", context.id(), "^potted[_/]")),
 								new HangingFlowerPotBlock(flowerPotBlock)
 						);
 					} else {
@@ -687,11 +696,11 @@ public final class AurorasDecoRegistry {
 						if (context.value() instanceof FenceBlock fenceBlock) {
 							var signPostBlock = Registry.register(
 									context.registry(),
-									AurorasDeco.id(RegistrationHelper.getIdPath("sign_post", context.id(), "_fence$")),
+									AurorasDeco.id(AuroraUtil.getIdPath("sign_post", context.id(), "_fence$")),
 									new SignPostBlock(fenceBlock)
 							);
 
-							((BlockEntityTypeAccessor) SIGN_POST_BLOCK_ENTITY_TYPE).aurorasdeco$addSupportedBlock(signPostBlock);
+							SIGN_POST_BLOCK_ENTITY_TYPE.addSupportedBlock(signPostBlock);
 						} else LanternRegistry.tryRegisterWallLantern(context.registry(), context.value(), context.id());
 					}
 				});
@@ -722,8 +731,6 @@ public final class AurorasDecoRegistry {
 						Item.BLOCK_ITEMS.put(chandelier, context.value());
 					}
 				});
-
-		RegistrationHelper.BLOCK.init();
 
 		var colors = DyeColor.values();
 

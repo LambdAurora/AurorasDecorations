@@ -158,7 +158,7 @@ public class BlackboardBlockEntity extends BasicBlockEntity implements Nameable,
 	/**
 	 * Returns whether this blackboard is empty or not.
 	 *
-	 * @return {@code true} if empty, else {@code false}
+	 * @return {@code true} if empty, or {@code false} otherwise
 	 */
 	public boolean isEmpty() {
 		return this.blackboard.isEmpty();

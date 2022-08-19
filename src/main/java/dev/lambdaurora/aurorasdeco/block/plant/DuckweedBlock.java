@@ -18,6 +18,7 @@
 package dev.lambdaurora.aurorasdeco.block.plant;
 
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoTags;
+import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import net.minecraft.block.*;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -43,7 +44,10 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Represents duckweed as a block.
@@ -52,7 +56,7 @@ import java.util.List;
  * @version 1.0.0
  * @since 1.0.0
  */
-public final class DuckweedBlock extends Block implements FluidFillable {
+public final class DuckweedBlock extends Block implements FluidFillable, Fertilizable {
 	private static final VoxelShape SHAPE = Block.createCuboidShape(0.0, 15.0, 0.0, 16.0, 16.0, 16.0);
 
 	public DuckweedBlock() {
@@ -68,12 +72,21 @@ public final class DuckweedBlock extends Block implements FluidFillable {
 
 	/* Placement */
 
-	@Override
-	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+	private boolean canPlaceAt(BlockView world, BlockPos pos, boolean allowExisting) {
 		if (!world.getFluidState(pos).isEqualAndStill(Fluids.WATER))
 			return false;
+		BlockState existingState = world.getBlockState(pos);
+
+		if ((!allowExisting && existingState.isOf(this)) && !world.getBlockState(pos).isOf(Blocks.WATER))
+			return false;
+
 		BlockState aboveState = world.getBlockState(pos.up());
 		return aboveState.isAir() || aboveState.isIn(AurorasDecoTags.VEGETATION_ON_WATER_SURFACE);
+	}
+
+	@Override
+	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+		return this.canPlaceAt(world, pos, true);
 	}
 
 	@Override
@@ -119,6 +132,33 @@ public final class DuckweedBlock extends Block implements FluidFillable {
 	@Override
 	public boolean tryFillWithFluid(WorldAccess world, BlockPos pos, BlockState state, FluidState fluidState) {
 		return false;
+	}
+
+	/* Fertilization */
+
+	@Override
+	public boolean isFertilizable(BlockView world, BlockPos pos, BlockState state, boolean isClient) {
+		return AuroraUtil.HORIZONTAL_DIRECTIONS.stream().anyMatch(direction -> this.canPlaceAt(world, pos.offset(direction), false));
+	}
+
+	@Override
+	public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) {
+		return true;
+	}
+
+	@Override
+	public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
+		var list = new ArrayList<>(AuroraUtil.HORIZONTAL_DIRECTIONS);
+		Collections.shuffle(list, random);
+
+		for (var direction : list) {
+			BlockPos neighborPos = pos.offset(direction);
+
+			if (this.canPlaceAt(world, neighborPos, false)) {
+				world.setBlockState(neighborPos, this.getDefaultState(), Block.NOTIFY_LISTENERS);
+				break;
+			}
+		}
 	}
 
 	/* Tooltip */

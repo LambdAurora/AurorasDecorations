@@ -15,14 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.mixin;
+package dev.lambdaurora.aurorasdeco.block.entity;
 
-import net.fabricmc.fabric.impl.registry.sync.trackers.StateIdTracker;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Invoker;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.util.math.BlockPos;
 
-@Mixin(StateIdTracker.class)
-public interface StateIdTrackerAccessor {
-	@Invoker(remap = false)
-	void callRecalcStateMap();
+public class BlackboardPressBlockEntity extends BlockEntity implements BlockEntityHelper {
+	public BlackboardPressBlockEntity(BlockPos blockPos, BlockState blockState) {
+		super(AurorasDecoRegistry.BLACKBOARD_PRESS_BLOCK_ENTITY, blockPos, blockState);
+	}
 }

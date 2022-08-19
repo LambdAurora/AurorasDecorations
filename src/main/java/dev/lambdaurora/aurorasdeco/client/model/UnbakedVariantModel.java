@@ -108,6 +108,7 @@ public class UnbakedVariantModel<T extends UnbakedModel> implements UnbakedModel
 		return builder.toString();
 	}
 
+	@SuppressWarnings("unchecked")
 	private static <T extends Comparable<T>> String propertyValueToString(Property<T> property, Comparable<?> value) {
 		return property.name((T) value);
 	}

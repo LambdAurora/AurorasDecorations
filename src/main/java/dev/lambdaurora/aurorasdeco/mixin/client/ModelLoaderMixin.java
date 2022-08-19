@@ -21,6 +21,7 @@ import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.block.entity.BlackboardBlockEntity;
 import dev.lambdaurora.aurorasdeco.client.model.*;
+import dev.lambdaurora.aurorasdeco.client.renderer.BlackboardPressBlockEntityRenderer;
 import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.render.model.json.ModelVariantMap;
@@ -84,6 +85,13 @@ public abstract class ModelLoaderMixin {
 								this.putModel(restModelId, model);
 								this.modelsToBake.put(restModelId, model);
 							});
+
+					BlackboardPressBlockEntityRenderer.initModels(this.resourceManager, this.variantMapDeserializationContext,
+							(pressModelId, model) -> {
+								this.putModel(pressModelId, model);
+								this.modelsToBake.put(pressModelId, model);
+							});
+
 					BlackboardBlockEntity.markAllMeshesDirty();
 				}
 

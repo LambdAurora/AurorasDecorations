@@ -132,7 +132,7 @@ public class BenchBlock extends Block implements BlockEntityProvider, SeatBlock,
 	 *
 	 * @param world the world the bench is in
 	 * @param pos the position of the bench
-	 * @return the {@link SeatRestItem} if the bench block has a rest, otherwise {@code null}
+	 * @return the {@link SeatRestItem} if the bench block has a rest, or {@code null} otherwise
 	 */
 	private @Nullable SeatRestItem getRest(BlockView world, BlockPos pos) {
 		var bench = this.getBlockEntity(world, pos);
@@ -147,7 +147,7 @@ public class BenchBlock extends Block implements BlockEntityProvider, SeatBlock,
 	 * @param otherPos the other block position
 	 * @param benchFacing this bench facing direction
 	 * @param rest the rest used on self
-	 * @return {@code true} if this bench can connect to the given block, otherwise {@code false}
+	 * @return {@code true} if this bench can connect to the given block, or {@code false} otherwise
 	 */
 	public boolean canConnect(BlockView world, BlockPos otherPos, Direction benchFacing, @Nullable SeatRestItem rest) {
 		return this.canConnect(world, world.getBlockState(otherPos), otherPos, benchFacing, rest);
@@ -161,7 +161,7 @@ public class BenchBlock extends Block implements BlockEntityProvider, SeatBlock,
 	 * @param otherPos the other block position
 	 * @param benchFacing this bench facing direction
 	 * @param rest the rest used on self
-	 * @return {@code true} if this bench can connect to the given block, otherwise {@code false}
+	 * @return {@code true} if this bench can connect to the given block, or {@code false} otherwise
 	 */
 	public boolean canConnect(BlockView world, BlockState other, BlockPos otherPos, Direction benchFacing, @Nullable SeatRestItem rest) {
 		return other.getBlock() == this && benchFacing == other.get(FACING)

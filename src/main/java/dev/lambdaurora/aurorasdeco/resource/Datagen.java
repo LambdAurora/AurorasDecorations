@@ -665,7 +665,7 @@ public final class Datagen {
 
 	private static void generateDirectionalSignsClientData(ResourceManager resourceManager, LangBuilder langBuilder) {
 		NativeImage oakTexture = null;
-		try (var resource = resourceManager.method_14486(SignPostItem.ABSOLUTE_OAK_SIGN_POST_TEXTURE)) {
+		try (var resource = resourceManager.getResource(SignPostItem.ABSOLUTE_OAK_SIGN_POST_TEXTURE)) {
 			oakTexture = NativeImage.read(resource.getInputStream());
 		} catch (IOException e) {
 			LOGGER.error("Cannot read the default texture of the directional sign.", e);
@@ -691,7 +691,7 @@ public final class Datagen {
 
 			var planksTextureId = planks.texture();
 			var texturePath = new Identifier(planksTextureId.getNamespace(), "textures/" + planksTextureId.getPath() + ".png");
-			try (var resource = resourceManager.method_14486(texturePath)) {
+			try (var resource = resourceManager.getResource(texturePath)) {
 				var image = NativeImage.read(resource.getInputStream());
 
 				var woodPalette = ColorUtil.getPaletteFromImage(image, 8);

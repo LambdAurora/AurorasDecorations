@@ -67,4 +67,4 @@ Aurora's Decorations adds new decorations features like wall lantern or big flow
 ![Daffodils](images/daffodils.png)
 
 [quilt]: https://quiltmc.org
-[Mod loader: Quilt]: https://img.shields.io/badge/modloader-Quilt-1976d2?style=flat-square
+[Mod loader: Quilt]: https://img.shields.io/badge/modloader-Quilt-9115ff?style=flat-square

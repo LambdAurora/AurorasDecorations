@@ -54,7 +54,7 @@ public class AuroraFlowerBlock extends FlowerBlock implements Fertilizable {
 				.sounds(BlockSoundGroup.GRASS);
 	}
 
-	/* Fertilizable */
+	/* Fertilization */
 
 	@Override
 	public boolean isFertilizable(BlockView world, BlockPos pos, BlockState state, boolean isClient) {

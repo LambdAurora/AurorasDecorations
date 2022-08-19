@@ -71,7 +71,7 @@ public class RestModelManager {
 		var benchBlock = Registry.BLOCK.get(AurorasDeco.id("bench/" + pathName));
 		var benchRestId = AurorasDeco.id("blockstates/bench/" + pathName + "_rest.json");
 		if (benchBlock != Blocks.AIR) {
-			try (var resource = resourceManager.method_14486(benchRestId)) {
+			try (var resource = resourceManager.getResource(benchRestId)) {
 				var stateFactory = deserializationContext.getStateFactory();
 				deserializationContext.setStateFactory(benchBlock.getStateManager());
 				var map = ModelVariantMap.fromJson(deserializationContext, new InputStreamReader(resource.getInputStream()));
