@@ -178,8 +178,9 @@
   "subtitles.aurorasdeco.block.shelf.add_item": "Shelf fills",
   "subtitles.aurorasdeco.block.shelf.swing": "Shelf empties",
   "subtitles.aurorasdeco.entity.armor_stand.hide_base_plate": "Hide armor stand base plate",
-
+  
   "tag.aurorasdeco.azalea_logs": "Azalea Logs",
+  "tag.aurorasdeco.benches": "Benches",
   "tag.aurorasdeco.blackboards": "Blackboards",
   "tag.aurorasdeco.braziers": "Braziers",
   "tag.aurorasdeco.copper_sulfate_decomposable": "Decomposable from Copper Sulfate",
@@ -189,8 +190,11 @@
   "tag.aurorasdeco.jacaranda_leaves": "Jacaranda Leaves",
   "tag.aurorasdeco.jacaranda_logs": "Jacaranda Logs",
   "tag.aurorasdeco.pet_beds": "Pet Beds",
+  "tag.aurorasdeco.shelves": "Shelves",
   "tag.aurorasdeco.sleeping_bags": "Sleeping Bags",
   "tag.aurorasdeco.sturdy_stone_components": "Components of Sturdy Stone",
+  "tag.aurorasdeco.small_log_piles": "Small Log Piles",
+  "tag.aurorasdeco.stumps": "Stumps",
   "tag.c.copper_sulfates": "Copper Sulfates",
   "tag.c.vegetation.on_water_surface": "Vegetation on top of water surface",
 
@@ -258,5 +262,10 @@
   "aurorasdeco.wood_type.soul_ice.white": "White Plank",
   "aurorasdeco.wood_type.soul_ice.light_gray": "Light Gray Plank",
   "aurorasdeco.wood_type.soul_ice.gray": "Gray Plank",
-  "aurorasdeco.wood_type.soul_ice.black": "Black Plank"
+  "aurorasdeco.wood_type.soul_ice.black": "Black Plank",
+  
+  "emi.category.aurorasdeco.woodcutting": "Woodcutting",
+  "emi.category.aurorasdeco.exploding": "Exploding",
+  
+  "tooltip.aurorasdeco.emi.as_item_entity": "Drop into the world, as an entity"
 }
