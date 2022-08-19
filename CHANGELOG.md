@@ -13,5 +13,8 @@
 
 ### 1.0.0-beta.5
 
-- Improved accuracy of dynamic language generation after testing with French.
+- Added [EMI] support.
 - Added missing French translations.
+- Improved accuracy of dynamic language generation after testing with French.
+
+[EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"

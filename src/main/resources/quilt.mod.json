@@ -29,6 +29,9 @@
       ],
       "client_init": [
         "dev.lambdaurora.aurorasdeco.client.AurorasDecoClient"
+      ],
+      "emi": [
+        "dev.lambdaurora.aurorasdeco.hook.EmiHooks"
       ]
     },
     "depends": [
@@ -59,6 +62,10 @@
       {
         "id": "trinkets",
         "versions": ">=3.4.0",
+        "optional": true
+      },
+      {
+        "id": "emi",
         "optional": true
       }
     ]

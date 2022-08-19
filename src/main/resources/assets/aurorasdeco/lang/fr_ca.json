@@ -183,6 +183,7 @@
   "subtitles.aurorasdeco.entity.armor_stand.hide_base_plate": "Cache la plaque d'un porte-armure",
 
   "tag.aurorasdeco.azalea_logs": "Bûches d'azalée",
+  "tag.aurorasdeco.benches": "Bancs",
   "tag.aurorasdeco.blackboards": "Tableaux noirs",
   "tag.aurorasdeco.braziers": "Braseros",
   "tag.aurorasdeco.copper_sulfate_decomposable": "Décomposables avec du sulfate de cuivre",
@@ -192,7 +193,10 @@
   "tag.aurorasdeco.jacaranda_leaves": "Feuilles de Jacaranda",
   "tag.aurorasdeco.jacaranda_logs": "Bûches de Jacaranda",
   "tag.aurorasdeco.pet_beds": "Petits lits",
+  "tag.aurorasdeco.shelves": "Étagères",
   "tag.aurorasdeco.sleeping_bags": "Sacs de couchage",
+  "tag.aurorasdeco.small_log_piles": "Petites piles de bûches",
+  "tag.aurorasdeco.stumps": "Souches",
   "tag.aurorasdeco.sturdy_stone_components": "Composants pour de roche renforcée",
   "tag.c.copper_sulfates": "Sulfates de cuivre",
   "tag.c.vegetation.on_water_surface": "Végétations vivants sur la surface de l'eau",
@@ -230,5 +234,10 @@
   "aurorasdeco.wood_type.charm.azalea": "azalée",
   "aurorasdeco.wood_type.charm.ebony": "ébène",
   "aurorasdeco.wood_type.betternether.willow": "saule",
-  "aurorasdeco.wood_type.twigs.stripped_bamboo": "bambou écorcé"
+  "aurorasdeco.wood_type.twigs.stripped_bamboo": "bambou écorcé",
+
+  "emi.category.aurorasdeco.woodcutting": "Découpe de bois",
+  "emi.category.aurorasdeco.exploding": "Par explosion",
+
+  "tooltip.aurorasdeco.emi.as_item_entity": "À jeter dans le monde, en tant qu'entité."
 }

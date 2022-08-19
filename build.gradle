@@ -123,6 +123,10 @@ dependencies {
 		exclude group: 'net.fabricmc.fabric-api'
 		exclude group: 'org.terraformersmc'
 	}
+	modImplementation("dev.emi:emi:${project.emi_version}") {
+		exclude group: 'net.fabricmc'
+		exclude group: 'net.fabricmc.fabric-api'
+	}
 
 	testmodImplementation sourceSets.main.output
 }
@@ -172,6 +176,7 @@ modrinth {
 	dependencies {
 		required.project "qsl"
 		optional.project "trinkets"
+		optional.project "emi"
 	}
 
 	// Changelog fetching
@@ -218,6 +223,7 @@ curseforge {
 			relations {
 				requiredDependency "qsl"
 				optionalDependency "trinkets"
+				optionalDependency "emi"
 			}
 		}
 
