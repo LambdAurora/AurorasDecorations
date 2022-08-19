@@ -810,8 +810,8 @@ public final class Datagen {
 
 			DynamicLang.registerProvider(
 					"block.aurorasdeco.small_log_pile." + block.getWoodType().getAbsoluteLangPath(),
-					entry -> entries -> entries.get("block.aurorasdeco.small_" + block.getWoodType().getLogType() + "_pile")
-							.formatted(entries.get(block.getWoodType().getFullLangPath()))
+					entry -> context -> context.getFormatted("block.aurorasdeco.small_" + block.getWoodType().getLogType() + "_pile",
+							context.getOrKey(block.getWoodType().getFullLangPath()))
 			);
 		});
 	}

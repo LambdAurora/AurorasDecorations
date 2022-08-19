@@ -10,3 +10,8 @@
 
 - Improved dynamic language generation.
 - Improved Biomes You'll Go compatibility.
+
+### 1.0.0-beta.5
+
+- Improved accuracy of dynamic language generation after testing with French.
+- Added missing French translations.

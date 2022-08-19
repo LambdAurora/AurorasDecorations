@@ -20,6 +20,8 @@ package dev.lambdaurora.aurorasdeco.resource.datagen;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.Map;
@@ -32,7 +34,7 @@ import java.util.function.Function;
  *
  * @author LambdAurora
  */
-public class DynamicLang {
+public final class DynamicLang {
 	private static final Map<String, EntryProvider> PROVIDERS = new Object2ObjectOpenHashMap<>();
 
 	public static void registerProvider(String entry, Function<String, EntryProvider> provider) {
@@ -42,7 +44,7 @@ public class DynamicLang {
 	public static void registerWooded(String baseName, WoodType woodType) {
 		registerProvider(
 				baseName + '.' + woodType.getAbsoluteLangPath(),
-				entry -> entries -> entries.get(baseName).formatted(entries.get(woodType.getFullLangPath()))
+				entry -> context -> context.getFormatted(baseName, context.getOrKey(woodType.getFullLangPath()))
 		);
 	}
 
@@ -53,14 +55,28 @@ public class DynamicLang {
 	 */
 	@ApiStatus.Internal
 	public static void apply(Map<String, String> entries) {
+		var context = new Context(entries);
+
 		var oakPlanks = WoodType.OAK.getComponent(WoodType.ComponentType.PLANKS);
 		var oakLog = WoodType.OAK.getComponent(WoodType.ComponentType.LOG);
+		var oakSlab = WoodType.OAK.getComponent(WoodType.ComponentType.SLAB);
 
-		var oakPlanksName = entries.get(oakPlanks.block().getTranslationKey());
-		var oakLogName = entries.get(oakLog.block().getTranslationKey());
+		var oakPlanksName = context.get(oakPlanks.block().getTranslationKey());
+		var oakLogName = context.get(oakLog.block().getTranslationKey());
+		var oakSlabName = context.get(oakSlab.block().getTranslationKey());
+		assert oakLogName != null;
 		var common = extractCommonPart(oakPlanksName, oakLogName);
 
 		if (common != null) {
+			{
+				assert oakSlabName != null;
+				var refined = extractCommonPart(common, oakSlabName);
+
+				if (refined != null) {
+					common = refined;
+				}
+			}
+
 			var planksName = oakPlanksName.replace(common, "").strip();
 			var logName = oakLogName.replace(common, "").strip();
 
@@ -73,7 +89,7 @@ public class DynamicLang {
 				if (component == null) {
 					component = woodType.getComponent(WoodType.ComponentType.LOG);
 				} else {
-					var compName = entries.get(component.block().getTranslationKey());
+					var compName = context.get(component.block().getTranslationKey());
 
 					if (compName != null)
 						woodName = compName.replace(planksName, "").strip();
@@ -81,7 +97,7 @@ public class DynamicLang {
 
 				if (component == null) return;
 				else if (woodName == null) {
-					var compName = entries.get(component.block().getTranslationKey());
+					var compName = context.get(component.block().getTranslationKey());
 
 					if (compName != null)
 						woodName = compName.replace(logName, "").strip();
@@ -94,28 +110,34 @@ public class DynamicLang {
 		}
 
 		PROVIDERS.forEach((entry, provider) -> {
-			entries.computeIfAbsent(entry, s -> provider.provideEntry(entries));
+			entries.computeIfAbsent(entry, s -> provider.provideEntry(context));
 		});
 	}
 
-	private static String extractCommonPart(String planks, String log) {
-		for (int i = 0; i < planks.length() && i < log.length(); i++) {
-			if (planks.charAt(i) != log.charAt(i)) {
+	private static String extractCommonPart(String first, String second) {
+		if (second.startsWith(first)) {
+			return first;
+		} else if (second.endsWith(first)) {
+			return first;
+		}
+
+		for (int i = 0; i < first.length() && i < second.length(); i++) {
+			if (first.charAt(i) != second.charAt(i)) {
 				if (i != 0) {
-					return planks.substring(0, i).strip();
+					return first.substring(0, i).strip();
 				}
 
 				break;
 			}
 		}
 
-		String reversedPlanks = new StringBuilder(planks).reverse().toString();
-		String reversedLog = new StringBuilder(log).reverse().toString();
+		String reversedFirst = new StringBuilder(first).reverse().toString();
+		String reversedSecond = new StringBuilder(second).reverse().toString();
 
-		for (int i = 0; i < reversedPlanks.length() && i < reversedLog.length(); i++) {
-			if (reversedPlanks.charAt(i) != reversedLog.charAt(i)) {
+		for (int i = 0; i < reversedFirst.length() && i < reversedSecond.length(); i++) {
+			if (reversedFirst.charAt(i) != reversedSecond.charAt(i)) {
 				if (i != 0) {
-					return new StringBuilder(reversedPlanks.substring(0, i)).reverse().toString().strip();
+					return new StringBuilder(reversedFirst.substring(0, i)).reverse().toString().strip();
 				}
 
 				break;
@@ -127,6 +149,27 @@ public class DynamicLang {
 
 	@FunctionalInterface
 	public interface EntryProvider {
-		String provideEntry(@UnmodifiableView Map<String, String> entries);
+		String provideEntry(Context context);
+	}
+
+	public record Context(@UnmodifiableView Map<String, String> entries) {
+		public @Nullable String get(String key) {
+			return this.entries.get(key);
+		}
+
+		@Contract(value = "!null -> !null", pure = true)
+		public String getOrKey(String key) {
+			return this.entries.getOrDefault(key, key);
+		}
+
+		public String getFormatted(String key, Object... args) {
+			var value = this.get(key);
+
+			if (value == null) {
+				return key;
+			}
+
+			return value.formatted(args);
+		}
 	}
 }
