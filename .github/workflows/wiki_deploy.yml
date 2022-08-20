@@ -4,13 +4,28 @@ on:
   push:
     branches:
       - '*'
+  # Allows to run this workflow manually.
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: 'Checkout'
+        uses: actions/checkout@v3
+      - name: 'Setup Pages'
+        uses: actions/configure-pages@v1
       - name: 'Setup Deno'
         uses: denoland/setup-deno@v1
         with:
@@ -21,8 +36,22 @@ jobs:
           cd wiki
           deno run --allow-read --allow-write --unstable deploy.mjs "/AurorasDecorations"
 
-      - name: 'Deploy Github Pages'
-        uses: JamesIves/github-pages-deploy-action@4.1.5
+      - name: 'Upload artifact'
+        uses: actions/upload-pages-artifact@v1
         with:
-          branch: gh-pages
-          folder: wiki/deploy_out
+          path: ./wiki/deploy_out
+
+  deploy:
+    needs: build
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Deploy to GitHub Pages'
+        id: deployment
+        uses: actions/deploy-pages@v1
