@@ -91,7 +91,7 @@ public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.Dynam
 			var blackboard = Blackboard.fromNbt(nbt);
 			BlackboardTexture.fromBlackboard(blackboard)
 					.render(
-							matrices.peek().getPosition(), vertexConsumers,
+							matrices.peek().getModel(), vertexConsumers,
 							blackboard.isLit() ? LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE : light,
 							false
 					);
@@ -99,7 +99,7 @@ public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.Dynam
 			if (stack.getTranslationKey().contains("glass")) {
 				BlackboardTexture.fromBlackboard(blackboard)
 						.render(
-								matrices.peek().getPosition(), vertexConsumers,
+								matrices.peek().getModel(), vertexConsumers,
 								blackboard.isLit() ? LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE : light,
 								true
 						);

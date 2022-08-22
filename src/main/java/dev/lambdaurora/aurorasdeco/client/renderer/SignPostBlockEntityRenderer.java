@@ -109,9 +109,9 @@ public class SignPostBlockEntityRenderer implements BlockEntityRenderer<SignPost
 			var text = list.isEmpty() ? OrderedText.EMPTY : list.get(0);
 			float x = -this.textRenderer.getWidth(text) / 2.f;
 			if (shouldRenderGlow) {
-				this.textRenderer.drawWithOutline(text, x, 0, color, backgroundColor, matrices.peek().getPosition(), vertexConsumers, textLight);
+				this.textRenderer.drawWithOutline(text, x, 0, color, backgroundColor, matrices.peek().getModel(), vertexConsumers, textLight);
 			} else {
-				this.textRenderer.draw(text, x, 0, color, false, matrices.peek().getPosition(), vertexConsumers,
+				this.textRenderer.draw(text, x, 0, color, false, matrices.peek().getModel(), vertexConsumers,
 						false, 0, textLight);
 			}
 		}

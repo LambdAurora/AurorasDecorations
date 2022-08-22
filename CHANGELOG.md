@@ -15,6 +15,7 @@
 
 - Added [EMI] support.
 - Added missing French translations.
+- Removed redundant axe item mixins.
 - Improved accuracy of dynamic language generation after testing with French.
 
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"
