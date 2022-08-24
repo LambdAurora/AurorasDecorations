@@ -86,13 +86,13 @@ public class ShelfScreenHandler extends ScreenHandler {
 	}
 
 	@Override
-	public ItemStack transferSlot(PlayerEntity player, int index) {
+	public ItemStack quickTransfer(PlayerEntity player, int fromIndex) {
 		var stack = ItemStack.EMPTY;
-		var slot = this.slots.get(index);
+		var slot = this.slots.get(fromIndex);
 		if (slot.hasStack()) {
 			var itemStack2 = slot.getStack();
 			stack = itemStack2.copy();
-			if (index < 8) {
+			if (fromIndex < 8) {
 				if (!this.insertItem(itemStack2, 8, this.slots.size(), true)) {
 					return ItemStack.EMPTY;
 				}

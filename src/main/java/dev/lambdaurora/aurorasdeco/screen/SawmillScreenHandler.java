@@ -180,21 +180,21 @@ public final class SawmillScreenHandler extends ScreenHandler {
 	}
 
 	@Override
-	public ItemStack transferSlot(PlayerEntity player, int index) {
+	public ItemStack quickTransfer(PlayerEntity player, int fromIndex) {
 		var outputStack = ItemStack.EMPTY;
-		var slot = this.slots.get(index);
+		var slot = this.slots.get(fromIndex);
 		if (slot.hasStack()) {
 			var stack = slot.getStack();
 			var item = stack.getItem();
 			outputStack = stack.copy();
-			if (index == 1) {
+			if (fromIndex == 1) {
 				item.onCraft(stack, player.world, player);
 				if (!this.insertItem(stack, 2, 38, true)) {
 					return ItemStack.EMPTY;
 				}
 
 				slot.onQuickTransfer(stack, outputStack);
-			} else if (index == 0) {
+			} else if (fromIndex == 0) {
 				if (!this.insertItem(stack, 2, 38, false)) {
 					return ItemStack.EMPTY;
 				}
@@ -203,11 +203,11 @@ public final class SawmillScreenHandler extends ScreenHandler {
 				if (!this.insertItem(stack, 0, 1, false)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (index >= 2 && index < 29) {
+			} else if (fromIndex >= 2 && fromIndex < 29) {
 				if (!this.insertItem(stack, 29, 38, false)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (index >= 29 && index < 38 && !this.insertItem(stack, 2, 29, false)) {
+			} else if (fromIndex >= 29 && fromIndex < 38 && !this.insertItem(stack, 2, 29, false)) {
 				return ItemStack.EMPTY;
 			}
 

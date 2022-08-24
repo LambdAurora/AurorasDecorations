@@ -90,15 +90,15 @@ public class CopperHopperScreenHandler extends ScreenHandler {
 	}
 
 	@Override
-	public ItemStack transferSlot(PlayerEntity player, int index) {
-		var slot = this.slots.get(index);
+	public ItemStack quickTransfer(PlayerEntity player, int fromIndex) {
+		var slot = this.slots.get(fromIndex);
 		if (!slot.hasStack()) return ItemStack.EMPTY;
 
 		var currentStack = slot.getStack();
 		var stack = currentStack.copy();
 
 		// From hopper to player.
-		if (index <= this.inventory.size()) {
+		if (fromIndex <= this.inventory.size()) {
 			if (!this.insertItem(currentStack, this.inventory.size() + 1, this.slots.size(), true)) {
 				return ItemStack.EMPTY;
 			}
