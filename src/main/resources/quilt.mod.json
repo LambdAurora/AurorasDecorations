@@ -6,16 +6,17 @@
     "version": "${version}",
     "metadata": {
       "name": "Aurora's Decorations",
-      "description": "Some new decorations features.",
+      "description": "A decorations-focused mod which tries to have a twist for its different features.",
       "contributors": {
-        "LambdAurora": "Author",
+        "Aurora (Lambda Foxes)": "Author",
+        "Lavender (Lambda Foxes)": "Author",
         "april": "Artist",
         "harpsi": "Artist",
         "Kat": "Artist",
         "unascribed": "Artist"
       },
       "contact": {
-        "homepage": "https://modrinth.com/mod/aurorasdecorations",
+        "homepage": "https://lambdaurora.dev/AurorasDecorations/",
         "sources": "https://github.com/LambdAurora/AurorasDecorations.git",
         "issues": "https://github.com/LambdAurora/AurorasDecorations/issues"
       },
