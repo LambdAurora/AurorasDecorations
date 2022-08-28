@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableMap;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
@@ -121,7 +122,8 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
 		var direction = state.get(FACING);
 		var attachPos = pos.offset(direction.getOpposite());
 		var attachState = world.getBlockState(attachPos);
-		return !VoxelShapes.matchesAnywhere(attachState.getSidesShape(world, attachPos).getFace(direction),
+		return attachState.isIn(ConventionalBlockTags.CHESTS)
+				|| !VoxelShapes.matchesAnywhere(attachState.getSidesShape(world, attachPos).getFace(direction),
 				VALID_ATTACHMENTS.get(state.get(TYPE)), BooleanBiFunction.ONLY_SECOND);
 	}
 
