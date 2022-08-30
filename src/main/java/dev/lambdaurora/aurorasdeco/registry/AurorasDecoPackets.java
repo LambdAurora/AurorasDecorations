@@ -90,10 +90,11 @@ public final class AurorasDecoPackets {
 	public static void handlePainterPaletteScroll(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
 	                                              PacketByteBuf buf, PacketSender responseSender) {
 		double scrollDelta = buf.readDouble();
+		boolean toolModifier = buf.readBoolean();
 
 		server.execute(() -> {
 			if (player.getMainHandStack().getItem() instanceof PainterPaletteItem paletteItem) {
-				paletteItem.onScroll(player, player.getMainHandStack(), scrollDelta);
+				paletteItem.onScroll(player, player.getMainHandStack(), scrollDelta, toolModifier);
 			}
 		});
 	}

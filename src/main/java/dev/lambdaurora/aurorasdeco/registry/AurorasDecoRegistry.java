@@ -36,14 +36,10 @@ import dev.lambdaurora.aurorasdeco.item.*;
 import dev.lambdaurora.aurorasdeco.recipe.BlackboardCloneRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.ExplodingRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
-import dev.lambdaurora.aurorasdeco.screen.CopperHopperScreenHandler;
-import dev.lambdaurora.aurorasdeco.screen.SawmillScreenHandler;
-import dev.lambdaurora.aurorasdeco.screen.ShelfScreenHandler;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.util.Derivator;
 import dev.lambdaurora.aurorasdeco.util.Registrar;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -55,7 +51,6 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.SpecialRecipeSerializer;
-import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.stat.StatFormatter;
 import net.minecraft.util.DyeColor;
@@ -63,7 +58,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
 import net.minecraft.world.poi.PointOfInterestTypes;
-import org.quiltmc.qsl.block.content.registry.api.BlockContentRegistries;
 import org.quiltmc.qsl.block.entity.api.QuiltBlockEntityTypeBuilder;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
@@ -353,12 +347,12 @@ public final class AurorasDecoRegistry {
 	public static final BlackboardPressBlock BLACKBOARD_PRESS_BLOCK = registerBlock("blackboard_press",
 			new BlackboardPressBlock(QuiltBlockSettings.of(Material.METAL)));/*,
 			new QuiltItemSettings().group(ItemGroup.DECORATIONS)
-	);
+	);*/
 
 	public static final PainterPaletteItem PAINTER_PALETTE_ITEM = registerItem("painter_palette", new PainterPaletteItem(new QuiltItemSettings()
 			.group(ItemGroup.TOOLS)
 			.maxCount(1)
-	));*/
+	));
 	//endregion
 
 	//region Copper Sulfate
@@ -551,17 +545,6 @@ public final class AurorasDecoRegistry {
 	public static final BlockEntityType<WindChimeBlockEntity> WIND_CHIME_BLOCK_ENTITY_TYPE = registerBlockEntity(
 			"wind_chime", WindChimeBlockEntity::new, WIND_CHIME_BLOCK
 	);
-
-	/* Screen handlers */
-
-	public static final ScreenHandlerType<CopperHopperScreenHandler> COPPER_HOPPER_SCREEN_HANDLER_TYPE =
-			Registry.register(Registry.SCREEN_HANDLER, id("copper_hopper"), new ScreenHandlerType<>(CopperHopperScreenHandler::new));
-
-	public static final ScreenHandlerType<SawmillScreenHandler> SAWMILL_SCREEN_HANDLER_TYPE =
-			Registry.register(Registry.SCREEN_HANDLER, id("sawmill"), new ScreenHandlerType<>(SawmillScreenHandler::new));
-
-	public static final ScreenHandlerType<ShelfScreenHandler> SHELF_SCREEN_HANDLER_TYPE =
-			Registry.register(Registry.SCREEN_HANDLER, id("shelf"), new ExtendedScreenHandlerType<>(ShelfScreenHandler::new));
 
 	/* Stats */
 

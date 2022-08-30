@@ -201,6 +201,17 @@
   "tag.c.copper_sulfates": "Copper Sulfates",
   "tag.c.vegetation.on_water_surface": "Vegetation on top of water surface",
 
+  "aurorasdeco.blackboard.change_modifier": "Modifier selected: %s",
+  "aurorasdeco.blackboard.change_tool": "Tool selected: %s",
+  "aurorasdeco.blackboard.modifier.darken": "Darken",
+  "aurorasdeco.blackboard.modifier.lighten": "Lighten",
+  "aurorasdeco.blackboard.modifier.saturation": "Toggle Saturation",
+  "aurorasdeco.blackboard.tool.brush": "Brush",
+  "aurorasdeco.blackboard.tool.fill": "Fill",
+  "aurorasdeco.blackboard.tool.line": "Line",
+  "aurorasdeco.blackboard.tool.pixel": "Pixel",
+  "aurorasdeco.blackboard.tool.replace": "Replace",
+
   "aurorasdeco.wood_type.oak": "Oak",
   "aurorasdeco.wood_type.spruce": "Spruce",
   "aurorasdeco.wood_type.birch": "Birch",

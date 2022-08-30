@@ -1,0 +1,142 @@
+/*
+ * Copyright (c) 2021-2022 LambdAurora <email@lambdaurora.dev>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package dev.lambdaurora.aurorasdeco.client.screen;
+
+import com.mojang.blaze3d.systems.RenderSystem;
+import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import dev.lambdaurora.aurorasdeco.screen.PainterPaletteScreenHandler;
+import dev.lambdaurora.aurorasdeco.screen.slot.BlackboardToolSlot;
+import dev.lambdaurora.aurorasdeco.screen.slot.ColorSlot;
+import dev.lambdaurora.aurorasdeco.screen.slot.LockedSlot;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.screen.slot.Slot;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+
+/**
+ * Represents the painter's palette container screen.
+ *
+ * @author LambdAurora
+ * @version 1.0.0-beta.6
+ * @since 1.0.0-beta.6
+ */
+@Environment(EnvType.CLIENT)
+public class PainterPaletteScreen extends HandledScreen<PainterPaletteScreenHandler> {
+	private static final Identifier TEXTURE = AurorasDeco.id("textures/gui/container/painter_palette.png");
+	private static final Identifier LOCK_TEXTURE = new Identifier("textures/gui/container/cartography_table.png");
+
+	public PainterPaletteScreen(PainterPaletteScreenHandler handler, PlayerInventory inventory, Text title) {
+		super(handler, inventory, title);
+		this.backgroundHeight += 2;
+		this.playerInventoryTitleY = this.backgroundHeight - 94;
+	}
+
+	public int getBackgroundX() {
+		return (this.width - this.backgroundWidth) / 2 - 24;
+	}
+
+	public int getBackgroundY() {
+		return (this.height - this.backgroundHeight) / 2;
+	}
+
+	@Override
+	protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
+		RenderSystem.setShaderTexture(0, TEXTURE);
+		this.drawTexture(matrices, this.getBackgroundX(), this.getBackgroundY(), 0, 0, this.backgroundWidth + 24, this.backgroundHeight);
+	}
+
+	@Override
+	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+		this.renderBackground(matrices);
+		super.render(matrices, mouseX, mouseY, delta);
+
+		matrices.push();
+		matrices.translate(this.getBackgroundX(), this.getBackgroundY(), 275);
+		for (var slot : this.handler.slots) {
+			if (slot instanceof LockedSlot) {
+				RenderSystem.setShaderTexture(0, LOCK_TEXTURE);
+
+				matrices.push();
+				matrices.translate(slot.x + 24 + 4, slot.y + 4, 0);
+				matrices.scale(.75f, .75f, 1);
+				drawTexture(matrices, 0, 0, 46, 212, 16, 16, 256, 256);
+				matrices.pop();
+			} else if ((slot instanceof ColorSlot && slot.getIndex() == this.handler.getInventory().getSelectedColorSlot())
+					|| (slot instanceof BlackboardToolSlot && slot.getIndex() == this.handler.getInventory().getSelectedToolSlot())) {
+				RenderSystem.setShaderTexture(0, TEXTURE);
+
+				matrices.push();
+				matrices.translate(slot.x + 24, slot.y, 0);
+				drawTexture(matrices, -3, -3, this.backgroundWidth + 24, 0, 22, 22, 256, 256);
+				matrices.pop();
+			}
+		}
+		matrices.pop();
+
+		this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+	}
+
+	@Override
+	public boolean mouseClicked(double mouseX, double mouseY, int button) {
+		if (button == 2) {
+			if (this.isClickOutsideBounds(mouseX, mouseY, this.x, this.y, button)) {
+				if (this.handler.onButtonClick(this.client.player, this.handler.getInventory().size())) {
+					this.client.interactionManager.clickButton(this.handler.syncId, this.handler.getInventory().size());
+					return true;
+				}
+			} else {
+				int slot = this.getSlotAt(mouseX, mouseY);
+
+				if (slot != -1 && this.handler.onButtonClick(this.client.player, slot)) {
+					this.client.interactionManager.clickButton(this.handler.syncId, slot);
+					return true;
+				}
+			}
+		}
+
+		return super.mouseClicked(mouseX, mouseY, button);
+	}
+
+	private int getSlotAt(double x, double y) {
+		for (int i = 0; i < this.handler.slots.size(); ++i) {
+			Slot slot = this.handler.slots.get(i);
+			if (this.isPointOverSlot(slot, x, y) && slot.isEnabled()) {
+				return i;
+			}
+		}
+
+		return -1;
+	}
+
+	private boolean isPointOverSlot(Slot slot, double pointX, double pointY) {
+		return this.isPointWithinBounds(slot.x, slot.y, 16, 16, pointX, pointY);
+	}
+
+	@Override
+	protected boolean isClickOutsideBounds(double mouseX, double mouseY, int left, int top, int button) {
+		return super.isClickOutsideBounds(mouseX, mouseY, left, top, button)
+				&& (mouseX < this.getBackgroundX() || mouseY < this.getBackgroundY() || mouseY > this.getBackgroundY() + 86 || mouseY > this.getBackgroundX() + 10);
+	}
+}

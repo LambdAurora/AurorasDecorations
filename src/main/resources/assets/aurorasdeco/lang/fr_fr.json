@@ -201,6 +201,17 @@
   "tag.c.copper_sulfates": "Sulfates de cuivre",
   "tag.c.vegetation.on_water_surface": "Végétations vivants sur la surface de l'eau",
 
+  "aurorasdeco.blackboard.change_modifier": "Modificateur sélectionné: %s",
+  "aurorasdeco.blackboard.change_tool": "Outil sélectionné: %s",
+  "aurorasdeco.blackboard.modifier.darken": "assombrir",
+  "aurorasdeco.blackboard.modifier.lighten": "éclaircir",
+  "aurorasdeco.blackboard.modifier.saturation": "échanger la saturation",
+  "aurorasdeco.blackboard.tool.brush": "pinceau",
+  "aurorasdeco.blackboard.tool.fill": "remplir",
+  "aurorasdeco.blackboard.tool.line": "ligne",
+  "aurorasdeco.blackboard.tool.pixel": "pixel",
+  "aurorasdeco.blackboard.tool.replace": "remplacer",
+
   "aurorasdeco.wood_type.oak": "chêne",
   "aurorasdeco.wood_type.spruce": "sapin",
   "aurorasdeco.wood_type.birch": "bouleau",

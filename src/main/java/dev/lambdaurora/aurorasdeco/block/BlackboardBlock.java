@@ -225,8 +225,10 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 
 				if (stack.getItem() instanceof PainterPaletteItem paletteItem) {
 					if (offhand.isEmpty()) {
-						offhand = paletteItem.getCurrentModifierAsItem(stack);
+						offhand = paletteItem.getCurrentToolAsItem(stack);
 					}
+
+					stack = paletteItem.getCurrentColorAsItem(stack);
 				}
 
 				var modifier = BlackboardDrawModifier.fromItem(stack);
@@ -285,7 +287,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 
 					Blackboard.DrawAction action = Blackboard.DrawAction.DEFAULT;
 					for (var possibleAction : Blackboard.DrawAction.ACTIONS) {
-						if (possibleAction.getOffhandTool() != null && offhand.isOf(possibleAction.getOffhandTool())) {
+						if (possibleAction.getOffHandTool() != null && offhand.isOf(possibleAction.getOffHandTool())) {
 							action = possibleAction;
 							break;
 						}

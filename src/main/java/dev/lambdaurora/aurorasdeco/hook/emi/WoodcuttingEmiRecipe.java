@@ -19,14 +19,9 @@ package dev.lambdaurora.aurorasdeco.hook.emi;
 
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.render.EmiTexture;
-import dev.emi.emi.api.stack.EmiIngredient;
-import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import dev.lambdaurora.aurorasdeco.hook.EmiHooks;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
-import net.minecraft.util.Identifier;
-
-import java.util.List;
 
 public class WoodcuttingEmiRecipe extends AuroraEmiCuttingRecipe<WoodcuttingRecipe> {
 	public WoodcuttingEmiRecipe(WoodcuttingRecipe recipe) {

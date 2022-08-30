@@ -31,9 +31,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Represents a blackboard color.
  *
@@ -41,10 +38,9 @@ import java.util.List;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class BlackboardColor implements BlackboardDrawModifier {
+public class BlackboardColor extends BlackboardDrawModifier {
 	private static final Int2ObjectMap<BlackboardColor> COLORS = new Int2ObjectOpenHashMap<>();
 	private static final Object2ObjectMap<Item, BlackboardColor> ITEM_TO_COLOR = new Object2ObjectOpenHashMap<>();
-	static final List<BlackboardDrawModifier> MODIFIERS = new ArrayList<>();
 
 	/**
 	 * The color identifier mask ({@value}) for the raw color format.
@@ -71,17 +67,15 @@ public class BlackboardColor implements BlackboardDrawModifier {
 	public static final int BLUEBERRIES_COLOR = 0xff006ac6;
 
 	private final byte id;
-	private final int color;
 	private final Item item;
 
 	private BlackboardColor(int id, int color, Item item) {
+		super("", color);
 		this.id = (byte) id;
-		this.color = color;
 		this.item = item;
 
 		COLORS.put(id, this);
 		ITEM_TO_COLOR.put(item, this);
-		MODIFIERS.add(this);
 	}
 
 	/**
@@ -128,13 +122,6 @@ public class BlackboardColor implements BlackboardDrawModifier {
 		id |= MathHelper.clamp(shade, 0, 7) << 4;
 		if (saturated) id |= SATURATION_MASK;
 		return id;
-	}
-
-	/**
-	 * {@return the color in the ARGB format}
-	 */
-	public int getColor() {
-		return this.color;
 	}
 
 	public Item getItem() {
@@ -248,11 +235,5 @@ public class BlackboardColor implements BlackboardDrawModifier {
 	@Override
 	public short apply(short colorData) {
 		return this.toRawId(0, false);
-	}
-
-	static {
-		MODIFIERS.add(BlackboardDrawModifier.SHADE_INCREASE);
-		MODIFIERS.add(BlackboardDrawModifier.SHADE_DECREASE);
-		MODIFIERS.add(BlackboardDrawModifier.SATURATION);
 	}
 }

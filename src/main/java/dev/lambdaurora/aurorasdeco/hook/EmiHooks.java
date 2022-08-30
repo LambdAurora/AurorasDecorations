@@ -21,7 +21,9 @@ import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiStack;
+import dev.emi.emi.api.widget.Bounds;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import dev.lambdaurora.aurorasdeco.client.screen.PainterPaletteScreen;
 import dev.lambdaurora.aurorasdeco.hook.emi.ExplodingEmiRecipe;
 import dev.lambdaurora.aurorasdeco.hook.emi.WoodcuttingEmiRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.ExplodingRecipe;
@@ -57,5 +59,9 @@ public final class EmiHooks implements EmiPlugin {
 		for (ExplodingRecipe recipe : registry.getRecipeManager().listAllOfType(AurorasDecoRegistry.EXPLODING_RECIPE_TYPE)) {
 			registry.addRecipe(new ExplodingEmiRecipe(recipe));
 		}
+
+		registry.addExclusionArea(PainterPaletteScreen.class, (screen, consumer) -> {
+			consumer.accept(new Bounds(screen.getBackgroundX(), screen.getBackgroundY() + 10, 24, 86));
+		});
 	}
 }

@@ -18,7 +18,7 @@
 package dev.lambdaurora.aurorasdeco.screen;
 
 import dev.lambdaurora.aurorasdeco.block.PartType;
-import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoScreenHandlers;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -44,7 +44,7 @@ public class ShelfScreenHandler extends ScreenHandler {
 	}
 
 	public ShelfScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PartType partType) {
-		super(AurorasDecoRegistry.SHELF_SCREEN_HANDLER_TYPE, syncId);
+		super(AurorasDecoScreenHandlers.SHELF_SCREEN_HANDLER_TYPE, syncId);
 		checkSize(inventory, 8);
 		this.inventory = inventory;
 		this.partType = partType;

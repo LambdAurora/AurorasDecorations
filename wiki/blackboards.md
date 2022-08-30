@@ -100,7 +100,7 @@ You can copy a blackboard's content onto another blackboard by combining a drawn
 
 ## Drawing
 
-To draw on a blackboard use a [dye][dyes] on blackboard in-game,
+To draw on a blackboard use a [dye][dyes] or a [Painter's Palette](painter_palette.md) on blackboard in-game,
 it will color the targeted pixel.
 You can shade a pixel using bone meal to lighten it, or coal to darken it;
 and you can use glowstone dust to toggle the saturation state of a pixel.

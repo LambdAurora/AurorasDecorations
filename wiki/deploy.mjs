@@ -110,6 +110,10 @@ async function load_markdown(path, assets_to_copy) {
 		return true;
 	});
 
+		if (path.includes("painter_palette")) {
+    	    console.log(main);
+    	}
+
 	fix_links_in_html(main.children, assets_to_copy);
 
 	const raw_title = get_raw_markdown_title(doc);

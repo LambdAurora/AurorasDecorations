@@ -18,7 +18,7 @@
 package dev.lambdaurora.aurorasdeco.screen;
 
 import dev.lambdaurora.aurorasdeco.block.entity.CopperHopperBlockEntity;
-import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoScreenHandlers;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -46,7 +46,7 @@ public class CopperHopperScreenHandler extends ScreenHandler {
 
 	public CopperHopperScreenHandler(int syncId, PlayerInventory playerInventory,
 	                                 Inventory hopperInventory, Inventory filterInventory) {
-		super(AurorasDecoRegistry.COPPER_HOPPER_SCREEN_HANDLER_TYPE, syncId);
+		super(AurorasDecoScreenHandlers.COPPER_HOPPER_SCREEN_HANDLER_TYPE, syncId);
 
 		checkSize(hopperInventory, HopperScreenHandler.SLOTS_COUNT);
 		checkSize(filterInventory, 1);

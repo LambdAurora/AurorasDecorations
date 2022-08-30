@@ -20,6 +20,7 @@ package dev.lambdaurora.aurorasdeco.mixin.client;
 import dev.lambdaurora.aurorasdeco.item.PainterPaletteItem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
+import net.minecraft.client.gui.screen.Screen;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -41,9 +42,9 @@ public class MouseMixin {
 			cancellable = true
 	)
 	private void onScroll(long window, double scrollDeltaX, double scrollDeltaY, CallbackInfo ci, double scrollDelta) {
-		if (this.client.player != null) {
+		if (this.client.player != null && this.client.player.isSneaking()) {
 			if (this.client.player.getMainHandStack().getItem() instanceof PainterPaletteItem paletteItem) {
-				if (paletteItem.onScroll(this.client.player, this.client.player.getMainHandStack(), scrollDelta)) {
+				if (paletteItem.onScroll(this.client.player, this.client.player.getMainHandStack(), scrollDelta, Screen.hasControlDown())) {
 					ci.cancel();
 				}
 			}

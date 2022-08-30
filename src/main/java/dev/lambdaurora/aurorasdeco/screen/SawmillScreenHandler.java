@@ -20,6 +20,7 @@ package dev.lambdaurora.aurorasdeco.screen;
 import com.google.common.collect.Lists;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoScreenHandlers;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
@@ -66,7 +67,7 @@ public final class SawmillScreenHandler extends ScreenHandler {
 	}
 
 	public SawmillScreenHandler(int syncId, PlayerInventory playerInventory, final ScreenHandlerContext context) {
-		super(AurorasDecoRegistry.SAWMILL_SCREEN_HANDLER_TYPE, syncId);
+		super(AurorasDecoScreenHandlers.SAWMILL_SCREEN_HANDLER_TYPE, syncId);
 		this.selectedRecipe = Property.create();
 		this.availableRecipes = Lists.newArrayList();
 		this.inputStack = ItemStack.EMPTY;

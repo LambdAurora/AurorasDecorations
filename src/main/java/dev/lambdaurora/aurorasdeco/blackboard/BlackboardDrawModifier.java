@@ -20,7 +20,11 @@ package dev.lambdaurora.aurorasdeco.blackboard;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.tag.ItemTags;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a {@link Blackboard} draw modifier.
@@ -29,8 +33,10 @@ import org.jetbrains.annotations.Nullable;
  * @version 1.0.0
  * @since 1.0.0
  */
-public interface BlackboardDrawModifier {
-	BlackboardDrawModifier SHADE_INCREASE = new BlackboardDrawModifier() {
+public abstract class BlackboardDrawModifier {
+	private static final List<BlackboardDrawModifier> MODIFIERS = new ArrayList<>();
+
+	public static final BlackboardDrawModifier SHADE_INCREASE = new BlackboardDrawModifier("aurorasdeco.blackboard.modifier.darken", 0xff444444) {
 		@Override
 		public boolean matchItem(ItemStack item) {
 			return item.isIn(ItemTags.COALS);
@@ -49,7 +55,7 @@ public interface BlackboardDrawModifier {
 		}
 	};
 
-	BlackboardDrawModifier SHADE_DECREASE = new BlackboardDrawModifier() {
+	public static final BlackboardDrawModifier SHADE_DECREASE = new BlackboardDrawModifier("aurorasdeco.blackboard.modifier.lighten", 0xffeeeeee) {
 		@Override
 		public boolean matchItem(ItemStack item) {
 			return item.isOf(Items.BONE_MEAL);
@@ -68,7 +74,7 @@ public interface BlackboardDrawModifier {
 		}
 	};
 
-	BlackboardDrawModifier SATURATION = new BlackboardDrawModifier() {
+	public static final BlackboardDrawModifier SATURATION = new BlackboardDrawModifier("aurorasdeco.blackboard.modifier.saturation", 0xffffbc5e) {
 		@Override
 		public boolean matchItem(ItemStack item) {
 			return item.isOf(Items.GLOWSTONE_DUST);
@@ -85,12 +91,32 @@ public interface BlackboardDrawModifier {
 		}
 	};
 
-	boolean matchItem(ItemStack item);
+	private final String translationKey;
+	private final int color;
 
-	short apply(short colorData);
+	protected BlackboardDrawModifier(String translationKey, int color) {
+		this.translationKey = translationKey;
+		this.color = color;
+		MODIFIERS.add(this);
+	}
 
-	static @Nullable BlackboardDrawModifier fromItem(ItemStack item) {
-		for (var modifier : BlackboardColor.MODIFIERS) {
+	public Text getName() {
+		return Text.translatable(this.translationKey);
+	}
+
+	/**
+	 * {@return the color in the ARGB format}
+	 */
+	public int getColor() {
+		return this.color;
+	}
+
+	public abstract boolean matchItem(ItemStack item);
+
+	public abstract short apply(short colorData);
+
+	public static @Nullable BlackboardDrawModifier fromItem(ItemStack item) {
+		for (var modifier : MODIFIERS) {
 			if (modifier.matchItem(item))
 				return modifier;
 		}

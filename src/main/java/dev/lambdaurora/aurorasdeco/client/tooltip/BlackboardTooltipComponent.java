@@ -25,6 +25,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
+import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.ItemRenderer;
@@ -68,20 +69,18 @@ public class BlackboardTooltipComponent implements TooltipComponent {
 	}
 
 	@Override
-	public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices,
-	                      ItemRenderer itemRenderer, int z) {
+	public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices, ItemRenderer itemRenderer, int z) {
 		var vertexConsumers = this.client.getBufferBuilders().getEntityVertexConsumers();
 		matrices.push();
 		matrices.translate(x, y, z);
 		matrices.scale(128.f, 128.f, 1);
 
-		int light = 15728880;
 		var model = matrices.peek().getModel();
 
-		this.quad(this.background, 0.f, 0.f, 1.f, 1.f, model, vertexConsumers, light);
+		this.quad(this.background, 0.f, 0.f, 1.f, 1.f, model, vertexConsumers, LightmapTextureManager.MAX_LIGHT_COORDINATE);
 
 		matrices.translate(0, 0, 1);
-		this.texture.render(model, vertexConsumers, light, false);
+		this.texture.render(model, vertexConsumers, LightmapTextureManager.MAX_LIGHT_COORDINATE, false);
 
 		if (this.blackboard.isLit()) {
 			matrices.push();
@@ -96,7 +95,7 @@ public class BlackboardTooltipComponent implements TooltipComponent {
 			offset *= 4.f;
 			offset = (float) (Math.floor(offset) / 4.f);
 
-			this.quad(glow, 0.f, offset, 1.f, offset + (0.25f), model, vertexConsumers, light);
+			this.quad(glow, 0.f, offset, 1.f, offset + (0.25f), model, vertexConsumers, LightmapTextureManager.MAX_LIGHT_COORDINATE);
 
 			matrices.pop();
 		}
@@ -106,7 +105,7 @@ public class BlackboardTooltipComponent implements TooltipComponent {
 			matrices.scale(.5f, .5f, 1.f);
 			model = matrices.peek().getModel();
 			RenderLayer locked = RenderLayer.getText(LOCK_ICON_TEXTURE);
-			this.quad(locked, 0.f, .6484375f, .2421875f, .890625f, model, vertexConsumers, light);
+			this.quad(locked, 0.f, .6484375f, .2421875f, .890625f, model, vertexConsumers, LightmapTextureManager.MAX_LIGHT_COORDINATE);
 		}
 
 		vertexConsumers.draw();

@@ -22,8 +22,6 @@ import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.tooltip.BlackboardTooltipData;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipData;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
@@ -116,7 +114,6 @@ public class BlackboardItem extends BlockItem {
 		return stack;
 	}
 
-	@Environment(EnvType.CLIENT)
 	@Override
 	public Optional<TooltipData> getTooltipData(ItemStack stack) {
 		var nbt = BlockItem.getBlockEntityNbtFromStack(stack);

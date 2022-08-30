@@ -28,7 +28,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.Direction;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -366,28 +368,28 @@ public class Blackboard implements BlackboardHandler {
 	}
 
 	public enum DrawAction {
-		DEFAULT(null) {
+		DEFAULT(null, "aurorasdeco.blackboard.tool.pixel") {
 			@Override
 			public boolean execute(BlackboardHandler blackboard, int x, int y, BlackboardDrawModifier modifier) {
 				short colorData = blackboard.getPixel(x, y);
 				return blackboard.setPixel(x, y, modifier.apply(colorData));
 			}
 		},
-		BRUSH(Items.WHITE_WOOL) {
+		BRUSH(Items.WHITE_WOOL, "aurorasdeco.blackboard.tool.brush") {
 			@Override
 			public boolean execute(BlackboardHandler blackboard, int x, int y, BlackboardDrawModifier modifier) {
 				short colorData = blackboard.getPixel(x, y);
 				return blackboard.brush(x, y, modifier.apply(colorData));
 			}
 		},
-		FILL(Items.BUCKET) {
+		FILL(Items.BUCKET, "aurorasdeco.blackboard.tool.fill") {
 			@Override
 			public boolean execute(BlackboardHandler blackboard, int x, int y, BlackboardDrawModifier modifier) {
 				short colorData = blackboard.getPixel(x, y);
 				return blackboard.fill(x, y, modifier.apply(colorData));
 			}
 		},
-		REPLACE(Items.ENDER_PEARL) {
+		REPLACE(Items.ENDER_PEARL, "aurorasdeco.blackboard.tool.replace") {
 			@Override
 			public boolean execute(BlackboardHandler blackboard, int x, int y, BlackboardDrawModifier modifier) {
 				short colorData = blackboard.getPixel(x, y);
@@ -398,13 +400,19 @@ public class Blackboard implements BlackboardHandler {
 		public static final List<DrawAction> ACTIONS = List.of(values());
 
 		private final Item offhandTool;
+		private final String translationKey;
 
-		DrawAction(@Nullable Item offhandTool) {
+		DrawAction(@Nullable Item offhandTool, @NotNull String translationKey) {
 			this.offhandTool = offhandTool;
+			this.translationKey = translationKey;
 		}
 
-		public @Nullable Item getOffhandTool() {
+		public @Nullable Item getOffHandTool() {
 			return this.offhandTool;
+		}
+
+		public Text getName() {
+			return Text.translatable(this.translationKey);
 		}
 
 		public abstract boolean execute(BlackboardHandler blackboard, int x, int y, BlackboardDrawModifier modifier);
