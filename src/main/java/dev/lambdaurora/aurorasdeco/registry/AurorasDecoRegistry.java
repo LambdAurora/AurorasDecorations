@@ -602,7 +602,7 @@ public final class AurorasDecoRegistry {
 	}
 
 	static <T extends Block> T registerWithItem(String name, T block, Item.Settings settings,
-	                                            BiFunction<T, Item.Settings, BlockItem> factory) {
+			BiFunction<T, Item.Settings, BlockItem> factory) {
 		registerItem(name, factory.apply(registerBlock(name, block), settings));
 		return block;
 	}
@@ -615,7 +615,7 @@ public final class AurorasDecoRegistry {
 	}
 
 	private static <T extends BigFlowerPotBlock> T registerBigPotted(String name, Block plant, Item item,
-	                                                                 Function<PottedPlantType, T> block) {
+			Function<PottedPlantType, T> block) {
 		return registerBlock("big_flower_pot/" + name, PottedPlantType.register(name, plant, item, block));
 	}
 
@@ -626,8 +626,8 @@ public final class AurorasDecoRegistry {
 	}
 
 	private static <T extends BlockEntity> BlockEntityType<T> registerBlockEntity(String name,
-	                                                                              BlockEntityType.BlockEntityFactory<T> factory,
-	                                                                              Block... blocks) {
+			BlockEntityType.BlockEntityFactory<T> factory,
+			Block... blocks) {
 		return Registry.register(Registry.BLOCK_ENTITY_TYPE, id(name), QuiltBlockEntityTypeBuilder.create(factory, blocks).build());
 	}
 

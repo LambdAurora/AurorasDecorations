@@ -62,8 +62,8 @@ public class UnbakedGlassboardModel extends UnbakedBlackboardModel {
 	private final String variant;
 
 	UnbakedGlassboardModel(ModelIdentifier id, UnbakedModel baseModel, ResourceManager resourceManager,
-	                       ModelVariantMap.DeserializationContext deserializationContext,
-	                       BiConsumer<Identifier, UnbakedModel> modelConsumer) {
+			ModelVariantMap.DeserializationContext deserializationContext,
+			BiConsumer<Identifier, UnbakedModel> modelConsumer) {
 		super(baseModel);
 		this.variant = id.getVariant();
 
@@ -109,14 +109,14 @@ public class UnbakedGlassboardModel extends UnbakedBlackboardModel {
 
 	@Override
 	public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer,
-	                       Identifier modelId) {
+			Identifier modelId) {
 		var baseModel = this.bakeBaseModel(loader, textureGetter, rotationContainer, modelId);
 
 		return new BakedGlassboardModel(baseModel, this.bakeAllConnectingModels(loader, textureGetter, rotationContainer, modelId, baseModel));
 	}
 
 	private Int2ObjectMap<List<BakedModel>> bakeAllConnectingModels(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer,
-	                                                                Identifier modelId, BakedModel baseModel) {
+			Identifier modelId, BakedModel baseModel) {
 		var map = new Int2ObjectOpenHashMap<List<BakedModel>>();
 
 		map.put(0, List.of(baseModel));

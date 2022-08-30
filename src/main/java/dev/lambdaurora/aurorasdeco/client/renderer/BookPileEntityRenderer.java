@@ -37,12 +37,11 @@ import java.util.Random;
  * @since 1.0.0
  */
 public class BookPileEntityRenderer implements BlockEntityRenderer<BookPileBlockEntity> {
-	public BookPileEntityRenderer(BlockEntityRendererFactory.Context ctx) {
-	}
+	public BookPileEntityRenderer(BlockEntityRendererFactory.Context ctx) {}
 
 	@Override
 	public void render(BookPileBlockEntity bookPile, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
-	                   int light, int overlay) {
+			int light, int overlay) {
 		long seed = bookPile.getPos().asLong();
 
 		var random = new Random(seed);

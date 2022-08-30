@@ -93,7 +93,7 @@ public class WindChimeBlockEntityRenderer implements BlockEntityRenderer<WindChi
 
 	@Override
 	public void render(WindChimeBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
-	                   int light, int overlay) {
+			int light, int overlay) {
 		this.chimes.forEach(model -> {
 			model.pitch = entity.getPitch(tickDelta);
 			model.roll = entity.getRoll(tickDelta);

@@ -70,6 +70,5 @@ public class DynamicWorldGen {
 		//AurorasDeco.debug("Setting up dynamic registries...");
 	}
 
-	public static void init() {
-	}
+	public static void init() {}
 }

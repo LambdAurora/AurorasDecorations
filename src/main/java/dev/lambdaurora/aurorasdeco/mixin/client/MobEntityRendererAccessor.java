@@ -29,6 +29,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface MobEntityRendererAccessor<T extends MobEntity> {
 	@Invoker("renderLeash")
 	<E extends Entity> void aurorasdeco$renderLeash(T entity, float tickDelta,
-	                                                MatrixStack matrices, VertexConsumerProvider provider,
-	                                                E holdingEntity);
+			MatrixStack matrices, VertexConsumerProvider provider,
+			E holdingEntity);
 }

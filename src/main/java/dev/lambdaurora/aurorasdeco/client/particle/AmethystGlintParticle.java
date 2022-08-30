@@ -26,7 +26,7 @@ import net.minecraft.particle.DefaultParticleType;
 @Environment(EnvType.CLIENT)
 public class AmethystGlintParticle extends SpriteBillboardParticle {
 	protected AmethystGlintParticle(ClientWorld clientWorld, double x, double y, double z,
-	                                double velocityX, double velocityY, double velocityZ) {
+			double velocityX, double velocityY, double velocityZ) {
 		super(clientWorld, x, y, z, velocityX, velocityY, velocityZ);
 		this.collidesWithWorld = false;
 
@@ -52,7 +52,7 @@ public class AmethystGlintParticle extends SpriteBillboardParticle {
 	public record Factory(SpriteProvider spriteProvider) implements ParticleFactory<DefaultParticleType> {
 		@Override
 		public Particle createParticle(DefaultParticleType parameters, ClientWorld clientWorld, double x, double y, double z,
-		                               double velocityX, double velocityY, double velocityZ) {
+				double velocityX, double velocityY, double velocityZ) {
 			var random = clientWorld.random;
 			var particle = new AmethystGlintParticle(clientWorld, x, y, z,
 					0.f, random.nextDouble() * -0.1, 0.f);

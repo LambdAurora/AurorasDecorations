@@ -223,7 +223,7 @@ public class AurorasDecoPack implements ResourcePack {
 
 	@Override
 	public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix,
-	                                            Predicate<Identifier> pathFilter) {
+			Predicate<Identifier> pathFilter) {
 		var start = type.getDirectory() + "/" + namespace + "/" + prefix;
 		return this.resources.keySet().stream()
 				.filter(s -> s.startsWith(start))

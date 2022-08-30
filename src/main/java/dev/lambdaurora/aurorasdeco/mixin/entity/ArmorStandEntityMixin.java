@@ -69,7 +69,7 @@ public abstract class ArmorStandEntityMixin extends LivingEntity {
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
 	private void onInteractAt(PlayerEntity player, Vec3d hitPos, Hand hand, CallbackInfoReturnable<ActionResult> cir,
-	                          ItemStack stack) {
+			ItemStack stack) {
 		var world = this.getWorld();
 		if (stack.isOf(Items.STICK) && !this.shouldShowArms()) {
 			this.setShowArms(true);

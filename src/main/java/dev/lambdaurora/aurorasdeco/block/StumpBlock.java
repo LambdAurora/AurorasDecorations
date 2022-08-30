@@ -113,7 +113,7 @@ public class StumpBlock extends Block implements SeatBlock, Waterloggable {
 
 	@Override
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState,
-	                                            WorldAccess world, BlockPos pos, BlockPos posFrom) {
+			WorldAccess world, BlockPos pos, BlockPos posFrom) {
 		if (state.get(WATERLOGGED)) {
 			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
 		}
@@ -125,7 +125,7 @@ public class StumpBlock extends Block implements SeatBlock, Waterloggable {
 
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-	                          BlockHitResult hit) {
+			BlockHitResult hit) {
 		ItemStack stack = player.getStackInHand(hand);
 		if (this.sit(world, pos, state, player, stack))
 			return ActionResult.success(world.isClient());

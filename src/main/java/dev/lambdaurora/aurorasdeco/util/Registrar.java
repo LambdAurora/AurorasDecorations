@@ -39,8 +39,7 @@ import java.util.function.Consumer;
  * @since 1.0.0
  */
 public final class Registrar {
-	private Registrar() {
-	}
+	private Registrar() {}
 
 	public static <V, T extends V> RegistrationCompleter<T, T> register(Registry<V> registry, String name, T object) {
 		return register(registry, AurorasDeco.id(name), object);

@@ -46,7 +46,7 @@ public class LavenderPetalParticle extends SpriteBillboardParticle {
 	protected boolean stuckInGround = false;
 
 	protected LavenderPetalParticle(ClientWorld clientWorld, double x, double y, double z,
-	                                double velocityX, double velocityY, double velocityZ) {
+			double velocityX, double velocityY, double velocityZ) {
 		super(clientWorld, x, y, z, velocityX, velocityY, velocityZ);
 
 		this.gravityStrength = 0.04f + random.nextFloat() * 0.02f;
@@ -178,7 +178,7 @@ public class LavenderPetalParticle extends SpriteBillboardParticle {
 	public record Factory(SpriteProvider spriteProvider) implements ParticleFactory<DefaultParticleType> {
 		@Override
 		public Particle createParticle(DefaultParticleType parameters, ClientWorld clientWorld, double x, double y, double z,
-		                               double velocityX, double velocityY, double velocityZ) {
+				double velocityX, double velocityY, double velocityZ) {
 			var random = clientWorld.random;
 			var particle = new LavenderPetalParticle(clientWorld, x, y, z, 0.f, random.nextDouble(), 0.f);
 			particle.setSprite(this.spriteProvider());

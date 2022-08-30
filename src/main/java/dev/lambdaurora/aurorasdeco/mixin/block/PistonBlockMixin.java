@@ -44,13 +44,13 @@ public abstract class PistonBlockMixin {
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
 	private void onMove(World world, BlockPos pos, Direction dir, boolean retract,
-	                    CallbackInfoReturnable<Boolean> cir,
-	                    BlockPos pistonHeadPos,
-	                    PistonHandler handler, Map<BlockPos, BlockState> map,
-	                    List<BlockPos> movedBlocks, List<BlockState> list2, List<BlockPos> brokenBlocks,
-	                    BlockState[] affectedStates,
-	                    Direction moveDir, int j, int l,
-	                    BlockPos currentPos, BlockState currentState) {
+			CallbackInfoReturnable<Boolean> cir,
+			BlockPos pistonHeadPos,
+			PistonHandler handler, Map<BlockPos, BlockState> map,
+			List<BlockPos> movedBlocks, List<BlockState> list2, List<BlockPos> brokenBlocks,
+			BlockState[] affectedStates,
+			Direction moveDir, int j, int l,
+			BlockPos currentPos, BlockState currentState) {
 		if (currentState.getBlock() instanceof SeatBlock && !world.isClient()) {
 			var seats = world.getEntitiesByClass(SeatEntity.class,
 					new Box(

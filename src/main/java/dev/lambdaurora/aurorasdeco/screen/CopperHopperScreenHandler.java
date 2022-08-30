@@ -45,7 +45,7 @@ public class CopperHopperScreenHandler extends ScreenHandler {
 	}
 
 	public CopperHopperScreenHandler(int syncId, PlayerInventory playerInventory,
-	                                 Inventory hopperInventory, Inventory filterInventory) {
+			Inventory hopperInventory, Inventory filterInventory) {
 		super(AurorasDecoScreenHandlers.COPPER_HOPPER_SCREEN_HANDLER_TYPE, syncId);
 
 		checkSize(hopperInventory, HopperScreenHandler.SLOTS_COUNT);

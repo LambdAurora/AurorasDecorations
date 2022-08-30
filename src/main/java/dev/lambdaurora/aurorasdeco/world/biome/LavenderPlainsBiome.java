@@ -47,8 +47,7 @@ public final class LavenderPlainsBiome extends AurorasDecoBiome {
 	}
 
 	@Override
-	public void init() {
-	}
+	public void init() {}
 
 	@Override
 	public void initSettings(GenerationSettings.Builder generationSettings, SpawnSettings.Builder spawnSettings) {

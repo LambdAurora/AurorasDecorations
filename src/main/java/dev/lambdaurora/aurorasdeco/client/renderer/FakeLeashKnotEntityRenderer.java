@@ -43,7 +43,7 @@ public class FakeLeashKnotEntityRenderer
 	@SuppressWarnings("unchecked")
 	@Override
 	public void render(FakeLeashKnotEntity fakeLeashKnot, float f, float tickDelta, MatrixStack matrices,
-	                   VertexConsumerProvider vertexConsumers, int light) {
+			VertexConsumerProvider vertexConsumers, int light) {
 		matrices.push();
 		matrices.scale(-1.f, -1.f, 1.f);
 

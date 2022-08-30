@@ -85,7 +85,7 @@ public class FallenTreeFeature extends Feature<FallenTreeFeatureConfig> {
 	}
 
 	private boolean generate(StructureWorldAccess world, RandomGenerator random, BlockPos origin, int length, Direction direction,
-	                         FallenTreeFeatureConfig config) {
+			FallenTreeFeatureConfig config) {
 		Direction.Axis axis = direction.getAxis();
 		BlockPos.Mutable pos = origin.mutableCopy();
 
@@ -266,6 +266,5 @@ public class FallenTreeFeature extends Feature<FallenTreeFeatureConfig> {
 		else return i == 0;
 	}
 
-	protected record LogPlacementResult(BlockPos pos, boolean air, Direction logDirection) {
-	}
+	protected record LogPlacementResult(BlockPos pos, boolean air, Direction logDirection) {}
 }

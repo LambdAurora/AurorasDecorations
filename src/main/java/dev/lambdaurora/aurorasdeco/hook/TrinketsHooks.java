@@ -59,11 +59,11 @@ public final class TrinketsHooks {
 	}
 
 	private static void renderBlackboardInTrinketSlot(ItemStack stack, SlotReference slotReference,
-	                                                  EntityModel<? extends LivingEntity> contextModel,
-	                                                  MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light,
-	                                                  LivingEntity entity,
-	                                                  float limbAngle, float limbDistance, float tickDelta, float animationProgress,
-	                                                  float headYaw, float headPitch) {
+			EntityModel<? extends LivingEntity> contextModel,
+			MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light,
+			LivingEntity entity,
+			float limbAngle, float limbDistance, float tickDelta, float animationProgress,
+			float headYaw, float headPitch) {
 		if (!slotReference.inventory().getSlotType().getGroup().equals("head"))
 			return;
 

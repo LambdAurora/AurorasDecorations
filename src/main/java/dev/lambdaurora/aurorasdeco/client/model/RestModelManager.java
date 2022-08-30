@@ -50,7 +50,7 @@ public class RestModelManager {
 	}
 
 	public void init(ResourceManager resourceManager, ModelVariantMap.DeserializationContext deserializationContext,
-	                 BiConsumer<Identifier, UnbakedModel> modelRegister) {
+			BiConsumer<Identifier, UnbakedModel> modelRegister) {
 		this.models.clear();
 		WoodType.forEach(woodType -> {
 			var planksComponent = woodType.getComponent(WoodType.ComponentType.PLANKS);
@@ -63,7 +63,7 @@ public class RestModelManager {
 	}
 
 	private RestModelEntry loadModelEntry(WoodType woodType, ResourceManager resourceManager,
-	                                      ModelVariantMap.DeserializationContext deserializationContext) {
+			ModelVariantMap.DeserializationContext deserializationContext) {
 		var pathName = woodType.getPathName();
 
 		// Bench rest

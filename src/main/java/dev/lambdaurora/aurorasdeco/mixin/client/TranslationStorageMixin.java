@@ -38,7 +38,7 @@ public class TranslationStorageMixin {
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
 	private static void onLoad(ResourceManager resourceManager, List<LanguageDefinition> definitions, CallbackInfoReturnable<TranslationStorage> cir,
-	                           Map<String, String> map) {
+			Map<String, String> map) {
 		DynamicLang.apply(map);
 	}
 }

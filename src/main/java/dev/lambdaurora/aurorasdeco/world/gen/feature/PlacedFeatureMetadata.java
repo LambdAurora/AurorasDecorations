@@ -47,8 +47,8 @@ public class PlacedFeatureMetadata {
 	private TagKey<Biome> allowedTag;
 
 	public PlacedFeatureMetadata(Identifier key,
-	                             Holder<? extends ConfiguredFeature<?, ?>> configuredFeature,
-	                             List<PlacementModifier> modifiers) {
+			Holder<? extends ConfiguredFeature<?, ?>> configuredFeature,
+			List<PlacementModifier> modifiers) {
 		this.key = RegistryKey.of(Registry.PLACED_FEATURE_KEY, key);
 		this.feature = new PlacedFeature(Holder.upcast(configuredFeature), List.copyOf(modifiers));
 	}

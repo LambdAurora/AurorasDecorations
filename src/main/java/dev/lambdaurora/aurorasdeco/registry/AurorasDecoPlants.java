@@ -48,8 +48,7 @@ public final class AurorasDecoPlants {
 		throw new UnsupportedOperationException("AurorasDecoPlants only contains static definitions.");
 	}
 
-	static void init() {
-	}
+	static void init() {}
 
 	public static final List<BlockState> FLOWER_FOREST_PLANTS;
 

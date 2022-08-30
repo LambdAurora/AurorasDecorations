@@ -22,6 +22,5 @@ import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 
 public class AurorasDecoDebug implements ModInitializer {
 	@Override
-	public void onInitialize(ModContainer mod) {
-	}
+	public void onInitialize(ModContainer mod) {}
 }

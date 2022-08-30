@@ -45,7 +45,7 @@ public class DerivedBlockItem extends BlockItem {
 	}
 
 	public DerivedBlockItem(Block block, KindSearcher<ItemStack, KindSearcher.StackEntry> searcher, SearchMethod searchMethod,
-	                        Settings settings) {
+			Settings settings) {
 		super(block, settings);
 		this.searcher = searcher;
 		this.searchMethod = searchMethod;

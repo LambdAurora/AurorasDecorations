@@ -123,7 +123,7 @@ public class PieBlock extends Block {
 
 	@Override
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState,
-	                                            WorldAccess world, BlockPos pos, BlockPos posFrom) {
+			WorldAccess world, BlockPos pos, BlockPos posFrom) {
 		return direction == Direction.DOWN && !state.canPlaceAt(world, pos)
 				? Blocks.AIR.getDefaultState()
 				: super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
@@ -143,7 +143,7 @@ public class PieBlock extends Block {
 	}
 
 	protected static ActionResult tryEat(WorldAccess world, BlockPos pos, BlockState state, PlayerEntity player,
-	                                     FoodComponent foodComponent) {
+			FoodComponent foodComponent) {
 		if (!player.canConsume(false)) {
 			return ActionResult.PASS;
 		} else {

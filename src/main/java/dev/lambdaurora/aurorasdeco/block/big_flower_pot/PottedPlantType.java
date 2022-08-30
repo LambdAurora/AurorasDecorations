@@ -113,7 +113,7 @@ public final class PottedPlantType {
 	}
 
 	public static <T extends BigFlowerPotBlock> T register(String id, Block plant, Item item,
-	                                                       Function<PottedPlantType, T> flowerPotBlockFactory) {
+			Function<PottedPlantType, T> flowerPotBlockFactory) {
 		var type = new PottedPlantType(id, plant, item);
 		TYPES.put(id, type);
 		var potBlock = flowerPotBlockFactory.apply(type);

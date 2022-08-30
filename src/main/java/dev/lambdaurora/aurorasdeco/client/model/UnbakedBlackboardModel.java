@@ -48,8 +48,8 @@ public class UnbakedBlackboardModel implements AuroraUnbakedModel {
 	protected final UnbakedModel baseModel;
 
 	public static UnbakedBlackboardModel of(ModelIdentifier id, UnbakedModel baseModel, ResourceManager resourceManager,
-	                                        ModelVariantMap.DeserializationContext variantMapDeserializationContext,
-	                                        BiConsumer<Identifier, UnbakedModel> modelConsumer) {
+			ModelVariantMap.DeserializationContext variantMapDeserializationContext,
+			BiConsumer<Identifier, UnbakedModel> modelConsumer) {
 		if (id.getPath().contains("glass")) {
 			return new UnbakedGlassboardModel(id, baseModel, resourceManager, variantMapDeserializationContext, modelConsumer);
 		} else {
@@ -68,7 +68,7 @@ public class UnbakedBlackboardModel implements AuroraUnbakedModel {
 
 	@Override
 	public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter,
-	                                                           Set<Pair<String, String>> unresolvedTextureReferences) {
+			Set<Pair<String, String>> unresolvedTextureReferences) {
 		var textures = new ObjectOpenHashSet<>(this.baseModel.getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences));
 		textures.add(WHITE);
 		return textures;
@@ -76,12 +76,12 @@ public class UnbakedBlackboardModel implements AuroraUnbakedModel {
 
 	@Override
 	public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer,
-	                       Identifier modelId) {
+			Identifier modelId) {
 		return new BakedBlackboardModel(this.bakeBaseModel(loader, textureGetter, rotationContainer, modelId));
 	}
 
 	protected BakedModel bakeBaseModel(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer,
-	                                   Identifier modelId) {
+			Identifier modelId) {
 		Blackboard.setWhiteSprite(textureGetter.apply(WHITE));
 		return this.baseModel.bake(loader, textureGetter, rotationContainer, modelId);
 	}

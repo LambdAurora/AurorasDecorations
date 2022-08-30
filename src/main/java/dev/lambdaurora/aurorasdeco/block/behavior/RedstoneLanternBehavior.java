@@ -131,6 +131,5 @@ public final class RedstoneLanternBehavior {
 		return false;
 	}
 
-	public record BurnoutEntry(BlockPos pos, long time) {
-	}
+	public record BurnoutEntry(BlockPos pos, long time) {}
 }

@@ -37,7 +37,7 @@ public abstract class ServerPlayerEntityMixin extends Entity {
 
 	@Inject(method = "setSpawnPoint", at = @At("HEAD"), cancellable = true)
 	private void onSetSpawnPoint(RegistryKey<World> dimension, BlockPos pos, float angle, boolean spawnPointSet, boolean bl,
-	                             CallbackInfo ci) {
+			CallbackInfo ci) {
 		if (this.world.getBlockState(pos).getBlock() instanceof SleepingBagBlock)
 			ci.cancel();
 	}

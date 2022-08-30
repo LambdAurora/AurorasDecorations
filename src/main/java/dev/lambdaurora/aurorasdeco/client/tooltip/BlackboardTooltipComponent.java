@@ -113,7 +113,7 @@ public class BlackboardTooltipComponent implements TooltipComponent {
 	}
 
 	private void quad(RenderLayer renderLayer, float uMin, float vMin, float uMax, float vMax,
-	                  Matrix4f model, VertexConsumerProvider vertexConsumers, int light) {
+			Matrix4f model, VertexConsumerProvider vertexConsumers, int light) {
 		var vertices = vertexConsumers.getBuffer(renderLayer);
 		vertices.vertex(model, 0.f, 1.f, 0.f).color(255, 255, 255, 255)
 				.uv(uMin, vMax).light(light).next();

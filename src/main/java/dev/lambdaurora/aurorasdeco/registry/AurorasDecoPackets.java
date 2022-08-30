@@ -51,7 +51,7 @@ public final class AurorasDecoPackets {
 	public static final Identifier PAINTER_PALETTE_SCROLL = AurorasDeco.id("painter_palette/scroll");
 
 	public static void handleSignPostOpenGuiFailPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
-	                                                   PacketByteBuf buf, PacketSender responseSender) {
+			PacketByteBuf buf, PacketSender responseSender) {
 		var pos = buf.readBlockPos();
 
 		server.execute(() -> {
@@ -64,7 +64,7 @@ public final class AurorasDecoPackets {
 	}
 
 	public static void handleSignPostSetTextPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
-	                                               PacketByteBuf buf, PacketSender responseSender) {
+			PacketByteBuf buf, PacketSender responseSender) {
 		var pos = buf.readBlockPos();
 		var mode = buf.readByte();
 		String upText = ((mode & 1) == 1) ? buf.readString() : null;
@@ -88,7 +88,7 @@ public final class AurorasDecoPackets {
 	}
 
 	public static void handlePainterPaletteScroll(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
-	                                              PacketByteBuf buf, PacketSender responseSender) {
+			PacketByteBuf buf, PacketSender responseSender) {
 		double scrollDelta = buf.readDouble();
 		boolean toolModifier = buf.readBoolean();
 
@@ -106,7 +106,7 @@ public final class AurorasDecoPackets {
 		}
 
 		public static void handleSignPostOpenGuiPacket(MinecraftClient client, ClientPlayNetworkHandler handler,
-		                                               PacketByteBuf buf, PacketSender responseSender) {
+				PacketByteBuf buf, PacketSender responseSender) {
 			var pos = buf.readBlockPos();
 
 			client.execute(() -> {

@@ -72,10 +72,10 @@ public class JacarandaFoliagePlacer extends FoliagePlacer {
 	}
 
 	private void addCanopy(TestableWorld world,
-	                       BiConsumer<BlockPos, BlockState> replacer,
-	                       BlockPos centerPos,
-	                       TreeFeatureConfig config, boolean giantTrunk,
-	                       RandomGenerator random) {
+			BiConsumer<BlockPos, BlockState> replacer,
+			BlockPos centerPos,
+			TreeFeatureConfig config, boolean giantTrunk,
+			RandomGenerator random) {
 		var pos = new BlockPos.Mutable();
 		cir1(world, replacer, centerPos, -1, pos, config, giantTrunk, random);
 		cir2(world, replacer, centerPos, 0, pos, config, giantTrunk, random);
@@ -84,11 +84,11 @@ public class JacarandaFoliagePlacer extends FoliagePlacer {
 	}
 
 	private void cir1(TestableWorld world,
-	                  BiConsumer<BlockPos, BlockState> replacer,
-	                  BlockPos centerPos,
-	                  int y, BlockPos.Mutable mutablePos,
-	                  TreeFeatureConfig config, boolean giantTrunk,
-	                  RandomGenerator random) {
+			BiConsumer<BlockPos, BlockState> replacer,
+			BlockPos centerPos,
+			int y, BlockPos.Mutable mutablePos,
+			TreeFeatureConfig config, boolean giantTrunk,
+			RandomGenerator random) {
 		for (int x = -1; x <= 1; x++) {
 			for (int z = -1; z <= 1; z++) {
 				//if (Math.abs(x) != 1 || Math.abs(z) != 1 || rand.nextBoolean()) {
@@ -101,11 +101,11 @@ public class JacarandaFoliagePlacer extends FoliagePlacer {
 	}
 
 	private void cir2(TestableWorld world,
-	                  BiConsumer<BlockPos, BlockState> replacer,
-	                  BlockPos centerPos,
-	                  int y, BlockPos.Mutable mutablePos,
-	                  TreeFeatureConfig config, boolean giantTrunk,
-	                  RandomGenerator random) {
+			BiConsumer<BlockPos, BlockState> replacer,
+			BlockPos centerPos,
+			int y, BlockPos.Mutable mutablePos,
+			TreeFeatureConfig config, boolean giantTrunk,
+			RandomGenerator random) {
 		for (int x = -2; x <= 2; x++) {
 			for (int z = -2; z <= 2; z++) {
 				//if (Math.abs(x) != 1 || Math.abs(z) != 1 || rand.nextBoolean()) {

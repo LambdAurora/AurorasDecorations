@@ -50,8 +50,7 @@ public class Blackboard implements BlackboardHandler {
 	private final short[] pixels = new short[256];
 	private boolean lit;
 
-	public Blackboard() {
-	}
+	public Blackboard() {}
 
 	/**
 	 * Gets the pixels of the blackboard.

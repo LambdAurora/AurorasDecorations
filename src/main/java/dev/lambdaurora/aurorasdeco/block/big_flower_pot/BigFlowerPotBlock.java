@@ -349,7 +349,7 @@ public class BigFlowerPotBlock extends Block/* implements FluidFillable*/ {
 
 		@Override
 		public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world,
-		                                            BlockPos pos, BlockPos posFrom) {
+				BlockPos pos, BlockPos posFrom) {
 			var downState = world.getBlockState(pos.down());
 			if (downState.getBlock() instanceof BigFlowerPotBlock block && !block.isEmpty()) {
 				return state;

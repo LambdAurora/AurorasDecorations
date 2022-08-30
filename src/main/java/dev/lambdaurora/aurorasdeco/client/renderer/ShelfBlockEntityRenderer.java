@@ -37,12 +37,11 @@ import net.minecraft.util.math.Vec3f;
  * @since 1.0.0
  */
 public class ShelfBlockEntityRenderer implements BlockEntityRenderer<ShelfBlockEntity> {
-	public ShelfBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
-	}
+	public ShelfBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {}
 
 	@Override
 	public void render(ShelfBlockEntity shelf, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
-	                   int light, int overlay) {
+			int light, int overlay) {
 		var facing = shelf.getCachedState().get(ShelfBlock.FACING);
 
 		matrices.push();

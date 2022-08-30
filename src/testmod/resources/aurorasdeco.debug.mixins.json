@@ -4,8 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "ArrayPaletteMixin",
-    "HolderReferenceMixin",
-    "ecotones.DataGenMixin"
+    "HolderReferenceMixin"
   ],
   "client": [
   ],

@@ -32,8 +32,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class BlockDustParticleFactoryMixin {
 	@Inject(method = "createParticle", at = @At("HEAD"))
 	private void onCreateParticle(BlockStateParticleEffect parameters, ClientWorld world,
-	                              double x, double y, double z, double velocityX, double velocityY, double velocityZ,
-	                              CallbackInfoReturnable<Particle> cir) {
+			double x, double y, double z, double velocityX, double velocityY, double velocityZ,
+			CallbackInfoReturnable<Particle> cir) {
 		var state = parameters.getBlockState();
 		if (state.getBlock() instanceof BigFlowerPotBlock.PlantAirBlock) {
 			state = world.getBlockState(new BlockPos.Mutable(x, y, z).move(0, -1, 0));

@@ -158,7 +158,7 @@ public class HangingFlowerPotBlock extends Block {
 
 	@Override
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world,
-	                                            BlockPos pos, BlockPos neighborPos) {
+			BlockPos pos, BlockPos neighborPos) {
 		return direction == Direction.UP && !state.canPlaceAt(world, pos)
 				? Blocks.AIR.getDefaultState()
 				: super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);

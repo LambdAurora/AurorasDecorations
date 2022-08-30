@@ -39,8 +39,7 @@ public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<Lante
 	private final MinecraftClient client = MinecraftClient.getInstance();
 	private final RandomGenerator random = new LegacySimpleRandom(RandomSeed.generateUniqueSeed());
 
-	public LanternBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
-	}
+	public LanternBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {}
 
 	@Override
 	public int getRenderDistance() {
@@ -49,7 +48,7 @@ public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<Lante
 
 	@Override
 	public void render(LanternBlockEntity lantern, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
-	                   int light, int overlay) {
+			int light, int overlay) {
 		var pos = lantern.getPos();
 
 		float pitch = 0.0F;

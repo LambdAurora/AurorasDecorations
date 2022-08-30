@@ -40,8 +40,8 @@ public class SpawnHelperMixin {
 			cancellable = true
 	)
 	private static void onCanSpawn(ServerWorld world, SpawnGroup group, StructureManager structureAccessor,
-	                               ChunkGenerator chunkGenerator, SpawnSettings.SpawnEntry spawnEntry,
-	                               BlockPos.Mutable pos, double squaredDistance, CallbackInfoReturnable<Boolean> cir) {
+			ChunkGenerator chunkGenerator, SpawnSettings.SpawnEntry spawnEntry,
+			BlockPos.Mutable pos, double squaredDistance, CallbackInfoReturnable<Boolean> cir) {
 		if (cir.getReturnValueZ()) {
 			if (!group.isPeaceful() && world.getPointOfInterestStorage().getInSquare(
 					poiType -> poiType.value() == AurorasDecoRegistry.AMETHYST_LANTERN_POI,

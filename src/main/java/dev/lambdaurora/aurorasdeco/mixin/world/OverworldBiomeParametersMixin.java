@@ -68,9 +68,9 @@ public abstract class OverworldBiomeParametersMixin {
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
 	private void onAddPeaksTo(Consumer<Pair<MultiNoiseUtil.NoiseHypercube, RegistryKey<Biome>>> parameters, MultiNoiseUtil.ParameterRange weirdness,
-	                          CallbackInfo ci,
-	                          int temperatureIndex, MultiNoiseUtil.ParameterRange temperature,
-	                          int humidityIndex, MultiNoiseUtil.ParameterRange humidity) {
+			CallbackInfo ci,
+			int temperatureIndex, MultiNoiseUtil.ParameterRange temperature,
+			int humidityIndex, MultiNoiseUtil.ParameterRange humidity) {
 		if (temperatureIndex == 2 && humidityIndex == 0) {
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
@@ -108,9 +108,9 @@ public abstract class OverworldBiomeParametersMixin {
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
 	private void onAddHighBiomesTo(Consumer<Pair<MultiNoiseUtil.NoiseHypercube, RegistryKey<Biome>>> parameters, MultiNoiseUtil.ParameterRange weirdness,
-	                               CallbackInfo ci,
-	                               int temperatureIndex, MultiNoiseUtil.ParameterRange temperature,
-	                               int humidityIndex, MultiNoiseUtil.ParameterRange humidity) {
+			CallbackInfo ci,
+			int temperatureIndex, MultiNoiseUtil.ParameterRange temperature,
+			int humidityIndex, MultiNoiseUtil.ParameterRange humidity) {
 		if (temperatureIndex == 2 && humidityIndex == 0) {
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
@@ -148,9 +148,9 @@ public abstract class OverworldBiomeParametersMixin {
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
 	private void onAddMidBiomesTo(Consumer<Pair<MultiNoiseUtil.NoiseHypercube, RegistryKey<Biome>>> parameters, MultiNoiseUtil.ParameterRange weirdness,
-	                              CallbackInfo ci,
-	                              int temperatureIndex, MultiNoiseUtil.ParameterRange temperature,
-	                              int humidityIndex, MultiNoiseUtil.ParameterRange humidity) {
+			CallbackInfo ci,
+			int temperatureIndex, MultiNoiseUtil.ParameterRange temperature,
+			int humidityIndex, MultiNoiseUtil.ParameterRange humidity) {
 		if (temperatureIndex == 2 && humidityIndex == 0) {
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
@@ -202,9 +202,9 @@ public abstract class OverworldBiomeParametersMixin {
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
 	private void onAddLowBiomesTo(Consumer<Pair<MultiNoiseUtil.NoiseHypercube, RegistryKey<Biome>>> parameters, MultiNoiseUtil.ParameterRange weirdness,
-	                              CallbackInfo ci,
-	                              int temperatureIndex, MultiNoiseUtil.ParameterRange temperature,
-	                              int humidityIndex, MultiNoiseUtil.ParameterRange humidity) {
+			CallbackInfo ci,
+			int temperatureIndex, MultiNoiseUtil.ParameterRange temperature,
+			int humidityIndex, MultiNoiseUtil.ParameterRange humidity) {
 		if (temperatureIndex == 2 && humidityIndex == 0) {
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,

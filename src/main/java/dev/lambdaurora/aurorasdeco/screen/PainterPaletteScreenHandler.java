@@ -46,7 +46,7 @@ public class PainterPaletteScreenHandler extends NestedScreenHandler {
 	}
 
 	public PainterPaletteScreenHandler(int syncId, PlayerInventory playerInventory, OriginType originType, int lockedSlot,
-	                                   PainterPaletteItem.PainterPaletteInventory inventory) {
+			PainterPaletteItem.PainterPaletteInventory inventory) {
 		super(AurorasDecoScreenHandlers.PAINTER_PALETTE_SCREEN_HANDLER_TYPE, syncId, originType, lockedSlot);
 		this.inventory = inventory;
 		this.inventory.onOpen(playerInventory.player);

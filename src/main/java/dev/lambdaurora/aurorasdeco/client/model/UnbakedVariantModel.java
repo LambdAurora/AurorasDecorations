@@ -65,7 +65,7 @@ public class UnbakedVariantModel<T extends UnbakedModel> implements UnbakedModel
 
 	@Override
 	public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter,
-	                                                           Set<Pair<String, String>> unresolvedTextureReferences) {
+			Set<Pair<String, String>> unresolvedTextureReferences) {
 		return this.unbakedVariantMap.values().stream()
 				.flatMap(model -> model.getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences).stream())
 				.collect(Collectors.toSet());

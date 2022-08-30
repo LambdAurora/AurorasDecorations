@@ -54,7 +54,7 @@ public class BakedBigFlowerPotModel extends ForwardingBakedModel {
 
 	@Override
 	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<RandomGenerator> randomSupplier,
-	                           RenderContext context) {
+			RenderContext context) {
 		super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 
 		if (!(state.getBlock() instanceof BigFlowerPotBlock potBlock))
@@ -121,6 +121,5 @@ public class BakedBigFlowerPotModel extends ForwardingBakedModel {
 	}
 
 	@Override
-	public void emitItemQuads(ItemStack stack, Supplier<RandomGenerator> randomSupplier, RenderContext context) {
-	}
+	public void emitItemQuads(ItemStack stack, Supplier<RandomGenerator> randomSupplier, RenderContext context) {}
 }

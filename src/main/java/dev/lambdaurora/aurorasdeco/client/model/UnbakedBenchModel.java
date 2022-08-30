@@ -41,13 +41,13 @@ public record UnbakedBenchModel(UnbakedModel baseModel, RestModelManager restMod
 
 	@Override
 	public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter,
-	                                                           Set<Pair<String, String>> unresolvedTextureReferences) {
+			Set<Pair<String, String>> unresolvedTextureReferences) {
 		return this.baseModel().getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences);
 	}
 
 	@Override
 	public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer,
-	                       Identifier modelId) {
+			Identifier modelId) {
 		return new BakedBenchModel(this.baseModel().bake(loader, textureGetter, rotationContainer, modelId), this.restModelManager());
 	}
 }

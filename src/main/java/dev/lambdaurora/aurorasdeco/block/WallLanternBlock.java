@@ -227,7 +227,7 @@ public class WallLanternBlock<L extends LanternBlock> extends BlockWithEntity im
 
 	@Override
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world,
-	                                            BlockPos pos, BlockPos posFrom) {
+			BlockPos pos, BlockPos posFrom) {
 		if (state.get(WATERLOGGED)) {
 			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
 		}
@@ -252,13 +252,13 @@ public class WallLanternBlock<L extends LanternBlock> extends BlockWithEntity im
 
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-	                          BlockHitResult hit) {
+			BlockHitResult hit) {
 		return this.swing(world, state, hit, player, true)
 				? ActionResult.success(world.isClient()) : ActionResult.PASS;
 	}
 
 	public boolean swing(World world, BlockState state, BlockHitResult hitResult, @Nullable PlayerEntity player,
-	                     boolean hitResultIndependent) {
+			boolean hitResultIndependent) {
 		var direction = hitResult.getSide();
 		var blockPos = hitResult.getBlockPos();
 		boolean canSwing = !hitResultIndependent
@@ -339,7 +339,7 @@ public class WallLanternBlock<L extends LanternBlock> extends BlockWithEntity im
 
 	@Override
 	public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(World world, BlockState state,
-	                                                                        BlockEntityType<T> type) {
+			BlockEntityType<T> type) {
 		return checkType(type, AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE,
 				world.isClient() ? SwayingBlockEntity::clientTick : SwayingBlockEntity::serverTick);
 	}

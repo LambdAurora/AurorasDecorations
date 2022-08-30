@@ -483,13 +483,13 @@ public final class Datagen {
 	}
 
 	private static void tryRegisterWoodcuttingRecipeFor(ItemConvertible planks, String basePath, String type, int count,
-	                                                    String category) {
+			String category) {
 		tryRegisterWoodcuttingRecipeFor(planks, Registry.ITEM.getId(planks.asItem()).getNamespace(), basePath, type, count,
 				category);
 	}
 
 	public static void tryRegisterWoodcuttingRecipeFor(ItemConvertible planks, String namespace, String basePath,
-	                                                   String type, int count, String category) {
+			String type, int count, String category) {
 		if (planks.asItem() == Items.AIR)
 			return;
 		var id = new Identifier(namespace, basePath + type);

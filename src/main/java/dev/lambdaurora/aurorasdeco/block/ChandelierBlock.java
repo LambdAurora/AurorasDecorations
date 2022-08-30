@@ -93,7 +93,7 @@ public class ChandelierBlock extends ExtendedCandleBlock {
 
 	@Override
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world,
-	                                            BlockPos pos, BlockPos posFrom) {
+			BlockPos pos, BlockPos posFrom) {
 		state = super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
 		return direction == Direction.UP && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : state;
 	}

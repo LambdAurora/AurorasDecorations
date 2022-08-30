@@ -152,7 +152,7 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
 
 	@Override
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState,
-	                                            WorldAccess world, BlockPos pos, BlockPos posFrom) {
+			WorldAccess world, BlockPos pos, BlockPos posFrom) {
 		if (direction == getDirectionTowardsOtherPart(state.get(PART), state.get(FACING))) {
 			return newState.isOf(this) && newState.get(PART) != state.get(PART)
 					? state.with(OCCUPIED, newState.get(OCCUPIED))

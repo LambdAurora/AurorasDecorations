@@ -45,7 +45,7 @@ public class FlowerPotBlockMixin {
 			require = 0
 	)
 	private BlockState onGetToPlaceState(Block block,
-	                                     BlockState currentState, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
+			BlockState currentState, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
 		BlockState state = block.getPlacementState(new ItemPlacementContext(player, hand, player.getStackInHand(hand), hitResult));
 		if (state == null)
 			return block.getDefaultState();

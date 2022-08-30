@@ -215,7 +215,7 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
 
 	@Override
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState,
-	                                            WorldAccess world, BlockPos pos, BlockPos posFrom) {
+			WorldAccess world, BlockPos pos, BlockPos posFrom) {
 		if (state.get(WATERLOGGED)) {
 			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
 		}
@@ -228,7 +228,7 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
 
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-	                          BlockHitResult hit) {
+			BlockHitResult hit) {
 		if (!world.isClient()) {
 			var shelf = AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE.get(world, pos);
 

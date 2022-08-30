@@ -114,7 +114,7 @@ public class BenchBlock extends Block implements BlockEntityProvider, SeatBlock,
 	}
 
 	private <T extends Comparable<T>, P extends Property<T>> P getPropertyTowards(Direction facing, Direction towards,
-	                                                                              P left, P right) {
+			P left, P right) {
 		return switch (facing) {
 			default -> towards == Direction.WEST ? right : left;
 			case EAST -> towards == Direction.NORTH ? right : left;
@@ -208,8 +208,7 @@ public class BenchBlock extends Block implements BlockEntityProvider, SeatBlock,
 	/* Updates */
 
 	@Override
-	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState,
-	                                            WorldAccess world, BlockPos pos, BlockPos posFrom) {
+	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
 		if (state.get(WATERLOGGED)) {
 			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
 		}
@@ -228,8 +227,7 @@ public class BenchBlock extends Block implements BlockEntityProvider, SeatBlock,
 	/* Interaction */
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-	                          BlockHitResult hit) {
+	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 		var handStack = player.getStackInHand(hand);
 		if (handStack.getItem() instanceof SeatRestItem seatRestItem) {
 			var bench = this.getBlockEntity(world, pos);

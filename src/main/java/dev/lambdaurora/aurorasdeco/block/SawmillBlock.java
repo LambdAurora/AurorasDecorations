@@ -108,7 +108,7 @@ public final class SawmillBlock extends Block {
 
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-	                          BlockHitResult hit) {
+			BlockHitResult hit) {
 		if (world.isClient()) {
 			return ActionResult.SUCCESS;
 		} else {

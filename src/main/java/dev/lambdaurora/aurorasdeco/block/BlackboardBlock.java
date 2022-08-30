@@ -190,7 +190,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 
 	@Override
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState,
-	                                            WorldAccess world, BlockPos pos, BlockPos posFrom) {
+			WorldAccess world, BlockPos pos, BlockPos posFrom) {
 		if (state.get(WATERLOGGED)) {
 			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
 		}
@@ -211,7 +211,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos,
-	                          PlayerEntity player, Hand hand, BlockHitResult hit) {
+			PlayerEntity player, Hand hand, BlockHitResult hit) {
 		var stack = player.getStackInHand(hand);
 		var offhand = player.getStackInHand(Hand.OFF_HAND);
 		var facing = state.get(FACING);
@@ -325,7 +325,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 	}
 
 	private void line(BlackboardBlockEntity blackboard, PlayerEntity player, int x, int y,
-	                  BlackboardDrawModifier modifier) {
+			BlackboardDrawModifier modifier) {
 		if (blackboard.lastUser != player) {
 			blackboard.lastUser = player;
 			blackboard.lastX = x;

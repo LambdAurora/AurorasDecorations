@@ -146,8 +146,8 @@ public class Derivator {
 	}
 
 	private static <T extends Block> T registerWithItem(String base, Derivative derivative, T block,
-	                                                    KindSearcher<ItemStack, KindSearcher.StackEntry> searcher,
-	                                                    Item.Settings settings) {
+			KindSearcher<ItemStack, KindSearcher.StackEntry> searcher,
+			Item.Settings settings) {
 		var name = derivative.apply(base);
 		register(name, block);
 		register(name, new DerivedBlockItem(block, searcher, settings));

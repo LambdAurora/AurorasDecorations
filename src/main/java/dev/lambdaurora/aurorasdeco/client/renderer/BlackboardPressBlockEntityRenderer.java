@@ -54,8 +54,7 @@ public class BlackboardPressBlockEntityRenderer implements BlockEntityRenderer<B
 	private static final RandomGenerator RANDOM = new LegacySimpleRandom(RandomSeed.generateUniqueSeed());
 	private final MinecraftClient client = MinecraftClient.getInstance();
 
-	public BlackboardPressBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
-	}
+	public BlackboardPressBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {}
 
 	@Override
 	public void render(BlackboardPressBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
@@ -98,7 +97,7 @@ public class BlackboardPressBlockEntityRenderer implements BlockEntityRenderer<B
 	}
 
 	public static void initModels(ResourceManager resourceManager, ModelVariantMap.DeserializationContext deserializationContext,
-	                              BiConsumer<Identifier, UnbakedModel> modelRegister) {
+			BiConsumer<Identifier, UnbakedModel> modelRegister) {
 		var stateFactory = deserializationContext.getStateFactory();
 		deserializationContext.setStateFactory(AurorasDecoRegistry.BLACKBOARD_PRESS_BLOCK.getStateManager());
 
@@ -109,7 +108,7 @@ public class BlackboardPressBlockEntityRenderer implements BlockEntityRenderer<B
 	}
 
 	private static void initModel(Identifier resourceId, Identifier modelId, ResourceManager resourceManager,
-	                              ModelVariantMap.DeserializationContext deserializationContext, BiConsumer<Identifier, UnbakedModel> modelRegister) {
+			ModelVariantMap.DeserializationContext deserializationContext, BiConsumer<Identifier, UnbakedModel> modelRegister) {
 		resourceManager.getResource(resourceId).ifPresentOrElse(resource -> {
 			try (var reader = new InputStreamReader(resource.open())) {
 				var map = ModelVariantMap.fromJson(deserializationContext, reader);

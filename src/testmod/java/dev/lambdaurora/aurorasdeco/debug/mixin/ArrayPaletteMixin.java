@@ -39,8 +39,11 @@ public abstract class ArrayPaletteMixin<T> {
 	@Final
 	private IndexedIterable<T> idList;
 
-	@Inject(method = "write", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/IndexedIterable;getRawId(Ljava/lang/Object;)I"),
-			locals = LocalCapture.CAPTURE_FAILHARD)
+	@Inject(
+			method = "write",
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/IndexedIterable;getRawId(Ljava/lang/Object;)I"),
+			locals = LocalCapture.CAPTURE_FAILHARD
+	)
 	private void onWrite(PacketByteBuf buf, CallbackInfo ci, int i) {
 		var obj = this.array[i];
 		if (this.idList.getRawId(obj) == -1) {

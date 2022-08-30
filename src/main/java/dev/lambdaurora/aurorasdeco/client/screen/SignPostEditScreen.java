@@ -195,8 +195,8 @@ public class SignPostEditScreen extends Screen {
 	}
 
 	private void renderSign(SignPostBlockEntity.Sign sign, int row, float yOffset,
-	                        MatrixStack matrices, VertexConsumerProvider.Immediate vertexConsumers,
-	                        int light, int overlay) {
+			MatrixStack matrices, VertexConsumerProvider.Immediate vertexConsumers,
+			int light, int overlay) {
 		matrices.push();
 
 		matrices.translate(0, yOffset, 0);

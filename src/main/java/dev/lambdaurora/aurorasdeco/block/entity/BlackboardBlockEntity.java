@@ -299,7 +299,6 @@ public class BlackboardBlockEntity extends BasicBlockEntity implements Nameable,
 		}
 
 		@Override
-		public void setLit(boolean lit) {
-		}
+		public void setLit(boolean lit) {}
 	}
 }

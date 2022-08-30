@@ -34,9 +34,9 @@ import java.util.concurrent.Executor;
 public class ServerReloadableResourcesMixin {
 	@Inject(method = "loadResources", at = @At("HEAD"))
 	private static void onLoad(ResourceManager resources, DynamicRegistryManager.Frozen registry,
-	                           CommandManager.RegistrationEnvironment environment,
-	                           int level, Executor prepareExecutor, Executor applyExecutor,
-	                           CallbackInfoReturnable<CompletableFuture<ServerReloadableResources>> cir) {
+			CommandManager.RegistrationEnvironment environment,
+			int level, Executor prepareExecutor, Executor applyExecutor,
+			CallbackInfoReturnable<CompletableFuture<ServerReloadableResources>> cir) {
 		DynamicWorldGen.setupRegistries(registry);
 	}
 }

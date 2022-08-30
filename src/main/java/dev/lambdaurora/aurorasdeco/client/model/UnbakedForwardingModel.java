@@ -42,7 +42,7 @@ import java.util.function.Function;
  */
 @Environment(EnvType.CLIENT)
 public record UnbakedForwardingModel(UnbakedModel baseModel,
-                                     Function<BakedModel, BakedModel> factory) implements AuroraUnbakedModel {
+		Function<BakedModel, BakedModel> factory) implements AuroraUnbakedModel {
 	@Override
 	public Collection<Identifier> getModelDependencies() {
 		return this.baseModel.getModelDependencies();

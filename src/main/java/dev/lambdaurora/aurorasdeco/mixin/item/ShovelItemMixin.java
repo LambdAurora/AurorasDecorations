@@ -41,7 +41,7 @@ public class ShovelItemMixin {
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
 	private void onUseOnBlock(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir,
-	                          World world, BlockPos pos, BlockState state, PlayerEntity player) {
+			World world, BlockPos pos, BlockState state, PlayerEntity player) {
 		if (BrazierBlock.canBeUnlit(state)) {
 			BrazierBlock.extinguish(context.getPlayer(), world, pos, state);
 			state = state.with(BrazierBlock.LIT, false);

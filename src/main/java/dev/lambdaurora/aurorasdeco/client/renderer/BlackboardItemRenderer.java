@@ -50,7 +50,7 @@ public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.Dynam
 
 	@Override
 	public void render(ItemStack stack, Mode mode, MatrixStack matrices,
-	                   VertexConsumerProvider vertexConsumers, int light, int overlay) {
+			VertexConsumerProvider vertexConsumers, int light, int overlay) {
 		var model = MinecraftClient.getInstance().getBakedModelManager().getModel(this.modelId);
 
 		matrices.push();

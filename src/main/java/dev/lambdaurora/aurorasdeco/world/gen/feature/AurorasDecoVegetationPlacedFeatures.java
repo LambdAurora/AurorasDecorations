@@ -170,7 +170,7 @@ public final class AurorasDecoVegetationPlacedFeatures {
 	}
 
 	private static Holder<PlacedFeature> register(Identifier id, Holder<? extends ConfiguredFeature<?, ?>> configuredFeature,
-	                                              List<PlacementModifier> modifiers) {
+			List<PlacementModifier> modifiers) {
 		return BuiltinRegistries.register(BuiltinRegistries.PLACED_FEATURE, id,
 				new PlacedFeature(Holder.upcast(configuredFeature), List.copyOf(modifiers)));
 	}

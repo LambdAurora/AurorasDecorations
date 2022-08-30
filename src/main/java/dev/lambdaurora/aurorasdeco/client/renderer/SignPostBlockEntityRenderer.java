@@ -54,7 +54,7 @@ public class SignPostBlockEntityRenderer implements BlockEntityRenderer<SignPost
 
 	@Override
 	public void render(SignPostBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
-	                   int light, int overlay) {
+			int light, int overlay) {
 		var upData = entity.getUp();
 		var downData = entity.getDown();
 
@@ -72,8 +72,8 @@ public class SignPostBlockEntityRenderer implements BlockEntityRenderer<SignPost
 	}
 
 	private void renderSign(SignPostBlockEntity entity, SignPostBlockEntity.Sign sign, float yOffset,
-	                        MatrixStack matrices, VertexConsumerProvider vertexConsumers,
-	                        int light, int overlay) {
+			MatrixStack matrices, VertexConsumerProvider vertexConsumers,
+			int light, int overlay) {
 		matrices.push();
 
 		matrices.translate(0, yOffset, 0);
