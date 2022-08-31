@@ -3,7 +3,7 @@
 <!--description:Learn everything about the Amethyst Lantern, a very cute and practical lantern.-->
 <!--thumbnail:images/amethyst_lantern.png-->
 
-Amethyst Lantern is a type of lantern which primary color is purple, like amethyst! 
+The Amethyst Lantern is a type of lantern which primary color is purple, like amethyst! 
 They emit some purple particles while placed.
 
 In addition to its cosmetic function, the Amethyst Lantern will cancel natural mob spawning in a 32 block radius in all directions around it. 
