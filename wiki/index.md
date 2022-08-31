@@ -2,7 +2,8 @@
 
 Welcome to the Aurora's Decorations website!
 
-Aurora's Decorations is a decorations-focused Minecraft mod and tries to have a twist for its unique features.
+Aurora's Decorations is a decorations-focused Minecraft mod 
+and tries to have a twist for its unique features.
 
 ⚠️ This website is still under construction, not every feature is listed yet! ⚠️
 
@@ -116,7 +117,9 @@ First, this mod is a *comfort* mod, this means I will only use a toolchain that 
 Second, this mod literally cannot work on Fabric, even if I wanted to.  
 > *Wait, what do you mean it cannot work?*  
 
-You heard me right; it cannot work on Fabric after the 1.18.2 changes. Fabric did not fix some stuff to account earlier registration. It ended up breaking this mod, and I had to patch up a lot of Fabric manually to make it work, but Quilt fixed those issues.
+You heard me right; it cannot work on Fabric after the 1.18.2 changes. 
+Fabric did not fix some stuff to account earlier registration. 
+It ended up breaking this mod, and I had to patch up a lot of Fabric manually to make it work, but Quilt fixed those issues.
 
 Third, Quilt provides nicer APIs for what this mod is trying to achieve.
 

@@ -4,11 +4,12 @@
 Wonderful blocks on which you can draw on.-->
 <!--thumbnail:images/blackboards.png-->
 
-Blackboards are blocks which you can draw on with dyes. They come in three variants: blackboard, chalkboard (green), and glassboard (transparent).
+Blackboards are blocks which you can draw on with dyes. 
+They come in three variants: blackboard, chalkboard (green), and glassboard (transparent).
 
 They can be placed, or worn as masks on the helmet slot, and on a dedicated slot if [Trinkets] is present.
 
-To place them they will need a support block, like candles, and they won't break if the support block is removed afterwards.
+To place them, they will need a support block like candles, and they won't break if the support block is removed afterwards.
 
 ![Blackboards](../images/blackboards.png)
 *<span style="text-align: center; display: block">Blackboards and Chalkboards</span>*
