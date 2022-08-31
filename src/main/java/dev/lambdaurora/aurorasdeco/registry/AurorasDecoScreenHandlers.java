@@ -32,10 +32,14 @@ import static dev.lambdaurora.aurorasdeco.AurorasDeco.id;
  * Represents the registered screen handlers of Aurora's Decorations.
  *
  * @author LambdAurora
- * @version 1.0.0-beta.6
+ * @version 1.0.0-beta.7
  * @since 1.0.0-beta.6
  */
 public class AurorasDecoScreenHandlers {
+	private AurorasDecoScreenHandlers() {
+		throw new UnsupportedOperationException("AurorasDecoScreenHandlers only contains static definitions.");
+	}
+
 	public static final ScreenHandlerType<CopperHopperScreenHandler> COPPER_HOPPER_SCREEN_HANDLER_TYPE = register("copper_hopper",
 			new ScreenHandlerType<>(CopperHopperScreenHandler::new));
 
@@ -51,4 +55,6 @@ public class AurorasDecoScreenHandlers {
 	private static <SH extends ScreenHandler> ScreenHandlerType<SH> register(String name, ScreenHandlerType<SH> type) {
 		return Registry.register(Registry.SCREEN_HANDLER, id(name), type);
 	}
+
+	static void init() {}
 }

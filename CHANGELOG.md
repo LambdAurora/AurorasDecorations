@@ -24,4 +24,8 @@
 - Fixed Jacaranda Leaves not being mineable with hoes.
 - Fixed shelves not fitting onto the side of chests.
 
+### 1.0.0-beta.7
+
+- Fixed screen handler types not being initialized correctly on dedicated servers.
+
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"

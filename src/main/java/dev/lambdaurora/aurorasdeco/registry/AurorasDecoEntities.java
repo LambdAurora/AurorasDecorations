@@ -65,6 +65,5 @@ public final class AurorasDecoEntities {
 					.build()
 	);
 
-	static void init() {
-	}
+	static void init() {}
 }

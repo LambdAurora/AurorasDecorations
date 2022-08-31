@@ -654,6 +654,7 @@ public final class AurorasDecoRegistry {
 		AurorasDecoPlants.init();
 		AurorasDecoBiomes.init();
 		AurorasDecoEntities.init();
+		AurorasDecoScreenHandlers.init();
 		AurorasDecoSounds.init();
 
 		RegistryMonitor.create(Registry.BLOCK)
