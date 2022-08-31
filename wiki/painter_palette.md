@@ -37,7 +37,7 @@ This item have an inventory capable of holding different blackboard-based <a hre
 ### Inventory
 
 The Painter's Palette contains an inventory capable of holding 4 drawing tools, and 27 [dye (including modifiers and paper)][dyes] items.
-The inventory can only hold one item per slot.
+Its inventory can only hold one item per slot.
 
 To access it, either shift right-click while holding the item, or right-click the item while in an inventory.
 
