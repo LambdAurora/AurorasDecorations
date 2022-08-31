@@ -9,7 +9,7 @@ They come in three variants: blackboard, chalkboard (green), and glassboard (tra
 
 They can be placed, or worn as masks on the helmet slot, and on a dedicated slot if [Trinkets] is present.
 
-To place them, they will need a support block like candles, and they won't break if the support block is removed afterwards.
+To be placed, they will need a support block like candles, and they won't break if the support block is removed afterwards.
 
 ![Blackboards](../images/blackboards.png)
 *<span style="text-align: center; display: block">Blackboards and Chalkboards</span>*
