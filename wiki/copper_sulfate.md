@@ -3,7 +3,7 @@
 <!--description:Learn everything about copper sulfate, a new item to craft multiple things.-->
 <!--thumbnail:images/assets/item/copper_sulfate.png-->
 
-Copper Sulfate ([Copper(II) Sulfate][copper_sulfate_wikipedia])
+Copper Sulfate ([Copper(II) Sulfate][copper_sulfate_wikipedia]) 
 is an item created from copper. It has a wide usage in crafting new light sources with green flames.
 
 <div style="display: flex; justify-content: center;">

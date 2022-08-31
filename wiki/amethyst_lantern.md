@@ -3,10 +3,10 @@
 <!--description:Learn everything about the Amethyst Lantern, a very cute and practical lantern.-->
 <!--thumbnail:images/amethyst_lantern.png-->
 
-Amethyst Lantern is a type of lantern which primary color is purple, like amethyst!  
+The Amethyst Lantern is a type of lantern which primary color is purple, like amethyst! 
 They emit some purple particles while placed.
 
-In addition to the cosmetic part of this lantern, the Amethyst Lantern will cancel natural mob spawning in a 32 blocks radius in all directions around it.
+In addition to its cosmetic function, the Amethyst Lantern will cancel natural mob spawning in a 32 block radius in all directions around it. 
 They will also speed up the curing of zombie villagers if near one.
 
 ![Amethyst Lantern](../images/amethyst_lantern.png)

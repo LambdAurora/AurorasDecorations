@@ -2,10 +2,10 @@
 
 Welcome to the Aurora's Decorations website!
 
-Aurora's Decorations is a decorations-focused Minecraft mod,
-and tries to have a twist for its different features.
+Aurora's Decorations is a decorations-focused Minecraft mod 
+and tries to have a twist for its unique features.
 
-⚠️ This website is still under construction, not every feature are listed yet! ⚠️
+⚠️ This website is still under construction, not every feature is listed yet! ⚠️
 
 You will find information about this mod's features here.
 
@@ -108,17 +108,18 @@ This list is outdated but contains elements that have not yet been documented as
 
 ### Can I use this in a modpack?
 
-Yes.
+Yes, feel free.
 
 ### Why is this mod only working on [Quilt](https://quiltmc.org)?
 
 First, this mod is a *comfort* mod, this means I will only use a toolchain that I feel comfortable with.
 
 Second, this mod literally cannot work on Fabric, even if I wanted to.  
-> *Wait what do you mean it cannot work?*  
+> *Wait, what do you mean it cannot work?*  
 
-You heard me right, it cannot work on Fabric after the 1.18.2 changes, because Fabric did not fixed some stuff to account earlier registration.
-Which ended up breaking this mod, I had to patch up a lot of Fabric manually to make it work, but Quilt fixed those issues.
+You heard me right; it cannot work on Fabric after the 1.18.2 changes. 
+Fabric did not fix some stuff to account earlier registration. 
+It ended up breaking this mod, and I had to patch up a lot of Fabric manually to make it work, but Quilt fixed those issues.
 
 Third, Quilt provides nicer APIs for what this mod is trying to achieve.
 
@@ -144,14 +145,14 @@ directly patching those loaders, which I doubt most porters will take time to do
 ### Can I port this mod to other Minecraft versions?
 
 If it's porting to newer Minecraft versions, I guess feel free?
-But I'll ask you to create a pull-request back.
-Would help reduce my own porting work and having a second pair of eyes is always better to catch mistakes.
+However, I'll ask you to write a pull-request back.
+It would help reduce my own porting work and having a second pair of eyes is always better to catch mistakes.
 
 If it's porting to earlier Minecraft versions, eeeehhhhh?
-If it's targeting anything pre-1.13 I would be scared for yourself.
+If it's targeting anything pre-1.13, I would be scared for you.
 If it's targeting anything between 1.14 and 1.18, I guess you can try?
-There's even earlier versions of this mod on GitHub targeting 1.18 and 1.17.
-Though for those I would kindly ask you to not claim it's official.
+There are even earlier versions of this mod on GitHub targeting 1.18 and 1.17.
+Although, for those I would kindly ask you to not claim it's official.
 
 ## Pictures
 
