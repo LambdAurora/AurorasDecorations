@@ -3,8 +3,7 @@
 <!--description:Learn everything about shelves, a decorative storage block.-->
 <!--thumbnail:images/render/oak_shelf.png-->
 
-Shelves are decorative storage blocks composed of two rows, each row can be placed separately.  
-They come in all different wood types available in your game.
+Shelves are decorative storage blocks composed of two rows, each row can be placed separately. They come in all different wood types available in your game.
 
 ![Shelves](../images/shelves.png)
 

@@ -3,8 +3,7 @@
 <!--description:Learn everything about the Azalea wood type, which complements nicely Vanilla Azalea trees.-->
 <!--thumbnail:images/azalea_wood.png-->
 
-Azalea wood is a brand-new dark pink-ish wood type to complement the Vanilla azalea trees and make them more unique!
-It comes with the all different available variants of wooden blocks, including the new ones this mod brings.
+Azalea wood is a brand-new dark pink-ish wood type to complement the Vanilla azalea trees and make them more unique! It comes with the all different available variants of wooden blocks, including the new ones this mod brings.
 
 ![Azalea Wood](../../images/azalea_wood.png)
 
