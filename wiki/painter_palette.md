@@ -4,7 +4,7 @@
 A very helpful item when drawing on blackboards.-->
 <!--thumbnail:images/render/item/painter_palette.png-->
 
-Painter's Palette is a tool item, designed to be used along with <a href="blackboards.md">blackboards</a>.  
+Painter's Palette is a tool item designed to be used along with <a href="blackboards.md">blackboards</a>.  
 This item have an inventory capable of holding different blackboard-based <a href="blackboards.md#dyes">dyes</a>, some modifiers, and drawing tools.
 
 <div style="display: flex; justify-content: center;">
@@ -37,9 +37,9 @@ This item have an inventory capable of holding different blackboard-based <a hre
 ### Inventory
 
 The Painter's Palette contains an inventory capable of holding 4 drawing tools, and 27 [dye (including modifiers and paper)][dyes] items.
-The inventory can only hold one item per slot.
+Its inventory can only hold one item per slot.
 
-To access it either shift right-click while holding the item, or right-click the item while in an inventory.
+To access it, either shift right-click while holding the item, or right-click the item while in an inventory.
 
 While in the inventory, the slot where the Painter's Palette reside will be locked.
 Some items may be highlighted with a special border, indicating they are currently selected for drawing.  
