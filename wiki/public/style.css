@@ -15,7 +15,7 @@
 }
 
 .wiki_page nav > ul > li {
-	padding: 0 1em;
+	padding: 0.2em 1em;
 }
 
 .wiki_page nav li {
@@ -24,7 +24,7 @@
 }
 
 .wiki_page nav li > div {
-	display: inline-block;
+	display: inline;
 	margin: 0.2em 0;
 }
 
