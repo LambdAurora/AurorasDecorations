@@ -8,7 +8,13 @@ const ASSETS_PATH_REGEX = /..\/src\/main\/resources\/assets\/aurorasdeco\/textur
 const root = Deno.args[0] ? Deno.args[0] : "";
 
 console.log("Creating deploy directory.");
-await Deno.remove("deploy_out", {recursive: true});
+try {
+	await Deno.remove("deploy_out", {recursive: true});
+} catch (e) {
+	if (!(e instanceof Deno.errors.NotFound)) {
+		throw e;
+	}
+}
 await Deno.mkdir("deploy_out");
 
 console.log("Deploying...");
