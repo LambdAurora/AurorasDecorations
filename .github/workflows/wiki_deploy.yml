@@ -34,7 +34,7 @@ jobs:
       - name: 'Build with Deno'
         run: |
           cd wiki
-          deno run --allow-read --allow-write --unstable deploy.mjs "/AurorasDecorations"
+          deno run --allow-read --allow-write deploy.ts "/AurorasDecorations"
 
       - name: 'Upload artifact'
         uses: actions/upload-pages-artifact@v1

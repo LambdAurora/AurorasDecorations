@@ -1,5 +1,5 @@
-import {existsSync} from "https://deno.land/std/fs/mod.ts";
-import {default as md, html} from "https://lambdaurora.dev/lib.md/lib/index.mjs";
+import {html, md} from "https://lambdaurora.dev/lib.md/lib/index.mjs";
+import {InlineCode, MDDocument} from "https://lambdaurora.dev/lib.md/lib/markdown.mjs";
 
 const WEBSITE = "https://lambdaurora.dev/";
 const WEBSITE_PREFIX = WEBSITE + "AurorasDecorations/";
@@ -8,17 +8,27 @@ const ASSETS_PATH_REGEX = /..\/src\/main\/resources\/assets\/aurorasdeco\/textur
 const root = Deno.args[0] ? Deno.args[0] : "";
 
 console.log("Creating deploy directory.");
-if (existsSync("deploy_out"))
-	await Deno.remove("deploy_out", {recursive: true});
+await Deno.remove("deploy_out", {recursive: true});
 await Deno.mkdir("deploy_out");
 
 console.log("Deploying...");
 
-let markdown_pages = {};
-let assets_to_copy = {};
+interface MarkdownPage {
+	path: string;
+	title: string;
+	raw_title: string;
+	nav: NavigationData[];
+	main: html.Element;
+	description: string;
+	thumbnail_meta: string;
+}
+type MarkdownPages = {[x: string]: MarkdownPage};
+
+const markdown_pages: MarkdownPages = {};
+const assets_to_copy: {[x: string]: string} = {};
 await deploy_dir(".", path => path.startsWith("./public"), markdown_pages, assets_to_copy);
 await deploy_dir("../images", path => path.startsWith("../images"));
-await deploy_dir(TEXTURES_PATH, path => assets_to_copy[path.substr(TEXTURES_PATH.length + 1)] !== undefined);
+await deploy_dir(TEXTURES_PATH, path => assets_to_copy[path.substring(TEXTURES_PATH.length + 1)] !== undefined);
 
 Deno.copyFile("../src/main/resources/assets/aurorasdeco/icon.png", "./deploy_out/icon.png").then(() => console.log("Copied icon."));
 
@@ -26,7 +36,7 @@ for (const page of Object.values(markdown_pages)) {
 	await deploy_markdown(markdown_pages, page);
 }
 
-function deploy_path(path) {
+function deploy_path(path: string) {
 	if (path.startsWith("./public"))
 		return path.replace(/^\.\/public/, "./deploy_out");
 	else if (path.startsWith(TEXTURES_PATH))
@@ -35,12 +45,12 @@ function deploy_path(path) {
 		return path.replace(/^\.\.?/, "./deploy_out")
 }
 
-async function deploy_dir(path, filter = _ => true, markdown_pages = {}, assets_to_copy = {}, level = 0) {
+async function deploy_dir(path: string, filter = (_: string) => true, markdown_pages: MarkdownPages = {}, assets_to_copy: {[x: string]: string} = {},
+		level = 0) {
 	console.log("  ".repeat(level) + `Deploying "${path}"...`);
 
 	const deploy_dir_path = deploy_path(path);
-	if (!existsSync(deploy_dir_path))
-		await Deno.mkdir(deploy_dir_path);
+	await Deno.mkdir(deploy_dir_path, {recursive: true});
 
 	for await (const dir_entry of Deno.readDir(path)) {
 		if (dir_entry.isFile && !path.startsWith("./public") && !path.startsWith("../images") && dir_entry.name.endsWith(".md")) {
@@ -56,13 +66,13 @@ async function deploy_dir(path, filter = _ => true, markdown_pages = {}, assets_
 	}
 }
 
-async function load_markdown(path, assets_to_copy) {
+async function load_markdown(path: string, assets_to_copy: {[x: string]: string}): Promise<MarkdownPage> {
 	const decoder = new TextDecoder("utf-8");
 	const content = decoder.decode(await Deno.readFile(path));
 	const doc = md.parser.parse(content);
 
 	let page_description = "Welcome to the Aurora's Decorations wiki. Aurora's Decorations is a decorations-focused mod.";
-	let page_thumbnail;
+	let page_thumbnail: string;
 
 	function get_thumbnail_meta_tag() {
 		if (page_thumbnail) {
@@ -71,10 +81,10 @@ async function load_markdown(path, assets_to_copy) {
 		return "";
 	}
 
-	const main = html.create_element("main");
+	const main = html.create_element("main") as html.Element;
 	main.children = md.render_to_html(doc, {
 		code: {
-			process: el => {
+			process: (el: InlineCode) => {
 				if (el.content.match(/^#[a-fA-F0-9]{3}(?:[a-fA-F0-9]{5}|[a-fA-F0-9]{3})?$/)) {
 					return html.create_element("span")
 						.with_attr("class", "ls_color_ship")
@@ -93,16 +103,16 @@ async function load_markdown(path, assets_to_copy) {
 			enable: true
 		},
 		table: {
-			process: table => table.with_attr("class", "ls_grid_table")
+			process: (table: html.Element) => table.with_attr("class", "ls_grid_table")
 		},
 		parent: main
 	}).children.filter(node => {
 		if (node instanceof html.Comment) {
-			if (node.content.startsWith("description:")) {
-				page_description = node.content.substr("description:".length);
+			if (node.content?.startsWith("description:")) {
+				page_description = node.content.substring("description:".length);
 				return false;
-			} else if (node.content.startsWith("thumbnail:")) {
-				page_thumbnail = node.content.substr("thumbnail:".length);
+			} else if (node.content?.startsWith("thumbnail:")) {
+				page_thumbnail = node.content.substring("thumbnail:".length);
 				return false;
 			}
 		}
@@ -110,9 +120,9 @@ async function load_markdown(path, assets_to_copy) {
 		return true;
 	});
 
-		if (path.includes("painter_palette")) {
-    	    console.log(main);
-    	}
+	if (path.includes("painter_palette")) {
+		console.log(main);
+	}
 
 	fix_links_in_html(main.children, assets_to_copy);
 
@@ -128,13 +138,13 @@ async function load_markdown(path, assets_to_copy) {
 	};
 }
 
-async function deploy_markdown(markdown_pages, page_data) {
+async function deploy_markdown(markdown_pages: MarkdownPages, page_data: MarkdownPage) {
 	console.log(`Writing ${page_data.path}...`);
 
 	page_data.main.children = page_data.main.children
 		.map(node => {
 			if (node instanceof html.Comment) {
-				if (node.content.startsWith("include:")) {
+				if (node.content?.startsWith("include:")) {
 					const include = node.content.split(":");
 
 					if (markdown_pages[include[2]]) {
@@ -150,10 +160,10 @@ async function deploy_markdown(markdown_pages, page_data) {
 						div.children = div.children.concat(include_page_data.main.children.map(included_node => {
 							if (included_node instanceof html.Element) {
 								if (included_node.tag.name.match(/^h[1-6]$/)) {
-									let current_heading = parseInt(included_node.tag.name[1]);
-									let offset = parseInt(include[1]);
+									const current_heading = parseInt(included_node.tag.name[1]);
+									const offset = parseInt(include[1]);
 
-									included_node.tag = html.Tag["h" + Math.min(current_heading + offset, 6)];
+									included_node.tag = (html.Tag as {[x: string]: unknown})["h" + Math.min(current_heading + offset, 6)];
 								}
 							}
 
@@ -179,7 +189,7 @@ async function deploy_markdown(markdown_pages, page_data) {
 		<meta property="og:type" content="website">
 		<meta property="og:title" content="${page_data.title}">
 		<meta property="og:site_name" content="Aurora's Decorations">
-		<meta property="og:url" content="${WEBSITE_PREFIX + page_data.path.substr(2)}">
+		<meta property="og:url" content="${WEBSITE_PREFIX + page_data.path.substring(2)}">
 		<meta property="og:description" content="${page_data.description}">
 		${page_data.thumbnail_meta}
 
@@ -237,7 +247,7 @@ async function deploy_markdown(markdown_pages, page_data) {
 	await Deno.writeFile(deploy_path(page_data.path), encoder.encode(page));
 }
 
-function fix_links_in_html(nodes, assets_to_copy) {
+function fix_links_in_html(nodes: html.Node[], assets_to_copy: {[x: string]: string}) {
 	for (const node of nodes) {
 		if (node instanceof html.Element) {
 			for (const attr of node.attributes) {
@@ -252,7 +262,7 @@ function fix_links_in_html(nodes, assets_to_copy) {
 					}
 
 					if (value.startsWith("../") && !value.includes(".md"))
-						value = node.attr(attr.name, value.substr(3)).value();
+						value = node.attr(attr.name, value.substring(3)).value();
 					if (value.includes('.md'))
 						node.attr(attr.name, value.replace(/\.md/, ".html"));
 				}
@@ -263,30 +273,36 @@ function fix_links_in_html(nodes, assets_to_copy) {
 	}
 }
 
-function get_raw_markdown_title(doc) {
+function get_raw_markdown_title(doc: MDDocument) {
 	for (const node of doc.blocks) {
 		if (node instanceof md.Heading && node.level === "h1") {
-			return node.toString().substr(2);
+			return node.toString().substring(2);
 		}
 	}
 	return "Aurora's Decorations";
 }
 
-function get_markdown_title(title) {
+function get_markdown_title(title: string) {
 	if (title.startsWith("Aurora's Decorations"))
 		return title;
 	else
 		return `Aurora's Decorations - ${title}`;
 }
 
-function relativize_from_root(path) {
+function relativize_from_root(path: string) {
 	const result = "../".repeat(path.split("/").length - 2);
 	if (result.length === 0) return "./";
 	return result;
 }
 
-function build_navigation_data(html, start = 0, level = 1) {
-	let data = [];
+interface NavigationData {
+	content: html.Node[];
+	id: string;
+	children: NavigationData[];
+}
+
+function build_navigation_data(html: html.Element, start = 0, level = 1) {
+	let data: NavigationData[] = [];
 
 	for (let i = start; i < html.children.length; i++) {
 		const child = html.children[i];
@@ -309,7 +325,23 @@ function build_navigation_data(html, start = 0, level = 1) {
 	return data;
 }
 
-function build_navigation(pages, current_page) {
+interface NavigationEntry {
+	type: string;
+	raw_title: string;
+}
+
+interface PageEntry extends NavigationEntry, MarkdownPage {
+	type: "page";
+}
+
+interface DirEntry extends NavigationEntry {
+	type: "dir";
+	path: string;
+	full_path: string[];
+	entries: NavigationEntry[];
+}
+
+function build_navigation(pages: MarkdownPages, current_page: MarkdownPage) {
 	const list = html.create_element("ul");
 	const index_page = pages["./index.md"];
 
@@ -317,7 +349,7 @@ function build_navigation(pages, current_page) {
 
 	const current_path = current_page.path.split("/");
 
-	function build_tree(page, elements, first) {
+	function build_tree(page: MarkdownPage, elements: NavigationData, first: boolean) {
 		let path = root + page.path.replace(/^\.\//, "/").replace(/index\.html$/, "");
 		if (!first) {
 			path += "#" + elements.id;
@@ -346,15 +378,15 @@ function build_navigation(pages, current_page) {
 		return tree;
 	}
 
-	function find_or_append_directory(entries, path, level = 1) {
+	function find_or_append_directory(entries: NavigationEntry[], path: string[], level = 1): DirEntry {
 		let result;
-		if ((result = entries.find(entry => entry.type === "dir" && entry.path === path[level]))) {
+		if ((result = entries.find(entry => entry.type === "dir" && (entry as DirEntry).path === path[level]))) {
 			if (path.length > level + 2) {
-				return find_or_append_directory(result.entries, path, level + 1);
+				return find_or_append_directory((result as DirEntry).entries, path, level + 1);
 			}
-			return result;
+			return result as DirEntry;
 		} else {
-			const entry = {
+			const entry: DirEntry = {
 				type: "dir",
 				path: path[level],
 				full_path: path.filter((_, index) => index <= level),
@@ -375,20 +407,21 @@ function build_navigation(pages, current_page) {
 
 	list.append_child(build_tree(index_page, index_page.nav[0], true));
 
-	let raw_entries = Object.entries(pages)
+	const raw_entries = Object.entries(pages)
 		.filter(([path, _]) => path !== "./index.md")
 		.map(([path, page]) => [path.split("/"), page]);
-	const entries = [];
+	const entries: NavigationEntry[] = [];
 
-	for (const [path, page] of raw_entries) {
+	for (const [p, page] of raw_entries) {
+		const path = p as string[];
 		if (path.length > 2) {
-			find_or_append_directory(entries, path).entries.push({type: "page", ...page});
+			find_or_append_directory(entries, path).entries.push({type: "page", ...page} as PageEntry);
 		} else {
-			entries.push({type: "page", ...page});
+			entries.push({type: "page", ...page} as PageEntry);
 		}
 	}
 
-	function should_open_dir(entry) {
+	function should_open_dir(entry: DirEntry) {
 		for (let i = 0; i < entry.full_path.length; i++) {
 			if (entry.full_path[i] !== current_path[i])
 				return false;
@@ -397,33 +430,35 @@ function build_navigation(pages, current_page) {
 		return true;
 	}
 
-	function build_navigational_tree(tree, entry) {
+	function build_navigational_tree(tree: html.Element, entry: NavigationEntry) {
 		if (entry.type === "dir") {
+			const dir_entry = entry as DirEntry;
 			const subtree = html.create_element("ul");
-			for (const item of entry.entries)
+			for (const item of dir_entry.entries)
 				build_navigational_tree(subtree, item);
 
 			const li = html.create_element("li").with_attr("class", "wiki_nav_directory ls_nav_dir_entry")
-				.with_child(entry.raw_title)
+				.with_child(dir_entry.raw_title)
 				.with_child(subtree);
 
-			if (should_open_dir(entry)) {
+			if (should_open_dir(dir_entry)) {
 				li.attr("open", "");
 			}
 
 			tree.append_child(li);
 		} else {
-			for (const h1 of entry.nav) {
-				tree.append_child(build_tree(entry, h1, true));
+			for (const h1 of (entry as PageEntry).nav) {
+				tree.append_child(build_tree(entry as PageEntry, h1, true));
 			}
 		}
 	}
 
-	(function sort_entries(entries) {
+	(function sort_entries(entries: NavigationEntry[]) {
 		const sorted = entries.sort((page1, page2) => page1.raw_title.localeCompare(page2.raw_title));
 		sorted.forEach(entry => {
 			if (entry.type === "dir") {
-				entry.entries = sort_entries(entry.entries);
+				const dir_entry = entry as DirEntry;
+				dir_entry.entries = sort_entries(dir_entry.entries);
 			}
 		})
 		return sorted;
