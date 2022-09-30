@@ -335,7 +335,7 @@ public final class Datagen {
 
 			tryRegisterWoodcuttingRecipeFor(block, basePath, "wood", 1, "building_blocks");
 
-			if (QuiltLoader.isModLoaded("blockus")) {
+			if (QuiltLoader.isModLoaded("blockus") && blockId.getNamespace().equals("blockus")) {
 				tryRegisterWoodcuttingRecipeFor(block, "blockus", basePath,
 						"small_logs", 1, "building_blocks");
 			}
@@ -346,7 +346,7 @@ public final class Datagen {
 			basePath += separator;
 
 			tryRegisterWoodcuttingRecipeFor(block, basePath, "hyphae", 1, "building_blocks");
-			if (QuiltLoader.isModLoaded("blockus")) {
+			if (QuiltLoader.isModLoaded("blockus") && blockId.getNamespace().equals("blockus")) {
 				tryRegisterWoodcuttingRecipeFor(block, "blockus", basePath,
 						"small_stems", 1, "building_blocks");
 			}

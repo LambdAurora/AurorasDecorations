@@ -28,4 +28,9 @@
 
 - Fixed screen handler types not being initialized correctly on dedicated servers.
 
+### 1.0.0-beta.8
+
+- Fixed Painter's Palette 4th tool slot not being serialized ([#34](https://github.com/LambdAurora/AurorasDecorations/issues/34)).
+- Fixed startup crash with Blockus and Promenade combined ([#33](https://github.com/LambdAurora/AurorasDecorations/issues/33)).
+
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"
