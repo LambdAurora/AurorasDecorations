@@ -223,7 +223,8 @@ public class PainterPaletteItem extends Item {
 
 	public static class PainterPaletteInventory extends SimpleInventory {
 		private static final int COLOR_SIZE = 27;
-		private static final int SIZE = COLOR_SIZE + 4;
+		private static final int TOOLS_SIZE = 4;
+		private static final int SIZE = COLOR_SIZE + TOOLS_SIZE;
 		private static final String SELECTED_COLOR_KEY = "selected_color";
 		private static final String SELECTED_TOOL_KEY = "selected_tool";
 
@@ -404,7 +405,7 @@ public class PainterPaletteItem extends Item {
 			var nbt = new NbtCompound();
 
 			this.addInventoryPart(nbt, "colors", (byte) 0, (byte) COLOR_SIZE);
-			this.addInventoryPart(nbt, "tools", (byte) COLOR_SIZE, (byte) (COLOR_SIZE + 3));
+			this.addInventoryPart(nbt, "tools", (byte) COLOR_SIZE, (byte) (COLOR_SIZE + TOOLS_SIZE));
 
 			if (!this.getStack(this.selectedColor).isEmpty()) {
 				nbt.putByte(SELECTED_COLOR_KEY, this.selectedColor);
