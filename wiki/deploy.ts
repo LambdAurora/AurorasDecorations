@@ -1,5 +1,4 @@
 import {html, md} from "https://deno.land/x/libmd@v1.7.0/mod.mjs";
-import {InlineCode, MDDocument} from "https://lambdaurora.dev/lib.md/lib/markdown.mjs";
 
 const WEBSITE = "https://lambdaurora.dev/";
 const WEBSITE_PREFIX = WEBSITE + "AurorasDecorations/";
@@ -91,7 +90,7 @@ async function load_markdown(path: string, assets_to_copy: { [x: string]: string
 	const main = html.create_element("main") as html.Element;
 	main.children = md.render_to_html(doc, {
 		code: {
-			process: (el: InlineCode) => {
+			process: (el: md.InlineCode) => {
 				if (el.content.match(/^#[a-fA-F0-9]{3}(?:[a-fA-F0-9]{5}|[a-fA-F0-9]{3})?$/)) {
 					return html.create_element("span")
 						.with_attr("class", "ls_color_ship")
@@ -276,7 +275,7 @@ function fix_links_in_html(nodes: html.Node[], assets_to_copy: { [x: string]: st
 	}
 }
 
-function get_raw_markdown_title(doc: MDDocument) {
+function get_raw_markdown_title(doc: md.MDDocument) {
 	for (const node of doc.blocks) {
 		if (node instanceof md.Heading && node.level === "h1") {
 			return node.toString().substring(2);
