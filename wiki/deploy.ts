@@ -1,4 +1,4 @@
-import {html, md} from "https://lambdaurora.dev/lib.md/lib/index.mjs";
+import {html, md} from "https://deno.land/x/libmd@v1.7.0/mod.mjs";
 import {InlineCode, MDDocument} from "https://lambdaurora.dev/lib.md/lib/markdown.mjs";
 
 const WEBSITE = "https://lambdaurora.dev/";
@@ -28,10 +28,11 @@ interface MarkdownPage {
 	description: string;
 	thumbnail_meta: string;
 }
-type MarkdownPages = {[x: string]: MarkdownPage};
+
+type MarkdownPages = { [x: string]: MarkdownPage };
 
 const markdown_pages: MarkdownPages = {};
-const assets_to_copy: {[x: string]: string} = {};
+const assets_to_copy: { [x: string]: string } = {};
 await deploy_dir(".", path => path.startsWith("./public"), markdown_pages, assets_to_copy);
 await deploy_dir("../images", path => path.startsWith("../images"));
 await deploy_dir(TEXTURES_PATH, path => assets_to_copy[path.substring(TEXTURES_PATH.length + 1)] !== undefined);
@@ -51,8 +52,8 @@ function deploy_path(path: string) {
 		return path.replace(/^\.\.?/, "./deploy_out")
 }
 
-async function deploy_dir(path: string, filter = (_: string) => true, markdown_pages: MarkdownPages = {}, assets_to_copy: {[x: string]: string} = {},
-		level = 0) {
+async function deploy_dir(path: string, filter = (_: string) => true, markdown_pages: MarkdownPages = {}, assets_to_copy: { [x: string]: string } = {},
+						  level = 0) {
 	console.log("  ".repeat(level) + `Deploying "${path}"...`);
 
 	const deploy_dir_path = deploy_path(path);
@@ -72,7 +73,7 @@ async function deploy_dir(path: string, filter = (_: string) => true, markdown_p
 	}
 }
 
-async function load_markdown(path: string, assets_to_copy: {[x: string]: string}): Promise<MarkdownPage> {
+async function load_markdown(path: string, assets_to_copy: { [x: string]: string }): Promise<MarkdownPage> {
 	const decoder = new TextDecoder("utf-8");
 	const content = decoder.decode(await Deno.readFile(path));
 	const doc = md.parser.parse(content);
@@ -126,10 +127,6 @@ async function load_markdown(path: string, assets_to_copy: {[x: string]: string}
 		return true;
 	});
 
-	if (path.includes("painter_palette")) {
-		console.log(main);
-	}
-
 	fix_links_in_html(main.children, assets_to_copy);
 
 	const raw_title = get_raw_markdown_title(doc);
@@ -169,7 +166,7 @@ async function deploy_markdown(markdown_pages: MarkdownPages, page_data: Markdow
 									const current_heading = parseInt(included_node.tag.name[1]);
 									const offset = parseInt(include[1]);
 
-									included_node.tag = (html.Tag as {[x: string]: unknown})["h" + Math.min(current_heading + offset, 6)];
+									included_node.tag = (html.Tag as { [x: string]: unknown })["h" + Math.min(current_heading + offset, 6)];
 								}
 							}
 
@@ -253,7 +250,7 @@ async function deploy_markdown(markdown_pages: MarkdownPages, page_data: Markdow
 	await Deno.writeFile(deploy_path(page_data.path), encoder.encode(page));
 }
 
-function fix_links_in_html(nodes: html.Node[], assets_to_copy: {[x: string]: string}) {
+function fix_links_in_html(nodes: html.Node[], assets_to_copy: { [x: string]: string }) {
 	for (const node of nodes) {
 		if (node instanceof html.Element) {
 			for (const attr of node.attributes) {
@@ -311,7 +308,7 @@ function build_navigation_data(html: html.Element, start = 0, level = 1) {
 	let data: NavigationData[] = [];
 
 	for (let i = start; i < html.children.length; i++) {
-		const child = html.children[i];
+		const child = html.children[i] as html.Element;
 		if (child.tag && child.tag.name.startsWith("h")) {
 			const current_level = parseInt(child.tag.name[1]);
 			if (current_level > 0) {
