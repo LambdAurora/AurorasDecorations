@@ -281,6 +281,7 @@ public class BenchBlock extends Block implements BlockEntityProvider, SeatBlock,
 		if (planks == null) throw new IllegalStateException("BenchBlock attempted to be created while the wood type is invalid.");
 		return QuiltBlockSettings.copyOf(planks.block())
 				.collidable(true)
+				.luminance(0) // Override any smart luminance stuff from other mods to avoid crashes.
 				.nonOpaque();
 	}
 }

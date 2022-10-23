@@ -42,6 +42,7 @@ import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
@@ -53,6 +54,7 @@ import net.minecraft.util.dynamic.GlobalPos;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
@@ -77,16 +79,9 @@ public class SignPostBlock extends BlockWithEntity {
 	private final FenceBlock fenceBlock;
 
 	public SignPostBlock(FenceBlock fenceBlock) {
-		super(settings(fenceBlock));
+		super(BlockPropertiesInjector.inject(settings(fenceBlock), new InjectedBlock(fenceBlock)));
 
 		this.fenceBlock = fenceBlock;
-
-		var builder = new StateManager.Builder<Block, BlockState>(this);
-		this.appendProperties(builder);
-		var customBuilder = new CustomStateBuilder<>(builder);
-		customBuilder.exclude("north", "east", "south", "west");
-		((BlockAccessor) this.fenceBlock).aurorasdeco$appendProperties(customBuilder);
-		((BlockAccessor) this).setStateManager(builder.build(Block::getDefaultState, getStateFactory())); // This is super cursed.
 
 		this.setDefaultState(AuroraUtil.remapBlockState(this.fenceBlock.getDefaultState(), this.stateManager.getDefaultState()));
 
@@ -104,6 +99,13 @@ public class SignPostBlock extends BlockWithEntity {
 
 	public static Stream<SignPostBlock> stream() {
 		return SIGN_POSTS.stream();
+	}
+
+	@Override
+	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+		var customBuilder = new CustomStateBuilder<>(builder);
+		customBuilder.exclude("north", "east", "south", "west");
+		((BlockAccessor) BlockPropertiesInjector.getInjectedData(InjectedBlock.class).fenceBlock()).aurorasdeco$appendProperties(customBuilder);
 	}
 
 	public FenceBlock getFenceBlock() {
@@ -134,6 +136,23 @@ public class SignPostBlock extends BlockWithEntity {
 	@Override
 	public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
 		return this.getFenceState(state).getCameraCollisionShape(world, pos, context);
+	}
+
+	/* Ticking */
+
+	@Override
+	public boolean hasRandomTicks(BlockState state) {
+		return this.fenceBlock.hasRandomTicks(state);
+	}
+
+	@Override
+	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, RandomGenerator random) {
+		this.fenceBlock.randomTick(state, world, pos, random);
+	}
+
+	@Override
+	public void randomDisplayTick(BlockState state, World world, BlockPos pos, RandomGenerator random) {
+		this.fenceBlock.randomDisplayTick(state, world, pos, random);
 	}
 
 	/* Placement */
@@ -364,5 +383,8 @@ public class SignPostBlock extends BlockWithEntity {
 				return signPost.getFenceState(this).get(property);
 			} else return super.get(property);
 		}
+	}
+
+	private record InjectedBlock(FenceBlock fenceBlock) implements BlockPropertiesInjector.InjectData {
 	}
 }
