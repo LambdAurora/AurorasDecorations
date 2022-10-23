@@ -9,5 +9,8 @@ pluginManagement {
 			url 'https://maven.fabricmc.net/'
 		}
 		gradlePluginPortal()
+		mavenLocal()
 	}
 }
+
+includeBuild("build_logic")

@@ -33,7 +33,7 @@ public interface OverworldBiomeCreatorAccessor {
 		throw new IllegalStateException("Mixin injection failed");
 	}
 
-	@Invoker("method_39152")
+	@Invoker("m_jwilswlx")
 	static Biome invokeCreateBiome(
 			Biome.Precipitation precipitation,
 			float temperature,

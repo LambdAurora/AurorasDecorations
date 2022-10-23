@@ -56,7 +56,7 @@ import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
  */
 @Environment(EnvType.CLIENT)
 public class SignPostEditScreen extends Screen {
-	private static final OrderedText END_CURSOR = OrderedText.styledForwardsVisitedString("_", Style.EMPTY);
+	private static final OrderedText END_CURSOR = OrderedText.forward("_", Style.EMPTY);
 	private final SignPostBlockEntity signPost;
 	private int ticksSinceOpened;
 	private int currentRow;
@@ -230,7 +230,7 @@ public class SignPostEditScreen extends Screen {
 				rowText = this.textRenderer.mirror(rowText);
 			}
 
-			var text = OrderedText.styledForwardsVisitedString(rowText, Style.EMPTY);
+			var text = OrderedText.forward(rowText, Style.EMPTY);
 			float x = -this.textRenderer.getWidth(text) / 2.f;
 			if (glowing) {
 				this.textRenderer.drawWithOutline(text, x, 0, color, backgroundColor, matrices.peek().getModel(), vertexConsumers, light);

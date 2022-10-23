@@ -33,4 +33,9 @@
 - Fixed Painter's Palette 4th tool slot not being serialized ([#34](https://github.com/LambdAurora/AurorasDecorations/issues/34)).
 - Fixed startup crash with Blockus and Promenade combined ([#33](https://github.com/LambdAurora/AurorasDecorations/issues/33)).
 
+### 1.0.0-beta.9
+
+- Improved buildscript to make porting easier in preparation to Mojang's new version model.
+- Updated virtual resource pack handling to use QSL.
+
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"

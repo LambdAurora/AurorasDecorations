@@ -47,7 +47,7 @@ import static dev.lambdaurora.aurorasdeco.AurorasDeco.id;
  */
 public class SignPostItem extends Item {
 	public static final Identifier SIGN_POST_MODEL = AurorasDeco.id("block/template/sign_post");
-	public static final Identifier ABSOLUTE_OAK_SIGN_POST_TEXTURE = id("textures/special/sign_post/oak.png");
+	public static final Identifier ABSOLUTE_OAK_SIGN_POST_TEXTURE = id("textures/block/sign_post/oak.png");
 
 	private static final KindSearcher<ItemStack, Item> SIGN_POST_KIND_SEARCHER
 			= KindSearcher.assignableSearcher(SignPostItem.class, ItemStack::getItem).build();

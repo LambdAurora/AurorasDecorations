@@ -1,0 +1,139 @@
+package aurorasdeco.task;
+
+import aurorasdeco.Constants;
+import aurorasdeco.extension.AurorasDecoExtension;
+import org.gradle.api.DefaultTask;
+import org.gradle.api.file.DirectoryProperty;
+import org.gradle.api.provider.Property;
+import org.gradle.api.tasks.Nested;
+import org.gradle.api.tasks.OutputDirectory;
+import org.gradle.api.tasks.TaskAction;
+import org.quiltmc.json5.JsonWriter;
+
+import javax.inject.Inject;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+public abstract class GenerateQmjTask extends DefaultTask {
+	@OutputDirectory
+	public abstract DirectoryProperty getOutputDir();
+
+	@Nested
+	public abstract Property<AurorasDecoExtension> getAurorasDecoModule();
+
+	@Inject
+	public GenerateQmjTask() {
+		this.setGroup("generation");
+	}
+
+	@TaskAction
+	public void generateQmj() throws IOException {
+		Path output = this.getOutputDir().getAsFile().get().toPath().resolve("quilt.mod.json");
+		this.getProject().getLogger().lifecycle(output.toAbsolutePath().toString());
+
+		if (Files.exists(output)) {
+			Files.delete(output);
+		}
+
+		JsonWriter writer = JsonWriter.json(output);
+
+		writer.beginObject()
+				.name("schema_version").value(1);
+		{
+			writer.name("quilt_loader").beginObject()
+					.name("group").value(this.getProject().getGroup().toString())
+					.name("id").value(Constants.NAMESPACE)
+					.name("version").value(this.getProject().getVersion().toString());
+			{
+				writer.name("metadata").beginObject()
+						.name("name").value(Constants.NAME)
+						.name("description").value(Constants.DESCRIPTION)
+						.name("contributors").beginObject();
+
+				for (var entry : Constants.CONTRIBUTORS) {
+					writer.name(entry.name()).value(entry.role());
+				}
+
+				writer.endObject()
+						.name("contact").beginObject();
+
+				{
+					writer.name("homepage").value(Constants.WEBSITE)
+							.name("sources").value(Constants.SOURCES)
+							.name("issues").value(Constants.ISSUES);
+				}
+
+				writer.endObject()
+						.name("license").value(Constants.LICENSE)
+						.name("icon").value(Constants.ICON_PATH);
+			}
+			writer.endObject()
+					.name("intermediate_mappings").value("net.fabricmc:intermediary");
+
+			if (!this.getAurorasDecoModule().get().getEntrypoints().isEmpty()) {
+				writer.name("entrypoints").beginObject();
+
+				for (var entrypoint : this.getAurorasDecoModule().get().getEntrypoints()) {
+					if (!entrypoint.getEnabled().get()) continue;
+
+					writer.name(entrypoint.getName());
+					writer.beginArray();
+					for (var target : entrypoint.getValues().get()) {
+						target.write(writer);
+					}
+					writer.endArray();
+				}
+
+				writer.endObject();
+			}
+
+			writer.name("depends").beginArray();
+			{
+				writer.beginObject()
+						.name("id").value("minecraft")
+						.name("versions").value(Constants.MINECRAFT_VERSION)
+						.endObject();
+				writer.beginObject()
+						.name("id").value("quilt_loader")
+						.name("versions").value(">=0.17.4")
+						.endObject();
+				writer.beginObject()
+						.name("id").value("quilted_fabric_api")
+						.name("versions").value(">=" + Constants.QFAPI_VERSION)
+						.endObject();
+				writer.beginObject()
+						.name("id").value("java")
+						.name("versions").value(">=" + Constants.JAVA_VERSION)
+						.endObject();
+				writer.beginObject()
+						.name("id").value("terraform-wood-api-v1")
+						.name("versions").value(">=" + Constants.TERRAFORM_WOOD_API_VERSION)
+						.endObject();
+
+				if (this.getAurorasDecoModule().get().getHasEmi().get()) {
+					writer.beginObject()
+							.name("id").value("emi")
+							.name("optional").value(true)
+							.endObject();
+				}
+
+				if (this.getAurorasDecoModule().get().getHasTrinkets().get()) {
+					writer.beginObject()
+							.name("id").value("trinkets")
+							.name("versions").value(">=" + Constants.TRINKETS_VERSION)
+							.name("optional").value(true)
+							.endObject();
+				}
+			}
+			writer.endArray();
+		}
+		writer.endObject();
+
+		writer.name("mixin").value("aurorasdeco.mixins.json");
+
+		writer.endObject();
+		writer.flush();
+		writer.close();
+	}
+}

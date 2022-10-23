@@ -50,11 +50,11 @@ import net.minecraft.resource.ResourceType;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.qsl.recipe.api.builder.VanillaRecipeBuilders;
 import org.quiltmc.qsl.recipe.api.serializer.QuiltRecipeSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,7 +73,7 @@ import static dev.lambdaurora.aurorasdeco.util.AuroraUtil.jsonArray;
  * @since 1.0.0
  */
 public final class Datagen {
-	public static final Logger LOGGER = LogManager.getLogger("aurorasdeco:datagen");
+	public static final Logger LOGGER = LoggerFactory.getLogger("aurorasdeco:datagen");
 
 	private static final Identifier WALL_LANTERN_ATTACHMENT = id("block/wall_lantern_attachment");
 	private static final Identifier WALL_LANTERN_ATTACHMENT_EXTENDED1 = id("block/wall_lantern_attachment_extended1");
@@ -677,7 +677,7 @@ public final class Datagen {
 		SignPostItem.stream().forEach(item -> {
 			var planks = item.getWoodType().getComponent(WoodType.ComponentType.PLANKS);
 
-			var textureId = id("special/sign_post/" + item.getWoodType().getPathName());
+			var textureId = id("block/sign_post/" + item.getWoodType().getPathName());
 
 			modelBuilder(SignPostItem.SIGN_POST_MODEL)
 					.texture("sign", textureId)

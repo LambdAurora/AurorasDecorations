@@ -17,13 +17,13 @@
 
 package dev.lambdaurora.aurorasdeco;
 
+import com.mojang.logging.LogUtils;
 import dev.lambdaurora.aurorasdeco.blackboard.BlackboardColor;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigPottedCactusBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPackets;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
-import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPackCreator;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.world.gen.DynamicWorldGen;
 import net.minecraft.block.Blocks;
@@ -32,8 +32,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
@@ -41,6 +39,7 @@ import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 import org.quiltmc.qsl.registry.api.event.RegistryMonitor;
 import org.quiltmc.qsl.resource.loader.api.ResourceLoader;
 import org.quiltmc.qsl.resource.loader.api.ResourcePackActivationType;
+import org.slf4j.Logger;
 
 /**
  * Represents the Aurora's Decorations mod.
@@ -51,7 +50,7 @@ import org.quiltmc.qsl.resource.loader.api.ResourcePackActivationType;
  */
 public class AurorasDeco implements ModInitializer {
 	public static final String NAMESPACE = "aurorasdeco";
-	public static final Logger LOGGER = LogManager.getLogger();
+	public static final Logger LOGGER = LogUtils.getLogger();
 	public static final AurorasDecoPack RESOURCE_PACK = new AurorasDecoPack(ResourceType.SERVER_DATA);
 
 	@Override
@@ -83,7 +82,9 @@ public class AurorasDeco implements ModInitializer {
 						.append(Text.literal(" - ").formatted(Formatting.GRAY))
 						.append(Text.literal("Swamp Tweaks").formatted(Formatting.DARK_GREEN))
 		);
-		ResourceLoader.get(ResourceType.SERVER_DATA).registerResourcePackProfileProvider(new AurorasDecoPackCreator());
+		ResourceLoader.get(ResourceType.SERVER_DATA).getRegisterDefaultResourcePackEvent().register(context -> {
+			context.addResourcePack(RESOURCE_PACK.rebuild(ResourceType.SERVER_DATA, null));
+		});
 	}
 
 	public static boolean isDevMode() {

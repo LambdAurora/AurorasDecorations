@@ -17,6 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.client.model;
 
+import com.mojang.logging.LogUtils;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -35,8 +36,7 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -47,7 +47,7 @@ import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public class UnbakedGlassboardModel extends UnbakedBlackboardModel {
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogUtils.getLogger();
 	static final int LEFT_UP_MASK = 0b00000001;
 	static final int UP_MASK = 0b00000010;
 	static final int RIGHT_UP_MASK = 0b00000100;

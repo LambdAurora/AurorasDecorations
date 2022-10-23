@@ -32,7 +32,6 @@ import dev.lambdaurora.aurorasdeco.client.screen.CopperHopperScreen;
 import dev.lambdaurora.aurorasdeco.client.screen.PainterPaletteScreen;
 import dev.lambdaurora.aurorasdeco.client.screen.SawmillScreen;
 import dev.lambdaurora.aurorasdeco.client.screen.ShelfScreen;
-import dev.lambdaurora.aurorasdeco.hook.TrinketsHooks;
 import dev.lambdaurora.aurorasdeco.registry.*;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
 import net.fabricmc.api.EnvType;
@@ -60,6 +59,7 @@ import org.quiltmc.qsl.block.extensions.api.client.BlockRenderLayerMap;
 import org.quiltmc.qsl.lifecycle.api.client.event.ClientLifecycleEvents;
 import org.quiltmc.qsl.lifecycle.api.client.event.ClientWorldTickEvents;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
+import org.quiltmc.qsl.resource.loader.api.ResourceLoader;
 
 import static dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry.*;
 
@@ -158,11 +158,9 @@ public class AurorasDecoClient implements ClientModInitializer {
 		ModelLoadingRegistry.INSTANCE.registerModelProvider(RenderRule::reload);
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(resourceManager -> new BakedSignPostModel.Provider());
 
-		TrinketsHooks.init(
-				BLACKBOARD_BLOCK.asItem(), WAXED_BLACKBOARD_BLOCK.asItem(),
-				CHALKBOARD_BLOCK.asItem(), WAXED_CHALKBOARD_BLOCK.asItem(),
-				GLASSBOARD_BLOCK.asItem(), WAXED_GLASSBOARD_BLOCK.asItem()
-		);
+		ResourceLoader.get(ResourceType.CLIENT_RESOURCES).getRegisterDefaultResourcePackEvent().register(context -> {
+			context.addResourcePack(AurorasDecoClient.RESOURCE_PACK.rebuild(ResourceType.CLIENT_RESOURCES, context.resourceManager()));
+		});
 	}
 
 	private void initBlockEntityRenderers() {

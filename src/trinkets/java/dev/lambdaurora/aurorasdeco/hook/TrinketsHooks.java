@@ -33,7 +33,11 @@ import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.QuiltLoader;
+import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
+
+import static dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry.*;
 
 /**
  * Represents hooks for Trinkets.
@@ -43,11 +47,16 @@ import org.quiltmc.loader.api.QuiltLoader;
  * @since 1.0.0
  */
 @Environment(EnvType.CLIENT)
-public final class TrinketsHooks {
+public final class TrinketsHooks implements ClientModInitializer {
 	private static final boolean HAS_TRINKETS = QuiltLoader.isModLoaded("trinkets");
 
-	private TrinketsHooks() {
-		throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");
+	@Override
+	public void onInitializeClient(ModContainer mod) {
+		init(
+				BLACKBOARD_BLOCK.asItem(), WAXED_BLACKBOARD_BLOCK.asItem(),
+				CHALKBOARD_BLOCK.asItem(), WAXED_CHALKBOARD_BLOCK.asItem(),
+				GLASSBOARD_BLOCK.asItem(), WAXED_GLASSBOARD_BLOCK.asItem()
+		);
 	}
 
 	public static void init(Item... blackboards) {

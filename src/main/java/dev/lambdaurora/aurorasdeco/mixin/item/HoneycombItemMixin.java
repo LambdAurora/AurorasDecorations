@@ -38,7 +38,6 @@ public class HoneycombItemMixin {
 	@Unique
 	private static final ThreadLocal<NbtCompound> aurorasdeco$blockEntityData = new ThreadLocal<>();
 
-	@Dynamic
 	@Inject(
 			method = "m_blzykkgi(Lnet/minecraft/item/ItemUsageContext;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/World;Lnet/minecraft/block/BlockState;)Lnet/minecraft/util/ActionResult;",
 			at = @At("HEAD")
@@ -52,7 +51,6 @@ public class HoneycombItemMixin {
 		}
 	}
 
-	@Dynamic
 	@Inject(
 			method = "m_blzykkgi(Lnet/minecraft/item/ItemUsageContext;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/World;Lnet/minecraft/block/BlockState;)Lnet/minecraft/util/ActionResult;",
 			at = @At("RETURN")

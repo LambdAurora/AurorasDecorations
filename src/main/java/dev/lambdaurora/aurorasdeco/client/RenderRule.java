@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.client;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -34,9 +35,8 @@ import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ import java.util.function.Consumer;
  */
 @Environment(EnvType.CLIENT)
 public record RenderRule(List<Model> models) {
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogUtils.getLogger();
 	private static final Map<Identifier, RenderRule> ITEM_RULES = new Object2ObjectOpenHashMap<>();
 	private static final Map<TagKey<Item>, RenderRule> TAG_RULES = new Object2ObjectOpenHashMap<>();
 

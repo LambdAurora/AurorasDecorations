@@ -1,0 +1,121 @@
+import aurorasdeco.Constants
+import aurorasdeco.extension.AurorasDecoExtension
+
+plugins {
+	id "org.quiltmc.loom"
+	id "java-library"
+	id "maven-publish"
+	id "org.quiltmc.gradle.licenser"
+}
+
+def extension = project.extensions.create(AurorasDecoExtension, "aurorasdeco", AurorasDecoExtension, project)
+
+def generateQmj = tasks.register("generateQmj", aurorasdeco.task.GenerateQmjTask) {
+	it.aurorasDecoModule.set(extension)
+	it.outputDir.set(project.file("build/generated/generated_resources/"))
+}
+ideaSyncTask.dependsOn(generateQmj)
+
+sourceSets {
+	main {
+		resources {
+			// this is needed so that people can use their IDE to compile the project (bypassing Gradle).
+			// you must remember to run the generateQmj task manually
+			srcDir generateQmj
+		}
+	}
+
+	actualmod {
+		compileClasspath += sourceSets.main.compileClasspath
+		runtimeClasspath += sourceSets.main.runtimeClasspath
+	}
+
+	testmod {
+		compileClasspath += sourceSets.main.compileClasspath
+		runtimeClasspath += sourceSets.main.runtimeClasspath
+		compileClasspath += sourceSets.actualmod.compileClasspath
+		runtimeClasspath += sourceSets.actualmod.runtimeClasspath
+	}
+}
+
+loom {
+	// Enable runtime only log4j, forces mods to use SLF4J for logging.
+	runtimeOnlyLog4j = true
+
+	runs {
+		autoTestServer {
+			server()
+			configName = "Auto test server"
+			source(sourceSets.testmod)
+			property("quilt.auto_test")
+			programArg("--nogui")
+		}
+
+		client {
+			client()
+			source(sourceSets.actualmod)
+		}
+
+		server {
+			server()
+			source(sourceSets.actualmod)
+			programArg("--nogui")
+		}
+	}
+}
+
+repositories {
+	maven {
+		name 'Ladysnake Mods'
+		url 'https://ladysnake.jfrog.io/artifactory/mods'
+	}
+	maven {
+		name 'TerraformersMC'
+		url 'https://maven.terraformersmc.com/'
+		content {
+			includeGroup 'dev.emi'
+			includeGroup 'com.terraformersmc'
+			includeGroup 'com.terraformersmc.terraform-api'
+		}
+	}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${Constants.MINECRAFT_VERSION}"
+	mappings "org.quiltmc:quilt-mappings:${Constants.MINECRAFT_VERSION}+build.${Constants.MAPPINGS}:intermediary-v2"
+	modImplementation "org.quiltmc:quilt-loader:${Constants.LOADER_VERSION}"
+
+	modImplementation("org.quiltmc.quilted-fabric-api:quilted-fabric-api:${Constants.QFAPI_VERSION}-${Constants.MINECRAFT_VERSION}")
+	include(modImplementation("com.terraformersmc.terraform-api:terraform-wood-api-v1:${Constants.TERRAFORM_WOOD_API_VERSION}") {
+		exclude group: 'net.fabricmc'
+		exclude group: 'net.fabricmc.fabric-api'
+		exclude group: 'org.terraformersmc'
+	})
+
+	// testmod sourceSet should depend on everything in the main source set.
+	testmodImplementation sourceSets.main.output
+	testmodImplementation sourceSets.actualmod.output
+}
+
+java {
+	sourceCompatibility = JavaVersion.toVersion(Constants.JAVA_VERSION)
+	targetCompatibility = JavaVersion.toVersion(Constants.JAVA_VERSION)
+
+	withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.encoding = 'UTF-8'
+	it.options.deprecation(true)
+
+	it.options.release.set(Constants.JAVA_VERSION)
+}
+
+sourcesJar {
+	dependsOn(generateQmj)
+}
+
+license {
+	rule file('codeformat/HEADER')
+	include '**/*.java'
+}
