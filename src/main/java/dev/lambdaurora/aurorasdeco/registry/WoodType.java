@@ -359,6 +359,8 @@ public final class WoodType {
 			else if (id.getPath().endsWith("_stem")) logType = "_stem";
 			else return null;
 
+			if (id.getPath().endsWith("_table" + logType)) return null;
+
 			return id.getPath().substring(0, id.getPath().length() - logType.length());
 		}, (resourceManager, component) -> {
 			var componentId = component.id();

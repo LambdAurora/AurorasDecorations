@@ -38,5 +38,6 @@
 - Improved buildscript to make porting easier in preparation to Mojang's new version model.
 - Updated virtual resource pack handling to use QSL.
 - Fixed incompatibility with Immersive Weathering ([#28](https://github.com/LambdAurora/AurorasDecorations/issues/28)).
+- Fixed tables being detected as wood type ([#32](https://github.com/LambdAurora/AurorasDecorations/issues/32)).
 
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"
