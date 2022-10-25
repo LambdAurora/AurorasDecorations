@@ -21,8 +21,6 @@ import com.google.common.collect.Lists;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoScreenHandlers;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingResultInventory;
@@ -37,6 +35,7 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.List;
 
@@ -101,22 +100,22 @@ public final class SawmillScreenHandler extends ScreenHandler {
 		this.addProperty(this.selectedRecipe);
 	}
 
-	@Environment(EnvType.CLIENT)
+	@ClientOnly
 	public int getSelectedRecipe() {
 		return this.selectedRecipe.get();
 	}
 
-	@Environment(EnvType.CLIENT)
+	@ClientOnly
 	public List<WoodcuttingRecipe> getAvailableRecipes() {
 		return this.availableRecipes;
 	}
 
-	@Environment(EnvType.CLIENT)
+	@ClientOnly
 	public int getAvailableRecipeCount() {
 		return this.availableRecipes.size();
 	}
 
-	@Environment(EnvType.CLIENT)
+	@ClientOnly
 	public boolean canCraft() {
 		return this.inputSlot.hasStack() && !this.availableRecipes.isEmpty();
 	}
@@ -170,7 +169,7 @@ public final class SawmillScreenHandler extends ScreenHandler {
 		this.sendContentUpdates();
 	}
 
-	@Environment(EnvType.CLIENT)
+	@ClientOnly
 	public void setContentsChangedListener(Runnable runnable) {
 		this.contentsChangedListener = runnable;
 	}

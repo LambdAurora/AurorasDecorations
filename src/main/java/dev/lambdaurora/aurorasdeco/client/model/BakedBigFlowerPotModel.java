@@ -19,8 +19,6 @@ package dev.lambdaurora.aurorasdeco.client.model;
 
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigPottedProxyBlock;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
@@ -36,10 +34,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.BlockRenderView;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.function.Supplier;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class BakedBigFlowerPotModel extends ForwardingBakedModel {
 	private final MinecraftClient client = MinecraftClient.getInstance();
 

@@ -22,6 +22,7 @@ import dev.lambdaurora.aurorasdeco.client.tooltip.BlackboardTooltipComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.tooltip.api.ConvertibleTooltipData;
 
 /**
@@ -32,7 +33,7 @@ import org.quiltmc.qsl.tooltip.api.ConvertibleTooltipData;
  * @since 1.0.0
  */
 public record BlackboardTooltipData(String background, Blackboard blackboard, boolean locked) implements ConvertibleTooltipData {
-	@Environment(EnvType.CLIENT)
+	@ClientOnly
 	public TooltipComponent toComponent() {
 		return new BlackboardTooltipComponent(this.background(), this.blackboard(), this.locked());
 	}

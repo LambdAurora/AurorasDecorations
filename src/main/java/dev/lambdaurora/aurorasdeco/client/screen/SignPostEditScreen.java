@@ -25,8 +25,6 @@ import dev.lambdaurora.aurorasdeco.block.entity.SignPostBlockEntity;
 import dev.lambdaurora.aurorasdeco.client.renderer.SignPostBlockEntityRenderer;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPackets;
 import dev.lambdaurora.aurorasdeco.util.ColorUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GameRenderer;
@@ -44,6 +42,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
 import org.lwjgl.glfw.GLFW;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 
@@ -54,7 +53,7 @@ import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
  * @version 1.0.0
  * @since 1.0.0
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class SignPostEditScreen extends Screen {
 	private static final OrderedText END_CURSOR = OrderedText.forward("_", Style.EMPTY);
 	private final SignPostBlockEntity signPost;

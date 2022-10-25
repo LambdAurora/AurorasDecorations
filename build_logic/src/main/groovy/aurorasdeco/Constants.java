@@ -24,9 +24,9 @@ public final class Constants {
 
 	public static final String MINECRAFT_VERSION = "1.19.2";
 	public static final int MAPPINGS = 21;
-	public static final String LOADER_VERSION = "0.17.5-beta.10";
-	public static final String QFAPI_VERSION = "4.0.0-beta.16+0.64.0";
-	public static final String QSL_VERSION = "3.0.0-beta.18";
+	public static final String LOADER_VERSION = "0.17.5";
+	public static final String QFAPI_VERSION = "4.0.0-beta.17+0.64.0";
+	public static final String QSL_VERSION = "3.0.0-beta.19";
 	public static final int JAVA_VERSION = 17;
 	// Dependencies
 	public static final String TERRAFORM_WOOD_API_VERSION = "4.1.0";

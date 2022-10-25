@@ -20,8 +20,6 @@ package dev.lambdaurora.aurorasdeco.client.renderer;
 import dev.lambdaurora.aurorasdeco.blackboard.Blackboard;
 import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
 import dev.lambdaurora.aurorasdeco.client.BlackboardTexture;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.LightmapTextureManager;
@@ -32,6 +30,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtElement;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 /**
  * Represents the dynamic item renderer of blackboards.
@@ -40,7 +39,7 @@ import net.minecraft.nbt.NbtElement;
  * @version 1.0.0
  * @since 1.0.0
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
 	private final ModelIdentifier modelId;
 

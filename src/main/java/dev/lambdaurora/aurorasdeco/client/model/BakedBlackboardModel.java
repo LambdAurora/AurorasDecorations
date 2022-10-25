@@ -18,8 +18,6 @@
 package dev.lambdaurora.aurorasdeco.client.model;
 
 import dev.lambdaurora.aurorasdeco.blackboard.Blackboard;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -34,10 +32,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.BlockRenderView;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.function.Supplier;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class BakedBlackboardModel extends ForwardingBakedModel {
 	public BakedBlackboardModel(BakedModel baseModel) {
 		this.wrapped = baseModel;

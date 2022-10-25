@@ -18,13 +18,12 @@
 package dev.lambdaurora.aurorasdeco.client;
 
 import dev.lambdaurora.aurorasdeco.blackboard.Blackboard;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.math.Matrix4f;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -38,7 +37,7 @@ import java.util.Map;
  * @version 1.0.0
  * @since 1.0.0
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class BlackboardTexture {
 	private static final BlackboardTextureLRUCache TEXTURE_CACHE = new BlackboardTextureLRUCache(64);
 	private static final Deque<BlackboardTexture> UNUSED_TEXTURE_CACHE = new ArrayDeque<>();

@@ -34,8 +34,6 @@ import dev.lambdaurora.aurorasdeco.client.screen.SawmillScreen;
 import dev.lambdaurora.aurorasdeco.client.screen.ShelfScreen;
 import dev.lambdaurora.aurorasdeco.registry.*;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
@@ -54,6 +52,7 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import org.quiltmc.loader.api.ModContainer;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 import org.quiltmc.qsl.block.extensions.api.client.BlockRenderLayerMap;
 import org.quiltmc.qsl.lifecycle.api.client.event.ClientLifecycleEvents;
@@ -70,7 +69,7 @@ import static dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry.*;
  * @version 1.0.0
  * @since 1.0.0
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class AurorasDecoClient implements ClientModInitializer {
 	public static final AurorasDecoPack RESOURCE_PACK = new AurorasDecoPack(ResourceType.CLIENT_RESOURCES);
 	public static final ModelIdentifier BLACKBOARD_MASK = new ModelIdentifier(AurorasDeco.id("blackboard_mask"),

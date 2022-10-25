@@ -18,8 +18,6 @@
 package dev.lambdaurora.aurorasdeco.block.entity;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -29,6 +27,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.Set;
 
@@ -198,7 +197,7 @@ public abstract class SwayingBlockEntity extends BlockEntity {
 		}
 	}
 
-	@Environment(EnvType.CLIENT)
+	@ClientOnly
 	protected void tickClient(World world) {
 		this.naturalSway = world.getLightLevel(LightType.SKY, this.pos) >= 12;
 		this.tick();

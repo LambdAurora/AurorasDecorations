@@ -32,6 +32,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +45,7 @@ import java.util.List;
  * @since 1.0.0
  */
 public class Blackboard implements BlackboardHandler {
-	@Environment(EnvType.CLIENT)
+	@ClientOnly
 	private static Sprite WHITE_SPRITE;
 
 	private final short[] pixels = new short[256];
@@ -219,12 +220,12 @@ public class Blackboard implements BlackboardHandler {
 
 	/* Rendering */
 
-	@Environment(EnvType.CLIENT)
+	@ClientOnly
 	public static void setWhiteSprite(Sprite whiteSprite) {
 		WHITE_SPRITE = whiteSprite;
 	}
 
-	@Environment(EnvType.CLIENT)
+	@ClientOnly
 	public Mesh buildMesh(Direction facing, int light) {
 		var meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
 		var emitter = meshBuilder.getEmitter();

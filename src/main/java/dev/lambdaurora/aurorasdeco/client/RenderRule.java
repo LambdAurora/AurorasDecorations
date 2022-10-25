@@ -21,8 +21,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -36,6 +34,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.slf4j.Logger;
 
 import java.io.InputStreamReader;
@@ -54,7 +53,7 @@ import java.util.function.Consumer;
  * @version 1.0.0
  * @since 1.0.0
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public record RenderRule(List<Model> models) {
 	private static final Logger LOGGER = LogUtils.getLogger();
 	private static final Map<Identifier, RenderRule> ITEM_RULES = new Object2ObjectOpenHashMap<>();

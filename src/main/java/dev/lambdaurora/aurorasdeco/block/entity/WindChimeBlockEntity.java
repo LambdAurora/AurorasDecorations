@@ -20,13 +20,12 @@ package dev.lambdaurora.aurorasdeco.block.entity;
 import dev.lambdaurora.aurorasdeco.block.WindChimeBlock;
 import dev.lambdaurora.aurorasdeco.client.Wind;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 public class WindChimeBlockEntity extends SwayingBlockEntity {
 	private final Box collisionBox;
@@ -61,7 +60,7 @@ public class WindChimeBlockEntity extends SwayingBlockEntity {
 
 	/* Ticking */
 
-	@Environment(EnvType.CLIENT)
+	@ClientOnly
 	@Override
 	protected void tickClient(World world) {
 		super.tickClient(world);

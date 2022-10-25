@@ -19,8 +19,6 @@ package dev.lambdaurora.aurorasdeco.client.renderer;
 
 import com.mojang.blaze3d.texture.NativeImage;
 import dev.lambdaurora.aurorasdeco.block.entity.SignPostBlockEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.LightmapTextureManager;
@@ -35,8 +33,9 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class SignPostBlockEntityRenderer implements BlockEntityRenderer<SignPostBlockEntity> {
 	private static final int RENDER_DISTANCE = MathHelper.square(16);
 	private static final int GLOWING_BLACK_COLOR = 0xfff0ebcc;

@@ -26,7 +26,6 @@ import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.util.CustomStateBuilder;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.advancement.criterion.Criteria;
@@ -59,6 +58,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.ArrayList;
@@ -371,7 +371,7 @@ public class SignPostBlock extends BlockWithEntity {
 	 * <p>
 	 * It allows to emit the block quads of a fence post block without a crash.
 	 */
-	@Environment(EnvType.CLIENT)
+	@ClientOnly
 	public static class State extends BlockState {
 		public State(Block block, ImmutableMap<Property<?>, Comparable<?>> immutableMap, MapCodec<BlockState> mapCodec) {
 			super(block, immutableMap, mapCodec);

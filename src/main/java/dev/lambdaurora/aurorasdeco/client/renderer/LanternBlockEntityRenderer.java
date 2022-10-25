@@ -20,8 +20,6 @@ package dev.lambdaurora.aurorasdeco.client.renderer;
 import dev.lambdaurora.aurorasdeco.block.WallLanternBlock;
 import dev.lambdaurora.aurorasdeco.block.entity.LanternBlockEntity;
 import dev.lambdaurora.aurorasdeco.hook.LBGHooks;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -33,8 +31,9 @@ import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.random.LegacySimpleRandom;
 import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.util.random.RandomSeed;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<LanternBlockEntity> {
 	private final MinecraftClient client = MinecraftClient.getInstance();
 	private final RandomGenerator random = new LegacySimpleRandom(RandomSeed.generateUniqueSeed());

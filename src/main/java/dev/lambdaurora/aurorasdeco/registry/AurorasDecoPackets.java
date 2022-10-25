@@ -20,8 +20,6 @@ package dev.lambdaurora.aurorasdeco.registry;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.client.screen.SignPostEditScreen;
 import dev.lambdaurora.aurorasdeco.item.PainterPaletteItem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
@@ -29,6 +27,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.PacketSender;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
@@ -99,7 +98,7 @@ public final class AurorasDecoPackets {
 		});
 	}
 
-	@Environment(EnvType.CLIENT)
+	@ClientOnly
 	public static final class Client {
 		private Client() {
 			throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");

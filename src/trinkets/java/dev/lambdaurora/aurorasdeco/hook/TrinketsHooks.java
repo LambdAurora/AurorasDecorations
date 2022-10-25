@@ -19,8 +19,6 @@ package dev.lambdaurora.aurorasdeco.hook;
 
 import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.client.TrinketRendererRegistry;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.HeadFeatureRenderer;
@@ -35,6 +33,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.QuiltLoader;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 
 import static dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry.*;
@@ -46,7 +45,7 @@ import static dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry.*;
  * @version 1.0.0
  * @since 1.0.0
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class TrinketsHooks implements ClientModInitializer {
 	private static final boolean HAS_TRINKETS = QuiltLoader.isModLoaded("trinkets");
 

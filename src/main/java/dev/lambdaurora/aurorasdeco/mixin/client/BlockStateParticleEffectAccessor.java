@@ -19,10 +19,12 @@ package dev.lambdaurora.aurorasdeco.mixin.client;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.particle.BlockStateParticleEffect;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
+@ClientOnly
 @Mixin(BlockStateParticleEffect.class)
 public interface BlockStateParticleEffectAccessor {
 	@Mutable

@@ -18,10 +18,9 @@
 package dev.lambdaurora.aurorasdeco.client.renderer;
 
 import dev.lambdaurora.aurorasdeco.block.entity.SwayingBlockEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public abstract class SwayingBlockEntityRenderer<T extends SwayingBlockEntity> implements BlockEntityRenderer<T> {
 }

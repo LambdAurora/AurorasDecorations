@@ -28,6 +28,7 @@ import net.minecraft.client.render.model.json.ModelVariantMap;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -50,6 +51,7 @@ import java.util.Map;
  * @version 1.0.0
  * @since 1.0.0
  */
+@ClientOnly
 @Mixin(value = ModelLoader.class, priority = 900)
 public abstract class ModelLoaderMixin {
 	@Shadow

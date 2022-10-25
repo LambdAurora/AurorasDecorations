@@ -21,8 +21,6 @@ import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.mixin.block.AbstractBlockAccessor;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -37,6 +35,7 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.block.content.registry.api.BlockContentRegistries;
 import org.quiltmc.qsl.block.content.registry.api.FlammableBlockEntry;
 
@@ -321,12 +320,12 @@ public final class WoodType {
 			});
 		}
 
-		@Environment(EnvType.CLIENT)
+		@ClientOnly
 		public BlockColorProvider getBlockColorProvider() {
 			return ColorProviderRegistry.BLOCK.get(this.block());
 		}
 
-		@Environment(EnvType.CLIENT)
+		@ClientOnly
 		public ItemColorProvider getItemColorProvider() {
 			return ColorProviderRegistry.ITEM.get(this.block());
 		}

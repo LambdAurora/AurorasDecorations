@@ -20,8 +20,6 @@ package dev.lambdaurora.aurorasdeco.client.model;
 import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoTags;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
@@ -30,11 +28,12 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.BlockRenderView;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class BakedGlassboardModel extends BakedBlackboardModel {
 	private final Int2ObjectMap<List<BakedModel>> models;
 

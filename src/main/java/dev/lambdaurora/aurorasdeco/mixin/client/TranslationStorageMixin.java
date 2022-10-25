@@ -21,6 +21,7 @@ import dev.lambdaurora.aurorasdeco.resource.datagen.DynamicLang;
 import net.minecraft.client.resource.language.LanguageDefinition;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.resource.ResourceManager;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -30,6 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.List;
 import java.util.Map;
 
+@ClientOnly
 @Mixin(TranslationStorage.class)
 public class TranslationStorageMixin {
 	@Inject(

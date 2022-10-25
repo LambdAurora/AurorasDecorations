@@ -19,8 +19,6 @@ package dev.lambdaurora.aurorasdeco.client.model;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.SignPostBlock;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.model.ModelProviderContext;
 import net.fabricmc.fabric.api.client.model.ModelVariantProvider;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
@@ -37,6 +35,7 @@ import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockRenderView;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.function.Supplier;
 
@@ -47,7 +46,7 @@ import java.util.function.Supplier;
  * @version 1.0.0
  * @since 1.0.0
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class BakedSignPostModel extends ForwardingBakedModel {
 	public BakedSignPostModel(BakedModel fenceModel) {
 		this.wrapped = fenceModel;

@@ -17,13 +17,12 @@
 
 package dev.lambdaurora.aurorasdeco.client.particle;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class AmethystGlintParticle extends SpriteBillboardParticle {
 	protected AmethystGlintParticle(ClientWorld clientWorld, double x, double y, double z,
 			double velocityX, double velocityY, double velocityZ) {

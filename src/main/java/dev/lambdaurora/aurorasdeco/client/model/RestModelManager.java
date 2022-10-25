@@ -20,8 +20,6 @@ package dev.lambdaurora.aurorasdeco.client.model;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelLoader;
@@ -30,13 +28,14 @@ import net.minecraft.client.render.model.json.ModelVariantMap;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class RestModelManager {
 	private final Map<WoodType, RestModelEntry> models = new Reference2ObjectOpenHashMap<>();
 	private final ModelLoader modelLoader;

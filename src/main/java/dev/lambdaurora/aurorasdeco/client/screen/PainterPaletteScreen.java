@@ -23,8 +23,6 @@ import dev.lambdaurora.aurorasdeco.screen.PainterPaletteScreenHandler;
 import dev.lambdaurora.aurorasdeco.screen.slot.BlackboardToolSlot;
 import dev.lambdaurora.aurorasdeco.screen.slot.ColorSlot;
 import dev.lambdaurora.aurorasdeco.screen.slot.LockedSlot;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -32,6 +30,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 /**
  * Represents the painter's palette container screen.
@@ -40,7 +39,7 @@ import net.minecraft.util.Identifier;
  * @version 1.0.0-beta.6
  * @since 1.0.0-beta.6
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class PainterPaletteScreen extends HandledScreen<PainterPaletteScreenHandler> {
 	private static final Identifier TEXTURE = AurorasDeco.id("textures/gui/container/painter_palette.png");
 	private static final Identifier LOCK_TEXTURE = new Identifier("textures/gui/container/cartography_table.png");

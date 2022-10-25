@@ -56,8 +56,6 @@
     "client.MobEntityRendererAccessor",
     "client.ModelLoaderMixin",
     "client.MouseMixin",
-    "client.NativeImageAccessor",
-    "client.ReloadableResourceManagerMixin",
     "client.TranslationStorageMixin"
   ],
   "injectors": {

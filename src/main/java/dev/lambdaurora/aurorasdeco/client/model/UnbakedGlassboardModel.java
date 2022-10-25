@@ -21,8 +21,6 @@ import com.mojang.logging.LogUtils;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.render.model.BakedModel;
@@ -36,6 +34,7 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -45,7 +44,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class UnbakedGlassboardModel extends UnbakedBlackboardModel {
 	private static final Logger LOGGER = LogUtils.getLogger();
 	static final int LEFT_UP_MASK = 0b00000001;

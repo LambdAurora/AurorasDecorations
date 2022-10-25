@@ -20,8 +20,6 @@ package dev.lambdaurora.aurorasdeco.client.tooltip;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.lambdaurora.aurorasdeco.blackboard.BlackboardColor;
 import dev.lambdaurora.aurorasdeco.item.PainterPaletteItem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -35,6 +33,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Matrix4f;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 /**
  * Represents the painter's palette tooltip component.
@@ -43,7 +42,7 @@ import net.minecraft.util.math.Matrix4f;
  * @version 1.0.0-beta.6
  * @since 1.0.0-beta.6
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class PainterPaletteTooltipComponent implements TooltipComponent {
 	private final PainterPaletteItem.PainterPaletteInventory inventory;
 	private final Text selectedToolText;

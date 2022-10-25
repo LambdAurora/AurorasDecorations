@@ -20,8 +20,6 @@ package dev.lambdaurora.aurorasdeco.client.tooltip;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.blackboard.Blackboard;
 import dev.lambdaurora.aurorasdeco.client.BlackboardTexture;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
@@ -32,6 +30,7 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix4f;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 /**
  * Represents the blackboard tooltip component. Displays the blackboard's contents.
@@ -40,7 +39,7 @@ import net.minecraft.util.math.Matrix4f;
  * @version 1.0.0
  * @since 1.0.0
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class BlackboardTooltipComponent implements TooltipComponent {
 	private static final Identifier LOCK_ICON_TEXTURE = new Identifier("textures/gui/container/cartography_table.png");
 	private static final Identifier GLOW_TEXTURE = AurorasDeco.id("textures/gui/glowing_sprite.png");

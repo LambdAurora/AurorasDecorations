@@ -21,8 +21,6 @@ import com.mojang.datafixers.util.Pair;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.blackboard.Blackboard;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.ModelLoader;
@@ -34,13 +32,14 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.Collection;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class UnbakedBlackboardModel implements AuroraUnbakedModel {
 	private static final SpriteIdentifier WHITE = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE,
 			AurorasDeco.id("special/white"));

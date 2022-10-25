@@ -18,8 +18,6 @@
 package dev.lambdaurora.aurorasdeco.client.model;
 
 import dev.lambdaurora.aurorasdeco.block.HangingFlowerPotBlock;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -29,6 +27,7 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.BlockRenderView;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.function.Supplier;
 
@@ -39,7 +38,7 @@ import java.util.function.Supplier;
  * @version 1.0.0
  * @since 1.0.0
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class BakedHangingFlowerPotModel extends ForwardingBakedModel {
 	private final MinecraftClient client = MinecraftClient.getInstance();
 

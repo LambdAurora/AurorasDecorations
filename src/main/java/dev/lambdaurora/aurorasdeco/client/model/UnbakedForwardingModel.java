@@ -18,8 +18,6 @@
 package dev.lambdaurora.aurorasdeco.client.model;
 
 import com.mojang.datafixers.util.Pair;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.ModelLoader;
@@ -28,6 +26,7 @@ import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.Collection;
 import java.util.Set;
@@ -40,7 +39,7 @@ import java.util.function.Function;
  * @version 1.0.0
  * @since 1.0.0
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public record UnbakedForwardingModel(UnbakedModel baseModel,
 		Function<BakedModel, BakedModel> factory) implements AuroraUnbakedModel {
 	@Override

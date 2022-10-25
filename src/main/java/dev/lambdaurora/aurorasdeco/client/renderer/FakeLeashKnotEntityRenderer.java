@@ -19,8 +19,6 @@ package dev.lambdaurora.aurorasdeco.client.renderer;
 
 import dev.lambdaurora.aurorasdeco.entity.FakeLeashKnotEntity;
 import dev.lambdaurora.aurorasdeco.mixin.client.MobEntityRendererAccessor;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -29,8 +27,9 @@ import net.minecraft.client.render.entity.model.EntityModelLayers;
 import net.minecraft.client.render.entity.model.LeashKnotEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class FakeLeashKnotEntityRenderer
 		extends MobEntityRenderer<FakeLeashKnotEntity, LeashKnotEntityModel<FakeLeashKnotEntity>> {
 	private static final Identifier TEXTURE = new Identifier("textures/entity/lead_knot.png");

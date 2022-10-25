@@ -29,11 +29,10 @@ import dev.lambdaurora.aurorasdeco.hook.emi.WoodcuttingEmiRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.ExplodingRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Blocks;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class EmiHooks implements EmiPlugin {
 	public static EmiRecipeCategory WOODCUTTING = new EmiRecipeCategory(AurorasDeco.id("woodcutting"),
 			EmiStack.of(AurorasDecoRegistry.SAWMILL_BLOCK)

@@ -17,8 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.hook;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -31,7 +30,7 @@ import java.lang.invoke.MethodType;
  * @version 1.0.0
  * @since 1.0.0
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class LBGHooks {
 	private LBGHooks() {
 		throw new UnsupportedOperationException("Someone tried to instantiate a class only containing static definitions. How?");

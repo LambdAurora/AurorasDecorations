@@ -21,14 +21,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.PartType;
 import dev.lambdaurora.aurorasdeco.screen.ShelfScreenHandler;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 /**
  * Represents the shelf container screen.
@@ -37,7 +36,7 @@ import net.minecraft.util.Identifier;
  * @version 1.0.0
  * @since 1.0.0
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class ShelfScreen extends HandledScreen<ShelfScreenHandler> {
 	private static final Identifier TEXTURE = AurorasDeco.id("textures/gui/container/shelf.png");
 

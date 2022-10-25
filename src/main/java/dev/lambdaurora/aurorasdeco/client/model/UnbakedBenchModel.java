@@ -18,8 +18,6 @@
 package dev.lambdaurora.aurorasdeco.client.model;
 
 import com.mojang.datafixers.util.Pair;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.ModelLoader;
@@ -27,12 +25,13 @@ import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.Collection;
 import java.util.Set;
 import java.util.function.Function;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public record UnbakedBenchModel(UnbakedModel baseModel, RestModelManager restModelManager) implements AuroraUnbakedModel {
 	@Override
 	public Collection<Identifier> getModelDependencies() {

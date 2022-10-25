@@ -96,7 +96,7 @@ public abstract class GenerateQmjTask extends DefaultTask {
 						.endObject();
 				writer.beginObject()
 						.name("id").value("quilt_loader")
-						.name("versions").value(">=0.17.4")
+						.name("versions").value(">=" + Constants.LOADER_VERSION)
 						.endObject();
 				writer.beginObject()
 						.name("id").value("quilted_fabric_api")
