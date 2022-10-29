@@ -10,9 +10,10 @@ group = project.maven_group
 version = "${project.mod_version}+${getMCVersionString()}"
 archivesBaseName = project.archives_base_name
 
-if (!(System.getenv("CURSEFORGE_TOKEN") || !(System.getenv("MODRINTH_TOKEN")))) {
+if (!(System.getenv("CURSEFORGE_TOKEN") && !(System.getenv("MODRINTH_TOKEN")))) {
 	version += "-local"
 }
+logger.lifecycle("Preparing version ${version}...")
 
 boolean isMCVersionNonRelease() {
 	return MINECRAFT_VERSION.matches('^\\d\\dw\\d\\d[a-z]$')
