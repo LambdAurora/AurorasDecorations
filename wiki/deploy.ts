@@ -1,4 +1,4 @@
-import {html, md} from "https://deno.land/x/libmd@v1.7.0/mod.mjs";
+import {html, md} from "https://deno.land/x/libmd@v1.7.3/mod.mjs";
 
 const WEBSITE = "https://lambdaurora.dev/";
 const WEBSITE_PREFIX = WEBSITE + "AurorasDecorations/";

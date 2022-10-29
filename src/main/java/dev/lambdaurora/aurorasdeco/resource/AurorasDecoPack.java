@@ -87,7 +87,7 @@ public class AurorasDecoPack extends InMemoryResourcePack {
 		root.add("values", values);
 
 		for (var type : types) {
-			this.putJson(ResourceType.SERVER_DATA, id, root);
+			this.putJson(ResourceType.SERVER_DATA, new Identifier(id.getNamespace(), "tags/" + type + "/" + id.getPath()), root);
 		}
 	}
 

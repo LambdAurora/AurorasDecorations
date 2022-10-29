@@ -42,7 +42,8 @@
 
 ### 1.0.0-beta.10
 
-- Bumped required Quilt Loader to 0.17.6-beta.2.
+- Bumped required Quilt Loader to 0.17.6.
 - Fixed the client virtual resource pack being injected twice.
+- Fixed virtual tags being put at the wrong location, failing to load critical tags.
 
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"
