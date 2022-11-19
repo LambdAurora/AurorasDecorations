@@ -7,7 +7,7 @@
   ],
   "key": {
     "C": {
-      "tag": "minecraft:stone_crafting_materials"
+      "tag": "c:cobblestone"
     },
     "S": {
       "item": "minecraft:stone"
