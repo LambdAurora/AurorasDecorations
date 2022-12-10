@@ -52,8 +52,8 @@ import java.util.Optional;
  * Represents a painter's palette item which can be used for easier painting on blackboards.
  *
  * @author LambdAurora
- * @version 1.0.0
- * @since 1.0.0
+ * @version 1.0.0-beta.11
+ * @since 1.0.0-beta.6
  */
 public class PainterPaletteItem extends Item {
 	private static final int DEFAULT_BACKGROUND_COLOR = 0xff967441;
@@ -292,7 +292,8 @@ public class PainterPaletteItem extends Item {
 		}
 
 		public int getSelectedToolSlot() {
-			return this.selectedTool + COLOR_SIZE;
+			if (this.selectedTool == -1) return -1;
+			else return this.selectedTool + COLOR_SIZE;
 		}
 
 		public ItemStack getSelectedTool() {

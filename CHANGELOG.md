@@ -46,4 +46,8 @@
 - Fixed the client virtual resource pack being injected twice.
 - Fixed virtual tags being put at the wrong location, failing to load critical tags.
 
+### 1.0.0-beta.11
+
+- Fixed painter's palette assuming the wrong slot when no tool is selected.
+
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"
