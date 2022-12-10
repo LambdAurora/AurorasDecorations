@@ -49,6 +49,7 @@
 ### 1.0.0-beta.11
 
 - Added Stripped Azalea Log and Stripped Jacaranda Log to `c:stripped_logs` block and item tags ([#40](https://github.com/LambdAurora/AurorasDecorations/issues/40)).
+- Changed render rules directory from `aurorasdeco_render_rules` to `aurorasdeco/render_rules`.
 - Fixed painter's palette assuming the wrong slot when no tool is selected.
 - Fixed sign post blocks not being waterloggable.
 - Fixed sign post blocks crashing with Sodium when Indium is absent (hopefully) ([#44](https://github.com/LambdAurora/AurorasDecorations/issues/44)).

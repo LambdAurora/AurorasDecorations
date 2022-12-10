@@ -7,7 +7,7 @@ Aurora's Decorations render rules allow to use custom item models in some situat
 
 ## Format
 
-Render rules are JSON files placed in the `assets/<namespace>/aurorasdeco_render_rules` directory of a resource pack.
+Render rules are JSON files placed in the `assets/<namespace>/aurorasdeco/render_rules` directory of a resource pack.
 
 The JSON has the following structure:
 
