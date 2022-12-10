@@ -23,9 +23,11 @@ import dev.lambdaurora.aurorasdeco.block.entity.SignPostBlockEntity;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import dev.lambdaurora.aurorasdeco.util.KindSearcher;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.item.*;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
@@ -42,8 +44,8 @@ import static dev.lambdaurora.aurorasdeco.AurorasDeco.id;
  * Represents a sign post item.
  *
  * @author LambdAurora
- * @version 1.0.0
- * @since 1.0.0
+ * @version 1.0.0-beta.11
+ * @since 1.0.0-beta.1
  */
 public class SignPostItem extends Item {
 	public static final Identifier SIGN_POST_MODEL = AurorasDeco.id("block/template/sign_post");
@@ -106,11 +108,12 @@ public class SignPostItem extends Item {
 
 		if (state.getBlock() instanceof FenceBlock || signPost) {
 			if (!signPost) {
-				var signPostState = SignPostBlock.byFence((FenceBlock) state.getBlock())
+				BlockState signPostState = SignPostBlock.byFence((FenceBlock) state.getBlock())
 						.getPlacementState(new ItemPlacementContext(context));
 				if (signPostState == null)
 					return ActionResult.FAIL;
 
+				signPostState = signPostState.with(Properties.WATERLOGGED, state.get(Properties.WATERLOGGED));
 				world.setBlockState(pos, signPostState, Block.NOTIFY_ALL);
 			}
 

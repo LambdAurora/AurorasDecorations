@@ -18,12 +18,15 @@
 package dev.lambdaurora.aurorasdeco.block;
 
 import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.state.StateManager;
 
 /**
  * Represents a way to inject properties from other blocks into a specific block.
  *
  * @author LambdAurora
- * @version 1.0.0-beta.9
+ * @version 1.0.0-beta.11
  * @since 1.0.0-beta.9
  */
 public final class BlockPropertiesInjector {
@@ -35,9 +38,19 @@ public final class BlockPropertiesInjector {
 	}
 
 	public static <D extends InjectData> D getInjectedData(Class<? extends D> dataClass) {
-		return dataClass.cast(DATA.get());
+		var data = DATA.get();
+
+		if (data == null) return null;
+		else return dataClass.cast(DATA.get());
+	}
+
+	public static void clear() {
+		DATA.remove();
 	}
 
 	public interface InjectData {
+		default StateManager.Factory<Block, BlockState> getStateFactory(StateManager.Factory<Block, BlockState> existing) {
+			return existing;
+		}
 	}
 }

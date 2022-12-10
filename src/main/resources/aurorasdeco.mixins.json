@@ -13,6 +13,7 @@
     "block.AbstractBlockAccessor",
     "block.BedBlockMixin",
     "block.BlockAccessor",
+    "block.BlockMixin",
     "block.BlockSettingsAccessor",
     "block.CandleBlockMixin",
     "block.FlowerPotBlockMixin",

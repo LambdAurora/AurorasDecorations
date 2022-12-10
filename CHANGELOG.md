@@ -49,5 +49,7 @@
 ### 1.0.0-beta.11
 
 - Fixed painter's palette assuming the wrong slot when no tool is selected.
+- Fixed sign post blocks not being waterloggable.
+- Fixed sign post blocks crashing with Sodium when Indium is absent (hopefully) ([#44](https://github.com/LambdAurora/AurorasDecorations/issues/44)).
 
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"

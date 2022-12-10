@@ -27,7 +27,6 @@ import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.util.CustomStateBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -46,6 +45,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -57,23 +57,26 @@ import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
+import org.quiltmc.loader.api.minecraft.MinecraftQuiltLoader;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
  * Represents a sign post block.
  *
  * @author LambdAurora
- * @version 1.0.0
- * @since 1.0.0
+ * @version 1.0.0-beta.11
+ * @since 1.0.0-beta.1
  */
 @SuppressWarnings("deprecation")
-public class SignPostBlock extends BlockWithEntity {
+public class SignPostBlock extends BlockWithEntity implements Waterloggable {
 	private static final List<SignPostBlock> SIGN_POSTS = new ArrayList<>();
 
 	private final FenceBlock fenceBlock;
@@ -86,6 +89,7 @@ public class SignPostBlock extends BlockWithEntity {
 		this.setDefaultState(AuroraUtil.remapBlockState(this.fenceBlock.getDefaultState(), this.stateManager.getDefaultState()));
 
 		SIGN_POSTS.add(this);
+		BlockPropertiesInjector.clear();
 	}
 
 	public static SignPostBlock byFence(FenceBlock fenceBlock) {
@@ -105,7 +109,8 @@ public class SignPostBlock extends BlockWithEntity {
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
 		var customBuilder = new CustomStateBuilder<>(builder);
 		customBuilder.exclude("north", "east", "south", "west");
-		((BlockAccessor) BlockPropertiesInjector.getInjectedData(InjectedBlock.class).fenceBlock()).aurorasdeco$appendProperties(customBuilder);
+		((BlockAccessor) Objects.requireNonNull(BlockPropertiesInjector.getInjectedData(InjectedBlock.class)).fenceBlock())
+				.aurorasdeco$appendProperties(customBuilder);
 	}
 
 	public FenceBlock getFenceBlock() {
@@ -162,6 +167,18 @@ public class SignPostBlock extends BlockWithEntity {
 		var fenceState = this.getFenceBlock().getPlacementState(ctx);
 		if (fenceState != null) return AuroraUtil.remapBlockState(fenceState, this.getDefaultState());
 		else return null;
+	}
+
+	/* Updates */
+
+	@Override
+	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState,
+			WorldAccess world, BlockPos pos, BlockPos posFrom) {
+		if (state.get(Properties.WATERLOGGED)) {
+			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+		}
+
+		return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
 	}
 
 	/* Interaction */
@@ -341,13 +358,6 @@ public class SignPostBlock extends BlockWithEntity {
 		return QuiltBlockSettings.copyOf(fenceBlock);
 	}
 
-	private static StateManager.Factory<Block, BlockState> getStateFactory() {
-		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-			return State::new;
-		}
-		return BlockState::new;
-	}
-
 	static {
 		UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
 			var offStack = player.getStackInHand(Hand.OFF_HAND);
@@ -386,5 +396,12 @@ public class SignPostBlock extends BlockWithEntity {
 	}
 
 	private record InjectedBlock(FenceBlock fenceBlock) implements BlockPropertiesInjector.InjectData {
+		@Override
+		public StateManager.Factory<Block, BlockState> getStateFactory(StateManager.Factory<Block, BlockState> existing) {
+			if (MinecraftQuiltLoader.getEnvironmentType() == EnvType.CLIENT) {
+				return State::new;
+			}
+			return existing;
+		}
 	}
 }
