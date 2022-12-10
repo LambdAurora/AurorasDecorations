@@ -34,13 +34,16 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
@@ -61,6 +64,7 @@ public class StumpBlock extends Block implements SeatBlock, Waterloggable {
 	private static final List<StumpBlock> LOG_STUMPS = new ArrayList<>();
 
 	protected static final VoxelShape SHAPE = createCuboidShape(3, 0, 3, 13, 10, 13);
+	private static final VoxelShape HOLDER_SHAPE = createCuboidShape(3, 15, 3, 13, 16, 13);
 
 	private final WoodType woodType;
 
@@ -99,6 +103,14 @@ public class StumpBlock extends Block implements SeatBlock, Waterloggable {
 	}
 
 	/* Placement */
+
+	@Override
+	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+		var downPos = pos.down();
+		var downState = world.getBlockState(downPos);
+		return VoxelShapes.matchesAnywhere(downState.getSidesShape(world, downPos).getFace(Direction.UP),
+				HOLDER_SHAPE, BooleanBiFunction.AND);
+	}
 
 	@Override
 	public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {

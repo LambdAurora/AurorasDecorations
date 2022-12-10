@@ -52,5 +52,7 @@
 - Fixed painter's palette assuming the wrong slot when no tool is selected.
 - Fixed sign post blocks not being waterloggable.
 - Fixed sign post blocks crashing with Sodium when Indium is absent (hopefully) ([#44](https://github.com/LambdAurora/AurorasDecorations/issues/44)).
+- Fixed being able to place stump blocks without a supporting block underneath ([#42](https://github.com/LambdAurora/AurorasDecorations/issues/42)).
+  - It is still possible to have floating stump blocks by pushing the block or destroying the support block.
 
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"
