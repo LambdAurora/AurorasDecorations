@@ -56,4 +56,8 @@
 - Fixed being able to place stump blocks without a supporting block underneath ([#42](https://github.com/LambdAurora/AurorasDecorations/issues/42)).
   - It is still possible to have floating stump blocks by pushing the block or destroying the support block.
 
+### 1.0.0-beta.12
+
+ - Fixed calcite bricks placement in the creative inventory.
+
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"

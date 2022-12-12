@@ -456,7 +456,7 @@ public final class AurorasDecoRegistry {
 	public static final Block CALCITE_BRICKS = registerWithItem("calcite_bricks",
 			new Block(QuiltBlockSettings.copyOf(POLISHED_CALCITE)),
 			new QuiltItemSettings().group(ItemGroup.BUILDING_BLOCKS),
-			DerivedBlockItem.itemWithStrictPositionFactory(Items.CHISELED_DEEPSLATE));
+			DerivedBlockItem.itemWithStrictPositionFactory(Items.REINFORCED_DEEPSLATE));
 	private static final Derivator CALCITE_BRICKS_DERIVATOR = new Derivator(CALCITE_BRICKS.getDefaultState());
 	public static final Block MOSSY_CALCITE_BRICKS = CALCITE_BRICKS_DERIVATOR.mossy();
 	public static final Block CRACKED_CALCITE_BRICKS = CALCITE_BRICKS_DERIVATOR.cracked();
