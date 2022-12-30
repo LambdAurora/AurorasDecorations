@@ -1,4 +1,4 @@
-import {html, md} from "https://deno.land/x/libmd@v1.7.3/mod.mjs";
+import {html, HTML_TAGS_TO_PURGE_SUGGESTION, md} from "https://deno.land/x/libmd@v1.9.0/mod.mjs";
 
 const WEBSITE = "https://lambdaurora.dev/";
 const WEBSITE_PREFIX = WEBSITE + "AurorasDecorations/";
@@ -75,7 +75,11 @@ async function deploy_dir(path: string, filter = (_: string) => true, markdown_p
 async function load_markdown(path: string, assets_to_copy: { [x: string]: string }): Promise<MarkdownPage> {
 	const decoder = new TextDecoder("utf-8");
 	const content = decoder.decode(await Deno.readFile(path));
-	const doc = md.parser.parse(content);
+	const doc = md.parser.parse(content, {
+		inline_html: {
+			disallowed_tags: HTML_TAGS_TO_PURGE_SUGGESTION.filter(tag => tag !== "svg")
+		}
+	});
 
 	let page_description = "Welcome to the Aurora's Decorations wiki. Aurora's Decorations is a decorations-focused mod.";
 	let page_thumbnail: string;
@@ -91,7 +95,7 @@ async function load_markdown(path: string, assets_to_copy: { [x: string]: string
 	main.children = md.render_to_html(doc, {
 		code: {
 			process: (el: md.InlineCode) => {
-				if (el.content.match(/^#[a-fA-F0-9]{3}(?:[a-fA-F0-9]{5}|[a-fA-F0-9]{3})?$/)) {
+				if (el.content.match(/^#[a-fA-F\d]{3}(?:[a-fA-F\d]{5}|[a-fA-F\d]{3})?$/)) {
 					return html.create_element("span")
 						.with_attr("class", "ls_color_ship")
 						.with_child(html.create_element("span")
@@ -104,6 +108,9 @@ async function load_markdown(path: string, assets_to_copy: { [x: string]: string
 		},
 		image: {
 			class_name: "ls_responsive_img"
+		},
+		inline_html: {
+			disallowed_tags: HTML_TAGS_TO_PURGE_SUGGESTION.filter(tag => tag !== "svg")
 		},
 		spoiler: {
 			enable: true
