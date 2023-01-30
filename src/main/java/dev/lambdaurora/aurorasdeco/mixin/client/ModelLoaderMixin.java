@@ -37,8 +37,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Map;
 
 /**
@@ -66,7 +66,7 @@ public abstract class ModelLoaderMixin {
 	@Unique
 	private final RestModelManager aurorasdeco$restModelManager = new RestModelManager((ModelLoader) (Object) this);
 	@Unique
-	private final List<Identifier> aurorasdeco$visitedModels = new ArrayList<>();
+	private final Set<Identifier> aurorasdeco$visitedModels = new HashSet<>();
 
 	@Shadow
 	protected abstract void putModel(Identifier id, UnbakedModel unbakedModel);
