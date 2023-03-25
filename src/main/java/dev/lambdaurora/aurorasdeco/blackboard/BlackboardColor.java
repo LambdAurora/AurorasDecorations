@@ -30,6 +30,10 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnmodifiableView;
+
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Represents a blackboard color.
@@ -99,6 +103,10 @@ public class BlackboardColor extends BlackboardDrawModifier {
 
 	public static @Nullable BlackboardColor fromItem(Item item) {
 		return ITEM_TO_COLOR.get(item);
+	}
+
+	public static @UnmodifiableView Collection<BlackboardColor> getColors() {
+		return Collections.unmodifiableCollection(COLORS.values());
 	}
 
 	/**

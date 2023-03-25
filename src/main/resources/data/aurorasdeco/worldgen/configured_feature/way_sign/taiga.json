@@ -1,0 +1,70 @@
+{
+  "type": "aurorasdeco:way_sign",
+  "config": {
+    "material": "minecraft:spruce_fence",
+    "board_material": "aurorasdeco:sign_post/oak",
+    "base": {
+      "type": "minecraft:weighted_state_provider",
+      "entries": [
+        {
+          "data": {
+            "Name": "aurorasdeco:polished_basalt_wall"
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "minecraft:cobblestone_wall"
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "minecraft:mossy_cobblestone_wall"
+          },
+          "weight": 1
+        }
+      ]
+    },
+    "path": {
+      "state": {
+        "type": "minecraft:weighted_state_provider",
+        "entries": [
+          {
+            "data": {
+              "Name": "minecraft:gravel"
+            },
+            "weight": 1
+          },
+          {
+            "data": {
+              "Name": "minecraft:cobblestone"
+            },
+            "weight": 1
+          },
+          {
+            "data": {
+              "Name": "minecraft:mossy_cobblestone"
+            },
+            "weight": 1
+          },
+          {
+            "data": {
+              "Name": "minecraft:tuff"
+            },
+            "weight": 1
+          },
+          {
+            "data": {
+              "Name": "minecraft:podzol"
+            },
+            "weight": 1
+          }
+        ]
+      },
+      "radius": 3,
+      "removal_factor": 0.40,
+      "addition_factor": 0.10
+    }
+  }
+}

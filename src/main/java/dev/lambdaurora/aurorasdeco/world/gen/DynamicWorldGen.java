@@ -19,8 +19,10 @@ package dev.lambdaurora.aurorasdeco.world.gen;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.world.gen.feature.AurorasDecoFeatures;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.DynamicRegistryManager;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.GenerationStep;
@@ -44,6 +46,7 @@ import java.util.function.Predicate;
  * @since 1.0.0
  */
 public class DynamicWorldGen {
+	private static final List<String> WAY_SIGNS = List.of("birch", "desert", "oak", "taiga");
 	private static final DynamicWorldGen INSTANCE = new DynamicWorldGen();
 
 	private DynamicWorldGen() {
@@ -52,6 +55,18 @@ public class DynamicWorldGen {
 				AurorasDecoFeatures.SWAMP_GIANT_MUSHROOMS,
 				AurorasDecoFeatures.SWAMP_SMALL_DRIPLEAF
 		));
+
+		var waySigns = BiomeModifications.create(AurorasDeco.id("way_signs"));
+		for (var waySign : WAY_SIGNS) {
+			waySigns.add(ModificationPhase.ADDITIONS,
+					BiomeSelectors.isIn(TagKey.of(Registry.BIOME_KEY, AurorasDeco.id("feature/way_sign/" + waySign))),
+					(selectionContext, context) -> {
+						context.getGenerationSettings().addFeature(GenerationStep.Feature.SURFACE_STRUCTURES,
+								RegistryKey.of(Registry.PLACED_FEATURE_KEY, AurorasDeco.id("way_sign/" + waySign))
+						);
+					}
+			);
+		}
 	}
 
 	private void registerDynamicModifications(Identifier modificationsId, Predicate<BiomeSelectionContext> selector, List<RegistryKey<PlacedFeature>> toPlace) {

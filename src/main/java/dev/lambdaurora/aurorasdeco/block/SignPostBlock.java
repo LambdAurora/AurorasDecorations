@@ -25,11 +25,14 @@ import dev.lambdaurora.aurorasdeco.mixin.block.BlockAccessor;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.util.CustomStateBuilder;
+import dev.lambdaurora.aurorasdeco.world.gen.feature.WaySignFeature;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -45,6 +48,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
@@ -77,6 +81,7 @@ import java.util.stream.Stream;
  */
 @SuppressWarnings("deprecation")
 public class SignPostBlock extends BlockWithEntity implements Waterloggable {
+	public static final BooleanProperty GENERATE_DIRECTIONS = BooleanProperty.of("generate_directions");
 	private static final List<SignPostBlock> SIGN_POSTS = new ArrayList<>();
 
 	private final FenceBlock fenceBlock;
@@ -86,7 +91,10 @@ public class SignPostBlock extends BlockWithEntity implements Waterloggable {
 
 		this.fenceBlock = fenceBlock;
 
-		this.setDefaultState(AuroraUtil.remapBlockState(this.fenceBlock.getDefaultState(), this.stateManager.getDefaultState()));
+		this.setDefaultState(
+				AuroraUtil.remapBlockState(this.fenceBlock.getDefaultState(), this.stateManager.getDefaultState())
+						.with(GENERATE_DIRECTIONS, false)
+		);
 
 		SIGN_POSTS.add(this);
 		BlockPropertiesInjector.clear();
@@ -107,8 +115,10 @@ public class SignPostBlock extends BlockWithEntity implements Waterloggable {
 
 	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+		builder.add(GENERATE_DIRECTIONS);
+
 		var customBuilder = new CustomStateBuilder<>(builder);
-		customBuilder.exclude("north", "east", "south", "west");
+		customBuilder.exclude("north", "east", "south", "west", GENERATE_DIRECTIONS.getName());
 		((BlockAccessor) Objects.requireNonNull(BlockPropertiesInjector.getInjectedData(InjectedBlock.class)).fenceBlock())
 				.aurorasdeco$appendProperties(customBuilder);
 	}
@@ -158,6 +168,15 @@ public class SignPostBlock extends BlockWithEntity implements Waterloggable {
 	@Override
 	public void randomDisplayTick(BlockState state, World world, BlockPos pos, RandomGenerator random) {
 		this.fenceBlock.randomDisplayTick(state, world, pos, random);
+	}
+
+	@Override
+	public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(World world, BlockState state,
+			BlockEntityType<T> type) {
+		if (state.get(GENERATE_DIRECTIONS) && !world.isClient())
+			return checkType(type, AurorasDecoRegistry.SIGN_POST_BLOCK_ENTITY_TYPE, WaySignFeature::generateDirections);
+
+		return null;
 	}
 
 	/* Placement */

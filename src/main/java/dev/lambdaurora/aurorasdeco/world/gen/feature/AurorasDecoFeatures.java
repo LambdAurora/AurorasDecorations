@@ -38,6 +38,7 @@ public final class AurorasDecoFeatures {
 	public static final AquaticSurfacePatchFeature AQUATIC_SURFACE_PATCH = register("aquatic_surface_patch",
 			new AquaticSurfacePatchFeature(AquaticSurfacePatchFeature.Config.CODEC));
 	public static final FallenTreeFeature FALLEN_TREE = register("fallen_tree", new FallenTreeFeature(FallenTreeFeatureConfig.CODEC));
+	public static final WaySignFeature WAY_SIGN = register("way_sign", new WaySignFeature(WaySignFeature.Config.CODEC));
 
 	public static final RegistryKey<PlacedFeature> SWAMP_DUCKWEED = RegistryKey.of(
 			Registry.PLACED_FEATURE_KEY, AurorasDeco.id("swamp/duckweed")

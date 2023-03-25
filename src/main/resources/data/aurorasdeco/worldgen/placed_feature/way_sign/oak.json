@@ -1,0 +1,23 @@
+{
+  "feature": "aurorasdeco:way_sign/normal",
+  "placement": [
+    {
+      "chance": 256,
+      "type": "minecraft:rarity_filter"
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "MOTION_BLOCKING"
+    },
+    {
+      "type": "minecraft:biome"
+    },
+    {
+      "type": "minecraft:count",
+      "count": 1
+    }
+  ]
+}

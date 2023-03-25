@@ -31,7 +31,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
@@ -42,18 +44,21 @@ import java.util.UUID;
  * Represents the sign post block entity.
  *
  * @author LambdAurora
- * @version 1.0.0
- * @since 1.0.0
+ * @version 1.0.0-beta.12
+ * @since 1.0.0-beta.1
  */
 public class SignPostBlockEntity extends BasicBlockEntity {
 	private Sign up;
 	private Sign down;
+	private GenerationSettings generationSettings;
 	@Nullable
 	private UUID editor;
 
 	public SignPostBlockEntity(BlockPos pos, BlockState state) {
 		super(AurorasDecoRegistry.SIGN_POST_BLOCK_ENTITY_TYPE, pos, state);
 	}
+
+	/* Signs */
 
 	public Sign getUp() {
 		return this.up;
@@ -78,6 +83,19 @@ public class SignPostBlockEntity extends BasicBlockEntity {
 	public @Nullable Sign getSign(boolean up) {
 		return up ? this.up : this.down;
 	}
+
+	/* Generation settings */
+
+	public GenerationSettings getGenerationSettings() {
+		return this.generationSettings;
+	}
+
+	public void setGenerationSettings(GenerationSettings generationSettings) {
+		this.generationSettings = generationSettings;
+		this.markDirty();
+	}
+
+	/* Edition */
 
 	public void startEdit(ServerPlayerEntity player) {
 		this.editor = player.getUuid();
@@ -133,6 +151,8 @@ public class SignPostBlockEntity extends BasicBlockEntity {
 		}
 	}
 
+	/* Sync */
+
 	private void attemptToSync() {
 		if (this.world != null && !this.world.isClient()) {
 			this.markDirty();
@@ -146,12 +166,20 @@ public class SignPostBlockEntity extends BasicBlockEntity {
 	public void readNbt(NbtCompound nbt) {
 		super.readNbt(nbt);
 		this.readSignPostNbt(nbt);
+
+		if (nbt.contains("generation_settings", NbtElement.COMPOUND_TYPE)) {
+			this.generationSettings = GenerationSettings.fromNbt(nbt.getCompound("generation_settings"));
+		}
 	}
 
 	@Override
 	public void writeNbt(NbtCompound nbt) {
 		super.writeNbt(nbt);
 		this.writeSignPostNbt(nbt);
+
+		if (this.generationSettings != null) {
+			nbt.put("generation_settings", this.generationSettings.toNbt());
+		}
 	}
 
 	private void readSignPostNbt(NbtCompound nbt) {
@@ -274,10 +302,20 @@ public class SignPostBlockEntity extends BasicBlockEntity {
 			return true;
 		}
 
-		public boolean pointToward(BlockPos targetPos) {
+		/**
+		 * {@return the angle in degrees to make this sign point towards the target position}
+		 *
+		 * @param targetPos the target position
+		 */
+		public float getPointTowardAngle(BlockPos targetPos) {
 			var pos = SignPostBlockEntity.this.getPos();
 			float yaw = (float) (Math.atan2(targetPos.getX() - pos.getX(), targetPos.getZ() - pos.getZ()) * 180 / Math.PI);
-			return this.setYaw(MathHelper.wrapDegrees(yaw - (this.isLeft() ? 180 : 0)));
+			return MathHelper.wrapDegrees(yaw - (this.isLeft() ? 180 : 0));
+		}
+
+		public boolean pointToward(BlockPos targetPos) {
+			float yaw = this.getPointTowardAngle(targetPos);
+			return this.setYaw(yaw);
 		}
 
 		public boolean isLeft() {
@@ -300,6 +338,34 @@ public class SignPostBlockEntity extends BasicBlockEntity {
 
 			nbt.putFloat("yaw", this.yaw);
 			nbt.putBoolean("left", this.left);
+
+			return nbt;
+		}
+	}
+
+	public record GenerationSettings(SignPostItem material, Direction facing) {
+		public static @Nullable GenerationSettings fromNbt(NbtCompound nbt) {
+			var materialId = Identifier.tryParse(nbt.getString("material"));
+
+			if (materialId == null) {
+				return null;
+			}
+
+			var material = Registry.ITEM.get(materialId);
+			var facing = Direction.byName(nbt.getString("facing"));
+
+			if (material instanceof SignPostItem actualMaterial && facing != null) {
+				return new GenerationSettings(actualMaterial, facing);
+			}
+
+			return null;
+		}
+
+		public NbtCompound toNbt() {
+			var nbt = new NbtCompound();
+
+			nbt.putString("material", Registry.ITEM.getId(this.material).toString());
+			nbt.putString("facing", facing.getName());
 
 			return nbt;
 		}

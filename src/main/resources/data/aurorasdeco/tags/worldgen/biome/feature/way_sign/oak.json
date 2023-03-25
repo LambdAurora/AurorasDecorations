@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:forest",
+    "minecraft:plains",
+    "minecraft:sunflower_plains",
+    "aurorasdeco:lavender_plains",
+    {
+      "id": "#byg:is_plains",
+      "required": false
+    }
+  ]
+}

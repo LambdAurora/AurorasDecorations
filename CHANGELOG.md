@@ -58,6 +58,9 @@
 
 ### 1.0.0-beta.12
 
- - Fixed calcite bricks placement in the creative inventory.
+- Added a world generation feature that generates a lonely sign posts indicating directions
+  to nearby interesting landmarks with some parts of a road.
+- Fixed calcite bricks placement in the creative inventory.
+- Optimized ModelLoaderMixin ([#46](https://github.com/LambdAurora/AurorasDecorations/pull/46)).
 
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"

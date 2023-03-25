@@ -42,6 +42,7 @@
     "item.ItemMixin",
     "item.LeadItemMixin",
     "item.ShovelItemMixin",
+    "world.ChunkGeneratorAccessor",
     "world.FoliagePlacerTypeAccessor",
     "world.OverworldBiomeCreatorAccessor",
     "world.OverworldBiomeParametersMixin",

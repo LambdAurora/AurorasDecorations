@@ -1,0 +1,76 @@
+{
+  "type": "aurorasdeco:way_sign",
+  "config": {
+    "material": "minecraft:oak_fence",
+    "board_material": "aurorasdeco:sign_post/spruce",
+    "base": {
+      "type": "minecraft:weighted_state_provider",
+      "entries": [
+        {
+          "data": {
+            "Name": "aurorasdeco:polished_basalt_wall"
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "minecraft:granite_wall"
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "minecraft:sandstone_wall"
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "minecraft:mud_brick_wall"
+          },
+          "weight": 1
+        }
+      ]
+    },
+    "path": {
+      "state": {
+        "type": "minecraft:weighted_state_provider",
+        "entries": [
+          {
+            "data": {
+              "Name": "minecraft:sandstone"
+            },
+            "weight": 3
+          },
+          {
+            "data": {
+              "Name": "minecraft:packed_mud"
+            },
+            "weight": 1
+          },
+          {
+            "data": {
+              "Name": "minecraft:mud_bricks"
+            },
+            "weight": 1
+          },
+          {
+            "data": {
+              "Name": "minecraft:granite"
+            },
+            "weight": 2
+          },
+          {
+            "data": {
+              "Name": "minecraft:birch_planks"
+            },
+            "weight": 1
+          }
+        ]
+      },
+      "radius": 3,
+      "removal_factor": 0.40,
+      "addition_factor": 0.10
+    }
+  }
+}

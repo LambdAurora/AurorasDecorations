@@ -1,0 +1,23 @@
+{
+  "feature": "aurorasdeco:way_sign/desert",
+  "placement": [
+    {
+      "chance": 304,
+      "type": "minecraft:rarity_filter"
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "MOTION_BLOCKING"
+    },
+    {
+      "type": "minecraft:biome"
+    },
+    {
+      "type": "minecraft:count",
+      "count": 1
+    }
+  ]
+}
