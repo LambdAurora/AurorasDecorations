@@ -1,6 +1,6 @@
 # Fallen Trees
 
-<!--description:Learn everything about the lavender plains, a beautiful and very purple biome.-->
+<!--description:Fallen trees are a world generation feature introduced in Aurora's Decorations, they come in different variants.-->
 <!--thumbnail:images/features/fallen_oak_tree.png-->
 
 Fallen Trees are a new world generation feature introduced by this mod.
