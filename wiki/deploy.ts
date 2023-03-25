@@ -211,6 +211,16 @@ async function deploy_markdown(markdown_pages: MarkdownPages, page_data: Markdow
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	</head>
 	<body class="wiki_page">
+		<div class="ls_navbar ls_fixed ls_show_on_small_only" ls_side="top">
+			<div class="ls_nav_trigger_btn_wrapper">
+				<label for="main_nav_trigger" class="ls_btn ls_nav_trigger_btn" ls_variant="icon" aria-role="menu" aria-label="Menu" aria-description="Open the navigation menu.">
+					<svg width="40" height="40" viewBox="0 0 40 40" stroke="var(--ls_theme_on_primary)" stroke-width="2px" shape-rendering="crispedges">
+						<line x1="12" y1="14" x2="28" y2="14"></line><line x1="12" y1="20" x2="28" y2="20"></line><line x1="12" y1="26" x2="28" y2="26"></line>
+					</svg>
+				</label>
+			</div>
+			<span class="ls_navbar_title">Aurora's Decorations</span>
+		</div>
 		<div>
 			<input type="checkbox" id="main_nav_trigger" class="ls_sidenav_internal_trigger" aria-hidden="true">
 			<nav id="main_nav" class="ls_sidenav">
@@ -220,13 +230,6 @@ async function deploy_markdown(markdown_pages: MarkdownPages, page_data: Markdow
 				</a>
 				${build_navigation(markdown_pages, page_data).html()}
 			</nav>
-			<label for="main_nav_trigger" class="ls_sidenav_trigger ls_btn" ls_variant="fab" aria-role="menu" aria-label="Menu" aria-description="Open the navigation menu.">
-				<svg width="40" height="40" viewBox="0 0 40 40" stroke="var(--ls_theme_on_primary)" stroke-width="2px" shape-rendering="crispedges">
-					<line x1="12" y1="14" x2="28" y2="14"></line>
-					<line x1="12" y1="20" x2="28" y2="20"></line>
-					<line x1="12" y1="26" x2="28" y2="26"></line>
-				</svg>
-			</label>
 			<label for="main_nav_trigger" class="ls_sidenav_darkened"></label>
 		</div>
 		<div class="wiki_content ls_sidenav_neighbor">

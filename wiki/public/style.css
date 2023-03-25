@@ -51,6 +51,12 @@ li.wiki_nav_directory[open] > ul {
 	opacity: initial;
 }
 
+@media screen and (max-width: 850px) {
+	.wiki_content > main > article {
+		margin-top: 60px;
+	}
+}
+
 /* Markdown styling */
 
 details > summary {
