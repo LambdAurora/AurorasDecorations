@@ -17,12 +17,9 @@
 
 package dev.lambdaurora.aurorasdeco.blackboard;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -268,7 +265,7 @@ public class Blackboard implements BlackboardHandler {
 	public void readNbt(NbtCompound nbt) {
 		byte[] pixels = nbt.getByteArray("pixels");
 
-		if (!nbt.contains("version", NbtType.INT)) {
+		if (!nbt.contains("version", NbtElement.INT_TYPE)) {
 			convert01(pixels);
 		} else {
 			switch (nbt.getInt("version")) {

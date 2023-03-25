@@ -26,11 +26,11 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Nameable;
@@ -279,7 +279,7 @@ public class BlackboardBlockEntity extends BasicBlockEntity implements Nameable,
 	public void readBlackBoardNbt(NbtCompound nbt) {
 		this.blackboard.readNbt(nbt);
 
-		if (nbt.contains("custom_name", NbtType.STRING)) {
+		if (nbt.contains("custom_name", NbtElement.STRING_TYPE)) {
 			this.customName = Text.Serializer.fromJson(nbt.getString("custom_name"));
 		}
 	}
