@@ -19,8 +19,6 @@ package dev.lambdaurora.aurorasdeco.block;
 
 import com.google.common.collect.ImmutableMap;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.accessor.PointOfInterestTypeExtensions;
-import dev.lambdaurora.aurorasdeco.mixin.PointOfInterestTypesAccessor;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BedPart;
@@ -54,6 +52,7 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.poi.PointOfInterestType;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
+import org.quiltmc.qsl.points_of_interest.api.PointOfInterestHelper;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -272,6 +271,7 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
 	}
 
 	public static void appendToPointOfInterest(RegistryKey<PointOfInterestType> poiType) {
+
 		var type = Registry.POINT_OF_INTEREST_TYPE.getHolder(poiType);
 
 		if (type.isEmpty()) {
@@ -283,10 +283,7 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
 					.filter(state -> state.get(SleepingBagBlock.PART) == BedPart.HEAD);
 		});
 
-		((PointOfInterestTypeExtensions) (Object) type.get().value()).aurorasdeco$addBlockStates(states
-				.peek(state -> PointOfInterestTypesAccessor.aurorasdeco$getStateToType().putIfAbsent(state, type.get()))
-				.toList()
-		);
+		PointOfInterestHelper.addBlockStates(poiType, states.toList());
 	}
 
 	static {

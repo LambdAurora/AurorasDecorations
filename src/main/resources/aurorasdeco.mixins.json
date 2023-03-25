@@ -3,8 +3,6 @@
   "package": "dev.lambdaurora.aurorasdeco.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "PointOfInterestTypeMixin",
-    "PointOfInterestTypesAccessor",
     "ServerAdvancementLoaderMixin",
     "ServerReloadableResourcesMixin",
     "SimpleRegistryAccessor",

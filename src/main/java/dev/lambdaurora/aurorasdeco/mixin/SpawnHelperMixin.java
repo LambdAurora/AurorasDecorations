@@ -44,7 +44,7 @@ public class SpawnHelperMixin {
 			BlockPos.Mutable pos, double squaredDistance, CallbackInfoReturnable<Boolean> cir) {
 		if (cir.getReturnValueZ()) {
 			if (!group.isPeaceful() && world.getPointOfInterestStorage().getInSquare(
-					poiType -> poiType.value() == AurorasDecoRegistry.AMETHYST_LANTERN_POI,
+					poiType -> poiType.isRegistryKey(AurorasDecoRegistry.AMETHYST_LANTERN_POI),
 					pos,
 					AmethystLanternBlock.EFFECT_RADIUS,
 					PointOfInterestStorage.OccupationStatus.ANY

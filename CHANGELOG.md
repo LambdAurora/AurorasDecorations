@@ -62,5 +62,6 @@
   to nearby interesting landmarks with some parts of a road.
 - Fixed calcite bricks placement in the creative inventory.
 - Optimized ModelLoaderMixin ([#46](https://github.com/LambdAurora/AurorasDecorations/pull/46)).
+- Switched to Quilt Point of Interest API for some stuff, reducing code to maintain.
 
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"

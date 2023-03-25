@@ -39,7 +39,6 @@ import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.util.Derivator;
 import dev.lambdaurora.aurorasdeco.util.Registrar;
-import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -56,11 +55,13 @@ import net.minecraft.stat.StatFormatter;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.poi.PointOfInterestType;
 import net.minecraft.world.poi.PointOfInterestTypes;
 import org.quiltmc.qsl.block.entity.api.QuiltBlockEntityTypeBuilder;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
+import org.quiltmc.qsl.points_of_interest.api.PointOfInterestHelper;
 import org.quiltmc.qsl.registry.api.event.RegistryMonitor;
 
 import java.util.function.BiFunction;
@@ -568,7 +569,7 @@ public final class AurorasDecoRegistry {
 
 	/* POI */
 
-	public static final PointOfInterestType AMETHYST_LANTERN_POI = PointOfInterestHelper.register(
+	public static final RegistryKey<PointOfInterestType> AMETHYST_LANTERN_POI = PointOfInterestHelper.register(
 			id("amethyst_lantern"),
 			0, 2,
 			AMETHYST_LANTERN_BLOCK, AMETHYST_WALL_LANTERN_BLOCK

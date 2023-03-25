@@ -47,6 +47,7 @@ import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.particle.LavaEmberParticle;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.TexturedRenderLayers;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.resource.ResourceType;
@@ -163,17 +164,17 @@ public class AurorasDecoClient implements ClientModInitializer {
 	}
 
 	private void initBlockEntityRenderers() {
-		BlockEntityRendererRegistry.register(BLACKBOARD_PRESS_BLOCK_ENTITY,
+		BlockEntityRendererFactories.register(BLACKBOARD_PRESS_BLOCK_ENTITY,
 				BlackboardPressBlockEntityRenderer::new);
-		BlockEntityRendererRegistry.register(AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE,
+		BlockEntityRendererFactories.register(AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE,
 				BookPileEntityRenderer::new);
-		BlockEntityRendererRegistry.register(AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE,
+		BlockEntityRendererFactories.register(AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE,
 				ShelfBlockEntityRenderer::new);
-		BlockEntityRendererRegistry.register(SIGN_POST_BLOCK_ENTITY_TYPE,
+		BlockEntityRendererFactories.register(SIGN_POST_BLOCK_ENTITY_TYPE,
 				SignPostBlockEntityRenderer::new);
-		BlockEntityRendererRegistry.register(AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE,
+		BlockEntityRendererFactories.register(AurorasDecoRegistry.WALL_LANTERN_BLOCK_ENTITY_TYPE,
 				LanternBlockEntityRenderer::new);
-		BlockEntityRendererRegistry.register(AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE,
+		BlockEntityRendererFactories.register(AurorasDecoRegistry.WIND_CHIME_BLOCK_ENTITY_TYPE,
 				WindChimeBlockEntityRenderer::new);
 	}
 

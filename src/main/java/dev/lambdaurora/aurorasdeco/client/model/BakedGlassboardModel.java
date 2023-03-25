@@ -93,7 +93,7 @@ public class BakedGlassboardModel extends BakedBlackboardModel {
 			return true;
 		});
 
-		this.models.get(fixedMask).forEach(context.fallbackConsumer());
+		this.models.get(fixedMask).forEach(context.bakedModelConsumer());
 
 		context.popTransform();
 
