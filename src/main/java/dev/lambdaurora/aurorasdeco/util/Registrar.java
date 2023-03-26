@@ -24,8 +24,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiFunction;
@@ -54,15 +55,15 @@ public final class Registrar {
 	}
 
 	public static <T extends Block> BlockRegistrationCompleter<T> register(Identifier id, T block) {
-		return new BlockRegistrationCompleter<>(id, Registry.register(Registry.BLOCK, id, block));
+		return new BlockRegistrationCompleter<>(id, Registry.register(Registries.BLOCK, id, block));
 	}
 
 	public static <T extends Item> RegistrationCompleter<T, T> register(String name, T item) {
-		return register(Registry.ITEM, name, item);
+		return register(Registries.ITEM, name, item);
 	}
 
 	public static <T extends Item> RegistrationCompleter<T, T> register(Identifier id, T item) {
-		return register(Registry.ITEM, id, item);
+		return register(Registries.ITEM, id, item);
 	}
 
 	/**

@@ -22,6 +22,7 @@ import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.block.entity.BlackboardBlockEntity;
 import dev.lambdaurora.aurorasdeco.client.model.*;
 import dev.lambdaurora.aurorasdeco.client.renderer.BlackboardPressBlockEntityRenderer;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.render.model.json.ModelVariantMap;
@@ -38,8 +39,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Injects the big flower pot dynamic models.
@@ -54,9 +55,6 @@ import java.util.Map;
 @ClientOnly
 @Mixin(value = ModelLoader.class, priority = 900)
 public abstract class ModelLoaderMixin {
-	@Shadow
-	@Final
-	private ResourceManager resourceManager;
 	@Shadow
 	@Final
 	private ModelVariantMap.DeserializationContext variantMapDeserializationContext;
@@ -80,15 +78,17 @@ public abstract class ModelLoaderMixin {
 		if (id instanceof ModelIdentifier modelId
 				&& !this.aurorasdeco$visitedModels.contains(id)) {
 			if (!modelId.getVariant().equals("inventory")) {
+				ResourceManager resourceManager = MinecraftClient.getInstance().getResourceManager();
+
 				if (this.aurorasdeco$firstRun) {
 					this.aurorasdeco$firstRun = false;
-					this.aurorasdeco$restModelManager.init(this.resourceManager, this.variantMapDeserializationContext,
+					this.aurorasdeco$restModelManager.init(resourceManager, this.variantMapDeserializationContext,
 							(restModelId, model) -> {
 								this.putModel(restModelId, model);
 								this.modelsToBake.put(restModelId, model);
 							});
 
-					BlackboardPressBlockEntityRenderer.initModels(this.resourceManager, this.variantMapDeserializationContext,
+					BlackboardPressBlockEntityRenderer.initModels(resourceManager, this.variantMapDeserializationContext,
 							(pressModelId, model) -> {
 								this.putModel(pressModelId, model);
 								this.modelsToBake.put(pressModelId, model);
@@ -118,7 +118,7 @@ public abstract class ModelLoaderMixin {
 					} else if (modelId.getPath().endsWith("board")) {
 						this.aurorasdeco$visitedModels.add(id);
 						this.putModel(id, UnbakedBlackboardModel.of(modelId, unbakedModel,
-								this.resourceManager, this.variantMapDeserializationContext,
+								resourceManager, this.variantMapDeserializationContext,
 								(partId, model) -> {
 									this.putModel(partId, model);
 									this.modelsToBake.put(partId, model);

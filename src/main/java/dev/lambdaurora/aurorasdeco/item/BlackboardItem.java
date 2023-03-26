@@ -26,17 +26,15 @@ import net.minecraft.client.item.TooltipData;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
+import net.minecraft.registry.Registries;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ClickType;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 import java.util.Optional;
@@ -94,11 +92,11 @@ public class BlackboardItem extends BlockItem {
 		this.ensureValidStack(stack);
 	}
 
-	@Override
+/*	@Override
 	public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
 		if (this.isInGroup(group) || group == ItemGroup.SEARCH)
 			stacks.add(this.getDefaultStack());
-	}
+	}*/
 
 	@Override
 	public ItemStack getDefaultStack() {
@@ -120,7 +118,7 @@ public class BlackboardItem extends BlockItem {
 		if (nbt != null && nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
 			var blackboard = Blackboard.fromNbt(nbt);
 			return Optional.of(new BlackboardTooltipData(
-					Registry.ITEM.getId(this).getPath().replace("waxed_", ""),
+					Registries.ITEM.getId(this).getPath().replace("waxed_", ""),
 					blackboard, this.locked)
 			);
 		}

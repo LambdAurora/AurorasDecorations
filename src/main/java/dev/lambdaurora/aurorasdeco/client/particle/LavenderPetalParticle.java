@@ -22,7 +22,7 @@ import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.tag.FluidTags;
+import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -73,7 +73,7 @@ public class LavenderPetalParticle extends SpriteBillboardParticle {
 		this.prevPosZ = this.z;
 		this.prevAngle = angle;
 
-		var pos = new BlockPos(this.x, this.y, this.z);
+		var pos = BlockPos.create(this.x, this.y, this.z);
 
 		this.age++;
 

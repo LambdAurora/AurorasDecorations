@@ -27,8 +27,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.random.RandomGenerator;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 import org.quiltmc.qsl.block.content.registry.api.BlockContentRegistries;
 import org.quiltmc.qsl.block.content.registry.api.FlammableBlockEntry;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
@@ -44,7 +44,7 @@ public class AuroraFlowerBlock extends FlowerBlock implements Fertilizable {
 	public AuroraFlowerBlock(StatusEffect statusEffect, int effectInStewDuration, Settings settings) {
 		super(statusEffect, effectInStewDuration, settings);
 
-		BlockContentRegistries.FLAMMABLE_BLOCK.put(this, new FlammableBlockEntry(60, 100));
+		BlockContentRegistries.FLAMMABLE.put(this, new FlammableBlockEntry(60, 100));
 	}
 
 	public static QuiltBlockSettings defaultSettings() {
@@ -57,7 +57,7 @@ public class AuroraFlowerBlock extends FlowerBlock implements Fertilizable {
 	/* Fertilization */
 
 	@Override
-	public boolean isFertilizable(BlockView world, BlockPos pos, BlockState state, boolean isClient) {
+	public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state, boolean isClient) {
 		return true;
 	}
 

@@ -37,18 +37,16 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.item.Items;
+import net.minecraft.registry.Holder;
+import net.minecraft.registry.HolderSet;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.structure.ConcentricRingsStructurePlacement;
-import net.minecraft.structure.RandomSpreadStructurePlacement;
-import net.minecraft.structure.StructureManager;
-import net.minecraft.structure.StructurePlacement;
+import net.minecraft.structure.*;
 import net.minecraft.text.Text;
-import net.minecraft.util.Holder;
-import net.minecraft.util.HolderSet;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.intprovider.IntProvider;
 import net.minecraft.util.random.RandomGenerator;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
@@ -152,7 +150,7 @@ public class WaySignFeature extends Feature<WaySignFeature.Config> {
 
 		/* Search for structures */
 		var serverWorld = (ServerWorld) world;
-		var plausibleTag = serverWorld.getRegistryManager().get(Registry.STRUCTURE_WORLDGEN)
+		var plausibleTag = serverWorld.getRegistryManager().get(RegistryKeys.STRUCTURE_FEATURE)
 				.getTag(AurorasDecoTags.WAY_SIGN_DESTINATION_STRUCTURES);
 		HolderSet<StructureFeature> tag;
 
@@ -192,10 +190,11 @@ public class WaySignFeature extends Feature<WaySignFeature.Config> {
 		}
 
 		var chunkGenerator = (ChunkGeneratorAccessor) world.getChunkManager().getChunkGenerator();
+		ConcentricRingPlacementCalculator concentricRingPlacementCalculator = world.getChunkManager().method_46642();
 		var structurePlacements = new Object2ObjectArrayMap<StructurePlacement, Set<Holder<StructureFeature>>>();
 
 		for (var holder : structures) {
-			for (StructurePlacement structurePlacement : chunkGenerator.invokeM_wozjtsiz(holder, world.getChunkManager().getRandomState())) {
+			for (StructurePlacement structurePlacement : concentricRingPlacementCalculator.getFeaturePlacements(holder)) {
 				structurePlacements.computeIfAbsent(structurePlacement, sP -> new ObjectArraySet<>()).add(holder);
 			}
 		}
@@ -270,7 +269,7 @@ public class WaySignFeature extends Feature<WaySignFeature.Config> {
 					int startChunkZ = chunkZ + spacing * distZ;
 					ChunkPos chunkPos = placement.getPotentialStartChunk(seed, startChunkX, startChunkZ);
 
-					Pair<BlockPos, Holder<StructureFeature>> found = ChunkGeneratorAccessor.invokeM_gxxzcexz(structures, world, structureManager,
+					Pair<BlockPos, Holder<StructureFeature>> found = ChunkGeneratorAccessor.invokeMethod_41522(structures, world, structureManager,
 							skipExistingChunks, placement, chunkPos);
 					if (found != null) {
 						BlockPos structurePos = found.getFirst();
@@ -376,13 +375,13 @@ public class WaySignFeature extends Feature<WaySignFeature.Config> {
 	) implements FeatureConfig {
 		public static final Codec<Config> CODEC = RecordCodecBuilder.create(instance -> instance
 				.group(
-						Registry.BLOCK.getCodec().flatXmap(block -> {
+						Registries.BLOCK.getCodec().flatXmap(block -> {
 							if (block instanceof FenceBlock fence) return DataResult.success(fence);
-							else return DataResult.error("Given material isn't a fence block.");
+							else return DataResult.error(() -> "Given material isn't a fence block.");
 						}, DataResult::success).fieldOf("material").forGetter(Config::fenceBlock),
-						Registry.ITEM.getCodec().flatXmap(item -> {
+						Registries.ITEM.getCodec().flatXmap(item -> {
 							if (item instanceof SignPostItem sign) return DataResult.success(sign);
-							else return DataResult.error("Given sign isn't a sign post item.");
+							else return DataResult.error(() -> "Given sign isn't a sign post item.");
 						}, DataResult::success).fieldOf("board_material").forGetter(Config::signPostItem),
 						BlockStateProvider.TYPE_CODEC.fieldOf("base").forGetter(Config::base),
 						PathConfig.CODEC.fieldOf("path").forGetter(Config::path)

@@ -25,9 +25,9 @@ import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Axis;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.random.LegacySimpleRandom;
 import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.util.random.RandomSeed;
@@ -72,9 +72,9 @@ public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<Lante
 
 		matrices.translate(8.f / 16.f, 12.f / 16.f, 8.f / 16.f);
 		if (roll != 0.f)
-			matrices.multiply(Vec3f.POSITIVE_Z.getRadialQuaternion(roll));
+			matrices.multiply(Axis.Z_POSITIVE.rotation(roll));
 		if (pitch != 0.f)
-			matrices.multiply(Vec3f.POSITIVE_X.getRadialQuaternion(pitch));
+			matrices.multiply(Axis.X_POSITIVE.rotation(pitch));
 
 		var facing = lantern.getCachedState().get(WallLanternBlock.FACING);
 		int lanternRotation = switch (facing) {
@@ -89,7 +89,7 @@ public class LanternBlockEntityRenderer extends SwayingBlockEntityRenderer<Lante
 				0.f,
 				(-facing.getOffsetZ() * extension) / 16.f);
 
-		matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(lanternRotation));
+		matrices.multiply(Axis.Y_NEGATIVE.rotationDegrees(lanternRotation));
 
 		var lanternShape = lanternState.getOutlineShape(lantern.getWorld(), pos);
 		var lanternShapeMaxY = lanternShape.getMax(Direction.Axis.Y);

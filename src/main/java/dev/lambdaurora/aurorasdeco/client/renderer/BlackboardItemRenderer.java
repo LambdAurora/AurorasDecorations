@@ -24,7 +24,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.model.json.ModelTransformation.Mode;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.BlockItem;
@@ -48,15 +48,15 @@ public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.Dynam
 	}
 
 	@Override
-	public void render(ItemStack stack, Mode mode, MatrixStack matrices,
+	public void render(ItemStack stack, ModelTransformationMode mode, MatrixStack matrices,
 			VertexConsumerProvider vertexConsumers, int light, int overlay) {
 		var model = MinecraftClient.getInstance().getBakedModelManager().getModel(this.modelId);
 
 		matrices.push();
 
 		matrices.translate(0.5, 0.5, 0.5);
-		boolean leftHanded = mode == Mode.THIRD_PERSON_LEFT_HAND;
-		if (mode == Mode.HEAD) {
+		boolean leftHanded = mode == ModelTransformationMode.THIRD_PERSON_LEFT_HAND;
+		if (mode == ModelTransformationMode.HEAD) {
 			var maskModel = MinecraftClient.getInstance().getBakedModelManager().getModel(AurorasDecoClient.BLACKBOARD_MASK);
 			MinecraftClient.getInstance().getItemRenderer().renderItem(stack, mode,
 					false, matrices, vertexConsumers, light, overlay, maskModel);
@@ -66,23 +66,26 @@ public class BlackboardItemRenderer implements BuiltinItemRendererRegistry.Dynam
 		var nbt = BlockItem.getBlockEntityNbtFromStack(stack);
 		if (nbt != null && nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
 			float z = .933f;
-			if (mode == Mode.HEAD) {
+			if (mode == ModelTransformationMode.HEAD) {
 				matrices.translate(0.5, 0.5, z);
 				matrices.scale(-1, -1, 1);
-			} else if (mode == Mode.GUI) {
+			} else if (mode == ModelTransformationMode.GUI) {
 				matrices.translate(0.27, -0.08, 0);
 				matrices.scale(-1, -1, 1);
-			} else if (mode == Mode.GROUND) {
+			} else if (mode == ModelTransformationMode.GROUND) {
 				matrices.translate(0.125, 0.5, 0.23333333);
 				matrices.scale(-1, -1, 1);
-			} else if (mode != Mode.THIRD_PERSON_RIGHT_HAND && mode != Mode.THIRD_PERSON_LEFT_HAND && !mode.isFirstPerson()) {
+			} else if (mode != ModelTransformationMode.THIRD_PERSON_RIGHT_HAND
+					&& mode != ModelTransformationMode.THIRD_PERSON_LEFT_HAND && !mode.isFirstPerson()) {
 				matrices.scale(-1, -1, 1);
 			}
 
 			model.getTransformation().getTransformation(mode).apply(leftHanded, matrices);
 			matrices.translate(0, 0, -0.5);
 
-			if (mode == Mode.THIRD_PERSON_RIGHT_HAND || mode == Mode.THIRD_PERSON_LEFT_HAND || mode.isFirstPerson()) {
+			if (mode == ModelTransformationMode.THIRD_PERSON_RIGHT_HAND
+					|| mode == ModelTransformationMode.THIRD_PERSON_LEFT_HAND
+					|| mode.isFirstPerson()) {
 				matrices.translate(0.5, 0.5, z);
 				matrices.scale(-1, -1, 1);
 			}

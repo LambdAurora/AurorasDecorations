@@ -21,9 +21,9 @@ import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.item.DerivedBlockItem;
 import net.minecraft.block.*;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
@@ -43,7 +43,7 @@ public class Derivator {
 
 	public Derivator(BlockState base) {
 		this.base = base;
-		this.normalBaseName = Registry.BLOCK.getId(base.getBlock()).getPath();
+		this.normalBaseName = Registries.BLOCK.getId(base.getBlock()).getPath();
 		this.singularBaseName = this.normalBaseName.endsWith("bricks")
 				? this.normalBaseName.substring(0, this.normalBaseName.length() - 1)
 				: this.normalBaseName;
@@ -55,7 +55,7 @@ public class Derivator {
 		return registerWithItem(this.normalBaseName, derivative,
 				new Block(QuiltBlockSettings.copyOf(this.base.getBlock())),
 				this.derivativeSearcher(new Derivative(this.normalBaseName, false)).build(),
-				new QuiltItemSettings().group(item.getGroup()));
+				new QuiltItemSettings());
 	}
 
 	public Block cracked() {
@@ -64,7 +64,7 @@ public class Derivator {
 		return registerWithItem(this.normalBaseName, derivative,
 				new Block(QuiltBlockSettings.copyOf(this.base.getBlock())),
 				this.derivativeSearcher(new Derivative(this.normalBaseName, false)).build(),
-				new QuiltItemSettings().group(item.getGroup()));
+				new QuiltItemSettings());
 	}
 
 	public Block chiseled() {
@@ -73,7 +73,7 @@ public class Derivator {
 		return registerWithItem(this.normalBaseName, derivative,
 				new Block(QuiltBlockSettings.copyOf(this.base.getBlock())),
 				this.derivativeSearcher(new Derivative(this.normalBaseName, false)).build(),
-				new QuiltItemSettings().group(item.getGroup()));
+				new QuiltItemSettings());
 	}
 
 	public WallBlock wall() {
@@ -81,7 +81,7 @@ public class Derivator {
 		var name = derivative.apply(this.singularBaseName);
 		var block = register(name, new WallBlock(QuiltBlockSettings.copyOf(this.base.getBlock())));
 		register(name, new DerivedBlockItem(block, KindSearcher.WALL_SEARCHER, KindSearcher::findLastOfGroup,
-				new QuiltItemSettings().group(ItemGroup.DECORATIONS)));
+				new QuiltItemSettings()));
 		return block;
 	}
 
@@ -91,8 +91,7 @@ public class Derivator {
 		return registerWithItem(this.singularBaseName, derivative,
 				new SlabBlock(QuiltBlockSettings.copyOf(this.base.getBlock())),
 				derivativeSearcher(derivative).build(),
-				new QuiltItemSettings()
-						.group(item.getGroup()));
+				new QuiltItemSettings());
 	}
 
 	public SlabBlock slab(Item after) {
@@ -101,8 +100,7 @@ public class Derivator {
 		return registerWithItem(this.singularBaseName, derivative,
 				new SlabBlock(QuiltBlockSettings.copyOf(this.base.getBlock())),
 				closeDerivativeSearcher(derivative).afterMapped(after, ItemStack::getItem).build(),
-				new QuiltItemSettings()
-						.group(item.getGroup()));
+				new QuiltItemSettings());
 	}
 
 	public StairsBlock stairs() {
@@ -111,8 +109,7 @@ public class Derivator {
 		return registerWithItem(this.singularBaseName, derivative, new StairsBlock(this.base,
 						QuiltBlockSettings.copyOf(this.base.getBlock())),
 				derivativeSearcher(derivative).build(),
-				new QuiltItemSettings()
-						.group(item.getGroup()));
+				new QuiltItemSettings());
 	}
 
 	public StairsBlock stairs(Item after) {
@@ -121,16 +118,15 @@ public class Derivator {
 		return registerWithItem(this.singularBaseName, derivative, new StairsBlock(this.base,
 						QuiltBlockSettings.copyOf(this.base.getBlock())),
 				closeDerivativeSearcher(derivative).afterMapped(after, ItemStack::getItem).build(),
-				new QuiltItemSettings()
-						.group(item.getGroup()));
+				new QuiltItemSettings());
 	}
 
 	private static <T extends Block> T register(String name, T block) {
-		return Registry.register(Registry.BLOCK, id(name), block);
+		return Registry.register(Registries.BLOCK, id(name), block);
 	}
 
 	private static <T extends Item> T register(String name, T item) {
-		return Registry.register(Registry.ITEM, id(name), item);
+		return Registry.register(Registries.ITEM, id(name), item);
 	}
 
 	private KindSearcher.Builder<ItemStack, KindSearcher.StackEntry> derivativeSearcher(Derivative derivative) {

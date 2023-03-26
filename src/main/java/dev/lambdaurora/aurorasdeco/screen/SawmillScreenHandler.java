@@ -161,7 +161,7 @@ public final class SawmillScreenHandler extends ScreenHandler {
 		if (!this.availableRecipes.isEmpty() && this.isButtonValid(this.selectedRecipe.get())) {
 			var recipe = this.availableRecipes.get(this.selectedRecipe.get());
 			this.output.setLastRecipe(recipe);
-			this.outputSlot.setStack(recipe.craft(this.input));
+			this.outputSlot.setStack(recipe.craft(this.input, this.world.getRegistryManager()));
 		} else {
 			this.outputSlot.setStack(ItemStack.EMPTY);
 		}

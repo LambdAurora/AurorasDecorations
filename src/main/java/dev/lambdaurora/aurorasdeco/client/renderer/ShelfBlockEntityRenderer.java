@@ -24,10 +24,10 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Axis;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
 
 /**
  * Represents the shelf block entity renderer.
@@ -46,10 +46,10 @@ public class ShelfBlockEntityRenderer implements BlockEntityRenderer<ShelfBlockE
 
 		matrices.push();
 		matrices.translate(0.5, 0.8, 0.5);
-		matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(facing.asRotation()));
+		matrices.multiply(Axis.Y_POSITIVE.rotationDegrees(facing.asRotation()));
 
 		if (facing.getAxis() == Direction.Axis.Z) {
-			matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180));
+			matrices.multiply(Axis.Y_POSITIVE.rotationDegrees(180));
 		}
 		matrices.translate(0.35, 0, 0.38);
 
@@ -80,7 +80,7 @@ public class ShelfBlockEntityRenderer implements BlockEntityRenderer<ShelfBlockE
 				}
 
 				renderer.renderItem(stack,
-						ModelTransformation.Mode.FIXED, false,
+						ModelTransformationMode.FIXED, false,
 						matrices, vertexConsumers,
 						light, overlay,
 						model);

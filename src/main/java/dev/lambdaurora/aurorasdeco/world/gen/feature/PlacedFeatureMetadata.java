@@ -17,16 +17,13 @@
 
 package dev.lambdaurora.aurorasdeco.world.gen.feature;
 
-import net.minecraft.tag.TagKey;
-import net.minecraft.util.Holder;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.PlacedFeature;
-import net.minecraft.world.gen.feature.PlacementModifier;
 import org.quiltmc.qsl.worldgen.biome.api.BiomeSelectionContext;
 import org.quiltmc.qsl.worldgen.biome.api.BiomeSelectors;
 
@@ -40,25 +37,17 @@ import java.util.function.Predicate;
  */
 public class PlacedFeatureMetadata {
 	private final RegistryKey<PlacedFeature> key;
-	private final PlacedFeature feature;
 	private final List<TagKey<Biome>> allowedCategoryTags = new ArrayList<>();
 	private final List<Biome.Precipitation> allowedPrecipitations = new ArrayList<>();
 	private final List<RegistryKey<ConfiguredFeature<?, ?>>> allowedNeighborFeatures = new ArrayList<>();
 	private TagKey<Biome> allowedTag;
 
-	public PlacedFeatureMetadata(Identifier key,
-			Holder<? extends ConfiguredFeature<?, ?>> configuredFeature,
-			List<PlacementModifier> modifiers) {
-		this.key = RegistryKey.of(Registry.PLACED_FEATURE_KEY, key);
-		this.feature = new PlacedFeature(Holder.upcast(configuredFeature), List.copyOf(modifiers));
+	public PlacedFeatureMetadata(Identifier key) {
+		this.key = RegistryKey.of(RegistryKeys.PLACED_FEATURE, key);
 	}
 
 	public RegistryKey<PlacedFeature> getKey() {
 		return this.key;
-	}
-
-	public PlacedFeature getFeature() {
-		return this.feature;
 	}
 
 	@SafeVarargs
@@ -97,7 +86,7 @@ public class PlacedFeatureMetadata {
 			return biomeSelectionContext -> true;
 		return biomeSelectionContext -> {
 			for (var precipitation : this.allowedPrecipitations) {
-				if (biomeSelectionContext.getBiome().getPrecipitation() == precipitation)
+				if (biomeSelectionContext.getBiome().hasPrecipitation())
 					return true;
 			}
 
@@ -106,7 +95,7 @@ public class PlacedFeatureMetadata {
 	}
 
 	public PlacedFeatureMetadata addAllowedNeighborFeature(Identifier key) {
-		return this.addAllowedNeighborFeature(RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, key));
+		return this.addAllowedNeighborFeature(RegistryKey.of(RegistryKeys.CONFIGURED_FEATURE, key));
 	}
 
 	public PlacedFeatureMetadata addAllowedNeighborFeature(RegistryKey<ConfiguredFeature<?, ?>> key) {
@@ -150,10 +139,5 @@ public class PlacedFeatureMetadata {
 						.and(this.getAllowedNeighborFeaturesPredicate())
 				)
 				.or(this.getTagPredicate());
-	}
-
-	public PlacedFeatureMetadata register() {
-		Registry.register(BuiltinRegistries.PLACED_FEATURE, this.key, this.feature);
-		return this;
 	}
 }

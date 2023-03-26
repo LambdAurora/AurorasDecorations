@@ -73,7 +73,7 @@ public final class BigPottedCactusBlock extends BigFlowerPotBlock {
 		Box entityBox = entity.getBoundingBox();
 
 		if (cactusBox.intersects(entityBox)) {
-			entity.damage(DamageSource.CACTUS, 1.f);
+			entity.damage(world.getDamageSources().cactus(), 1.f);
 		}
 	}
 }

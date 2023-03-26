@@ -31,9 +31,9 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.BlockRenderView;
+import org.joml.Vector3f;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.function.Supplier;
@@ -78,10 +78,10 @@ public class BakedBigFlowerPotModel extends ForwardingBakedModel {
 			var model = client.getBakedModelManager().getBlockModels().getModel(plantState);
 			if (model instanceof FabricBakedModel fabricBakedModel) {
 				context.pushTransform(quad -> {
-					Vec3f vec = null;
+					Vector3f vec = null;
 					for (int i = 0; i < 4; i++) {
 						vec = quad.copyPos(i, vec);
-						vec.multiplyComponentwise(ratio, ratio, ratio);
+						vec.mul(ratio);
 						vec.add(offset, .8f, offset);
 						quad.pos(i, vec);
 					}
@@ -98,10 +98,10 @@ public class BakedBigFlowerPotModel extends ForwardingBakedModel {
 				final var upModel = client.getBakedModelManager().getBlockModels().getModel(upPlantState);
 				if (upModel instanceof FabricBakedModel) {
 					context.pushTransform(quad -> {
-						Vec3f vec = null;
+						Vector3f vec = null;
 						for (int i = 0; i < 4; i++) {
 							vec = quad.copyPos(i, vec);
-							vec.multiplyComponentwise(ratio, ratio, ratio);
+							vec.mul(ratio);
 							vec.add(offset, .8f + ratio, offset);
 							quad.pos(i, vec);
 						}

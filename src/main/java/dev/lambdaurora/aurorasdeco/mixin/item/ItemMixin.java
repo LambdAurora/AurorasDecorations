@@ -24,8 +24,8 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.FoodComponent;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 import org.spongepowered.asm.mixin.Final;
@@ -55,7 +55,7 @@ public class ItemMixin implements ItemExtensions {
 				.food(this.foodComponent));
 		this.aurorasdeco$requireSneaking = requireSneaking;
 
-		var cache = ((SimpleRegistryAccessor<Item>) Registry.ITEM).getIntrusiveHolderCache();
+		var cache = ((SimpleRegistryAccessor<Item>) Registries.ITEM).getEntryToIntrusiveHolder();
 
 		if (cache != null) {
 			cache.remove(this.aurorasdeco$placeable);

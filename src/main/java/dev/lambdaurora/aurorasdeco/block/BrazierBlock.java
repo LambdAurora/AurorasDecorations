@@ -135,7 +135,7 @@ public class BrazierBlock extends AuroraBlock implements Waterloggable {
 		var box = FLAME_BOX.offset(pos);
 		if (box.intersects(entity.getBoundingBox()) && !entity.isFireImmune() && state.get(LIT)
 				&& entity instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entity)) {
-			entity.damage(DamageSource.IN_FIRE, (float) this.fireDamage);
+			entity.damage(world.getDamageSources().inFire(), (float) this.fireDamage);
 		}
 
 		super.onEntityCollision(state, world, pos, entity);

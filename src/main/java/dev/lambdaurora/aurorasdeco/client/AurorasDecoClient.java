@@ -183,8 +183,8 @@ public class AurorasDecoClient implements ClientModInitializer {
 				FakeLeashKnotEntityRenderer::new);
 		EntityRendererRegistry.register(AurorasDecoEntities.SEAT_ENTITY_TYPE,
 				SeatEntityRenderer::new);
-		TerraformBoatClientHelper.registerModelLayers(AurorasDeco.id("azalea"));
-		TerraformBoatClientHelper.registerModelLayers(AurorasDeco.id("jacaranda"));
+		TerraformBoatClientHelper.registerModelLayers(AurorasDeco.id("azalea"), false);
+		TerraformBoatClientHelper.registerModelLayers(AurorasDeco.id("jacaranda"), false);
 	}
 
 	private void initBlockRenderLayers() {

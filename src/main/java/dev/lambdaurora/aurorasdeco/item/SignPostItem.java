@@ -86,12 +86,12 @@ public class SignPostItem extends Item {
 		return this.woodType;
 	}
 
-	@Override
+	/*@Override
 	public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
 		if (this.isInGroup(group) || group == ItemGroup.SEARCH) {
 			stacks.add(SIGN_POST_KIND_SEARCHER.findLastOfGroup(stacks), new ItemStack(this));
 		}
-	}
+	}*/
 
 	@Override
 	public ActionResult useOnBlock(ItemUsageContext context) {

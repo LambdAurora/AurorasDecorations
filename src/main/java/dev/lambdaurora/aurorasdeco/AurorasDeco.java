@@ -27,11 +27,12 @@ import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.world.gen.DynamicWorldGen;
 import net.minecraft.block.Blocks;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
@@ -57,15 +58,15 @@ public class AurorasDeco implements ModInitializer {
 	public void onInitialize(ModContainer mod) {
 		AurorasDecoRegistry.init();
 
-		RegistryMonitor.create(Registry.ITEM).forAll(context -> {
+		RegistryMonitor.create(Registries.ITEM).forAll(context -> {
 			if (AuroraUtil.idEqual(context.id(), "pockettools", "pocket_cactus")) {
-				Registry.register(Registry.BLOCK, id("big_flower_pot/pocket_cactus"),
+				Registry.register(Registries.BLOCK, id("big_flower_pot/pocket_cactus"),
 						PottedPlantType.register("pocket_cactus", Blocks.POTTED_CACTUS, context.value(),
 								type -> new BigPottedCactusBlock(type, BigPottedCactusBlock.POCKET_CACTUS_SHAPE)));
 			} else if (PottedPlantType.isValidPlant(context.value())) {
 				var potBlock = PottedPlantType.registerFromItem(context.value());
 				if (potBlock != null)
-					Registry.register(Registry.BLOCK, id("big_flower_pot/" + potBlock.getPlantType().getId()), potBlock);
+					Registry.register(Registries.BLOCK, id("big_flower_pot/" + potBlock.getPlantType().getId()), potBlock);
 			}
 
 			BlackboardColor.tryRegisterColorFromItem(context.id(), context.value());
@@ -77,6 +78,11 @@ public class AurorasDeco implements ModInitializer {
 
 		DynamicWorldGen.init();
 
+		ResourceLoader.registerBuiltinResourcePack(id("azalea_tree"), ResourcePackActivationType.DEFAULT_ENABLED,
+				Text.literal("Aurora's Deco").formatted(Formatting.GOLD)
+						.append(Text.literal(" - ").formatted(Formatting.GRAY))
+						.append(Text.literal("Azalea Tree").formatted(Formatting.LIGHT_PURPLE))
+		);
 		ResourceLoader.registerBuiltinResourcePack(id("swamp_worldgen"), ResourcePackActivationType.NORMAL,
 				Text.literal("Aurora's Deco").formatted(Formatting.GOLD)
 						.append(Text.literal(" - ").formatted(Formatting.GRAY))

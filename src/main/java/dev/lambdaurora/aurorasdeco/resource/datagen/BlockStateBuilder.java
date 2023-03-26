@@ -22,9 +22,9 @@ import com.google.gson.JsonObject;
 import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.block.Block;
+import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.util.Map;
 
@@ -35,7 +35,7 @@ public class BlockStateBuilder {
 	private final Map<String, JsonArray> variants = new Object2ObjectOpenHashMap<>();
 
 	public BlockStateBuilder(Block block) {
-		var id = Registry.BLOCK.getId(block);
+		var id = Registries.BLOCK.getId(block);
 		this.id = new Identifier(id.getNamespace(), "blockstates/" + id.getPath());
 
 		this.json.add("variants", variantsJson);

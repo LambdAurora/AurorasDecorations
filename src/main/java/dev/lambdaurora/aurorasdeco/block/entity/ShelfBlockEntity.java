@@ -82,7 +82,7 @@ public class ShelfBlockEntity extends LootableContainerBlockEntity
 	}
 
 	@Override
-	public NbtCompound toInitialChunkDataNbt() {
+	public NbtCompound toSyncedNbt() {
 		return this.toNbt();
 	}
 

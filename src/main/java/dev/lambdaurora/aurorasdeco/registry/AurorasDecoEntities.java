@@ -24,7 +24,8 @@ import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 
 import static dev.lambdaurora.aurorasdeco.AurorasDeco.id;
 
@@ -43,19 +44,19 @@ public final class AurorasDecoEntities {
 	/* Entities */
 
 	public static final EntityType<FakeLeashKnotEntity> FAKE_LEASH_KNOT_ENTITY_TYPE = Registry.register(
-			Registry.ENTITY_TYPE,
+			Registries.ENTITY_TYPE,
 			id("fake_leash_knot"),
 			FabricEntityTypeBuilder.<FakeLeashKnotEntity>createMob()
 					.entityFactory(FakeLeashKnotEntity::new)
 					.dimensions(EntityDimensions.fixed(.375f, .5f))
-					.defaultAttributes(MobEntity::createMobAttributes)
+					.defaultAttributes(MobEntity::createAttributes)
 					.forceTrackedVelocityUpdates(false)
 					.trackRangeChunks(10)
 					.trackedUpdateRate(Integer.MAX_VALUE)
 					.build()
 	);
 	public static final EntityType<SeatEntity> SEAT_ENTITY_TYPE = Registry.register(
-			Registry.ENTITY_TYPE,
+			Registries.ENTITY_TYPE,
 			id("seat"),
 			FabricEntityTypeBuilder.create(SpawnGroup.MISC, SeatEntity::new)
 					.dimensions(EntityDimensions.fixed(0.f, 0.f))

@@ -24,9 +24,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.CuttingRecipe;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.quiltmc.qsl.recipe.api.serializer.QuiltRecipeSerializer;
 
@@ -47,7 +47,7 @@ public final class WoodcuttingRecipe extends CuttingRecipe {
 
 	@Override
 	public boolean matches(Inventory inv, World world) {
-		return this.input.test(inv.getStack(0));
+		return this.ingredient.test(inv.getStack(0));
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public final class WoodcuttingRecipe extends CuttingRecipe {
 
 			var resultId = JsonHelper.getString(json, "result");
 			int count = JsonHelper.getInt(json, "count");
-			var itemStack = new ItemStack(Registry.ITEM.get(new Identifier(resultId)), count);
+			var itemStack = new ItemStack(Registries.ITEM.get(new Identifier(resultId)), count);
 			return new WoodcuttingRecipe(identifier, group, ingredient, itemStack);
 		}
 
@@ -86,8 +86,8 @@ public final class WoodcuttingRecipe extends CuttingRecipe {
 		@Override
 		public void write(PacketByteBuf buf, WoodcuttingRecipe recipe) {
 			buf.writeString(recipe.group);
-			recipe.input.write(buf);
-			buf.writeItemStack(recipe.getOutput());
+			recipe.ingredient.write(buf);
+			buf.writeItemStack(recipe.result);
 		}
 
 		@Override
@@ -97,9 +97,9 @@ public final class WoodcuttingRecipe extends CuttingRecipe {
 			if (!recipe.group.isEmpty())
 				root.addProperty("group", recipe.group);
 
-			root.add("ingredient", recipe.input.toJson());
-			root.addProperty("result", Registry.ITEM.getId(recipe.getOutput().getItem()).toString());
-			root.addProperty("count", recipe.getOutput().getCount());
+			root.add("ingredient", recipe.ingredient.toJson());
+			root.addProperty("result", Registries.ITEM.getId(recipe.result.getItem()).toString());
+			root.addProperty("count", recipe.result.getCount());
 
 			return root;
 		}

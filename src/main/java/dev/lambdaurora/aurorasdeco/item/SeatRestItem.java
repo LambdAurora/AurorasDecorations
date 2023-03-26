@@ -62,10 +62,10 @@ public class SeatRestItem extends Item {
 		return this.woodType;
 	}
 
-	@Override
+	/*@Override
 	public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
 		if (this.isInGroup(group) || group == ItemGroup.SEARCH) {
 			stacks.add(SEAT_REST_KIND_SEARCHER.findLastOfGroup(stacks), new ItemStack(this));
 		}
-	}
+	}*/
 }

@@ -21,25 +21,27 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.mixin.world.FoliagePlacerTypeAccessor;
-import net.minecraft.block.BlockState;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.intprovider.ConstantIntProvider;
 import net.minecraft.util.math.intprovider.IntProvider;
 import net.minecraft.util.random.RandomGenerator;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.TestableWorld;
 import net.minecraft.world.gen.feature.TreeFeatureConfig;
 import net.minecraft.world.gen.foliage.FoliagePlacer;
 import net.minecraft.world.gen.foliage.FoliagePlacerType;
 
-import java.util.function.BiConsumer;
-
 public class JacarandaFoliagePlacer extends FoliagePlacer {
 	public static final Codec<JacarandaFoliagePlacer> CODEC = RecordCodecBuilder.create(instance -> fillFoliagePlacerFields(instance).apply(instance, JacarandaFoliagePlacer::new));
-	public static final FoliagePlacerType<JacarandaFoliagePlacer> TYPE = Registry.register(Registry.FOLIAGE_PLACER_TYPE,
+	public static final FoliagePlacerType<JacarandaFoliagePlacer> TYPE = Registry.register(Registries.FOLIAGE_PLACER_TYPE,
 			AurorasDeco.id("jacaranda"),
 			FoliagePlacerTypeAccessor.create(CODEC)
 	);
+
+	public static void poke() {
+		/* Ignored */
+	}
 
 	public JacarandaFoliagePlacer(IntProvider fakeRadius, IntProvider fakeOffset) {
 		super(ConstantIntProvider.create(2), ConstantIntProvider.ZERO);
@@ -51,7 +53,7 @@ public class JacarandaFoliagePlacer extends FoliagePlacer {
 	}
 
 	@Override
-	protected void generate(TestableWorld world, BiConsumer<BlockPos, BlockState> replacer, RandomGenerator random, TreeFeatureConfig config, int trunkHeight, TreeNode treeNode, int foliageHeight, int radius, int offset) {
+	protected void method_23448(TestableWorld world, FoliagePlacer.C_pwcqvmho replacer, RandomGenerator random, TreeFeatureConfig config, int trunkHeight, TreeNode treeNode, int foliageHeight, int radius, int offset) {
 		this.addCanopy(world, replacer, treeNode.getCenter(), config, treeNode.isGiantTrunk(), random);
 	}
 
@@ -72,7 +74,7 @@ public class JacarandaFoliagePlacer extends FoliagePlacer {
 	}
 
 	private void addCanopy(TestableWorld world,
-			BiConsumer<BlockPos, BlockState> replacer,
+			FoliagePlacer.C_pwcqvmho replacer,
 			BlockPos centerPos,
 			TreeFeatureConfig config, boolean giantTrunk,
 			RandomGenerator random) {
@@ -84,7 +86,7 @@ public class JacarandaFoliagePlacer extends FoliagePlacer {
 	}
 
 	private void cir1(TestableWorld world,
-			BiConsumer<BlockPos, BlockState> replacer,
+			FoliagePlacer.C_pwcqvmho replacer,
 			BlockPos centerPos,
 			int y, BlockPos.Mutable mutablePos,
 			TreeFeatureConfig config, boolean giantTrunk,
@@ -101,7 +103,7 @@ public class JacarandaFoliagePlacer extends FoliagePlacer {
 	}
 
 	private void cir2(TestableWorld world,
-			BiConsumer<BlockPos, BlockState> replacer,
+			FoliagePlacer.C_pwcqvmho replacer,
 			BlockPos centerPos,
 			int y, BlockPos.Mutable mutablePos,
 			TreeFeatureConfig config, boolean giantTrunk,

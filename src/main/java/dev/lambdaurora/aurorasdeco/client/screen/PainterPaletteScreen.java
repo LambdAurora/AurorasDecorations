@@ -63,7 +63,7 @@ public class PainterPaletteScreen extends HandledScreen<PainterPaletteScreenHand
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
 		RenderSystem.setShaderTexture(0, TEXTURE);
-		this.drawTexture(matrices, this.getBackgroundX(), this.getBackgroundY(), 0, 0, this.backgroundWidth + 24, this.backgroundHeight);
+		drawTexture(matrices, this.getBackgroundX(), this.getBackgroundY(), 0, 0, this.backgroundWidth + 24, this.backgroundHeight);
 	}
 
 	@Override

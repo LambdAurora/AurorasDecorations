@@ -30,10 +30,10 @@ import net.minecraft.client.color.block.BlockColorProvider;
 import net.minecraft.client.color.item.ItemColorProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.block.content.registry.api.BlockContentRegistries;
@@ -270,7 +270,7 @@ public final class WoodType {
 
 	public record Component(WoodType woodType, Block block) {
 		public Identifier id() {
-			return Registry.BLOCK.getId(this.block());
+			return Registries.BLOCK.getId(this.block());
 		}
 
 		public Material material() {
@@ -294,7 +294,7 @@ public final class WoodType {
 		}
 
 		public Identifier getItemId() {
-			return Registry.ITEM.getId(this.item());
+			return Registries.ITEM.getId(this.item());
 		}
 
 		public Identifier texture() {
@@ -309,13 +309,13 @@ public final class WoodType {
 		}
 
 		public @Nullable FlammableBlockEntry getFlammableEntry() {
-			return BlockContentRegistries.FLAMMABLE_BLOCK.getNullable(this.block());
+			return BlockContentRegistries.FLAMMABLE.getNullable(this.block());
 		}
 
 		public void syncFlammabilityWith(Block other) {
-			BlockContentRegistries.FLAMMABLE_BLOCK.valueAddedEvent().register((entry, value) -> {
+			BlockContentRegistries.FLAMMABLE.valueAddedEvent().register((entry, value) -> {
 				if (entry == this.block) {
-					BlockContentRegistries.FLAMMABLE_BLOCK.put(other, value);
+					BlockContentRegistries.FLAMMABLE.put(other, value);
 				}
 			});
 		}

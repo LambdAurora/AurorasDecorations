@@ -24,7 +24,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.HeadFeatureRenderer;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.ModelWithHead;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.ZombieVillagerEntity;
@@ -85,7 +85,7 @@ public final class TrinketsHooks implements ClientModInitializer {
 			withHead.getHead().rotate(matrices);
 
 		HeadFeatureRenderer.translate(matrices, villager);
-		MinecraftClient.getInstance().getEntityRenderDispatcher().getHeldItemRenderer().renderItem(entity, stack, ModelTransformation.Mode.HEAD,
+		MinecraftClient.getInstance().getEntityRenderDispatcher().getHeldItemRenderer().renderItem(entity, stack, ModelTransformationMode.HEAD,
 				false,
 				matrices, vertexConsumers, light);
 	}

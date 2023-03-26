@@ -29,10 +29,10 @@ import net.minecraft.client.render.block.BlockModels;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.util.ModelIdentifier;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.random.RandomGenerator;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockRenderView;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
@@ -70,7 +70,7 @@ public class BakedSignPostModel extends ForwardingBakedModel {
 		public @Nullable UnbakedModel loadModelVariant(ModelIdentifier modelId, ModelProviderContext context) {
 			if (modelId.getNamespace().equals(AurorasDeco.NAMESPACE) && modelId.getPath().startsWith("sign_post/") &&
 					!modelId.getVariant().equals("inventory")) {
-				if (Registry.BLOCK.get(new Identifier(modelId.getNamespace(), modelId.getPath())) instanceof SignPostBlock signPostBlock) {
+				if (Registries.BLOCK.get(new Identifier(modelId.getNamespace(), modelId.getPath())) instanceof SignPostBlock signPostBlock) {
 					var states = signPostBlock.getStateManager().getStates();
 					for (var state : states) {
 						if (modelId.equals(BlockModels.getModelId(state))) {

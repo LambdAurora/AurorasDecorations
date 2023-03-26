@@ -32,7 +32,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.math.Matrix4f;
+import org.joml.Matrix4f;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 /**
@@ -75,12 +75,14 @@ public class PainterPaletteTooltipComponent implements TooltipComponent {
 
 	@Override
 	public void drawText(TextRenderer textRenderer, int x, int y, Matrix4f matrix4f, VertexConsumerProvider.Immediate immediate) {
-		textRenderer.draw(this.selectedToolText, x, y, 0xffffffff, true, matrix4f, immediate, false, 0,
-				LightmapTextureManager.MAX_LIGHT_COORDINATE);
+		textRenderer.draw(
+				this.selectedToolText, x, y, 0xffffffff, true, matrix4f, immediate, TextRenderer.TextLayerType.NORMAL,
+				0, LightmapTextureManager.MAX_LIGHT_COORDINATE
+		);
 	}
 
 	@Override
-	public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices, ItemRenderer itemRenderer, int z) {
+	public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices, ItemRenderer itemRenderer) {
 		ItemStack primaryColorStack = this.inventory.getSelectedColor();
 
 		if (primaryColorStack.isEmpty()) return;
@@ -90,27 +92,27 @@ public class PainterPaletteTooltipComponent implements TooltipComponent {
 
 		matrices.push();
 		y += 12;
-		matrices.translate(x, y, z);
+		matrices.translate(x, y, 0);
 
-		this.drawSlot(matrices, z, true, false);
+		this.drawSlot(matrices, 0, true, false);
 		if (!previousColorStack.isEmpty()) {
-			itemRenderer.renderInGuiWithOverrides(previousColorStack, x + 2, y + 2, inventory.getSlotOf(previousColorStack));
-			itemRenderer.renderGuiItemOverlay(textRenderer, previousColorStack, x + 2, y + 2);
+			itemRenderer.method_32797(matrices, previousColorStack, x + 2, y + 2, inventory.getSlotOf(previousColorStack));
+			itemRenderer.method_4025(matrices, textRenderer, previousColorStack, x + 2, y + 2);
 			this.drawColorOverlay(matrices, previousColorStack);
 		}
 
 		matrices.translate(18, 0, 0);
-		this.drawSlot(matrices, z, false, false);
-		itemRenderer.renderInGuiWithOverrides(primaryColorStack, x + 18 + 2, y + 2, inventory.getSelectedColorSlot());
-		itemRenderer.renderGuiItemOverlay(textRenderer, primaryColorStack, x + 18 + 2, y + 2);
+		this.drawSlot(matrices, 0, false, false);
+		itemRenderer.method_32797(matrices, primaryColorStack, x + 18 + 2, y + 2, inventory.getSelectedColorSlot());
+		itemRenderer.method_4025(matrices, textRenderer, primaryColorStack, x + 18 + 2, y + 2);
 		this.drawColorOverlay(matrices, primaryColorStack);
-		HandledScreen.drawSlotHighlight(matrices, x + 1, y + 1, z);
+		HandledScreen.drawSlotHighlight(matrices, x + 1, y + 1, 0);
 
 		matrices.translate(18, 0, 0);
-		this.drawSlot(matrices, z, false, true);
+		this.drawSlot(matrices, 0, false, true);
 		if (!previousColorStack.isEmpty()) {
-			itemRenderer.renderInGuiWithOverrides(nextColorStack, x + 18 * 2 + 2, y + 2, inventory.getSlotOf(nextColorStack));
-			itemRenderer.renderGuiItemOverlay(textRenderer, nextColorStack, x + 18 * 2 + 2, y + 2);
+			itemRenderer.method_32797(matrices, nextColorStack, x + 18 * 2 + 2, y + 2, inventory.getSlotOf(nextColorStack));
+			itemRenderer.method_4025(matrices, textRenderer, nextColorStack, x + 18 * 2 + 2, y + 2);
 			this.drawColorOverlay(matrices, nextColorStack);
 		}
 

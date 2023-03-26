@@ -26,10 +26,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
-import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -131,7 +131,7 @@ public class BenchBlockEntity extends BasicBlockEntity implements RenderAttachme
 			var restId = Identifier.tryParse(nbt.getString("rest"));
 
 			if (restId != null) {
-				var item = Registry.ITEM.get(restId);
+				var item = Registries.ITEM.get(restId);
 				if (item instanceof SeatRestItem seatRestItem)
 					this.rest = seatRestItem;
 			}
@@ -143,6 +143,6 @@ public class BenchBlockEntity extends BasicBlockEntity implements RenderAttachme
 
 	private void writeBenchNbt(NbtCompound nbt) {
 		if (this.rest != null)
-			nbt.putString("rest", Registry.ITEM.getId(this.rest).toString());
+			nbt.putString("rest", Registries.ITEM.getId(this.rest).toString());
 	}
 }

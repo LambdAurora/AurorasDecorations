@@ -39,7 +39,7 @@ public class HoneycombItemMixin {
 	private static final ThreadLocal<NbtCompound> aurorasdeco$blockEntityData = new ThreadLocal<>();
 
 	@Inject(
-			method = "m_blzykkgi(Lnet/minecraft/item/ItemUsageContext;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/World;Lnet/minecraft/block/BlockState;)Lnet/minecraft/util/ActionResult;",
+			method = "method_34719(Lnet/minecraft/item/ItemUsageContext;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/World;Lnet/minecraft/block/BlockState;)Lnet/minecraft/util/ActionResult;",
 			at = @At("HEAD")
 	)
 	private static void onBeforeReplace(ItemUsageContext context, BlockPos pos, World world, BlockState state, CallbackInfoReturnable<ActionResult> cir) {
@@ -52,7 +52,7 @@ public class HoneycombItemMixin {
 	}
 
 	@Inject(
-			method = "m_blzykkgi(Lnet/minecraft/item/ItemUsageContext;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/World;Lnet/minecraft/block/BlockState;)Lnet/minecraft/util/ActionResult;",
+			method = "method_34719(Lnet/minecraft/item/ItemUsageContext;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/World;Lnet/minecraft/block/BlockState;)Lnet/minecraft/util/ActionResult;",
 			at = @At("RETURN")
 	)
 	private static void onAfterReplace(ItemUsageContext context, BlockPos pos, World world, BlockState state, CallbackInfoReturnable<ActionResult> cir) {

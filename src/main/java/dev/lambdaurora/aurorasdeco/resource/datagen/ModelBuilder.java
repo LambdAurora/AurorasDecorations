@@ -21,9 +21,9 @@ import com.google.gson.JsonObject;
 import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 public class ModelBuilder {
 	private final JsonObject json = new JsonObject();
@@ -48,12 +48,12 @@ public class ModelBuilder {
 	}
 
 	public Identifier register(Block block) {
-		var id = Registry.BLOCK.getId(block);
+		var id = Registries.BLOCK.getId(block);
 		return this.register(new Identifier(id.getNamespace(), "block/" + id.getPath()));
 	}
 
 	public Identifier register(Item block) {
-		var id = Registry.ITEM.getId(block);
+		var id = Registries.ITEM.getId(block);
 		return this.register(new Identifier(id.getNamespace(), "item/" + id.getPath()));
 	}
 

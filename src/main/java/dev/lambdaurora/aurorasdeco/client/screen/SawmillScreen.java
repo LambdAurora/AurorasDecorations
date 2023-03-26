@@ -63,15 +63,15 @@ public class SawmillScreen extends HandledScreen<SawmillScreenHandler> {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
 		RenderSystem.setShaderTexture(0, TEXTURE);
-		this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+		drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 		int scrollAmount = (int) (41.f * this.scrollAmount);
-		this.drawTexture(matrices, this.x + 119, this.y + 15 + scrollAmount, 176 + (this.shouldScroll() ? 0 : 12), 0,
+		drawTexture(matrices, this.x + 119, this.y + 15 + scrollAmount, 176 + (this.shouldScroll() ? 0 : 12), 0,
 				12, 15);
 		int recipesX = this.x + 52;
 		int recipesY = this.y + 14;
 		int recipesScrollOffset = this.scrollOffset + 12;
 		this.renderRecipeBackground(matrices, mouseX, mouseY, recipesX, recipesY, recipesScrollOffset);
-		this.renderRecipeIcons(recipesX, recipesY, recipesScrollOffset);
+		this.renderRecipeIcons(matrices, recipesX, recipesY, recipesScrollOffset);
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class SawmillScreen extends HandledScreen<SawmillScreenHandler> {
 				int n = i + m % 4 * 16;
 				int o = j + m / 4 * 18 + 2;
 				if (x >= n && x < n + 16 && y >= o && y < o + 18) {
-					this.renderTooltip(matrices, list.get(l).getOutput(), x, y);
+					this.renderTooltip(matrices, list.get(l).getResult(this.client.world.getRegistryManager()), x, y);
 				}
 			}
 		}
@@ -107,11 +107,11 @@ public class SawmillScreen extends HandledScreen<SawmillScreenHandler> {
 				v += 36;
 			}
 
-			this.drawTexture(matrices, recipeX, recipeY - 1, 0, v, 16, 18);
+			drawTexture(matrices, recipeX, recipeY - 1, 0, v, 16, 18);
 		}
 	}
 
-	private void renderRecipeIcons(int x, int y, int scrollOffset) {
+	private void renderRecipeIcons(MatrixStack matrices, int x, int y, int scrollOffset) {
 		var list = this.handler.getAvailableRecipes();
 
 		for (int i = this.scrollOffset; i < scrollOffset && i < this.handler.getAvailableRecipeCount(); ++i) {
@@ -119,7 +119,7 @@ public class SawmillScreen extends HandledScreen<SawmillScreenHandler> {
 			int recipeX = x + offset % 4 * 16;
 			int line = offset / 4;
 			int recipeY = y + line * 18 + 2;
-			this.client.getItemRenderer().renderInGuiWithOverrides(list.get(i).getOutput(), recipeX, recipeY);
+			this.client.getItemRenderer().renderInGui(matrices, list.get(i).getResult(this.client.world.getRegistryManager()), recipeX, recipeY);
 		}
 	}
 

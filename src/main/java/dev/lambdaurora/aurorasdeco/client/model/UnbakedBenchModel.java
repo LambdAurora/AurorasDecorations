@@ -17,10 +17,9 @@
 
 package dev.lambdaurora.aurorasdeco.client.model;
 
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.ModelLoader;
+import net.minecraft.client.render.model.ModelBaker;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
@@ -28,25 +27,24 @@ import net.minecraft.util.Identifier;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.Collection;
-import java.util.Set;
 import java.util.function.Function;
 
 @ClientOnly
 public record UnbakedBenchModel(UnbakedModel baseModel, RestModelManager restModelManager) implements AuroraUnbakedModel {
 	@Override
 	public Collection<Identifier> getModelDependencies() {
-		return this.baseModel().getModelDependencies();
+		return this.baseModel.getModelDependencies();
 	}
 
 	@Override
-	public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter,
-			Set<Pair<String, String>> unresolvedTextureReferences) {
-		return this.baseModel().getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences);
+	public void resolveParents(Function<Identifier, UnbakedModel> models) {
+		this.baseModel.resolveParents(models);
 	}
 
 	@Override
-	public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer,
-			Identifier modelId) {
-		return new BakedBenchModel(this.baseModel().bake(loader, textureGetter, rotationContainer, modelId), this.restModelManager());
+	public BakedModel bake(
+			ModelBaker modelBaker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId
+	) {
+		return new BakedBenchModel(this.baseModel().bake(modelBaker, textureGetter, rotationContainer, modelId), this.restModelManager());
 	}
 }

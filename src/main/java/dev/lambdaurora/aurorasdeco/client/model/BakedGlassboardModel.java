@@ -25,9 +25,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.BlockRenderView;
+import org.joml.Vector3f;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.List;
@@ -102,21 +102,21 @@ public class BakedGlassboardModel extends BakedBlackboardModel {
 		context.pushTransform(quad -> {
 			quad.nominalFace(quad.lightFace().rotateYClockwise());
 			Direction direction = quad.lightFace();
-			Vec3f quadPos = new Vec3f();
+			var quadPos = new Vector3f();
 
 			float leftValue;
 			float rightValue;
 
 			if (direction.getAxis() == Direction.Axis.Z) {
 				quad.copyPos(0, quadPos);
-				leftValue = quadPos.getX();
+				leftValue = quadPos.x();
 				quad.copyPos(2, quadPos);
-				rightValue = quadPos.getX();
+				rightValue = quadPos.x();
 			} else if (direction.getAxis() == Direction.Axis.X) {
 				quad.copyPos(0, quadPos);
-				leftValue = quadPos.getZ();
+				leftValue = quadPos.z();
 				quad.copyPos(2, quadPos);
-				rightValue = quadPos.getZ();
+				rightValue = quadPos.z();
 			} else {
 				leftValue = rightValue = 0;
 			}
@@ -125,9 +125,9 @@ public class BakedGlassboardModel extends BakedBlackboardModel {
 				quad.copyPos(i, quadPos);
 
 				if (direction.getAxis() == Direction.Axis.Z) {
-					quad.pos(i, i < 2 ? rightValue : leftValue, quadPos.getY(), quadPos.getZ());
+					quad.pos(i, i < 2 ? rightValue : leftValue, quadPos.y(), quadPos.z());
 				} else if (direction.getAxis() == Direction.Axis.X) {
-					quad.pos(i, quadPos.getX(), quadPos.getY(), i < 2 ? rightValue : leftValue);
+					quad.pos(i, quadPos.x(), quadPos.y(), i < 2 ? rightValue : leftValue);
 				}
 			}
 			return true;

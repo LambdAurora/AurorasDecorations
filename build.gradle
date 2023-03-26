@@ -8,7 +8,7 @@ plugins {
 }
 
 group = project.maven_group
-version = "${project.mod_version}+${getMCVersionString()}"
+version = "${project.mod_version}+${MINECRAFT_VERSION}"
 archivesBaseName = project.archives_base_name
 
 if (!(System.getenv("CURSEFORGE_TOKEN") || System.getenv("MODRINTH_TOKEN"))) {
@@ -19,14 +19,6 @@ logger.lifecycle("Preparing version ${version}...")
 boolean isMCVersionNonRelease() {
 	return MINECRAFT_VERSION.matches('^\\d\\dw\\d\\d[a-z]$')
 			|| MINECRAFT_VERSION.matches('\\d+\\.\\d+-(pre|rc)(\\d+)')
-}
-
-String getMCVersionString() {
-	if (isMCVersionNonRelease()) {
-		return MINECRAFT_VERSION
-	}
-	def version = MINECRAFT_VERSION.split('\\.')
-	return version[0] + '.' + version[1]
 }
 
 String parseReadme() {
@@ -111,7 +103,7 @@ jar {
 
 modrinth {
 	projectId = project.modrinth_id
-	versionName = "Aurora's Decorations ${project.mod_version} (${getMCVersionString()})"
+	versionName = "Aurora's Decorations ${project.mod_version} (${MINECRAFT_VERSION})"
 	gameVersions = [MINECRAFT_VERSION]
 	loaders = ["quilt"]
 	versionType = this.getVersionType()
@@ -163,7 +155,7 @@ curseforge {
 		}
 
 		mainArtifact(remapJar) {
-			displayName = "Aurora's Decorations ${project.mod_version} (${getMCVersionString()})"
+			displayName = "Aurora's Decorations ${project.mod_version} (${MINECRAFT_VERSION})"
 
 			relations {
 				requiredDependency "qsl"

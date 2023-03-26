@@ -29,6 +29,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -42,8 +45,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -52,7 +53,7 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.poi.PointOfInterestType;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
-import org.quiltmc.qsl.points_of_interest.api.PointOfInterestHelper;
+import org.quiltmc.qsl.poi.api.PointOfInterestHelper;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -261,7 +262,7 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
 	}
 
 	public static SleepingBagBlock register(DyeColor color) {
-		var block = Registry.register(Registry.BLOCK,
+		var block = Registry.register(Registries.BLOCK,
 				AurorasDeco.id("sleeping_bag/" + color.getName()),
 				new SleepingBagBlock(color));
 
@@ -272,7 +273,7 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
 
 	public static void appendToPointOfInterest(RegistryKey<PointOfInterestType> poiType) {
 
-		var type = Registry.POINT_OF_INTEREST_TYPE.getHolder(poiType);
+		var type = Registries.POINT_OF_INTEREST_TYPE.getHolder(poiType);
 
 		if (type.isEmpty()) {
 			return;

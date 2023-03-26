@@ -115,7 +115,7 @@ public abstract class BlockItemMixin extends Item implements BlockItemAccessor {
 				.ifPresent(explodingRecipe -> {
 					int count = entity.getStack().getCount();
 					for (int i = 0; i < count; i++)
-						ItemUsage.spawnItemContents(entity, Stream.of(explodingRecipe.craft(inv)));
+						ItemUsage.spawnItemContents(entity, Stream.of(explodingRecipe.craft(inv, server.getRegistryManager())));
 					ci.cancel();
 				});
 	}

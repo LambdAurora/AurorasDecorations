@@ -26,8 +26,8 @@ import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -83,7 +83,7 @@ public final class PottedPlantType {
 	public static @Nullable BigFlowerPotBlock registerFromItem(Item item) {
 		if (item instanceof BlockItem blockItem) {
 			var block = blockItem.getBlock();
-			var id = getIdFromPlant(Registry.BLOCK.getId(block));
+			var id = getIdFromPlant(Registries.BLOCK.getId(block));
 
 			if (TYPES.containsKey(id))
 				return null;

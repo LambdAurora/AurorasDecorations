@@ -26,6 +26,8 @@ import net.minecraft.block.*;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.state.StateManager;
@@ -37,7 +39,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.random.RandomGenerator;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -228,7 +229,7 @@ public class HangingFlowerPotBlock extends Block {
 	}
 
 	public static HangingFlowerPotBlock initEmpty() {
-		HangingFlowerPotBlock block = Registry.register(Registry.BLOCK, AurorasDeco.id("hanging_flower_pot"),
+		HangingFlowerPotBlock block = Registry.register(Registries.BLOCK, AurorasDeco.id("hanging_flower_pot"),
 				new HangingFlowerPotBlock((FlowerPotBlock) Blocks.FLOWER_POT)
 		);
 

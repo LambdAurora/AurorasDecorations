@@ -4,7 +4,6 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "ServerAdvancementLoaderMixin",
-    "ServerReloadableResourcesMixin",
     "SimpleRegistryAccessor",
     "SpawnHelperMixin",
     "StateManagerBuilderAccessor",
@@ -42,10 +41,8 @@
     "item.ShovelItemMixin",
     "world.ChunkGeneratorAccessor",
     "world.FoliagePlacerTypeAccessor",
-    "world.OverworldBiomeCreatorAccessor",
-    "world.OverworldBiomeParametersMixin",
-    "world.TreeConfiguredFeaturesAccessor",
-    "world.VegetationConfiguredFeaturesMixin"
+    "world.MultiNoiseBiomeSourceParameterListMixin",
+    "world.OverworldBiomeParametersMixin"
   ],
   "client": [
     "client.BedBlockClientMixin",

@@ -23,8 +23,8 @@ import net.minecraft.block.HorizontalConnectingBlock;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.state.StateManager;
-import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
@@ -61,8 +61,7 @@ public class FenceLikeWallBlock extends HorizontalConnectingBlock {
 	}
 
 	public boolean canConnect(BlockState state, boolean neighborIsFullSquare, Direction dir) {
-		return !cannotConnect(state) && neighborIsFullSquare
-				|| state.isIn(BlockTags.WALLS);
+		return !cannotConnect(state) && neighborIsFullSquare || state.isIn(BlockTags.WALLS);
 	}
 
 	/* Placement */

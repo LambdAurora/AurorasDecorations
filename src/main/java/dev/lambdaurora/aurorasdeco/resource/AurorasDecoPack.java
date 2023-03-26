@@ -27,10 +27,10 @@ import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.*;
 import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
 import net.minecraft.block.Material;
+import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.resource.loader.api.InMemoryResourcePack;
 import org.slf4j.Logger;
@@ -52,20 +52,20 @@ public class AurorasDecoPack extends InMemoryResourcePack {
 
 	public AurorasDecoPack rebuild(ResourceType type, @Nullable ResourceManager resourceManager) {
 		this.registerTag(new String[]{"blocks"}, new Identifier("flower_pots"), HangingFlowerPotBlock.stream()
-				.map(Registry.BLOCK::getId));
+				.map(Registries.BLOCK::getId));
 
 		this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("benches"), BenchBlock.streamBenches()
-				.map(Registry.BLOCK::getId));
+				.map(Registries.BLOCK::getId));
 		this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("shelves"), ShelfBlock.streamShelves()
-				.map(Registry.BLOCK::getId));
+				.map(Registries.BLOCK::getId));
 		this.registerTag(new String[]{"blocks"}, new Identifier("mineable/axe"), SignPostBlock.stream()
 				.filter(block -> block.getDefaultState().getMaterial() == Material.WOOD
 						|| block.getDefaultState().getMaterial() == Material.NETHER_WOOD)
-				.map(Registry.BLOCK::getId));
+				.map(Registries.BLOCK::getId));
 		this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("small_log_piles"), SmallLogPileBlock.stream()
-				.map(Registry.BLOCK::getId));
+				.map(Registries.BLOCK::getId));
 		this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("stumps"), StumpBlock.streamLogStumps()
-				.map(Registry.BLOCK::getId));
+				.map(Registries.BLOCK::getId));
 		this.registerTag(new String[]{"blocks"}, AurorasDeco.id("wall_lanterns"), LanternRegistry.streamIds());
 
 		return type == ResourceType.CLIENT_RESOURCES ? this.rebuildClient(resourceManager) : this.rebuildData();

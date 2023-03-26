@@ -22,9 +22,11 @@ import dev.lambdaurora.aurorasdeco.screen.PainterPaletteScreenHandler;
 import dev.lambdaurora.aurorasdeco.screen.SawmillScreenHandler;
 import dev.lambdaurora.aurorasdeco.screen.ShelfScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
+import net.minecraft.feature_flags.FeatureFlagBitSet;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.util.registry.Registry;
 
 import static dev.lambdaurora.aurorasdeco.AurorasDeco.id;
 
@@ -41,19 +43,19 @@ public class AurorasDecoScreenHandlers {
 	}
 
 	public static final ScreenHandlerType<CopperHopperScreenHandler> COPPER_HOPPER_SCREEN_HANDLER_TYPE = register("copper_hopper",
-			new ScreenHandlerType<>(CopperHopperScreenHandler::new));
+			new ScreenHandlerType<>(CopperHopperScreenHandler::new, FeatureFlagBitSet.empty()));
 
 	public static final ScreenHandlerType<PainterPaletteScreenHandler> PAINTER_PALETTE_SCREEN_HANDLER_TYPE = register("painter_palette",
 			new ExtendedScreenHandlerType<>(PainterPaletteScreenHandler::new));
 
 	public static final ScreenHandlerType<SawmillScreenHandler> SAWMILL_SCREEN_HANDLER_TYPE = register("sawmill",
-			new ScreenHandlerType<>(SawmillScreenHandler::new));
+			new ScreenHandlerType<>(SawmillScreenHandler::new, FeatureFlagBitSet.empty()));
 
 	public static final ScreenHandlerType<ShelfScreenHandler> SHELF_SCREEN_HANDLER_TYPE = register("shelf",
 			new ExtendedScreenHandlerType<>(ShelfScreenHandler::new));
 
 	private static <SH extends ScreenHandler> ScreenHandlerType<SH> register(String name, ScreenHandlerType<SH> type) {
-		return Registry.register(Registry.SCREEN_HANDLER, id(name), type);
+		return Registry.register(Registries.SCREEN_HANDLER_TYPE, id(name), type);
 	}
 
 	static void init() {}

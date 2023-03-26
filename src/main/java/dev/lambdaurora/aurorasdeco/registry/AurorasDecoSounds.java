@@ -17,8 +17,9 @@
 
 package dev.lambdaurora.aurorasdeco.registry;
 
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.registry.Registry;
 
 import static dev.lambdaurora.aurorasdeco.AurorasDeco.id;
 
@@ -42,7 +43,7 @@ public final class AurorasDecoSounds {
 
 	private static SoundEvent register(String path) {
 		var id = id(path);
-		return Registry.register(Registry.SOUND_EVENT, id, new SoundEvent(id));
+		return Registry.register(Registries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id));
 	}
 
 	static void init() {

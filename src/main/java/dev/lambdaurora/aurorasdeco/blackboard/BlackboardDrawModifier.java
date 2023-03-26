@@ -19,7 +19,7 @@ package dev.lambdaurora.aurorasdeco.blackboard;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.tag.ItemTags;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 

@@ -26,6 +26,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.DyeColor;
@@ -33,7 +34,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
@@ -351,7 +351,7 @@ public class SignPostBlockEntity extends BasicBlockEntity {
 				return null;
 			}
 
-			var material = Registry.ITEM.get(materialId);
+			var material = Registries.ITEM.get(materialId);
 			var facing = Direction.byName(nbt.getString("facing"));
 
 			if (material instanceof SignPostItem actualMaterial && facing != null) {
@@ -364,7 +364,7 @@ public class SignPostBlockEntity extends BasicBlockEntity {
 		public NbtCompound toNbt() {
 			var nbt = new NbtCompound();
 
-			nbt.putString("material", Registry.ITEM.getId(this.material).toString());
+			nbt.putString("material", Registries.ITEM.getId(this.material).toString());
 			nbt.putString("facing", facing.getName());
 
 			return nbt;

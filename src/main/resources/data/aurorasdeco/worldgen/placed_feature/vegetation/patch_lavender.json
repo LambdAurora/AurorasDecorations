@@ -1,0 +1,32 @@
+{
+  "feature": "aurorasdeco:vegetation/patch_lavender",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": {
+        "type": "minecraft:clamped",
+        "value": {
+          "min_inclusive": 0,
+          "max_inclusive": 6,
+          "source": {
+            "type": "minecraft:uniform",
+            "value": {
+              "min_inclusive": -1,
+              "max_inclusive": 6
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "MOTION_BLOCKING"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

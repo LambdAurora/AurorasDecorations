@@ -1,0 +1,14 @@
+{
+  "type": "aurorasdeco:fallen_tree",
+  "config": {
+    "trunk_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:spruce_log"
+      }
+    },
+    "base_length": 5,
+    "variance": 4,
+    "layer": "moss"
+  }
+}

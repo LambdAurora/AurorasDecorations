@@ -28,10 +28,11 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.resource.ResourceManager;
-import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
@@ -88,7 +89,7 @@ public record RenderRule(List<Model> models) {
 	}
 
 	public static @Nullable RenderRule getRenderRule(ItemStack stack) {
-		var itemId = Registry.ITEM.getId(stack.getItem());
+		var itemId = Registries.ITEM.getId(stack.getItem());
 
 		var rule = ITEM_RULES.get(itemId);
 		if (rule != null) {
@@ -152,7 +153,7 @@ public record RenderRule(List<Model> models) {
 						success = true;
 					} else if (match.has("tag")) {
 						var tagId = Identifier.tryParse(match.get("tag").getAsString());
-						TAG_RULES.put(TagKey.of(Registry.ITEM_KEY, tagId), renderRule);
+						TAG_RULES.put(TagKey.of(RegistryKeys.ITEM, tagId), renderRule);
 						success = true;
 					}
 
@@ -216,14 +217,14 @@ public record RenderRule(List<Model> models) {
 					if (blockId == null) {
 						LOGGER.error("Failed to parse block identifier in render rule {}.", manifest);
 					} else {
-						restrictedBlock = Registry.BLOCK.get(blockId);
+						restrictedBlock = Registries.BLOCK.get(blockId);
 					}
 				} else if (restrict.has("tag")) {
 					var blockId = Identifier.tryParse(restrict.get("tag").getAsString());
 					if (blockId == null) {
 						LOGGER.error("Failed to parse tag identifier in render rule {}.", manifest);
 					} else {
-						restrictedBlockTag = TagKey.of(Registry.BLOCK_KEY, blockId);
+						restrictedBlockTag = TagKey.of(RegistryKeys.BLOCK, blockId);
 					}
 				}
 			}

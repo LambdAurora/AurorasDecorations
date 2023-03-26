@@ -23,9 +23,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.Axis;
 
 import java.util.Random;
 
@@ -61,13 +61,13 @@ public class BookPileEntityRenderer implements BlockEntityRenderer<BookPileBlock
 			{
 				matrices.translate(.5, 0, .5);
 				int angle = random.nextInt(360);
-				matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(angle));
+				matrices.multiply(Axis.Y_POSITIVE.rotationDegrees(angle));
 				matrices.translate(-.5, 0, -.5);
 			}
 
 			// Makes the book lay on the floor.
 			matrices.translate(.5, .025, .5);
-			matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(90));
+			matrices.multiply(Axis.Z_POSITIVE.rotationDegrees(90));
 			matrices.translate(3 / 16.f - .15, 0, 0);
 			matrices.scale(.45f, .45f, .45f);
 
@@ -76,7 +76,7 @@ public class BookPileEntityRenderer implements BlockEntityRenderer<BookPileBlock
 			}
 
 			renderer.renderItem(stack,
-					ModelTransformation.Mode.FIXED, false,
+					ModelTransformationMode.FIXED, false,
 					matrices, vertexConsumers,
 					light, overlay,
 					model);

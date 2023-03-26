@@ -35,8 +35,8 @@ import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Axis;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.random.LegacySimpleRandom;
 import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.util.random.RandomSeed;
@@ -83,7 +83,7 @@ public class BlackboardPressBlockEntityRenderer implements BlockEntityRenderer<B
 				matrices.push();
 
 				matrices.translate(0.5, 0, 0.5);
-				matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-(entity.getWorld().getTime() % 360)));
+				matrices.multiply(Axis.Y_POSITIVE.rotationDegrees(-(entity.getWorld().getTime() % 360)));
 				matrices.translate(-0.5, 0, -0.5);
 
 				client.getBlockRenderManager().getModelRenderer().render(entity.getWorld(), screwModel, state, pos,

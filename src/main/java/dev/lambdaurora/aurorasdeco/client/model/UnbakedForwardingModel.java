@@ -17,19 +17,16 @@
 
 package dev.lambdaurora.aurorasdeco.client.model;
 
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.ModelLoader;
+import net.minecraft.client.render.model.ModelBaker;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.Collection;
-import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -40,21 +37,21 @@ import java.util.function.Function;
  * @since 1.0.0
  */
 @ClientOnly
-public record UnbakedForwardingModel(UnbakedModel baseModel,
-		Function<BakedModel, BakedModel> factory) implements AuroraUnbakedModel {
+public record UnbakedForwardingModel(UnbakedModel baseModel, Function<BakedModel, BakedModel> factory) implements AuroraUnbakedModel {
 	@Override
 	public Collection<Identifier> getModelDependencies() {
 		return this.baseModel.getModelDependencies();
 	}
 
 	@Override
-	public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
-		return this.baseModel.getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences);
+	public void resolveParents(Function<Identifier, UnbakedModel> models) {
+		this.baseModel.resolveParents(models);
 	}
 
-	@Nullable
 	@Override
-	public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+	public BakedModel bake(
+			ModelBaker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId
+	) {
 		return this.factory.apply(this.baseModel.bake(loader, textureGetter, rotationContainer, modelId));
 	}
 }

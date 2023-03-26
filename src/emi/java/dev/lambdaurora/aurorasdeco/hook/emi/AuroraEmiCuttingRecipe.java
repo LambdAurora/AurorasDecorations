@@ -30,7 +30,7 @@ public abstract class AuroraEmiCuttingRecipe<R extends CuttingRecipe> extends Au
 	public AuroraEmiCuttingRecipe(R recipe) {
 		super(recipe);
 		this.input = EmiIngredient.of(recipe.getIngredients().get(0));
-		this.output = EmiStack.of(recipe.getOutput());
+		this.output = EmiStack.of(recipe.getResult(null));
 	}
 
 	@Override

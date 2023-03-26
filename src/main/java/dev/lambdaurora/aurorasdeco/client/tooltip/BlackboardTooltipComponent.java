@@ -29,7 +29,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Matrix4f;
+import org.joml.Matrix4f;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 /**
@@ -68,10 +68,10 @@ public class BlackboardTooltipComponent implements TooltipComponent {
 	}
 
 	@Override
-	public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices, ItemRenderer itemRenderer, int z) {
+	public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices, ItemRenderer itemRenderer) {
 		var vertexConsumers = this.client.getBufferBuilders().getEntityVertexConsumers();
 		matrices.push();
-		matrices.translate(x, y, z);
+		matrices.translate(x, y, 0);
 		matrices.scale(128.f, 128.f, 1);
 
 		var model = matrices.peek().getModel();

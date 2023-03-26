@@ -48,14 +48,25 @@ public record FallenTreeFeatureConfig(
 		BlockStateProvider vineProvider,
 		BlockStateProvider mushroomProvider
 ) implements FeatureConfig {
+	private static final BlockStateProvider DEFAULT_VINE_PROVIDER = new WeightedBlockStateProvider(DataPool.<BlockState>builder()
+			.add(Blocks.VINE.getDefaultState(), 5)
+			.add(Blocks.GLOW_LICHEN.getDefaultState(), 3)
+	);
+	private static final BlockStateProvider DEFAULT_MUSHROOM_PROVIDER = new WeightedBlockStateProvider(DataPool.<BlockState>builder()
+			.add(Blocks.BROWN_MUSHROOM.getDefaultState(), 5)
+			.add(Blocks.RED_MUSHROOM.getDefaultState(), 2)
+	);
+
 	public static final Codec<FallenTreeFeatureConfig> CODEC = RecordCodecBuilder.create(instance -> instance
 			.group(
 					BlockStateProvider.TYPE_CODEC.fieldOf("trunk_provider").forGetter(FallenTreeFeatureConfig::trunkProvider),
 					Codec.INT.fieldOf("base_length").forGetter(FallenTreeFeatureConfig::baseLength),
 					Codec.INT.fieldOf("variance").forGetter(FallenTreeFeatureConfig::variance),
 					LayerType.CODEC.fieldOf("layer").forGetter(FallenTreeFeatureConfig::layerType),
-					BlockStateProvider.TYPE_CODEC.fieldOf("vine_provider").forGetter(FallenTreeFeatureConfig::vineProvider),
-					BlockStateProvider.TYPE_CODEC.fieldOf("mushroom_provider").forGetter(FallenTreeFeatureConfig::mushroomProvider)
+					BlockStateProvider.TYPE_CODEC.fieldOf("vine_provider")
+							.orElse(DEFAULT_VINE_PROVIDER).forGetter(FallenTreeFeatureConfig::vineProvider),
+					BlockStateProvider.TYPE_CODEC.fieldOf("mushroom_provider")
+							.orElse(DEFAULT_MUSHROOM_PROVIDER).forGetter(FallenTreeFeatureConfig::mushroomProvider)
 			)
 			.apply(instance, FallenTreeFeatureConfig::new)
 	);
@@ -106,14 +117,8 @@ public record FallenTreeFeatureConfig(
 		private int baseHeight = 3;
 		private int variance = 2;
 		private LayerType layerType = LayerType.NONE;
-		private BlockStateProvider vineProvider = new WeightedBlockStateProvider(DataPool.<BlockState>builder()
-				.add(Blocks.VINE.getDefaultState(), 5)
-				.add(Blocks.GLOW_LICHEN.getDefaultState(), 3)
-		);
-		private BlockStateProvider mushroomProvider = new WeightedBlockStateProvider(DataPool.<BlockState>builder()
-				.add(Blocks.BROWN_MUSHROOM.getDefaultState(), 5)
-				.add(Blocks.RED_MUSHROOM.getDefaultState(), 2)
-		);
+		private BlockStateProvider vineProvider = DEFAULT_VINE_PROVIDER;
+		private BlockStateProvider mushroomProvider = DEFAULT_MUSHROOM_PROVIDER;
 
 		public Builder(BlockStateProvider trunkProvider) {
 			this.trunkProvider = trunkProvider;

@@ -19,11 +19,7 @@ package dev.lambdaurora.aurorasdeco.item;
 
 import dev.lambdaurora.aurorasdeco.util.KindSearcher;
 import net.minecraft.block.Block;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.item.*;
 
 import java.util.List;
 import java.util.function.BiFunction;
@@ -51,23 +47,27 @@ public class DerivedBlockItem extends BlockItem {
 		this.searchMethod = searchMethod;
 	}
 
-	@Override
+	/*@Override
 	public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
 		if (this.isInGroup(group) || group == ItemGroup.SEARCH) {
 			stacks.add(this.searchMethod.applyAsInt(this.searcher, stacks), new ItemStack(this));
 		}
+	}*/
+
+	public static <B extends Block> BiFunction<B, Settings, BlockItem> itemWithStrictPositionFactory(ItemGroup group, Item after) {
+		return (block, settings) -> newItemWithStrictPosition(block, group, after, settings);
 	}
 
-	public static <B extends Block> BiFunction<B, Settings, BlockItem> itemWithStrictPositionFactory(Item after) {
-		return (block, settings) -> newItemWithStrictPosition(block, after, settings);
+	public static BlockItem newItemWithStrictPosition(Block block, ItemGroup group, Item after, Settings settings) {
+		var item = new BlockItem(block, settings);
+		ItemGroupInjector.of(group).inject(item, KindSearcher.strictlyAfter(after), KindSearcher::findLastOfGroup);
+		return item;
 	}
 
-	public static DerivedBlockItem newItemWithStrictPosition(Block block, Item after, Settings settings) {
-		return new DerivedBlockItem(block, KindSearcher.strictlyAfter(after), KindSearcher::findLastOfGroup, settings);
-	}
-
-	public static DerivedBlockItem campfire(Block block, Settings settings) {
-		return new DerivedBlockItem(block, KindSearcher.CAMPFIRE_SEARCHER, KindSearcher::findLastOfGroup, settings);
+	public static BlockItem campfire(Block block, Settings settings) {
+		var item = new BlockItem(block, settings);
+		ItemGroupInjector.of(ItemGroups.FUNCTIONAL_BLOCKS).inject(item, KindSearcher.CAMPFIRE_SEARCHER, KindSearcher::findLastOfGroup);
+		return item;
 	}
 
 	public static DerivedBlockItem door(Block block, Settings settings) {
@@ -86,20 +86,27 @@ public class DerivedBlockItem extends BlockItem {
 		return new DerivedBlockItem(block, KindSearcher.FLOWER_SEARCHER, KindSearcher::findLastOfGroup, settings);
 	}
 
-	public static DerivedBlockItem hopper(Block block, Settings settings) {
-		return new DerivedBlockItem(block, KindSearcher.HOPPER_SEARCHER, KindSearcher::findLastOfGroup, settings);
+	public static BlockItem hopper(Block block, Settings settings) {
+		var item = new BlockItem(block, settings);
+		ItemGroupInjector.of(ItemGroups.REDSTONE_BLOCKS).inject(item, KindSearcher.HOPPER_SEARCHER, KindSearcher::findLastOfGroup);
+		return item;
 	}
 
-	public static DerivedBlockItem lantern(Block block, Settings settings) {
-		return new DerivedBlockItem(block, KindSearcher.LANTERN_SEARCHER, KindSearcher::findLastOfGroup, settings);
+	public static BlockItem lantern(Block block, Settings settings) {
+		var item = new BlockItem(block, settings);
+		ItemGroupInjector.of(ItemGroups.FUNCTIONAL_BLOCKS).inject(item, KindSearcher.LANTERN_SEARCHER, KindSearcher::findLastOfGroup);
+		return item;
 	}
 
 	public static DerivedBlockItem leaves(Block block, Settings settings) {
 		return new DerivedBlockItem(block, KindSearcher.LEAVES_SEARCHER, KindSearcher::findLastOfGroup, settings);
 	}
 
-	public static DerivedBlockItem log(Block block, Settings settings) {
-		return new DerivedBlockItem(block, KindSearcher.LOG_SEARCHER, KindSearcher::findLastOfGroup, settings);
+	public static BlockItem log(Block block, Settings settings) {
+		var item = new BlockItem(block, settings);
+		ItemGroupInjector.of(ItemGroups.BUILDING_BLOCKS).inject(item, KindSearcher.LOG_SEARCHER, KindSearcher::findLastOfGroup);
+		ItemGroupInjector.of(ItemGroups.NATURAL_BLOCKS).inject(item, KindSearcher.LOG_SEARCHER, KindSearcher::findLastOfGroup);
+		return item;
 	}
 
 	public static DerivedBlockItem planks(Block block, Settings settings) {
@@ -151,5 +158,8 @@ public class DerivedBlockItem extends BlockItem {
 	}
 
 	public interface SearchMethod extends ToIntBiFunction<KindSearcher<ItemStack, KindSearcher.StackEntry>, List<ItemStack>> {
+		default void injectInto(List<ItemStack> stacks, KindSearcher<ItemStack, KindSearcher.StackEntry> searcher, ItemStack stack) {
+			stacks.add(this.applyAsInt(searcher, stacks), stack);
+		}
 	}
 }

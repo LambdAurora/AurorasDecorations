@@ -63,11 +63,11 @@ public class CopperHopperScreen extends HandledScreen<CopperHopperScreenHandler>
 		int x = (this.width - this.backgroundWidth) / 2;
 		int y = (this.height - this.backgroundHeight) / 2;
 
-		this.drawTexture(matrices, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+		drawTexture(matrices, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
 		var filterSlot = this.getScreenHandler().getFilterSlot();
 		if (!filterSlot.hasStack()) {
-			this.drawTexture(matrices, this.x + filterSlot.x, this.y + filterSlot.y,
+			drawTexture(matrices, this.x + filterSlot.x, this.y + filterSlot.y,
 					1, this.backgroundHeight + 1, 16, 16);
 		}
 	}

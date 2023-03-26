@@ -17,25 +17,22 @@
 
 package dev.lambdaurora.aurorasdeco.client.model;
 
-import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.ModelLoader;
+import net.minecraft.client.render.model.ModelBaker;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -64,15 +61,14 @@ public class UnbakedVariantModel<T extends UnbakedModel> implements UnbakedModel
 	}
 
 	@Override
-	public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter,
-			Set<Pair<String, String>> unresolvedTextureReferences) {
-		return this.unbakedVariantMap.values().stream()
-				.flatMap(model -> model.getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences).stream())
-				.collect(Collectors.toSet());
+	public void resolveParents(Function<Identifier, UnbakedModel> models) {
+		this.unbakedVariantMap.values().forEach(model -> model.resolveParents(models));
 	}
 
 	@Override
-	public @Nullable BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+	public BakedModel bake(
+			ModelBaker modelBaker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId
+	) {
 		var map = new Object2ReferenceOpenHashMap<String, BlockState>();
 		var models = new Reference2ObjectOpenHashMap<BlockState, BakedModel>();
 
@@ -81,7 +77,7 @@ public class UnbakedVariantModel<T extends UnbakedModel> implements UnbakedModel
 		});
 
 		this.unbakedVariantMap.forEach((variant, model) -> {
-			models.put(map.get(variant), model.bake(loader, textureGetter, rotationContainer, modelId));
+			models.put(map.get(variant), model.bake(modelBaker, textureGetter, rotationContainer, modelId));
 		});
 
 		return new BakedVariantModel(models);

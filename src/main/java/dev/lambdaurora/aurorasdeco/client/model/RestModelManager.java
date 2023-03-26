@@ -25,9 +25,9 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.render.model.json.ModelVariantMap;
+import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.io.IOException;
@@ -67,7 +67,7 @@ public class RestModelManager {
 
 		// Bench rest
 		UnbakedModel benchRest = null;
-		var benchBlock = Registry.BLOCK.get(AurorasDeco.id("bench/" + pathName));
+		var benchBlock = Registries.BLOCK.get(AurorasDeco.id("bench/" + pathName));
 		var benchRestId = AurorasDeco.id("blockstates/bench/" + pathName + "_rest.json");
 		if (benchBlock != Blocks.AIR) {
 			var resource = resourceManager.getResource(benchRestId);

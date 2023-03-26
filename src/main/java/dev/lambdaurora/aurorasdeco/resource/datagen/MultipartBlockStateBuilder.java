@@ -21,10 +21,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
 import net.minecraft.block.Block;
+import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 public class MultipartBlockStateBuilder {
 	private final JsonObject json = new JsonObject();
@@ -38,7 +38,7 @@ public class MultipartBlockStateBuilder {
 	}
 
 	public MultipartBlockStateBuilder(Block block) {
-		this(Registry.BLOCK.getId(block));
+		this(Registries.BLOCK.getId(block));
 	}
 
 	public MultipartBlockStateBuilder add(StateModel model) {

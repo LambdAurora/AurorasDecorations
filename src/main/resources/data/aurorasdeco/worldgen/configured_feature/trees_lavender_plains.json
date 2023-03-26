@@ -1,0 +1,53 @@
+{
+  "type": "minecraft:random_selector",
+  "config": {
+    "features": [
+      {
+        "chance": 0.5,
+        "feature": {
+          "feature": "aurorasdeco:tree/jacaranda_bees_015",
+          "placement": []
+        }
+      },
+      {
+        "chance": 0.25,
+        "feature": {
+          "feature": "aurorasdeco:fallen_tree/oak",
+          "placement": []
+        }
+      },
+      {
+        "chance": 0.2,
+        "feature": {
+          "feature": "aurorasdeco:fallen_tree/birch",
+          "placement": []
+        }
+      },
+      {
+        "chance": 0.33333334,
+        "feature": {
+          "feature": "aurorasdeco:tree/oak_bees_015",
+          "placement": []
+        }
+      },
+      {
+        "chance": 0.5,
+        "feature": {
+          "feature": "aurorasdeco:tree/birch_bees_015",
+          "placement": []
+        }
+      },
+      {
+        "chance": 0.33333334,
+        "feature": {
+          "feature": "aurorasdeco:tree/fancy_oak_bees_015",
+          "placement": []
+        }
+      }
+    ],
+    "default": {
+      "feature": "aurorasdeco:tree/flowering_jacaranda_bees_015",
+      "placement": []
+    }
+  }
+}

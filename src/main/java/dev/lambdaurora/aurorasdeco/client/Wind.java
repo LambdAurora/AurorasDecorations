@@ -114,7 +114,7 @@ public class Wind {
 			this.originalState = null;
 		}
 
-		boolean raining = world.getLevelProperties().isRaining();
+		boolean raining = world.getProperties().isRaining();
 		boolean thundering = world.isThundering();
 		boolean weatherChanged = this.wasRaining != raining || this.wasThundering != thundering;
 

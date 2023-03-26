@@ -25,9 +25,11 @@ import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.recipe.CraftingCategory;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
@@ -48,8 +50,8 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
 			AurorasDecoRegistry.GLASSBOARD_BLOCK
 	);
 
-	public BlackboardCloneRecipe(Identifier id) {
-		super(id);
+	public BlackboardCloneRecipe(Identifier id, CraftingCategory craftingCategory) {
+		super(id, craftingCategory);
 	}
 
 	@Override
@@ -72,7 +74,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
 	}
 
 	@Override
-	public ItemStack craft(CraftingInventory inv) {
+	public ItemStack craft(CraftingInventory inv, DynamicRegistryManager registryManager) {
 		Blackboard blackboard = null;
 		ItemStack output = null;
 		Text customName = null;
@@ -147,10 +149,5 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
 	@Override
 	public RecipeSerializer<?> getSerializer() {
 		return AurorasDecoRegistry.BLACKBOARD_CLONE_RECIPE_SERIALIZER;
-	}
-
-	@Override
-	public ItemStack getOutput() {
-		return super.getOutput();
 	}
 }

@@ -33,6 +33,7 @@ import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 
 /**
  * Represents a potted sweet berry bush.
@@ -85,7 +86,7 @@ public class BigPottedSweetBerryBushBlock extends BigPottedProxyBlock implements
 	/* Fertilization */
 
 	@Override
-	public boolean isFertilizable(BlockView world, BlockPos pos, BlockState state, boolean isClient) {
+	public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state, boolean isClient) {
 		return ((Fertilizable) this.getPlant()).isFertilizable(world, pos, state, isClient);
 	}
 

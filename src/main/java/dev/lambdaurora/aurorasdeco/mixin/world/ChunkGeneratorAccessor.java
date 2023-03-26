@@ -18,29 +18,24 @@
 package dev.lambdaurora.aurorasdeco.mixin.world;
 
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.registry.Holder;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.ConcentricRingsStructurePlacement;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePlacement;
-import net.minecraft.util.Holder;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.WorldView;
-import net.minecraft.world.gen.RandomState;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.StructureFeature;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-import java.util.List;
 import java.util.Set;
 
 @Mixin(ChunkGenerator.class)
 public interface ChunkGeneratorAccessor {
-	@Invoker
-	List<StructurePlacement> invokeM_wozjtsiz(Holder<StructureFeature> feature, RandomState random);
-
 	@Invoker
 	@Nullable Pair<BlockPos, Holder<StructureFeature>> invokeFindStructures(
 			Set<Holder<StructureFeature>> structures,
@@ -53,7 +48,7 @@ public interface ChunkGeneratorAccessor {
 
 	@Invoker
 	@Nullable
-	static Pair<BlockPos, Holder<StructureFeature>> invokeM_gxxzcexz(
+	static Pair<BlockPos, Holder<StructureFeature>> invokeMethod_41522(
 			Set<Holder<StructureFeature>> structures, WorldView world, StructureManager structureManager, boolean skipExistingChunks,
 			StructurePlacement placement, ChunkPos pos
 	) {

@@ -29,8 +29,9 @@ import net.minecraft.block.LanternBlock;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.MinecraftQuiltLoader;
 import org.quiltmc.qsl.block.extensions.api.client.BlockRenderLayerMap;
@@ -66,7 +67,7 @@ public final class LanternRegistry {
 		if (WALL_LANTERNS.containsKey(wallLanternId))
 			return (WallLanternBlock<L>) WALL_LANTERNS.get(wallLanternId);
 		else if (block == Blocks.LANTERN || block == Blocks.SOUL_LANTERN) {
-			wallLanternBlock = (WallLanternBlock<L>) Registry.BLOCK.get(wallLanternId);
+			wallLanternBlock = (WallLanternBlock<L>) Registries.BLOCK.get(wallLanternId);
 		} else if (block instanceof RedstoneLanternBlock redstoneLanternBlock) {
 			wallLanternBlock = (WallLanternBlock<L>) Registry.register(registry, wallLanternId, new RedstoneWallLanternBlock(redstoneLanternBlock));
 		} else {
@@ -85,7 +86,7 @@ public final class LanternRegistry {
 	}
 
 	public static <L extends LanternBlock> WallLanternBlock<L> registerWallLantern(L block) {
-		return registerWallLantern(Registry.BLOCK, block, Registry.BLOCK.getId(block));
+		return registerWallLantern(Registries.BLOCK, block, Registries.BLOCK.getId(block));
 	}
 
 	public static void tryRegisterWallLantern(Registry<Block> registry, Block block, Identifier id) {

@@ -1,0 +1,20 @@
+{
+  "type": "aurorasdeco:fallen_tree",
+  "config": {
+    "trunk_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:jungle_log"
+      }
+    },
+    "base_length": 3,
+    "variance": 6,
+    "layer": "moss",
+    "mushroom_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:air"
+      }
+    }
+  }
+}

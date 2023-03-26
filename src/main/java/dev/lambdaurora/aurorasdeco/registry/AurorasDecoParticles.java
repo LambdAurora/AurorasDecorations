@@ -20,7 +20,8 @@ package dev.lambdaurora.aurorasdeco.registry;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 
 /**
  * Represents the registered particles in Aurora's Decorations.
@@ -40,6 +41,6 @@ public final class AurorasDecoParticles {
 	public static final DefaultParticleType LAVENDER_PETAL = register("lavender_petal");
 
 	private static DefaultParticleType register(String name) {
-		return Registry.register(Registry.PARTICLE_TYPE, AurorasDeco.id(name), FabricParticleTypes.simple());
+		return Registry.register(Registries.PARTICLE_TYPE, AurorasDeco.id(name), FabricParticleTypes.simple());
 	}
 }

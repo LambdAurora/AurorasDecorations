@@ -57,7 +57,7 @@ public abstract class LivingEntityMixin extends Entity {
 
 	@Dynamic("Lambda in LivingEntity#wakeUp")
 	@Inject(
-			method = "m_ljzijdub(Lnet/minecraft/util/math/BlockPos;)V",
+			method = "method_18404(Lnet/minecraft/util/math/BlockPos;)V",
 			at = @At(
 					value = "INVOKE",
 					target = "Lnet/minecraft/block/BlockState;getBlock()Lnet/minecraft/block/Block;"
@@ -67,10 +67,11 @@ public abstract class LivingEntityMixin extends Entity {
 	private void onWakeUp(BlockPos pos, CallbackInfo ci, BlockState state) {
 		if (state.getBlock() instanceof SleepingBagBlock) {
 			this.world.setBlockState(pos, state.with(SleepingBagBlock.OCCUPIED, false), Block.NOTIFY_ALL);
-			Vec3d wakUpPos = BedBlock.findWakeUpPosition(this.getType(), this.world, pos, this.getYaw()).orElseGet(() -> {
-				BlockPos upPos = pos.up();
-				return new Vec3d(upPos.getX() + 0.5, upPos.getY() + 0.1, upPos.getZ() + 0.5);
-			});
+			Vec3d wakUpPos = BedBlock.findWakeUpPosition(this.getType(), this.world, pos, state.get(SleepingBagBlock.FACING), this.getYaw())
+					.orElseGet(() -> {
+						BlockPos upPos = pos.up();
+						return new Vec3d(upPos.getX() + 0.5, upPos.getY() + 0.1, upPos.getZ() + 0.5);
+					});
 			Vec3d vec3d2 = Vec3d.ofBottomCenter(pos).subtract(wakUpPos).normalize();
 			float yaw = (float) MathHelper.wrapDegrees(MathHelper.atan2(vec3d2.z, vec3d2.x) * 57.2957763671875D - 90);
 			this.setPosition(wakUpPos.x, wakUpPos.y, wakUpPos.z);

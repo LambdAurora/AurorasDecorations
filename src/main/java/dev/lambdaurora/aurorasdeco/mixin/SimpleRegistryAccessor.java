@@ -17,8 +17,8 @@
 
 package dev.lambdaurora.aurorasdeco.mixin;
 
-import net.minecraft.util.Holder;
-import net.minecraft.util.registry.SimpleRegistry;
+import net.minecraft.registry.Holder;
+import net.minecraft.registry.SimpleRegistry;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
@@ -28,5 +28,5 @@ import java.util.Map;
 @Mixin(SimpleRegistry.class)
 public interface SimpleRegistryAccessor<T> {
 	@Accessor
-	@Nullable Map<T, Holder.Reference<T>> getIntrusiveHolderCache();
+	@Nullable Map<T, Holder.Reference<T>> getEntryToIntrusiveHolder();
 }

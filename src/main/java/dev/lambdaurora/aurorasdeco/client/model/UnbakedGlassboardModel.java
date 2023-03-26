@@ -25,15 +25,15 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.ModelLoader;
+import net.minecraft.client.render.model.ModelBaker;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.render.model.json.ModelVariantMap;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.SpriteIdentifier;
+import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.slf4j.Logger;
 
@@ -60,9 +60,10 @@ public class UnbakedGlassboardModel extends UnbakedBlackboardModel {
 	private final Int2ObjectMap<Identifier> identifiers = new Int2ObjectOpenHashMap<>();
 	private final String variant;
 
-	UnbakedGlassboardModel(ModelIdentifier id, UnbakedModel baseModel, ResourceManager resourceManager,
-			ModelVariantMap.DeserializationContext deserializationContext,
-			BiConsumer<Identifier, UnbakedModel> modelConsumer) {
+	UnbakedGlassboardModel(
+			ModelIdentifier id, UnbakedModel baseModel, ResourceManager resourceManager,
+			ModelVariantMap.DeserializationContext deserializationContext, BiConsumer<Identifier, UnbakedModel> modelConsumer
+	) {
 		super(baseModel);
 		this.variant = id.getVariant();
 
@@ -71,7 +72,7 @@ public class UnbakedGlassboardModel extends UnbakedBlackboardModel {
 			prefix = "waxed/";
 		}
 
-		Block block = Registry.BLOCK.get(AurorasDeco.id(id.getPath()));
+		Block block = Registries.BLOCK.get(AurorasDeco.id(id.getPath()));
 
 		for (var corner : Corner.CORNERS) {
 			for (var type : Type.TYPES) {
@@ -107,15 +108,18 @@ public class UnbakedGlassboardModel extends UnbakedBlackboardModel {
 	}
 
 	@Override
-	public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer,
-			Identifier modelId) {
-		var baseModel = this.bakeBaseModel(loader, textureGetter, rotationContainer, modelId);
+	public BakedModel bake(
+			ModelBaker modelBaker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId
+	) {
+		var baseModel = this.bakeBaseModel(modelBaker, textureGetter, rotationContainer, modelId);
 
-		return new BakedGlassboardModel(baseModel, this.bakeAllConnectingModels(loader, textureGetter, rotationContainer, modelId, baseModel));
+		return new BakedGlassboardModel(baseModel, this.bakeAllConnectingModels(modelBaker, textureGetter, rotationContainer, modelId, baseModel));
 	}
 
-	private Int2ObjectMap<List<BakedModel>> bakeAllConnectingModels(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer,
-			Identifier modelId, BakedModel baseModel) {
+	private Int2ObjectMap<List<BakedModel>> bakeAllConnectingModels(
+			ModelBaker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer,
+			Identifier modelId, BakedModel baseModel
+	) {
 		var map = new Int2ObjectOpenHashMap<List<BakedModel>>();
 
 		map.put(0, List.of(baseModel));
@@ -124,8 +128,8 @@ public class UnbakedGlassboardModel extends UnbakedBlackboardModel {
 		for (var corner : Corner.CORNERS) {
 			for (var type : Type.TYPES) {
 				int id = this.getCornerDataIndex(corner, type);
-				bakedModels.put(id, loader.getOrLoadModel(this.identifiers.get(id))
-						.bake(loader, textureGetter, rotationContainer, modelId));
+				bakedModels.put(id, baker.getModel(this.identifiers.get(id))
+						.bake(baker, textureGetter, rotationContainer, modelId));
 			}
 		}
 

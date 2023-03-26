@@ -19,21 +19,26 @@ package dev.lambdaurora.aurorasdeco.world.gen;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.world.gen.feature.AurorasDecoFeatures;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.Holder;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.DynamicRegistryManager;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.biome.BiomeKeys;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.PlacedFeature;
-import org.jetbrains.annotations.TestOnly;
+import org.jetbrains.annotations.NotNull;
+import org.quiltmc.qsl.registry.api.event.DynamicRegistryManagerSetupContext;
+import org.quiltmc.qsl.registry.api.event.RegistryEvents;
 import org.quiltmc.qsl.worldgen.biome.api.BiomeModifications;
 import org.quiltmc.qsl.worldgen.biome.api.BiomeSelectionContext;
 import org.quiltmc.qsl.worldgen.biome.api.BiomeSelectors;
 import org.quiltmc.qsl.worldgen.biome.api.ModificationPhase;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 
 /**
@@ -45,12 +50,13 @@ import java.util.function.Predicate;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class DynamicWorldGen {
+public class DynamicWorldGen{
 	private static final List<String> WAY_SIGNS = List.of("birch", "desert", "oak", "taiga");
 	private static final DynamicWorldGen INSTANCE = new DynamicWorldGen();
+	private boolean canInjectBiomes = false;
 
 	private DynamicWorldGen() {
-		this.registerDynamicModifications(AurorasDeco.id("swamp"), BiomeSelectors.includeByKey(BiomeKeys.SWAMP), List.of(
+		this.registerDynamicModifications(AurorasDeco.id("swamp"), BiomeSelectors.includeByKey(Biomes.SWAMP), List.of(
 				AurorasDecoFeatures.SWAMP_DUCKWEED,
 				AurorasDecoFeatures.SWAMP_GIANT_MUSHROOMS,
 				AurorasDecoFeatures.SWAMP_SMALL_DRIPLEAF
@@ -59,10 +65,10 @@ public class DynamicWorldGen {
 		var waySigns = BiomeModifications.create(AurorasDeco.id("way_signs"));
 		for (var waySign : WAY_SIGNS) {
 			waySigns.add(ModificationPhase.ADDITIONS,
-					BiomeSelectors.isIn(TagKey.of(Registry.BIOME_KEY, AurorasDeco.id("feature/way_sign/" + waySign))),
+					BiomeSelectors.isIn(TagKey.of(RegistryKeys.BIOME, AurorasDeco.id("feature/way_sign/" + waySign))),
 					(selectionContext, context) -> {
 						context.getGenerationSettings().addFeature(GenerationStep.Feature.SURFACE_STRUCTURES,
-								RegistryKey.of(Registry.PLACED_FEATURE_KEY, AurorasDeco.id("way_sign/" + waySign))
+								RegistryKey.of(RegistryKeys.PLACED_FEATURE, AurorasDeco.id("way_sign/" + waySign))
 						);
 					}
 			);
@@ -80,9 +86,16 @@ public class DynamicWorldGen {
 				});
 	}
 
-	@TestOnly
-	public static void setupRegistries(DynamicRegistryManager registryManager) {
-		//AurorasDeco.debug("Setting up dynamic registries...");
+	public static void markCanInjectBiomes(boolean canInjectBiomes) {
+		INSTANCE.canInjectBiomes = canInjectBiomes;
+	}
+
+	public static void unmarkCanInjectBiomes() {
+		INSTANCE.canInjectBiomes = false;
+	}
+
+	public static boolean canInjectBiomes() {
+		return INSTANCE.canInjectBiomes;
 	}
 
 	public static void init() {}

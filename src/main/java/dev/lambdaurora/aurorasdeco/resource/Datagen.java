@@ -45,11 +45,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
-import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.qsl.recipe.api.builder.VanillaRecipeBuilders;
 import org.quiltmc.qsl.recipe.api.serializer.QuiltRecipeSerializer;
@@ -115,7 +116,7 @@ public final class Datagen {
 	}
 
 	public static void registerBetterGrassLayer(Block block, Identifier data) {
-		registerBetterGrassLayer(Registry.BLOCK.getId(block), data);
+		registerBetterGrassLayer(Registries.BLOCK.getId(block), data);
 	}
 
 	private static JsonObject generateBlockLootTableSimplePool(Identifier id, boolean copyName) {
@@ -182,7 +183,7 @@ public final class Datagen {
 	}
 
 	public static void registerBenchBlockLootTable(Block block) {
-		var id = Registry.BLOCK.getId(block);
+		var id = Registries.BLOCK.getId(block);
 		AurorasDeco.RESOURCE_PACK.putJson(
 				ResourceType.SERVER_DATA,
 				new Identifier(id.getNamespace(), "loot_tables/blocks/" + id.getPath()),
@@ -218,7 +219,7 @@ public final class Datagen {
 	}
 
 	public static void registerDoubleBlockLootTable(Block block) {
-		var id = Registry.BLOCK.getId(block);
+		var id = Registries.BLOCK.getId(block);
 		AurorasDeco.RESOURCE_PACK.putJson(
 				ResourceType.SERVER_DATA,
 				new Identifier(id.getNamespace(), "loot_tables/blocks/" + id.getPath()),
@@ -296,16 +297,16 @@ public final class Datagen {
 	}
 
 	public static void registerCandleLikeBlockLootTable(ExtendedCandleBlock block) {
-		var blockId = Registry.BLOCK.getId(block);
+		var blockId = Registries.BLOCK.getId(block);
 		AurorasDeco.RESOURCE_PACK.putJsonText(
 				ResourceType.SERVER_DATA,
 				new Identifier(blockId.getNamespace(), "loot_tables/blocks/" + blockId.getPath()),
-				candleLikeBlockLootTable(blockId, Registry.ITEM.getId(block.getParent().asItem()))
+				candleLikeBlockLootTable(blockId, Registries.ITEM.getId(block.getParent().asItem()))
 		);
 	}
 
 	public static void dropsSelf(Block block) {
-		registerSimpleBlockLootTable(Registry.BLOCK.getId(block), Registry.ITEM.getId(block.asItem()),
+		registerSimpleBlockLootTable(Registries.BLOCK.getId(block), Registries.ITEM.getId(block.asItem()),
 				block instanceof BlockWithEntity);
 	}
 
@@ -326,7 +327,7 @@ public final class Datagen {
 	}
 
 	public static void registerWoodcuttingRecipesForBlockVariants(Block block) {
-		var blockId = Registry.BLOCK.getId(block);
+		var blockId = Registries.BLOCK.getId(block);
 		if (blockId.getPath().endsWith("log")) {
 			char separator = '_';
 			var basePath = LOG_TO_BASE_ID.matcher(blockId.getPath()).replaceAll("");
@@ -355,7 +356,7 @@ public final class Datagen {
 
 	public static void registerDefaultRecipes() {
 		{
-			var sulfurItem = Registry.ITEM.get(new Identifier("sulfurpotassiummod", "sulfur"));
+			var sulfurItem = Registries.ITEM.get(new Identifier("sulfurpotassiummod", "sulfur"));
 			if (sulfurItem != Items.AIR) {
 				registerRecipe(VanillaRecipeBuilders.shapelessRecipe(new ItemStack(AurorasDecoRegistry.COPPER_SULFATE_ITEM))
 						.ingredient(sulfurItem)
@@ -394,7 +395,7 @@ public final class Datagen {
 				registerRecipe(new WoodcuttingRecipe(AuroraUtil.appendWithNamespace("woodcutting", planksId),
 								"planks",
 								Ingredient.ofTag(TagKey.of(
-										Registry.ITEM_KEY,
+										RegistryKeys.ITEM,
 										new Identifier(log.id().getNamespace(), log.id().getPath() + "s")
 								)),
 								new ItemStack(planks.item(), 4)),
@@ -402,7 +403,7 @@ public final class Datagen {
 			}
 		});
 
-		Registry.BLOCK.stream().filter(block -> ((AbstractBlockAccessor) block).getMaterial() == Material.WOOD
+		Registries.BLOCK.stream().filter(block -> ((AbstractBlockAccessor) block).getMaterial() == Material.WOOD
 						|| ((AbstractBlockAccessor) block).getMaterial() == Material.NETHER_WOOD)
 				.forEach(Datagen::registerWoodcuttingRecipesForBlockVariants);
 
@@ -484,7 +485,7 @@ public final class Datagen {
 
 	private static void tryRegisterWoodcuttingRecipeFor(ItemConvertible planks, String basePath, String type, int count,
 			String category) {
-		tryRegisterWoodcuttingRecipeFor(planks, Registry.ITEM.getId(planks.asItem()).getNamespace(), basePath, type, count,
+		tryRegisterWoodcuttingRecipeFor(planks, Registries.ITEM.getId(planks.asItem()).getNamespace(), basePath, type, count,
 				category);
 	}
 
@@ -493,7 +494,7 @@ public final class Datagen {
 		if (planks.asItem() == Items.AIR)
 			return;
 		var id = new Identifier(namespace, basePath + type);
-		var item = Registry.ITEM.get(id);
+		var item = Registries.ITEM.get(id);
 		if (item != Items.AIR) {
 			var recipe = new WoodcuttingRecipe(
 					new Identifier(namespace, "woodcutting/" + basePath + type),
@@ -523,7 +524,7 @@ public final class Datagen {
 
 		PottedPlantType.stream().filter(type -> !type.isEmpty() && type.getPot().hasDynamicModel())
 				.forEach(type -> {
-					var id = Registry.BLOCK.getId(type.getPot());
+					var id = Registries.BLOCK.getId(type.getPot());
 					var builder = blockStateBuilder(type.getPot());
 					if (id.getPath().endsWith("mushroom")) builder.addToVariant("", BIG_FLOWER_POT_WITH_MYCELIUM_MODEL);
 					else builder.addToVariant("", BIG_FLOWER_POT_MODEL);
@@ -534,7 +535,7 @@ public final class Datagen {
 		HangingFlowerPotBlock.stream().forEach(block -> {
 			if (block == AurorasDecoRegistry.HANGING_FLOWER_POT_BLOCK) return;
 
-			var id = Registry.BLOCK.getId(block);
+			var id = Registries.BLOCK.getId(block);
 			blockStateBuilder(block)
 					.addToVariant("", HangingFlowerPotBlock.HANGING_FLOWER_POT_ATTACHMENT_MODEL)
 					.register();
@@ -580,7 +581,7 @@ public final class Datagen {
 					.texture("head_bottom", headBottomTexture)
 					.texture("head_side", headSideTexture)
 					.texture("head_top", headTopTexture)
-					.register(id("item/" + Registry.ITEM.getId(sleepingBag.asItem()).getPath()));
+					.register(id("item/" + Registries.ITEM.getId(sleepingBag.asItem()).getPath()));
 		});
 
 		LanternRegistry.forEach((lanternId, wallLantern) -> {
@@ -605,7 +606,7 @@ public final class Datagen {
 	private static void generateBenchesClientData(ResourceManager resourceManager) {
 		BenchBlock.streamBenches().forEach(block -> {
 			var builder = multipartBlockStateBuilder(block);
-			var restBuilder = new MultipartBlockStateBuilder(AurorasDeco.id(Registry.BLOCK.getId(block).getPath() + "_rest"));
+			var restBuilder = new MultipartBlockStateBuilder(AurorasDeco.id(Registries.BLOCK.getId(block).getPath() + "_rest"));
 
 			var pathName = block.getWoodType().getPathName();
 			var blockPathName = "block/bench/" + pathName;
@@ -879,7 +880,7 @@ public final class Datagen {
 	}
 
 	private static void generateSimpleItemModel(Item item) {
-		var itemId = Registry.ITEM.getId(item);
+		var itemId = Registries.ITEM.getId(item);
 		generateSimpleItemModel(new Identifier(itemId.getNamespace(), "item/" + itemId.getPath()));
 	}
 

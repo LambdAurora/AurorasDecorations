@@ -22,9 +22,9 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.registry.Registries;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.util.List;
 import java.util.function.Function;
@@ -102,7 +102,7 @@ public class KindSearcher<I, O> {
 	}
 
 	public static Builder<ItemStack, StackEntry> itemIdentifierSearcher(Predicate<StackEntry> tester) {
-		return new Builder<>(tester, stack -> new StackEntry(stack, Registry.ITEM.getId(stack.getItem())));
+		return new Builder<>(tester, stack -> new StackEntry(stack, Registries.ITEM.getId(stack.getItem())));
 	}
 
 	public static KindSearcher<ItemStack, StackEntry> strictlyAfter(Item item) {
@@ -223,7 +223,7 @@ public class KindSearcher<I, O> {
 			entry -> {
 				if (entry.stack().getItem() instanceof BlockItem blockItem) {
 					if (blockItem.getBlock() instanceof PillarBlock block) {
-						Identifier id = Registry.ITEM.getId(blockItem);
+						Identifier id = Registries.ITEM.getId(blockItem);
 
 						if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.NETHER_WOOD) {
 							return !id.getPath().startsWith("stripped") && (id.getPath().endsWith("log") || id.getPath().endsWith("stem"));
@@ -242,7 +242,7 @@ public class KindSearcher<I, O> {
 			entry -> {
 				if (entry.stack().getItem() instanceof BlockItem blockItem
 						&& blockItem.getBlock().getSoundGroup(blockItem.getBlock().getDefaultState()) == BlockSoundGroup.WOOD) {
-					Identifier id = Registry.ITEM.getId(blockItem);
+					Identifier id = Registries.ITEM.getId(blockItem);
 					return id.getPath().contains("planks");
 				}
 
@@ -260,7 +260,7 @@ public class KindSearcher<I, O> {
 			entry -> {
 				if (entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof PillarBlock block
 						&& (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.NETHER_WOOD)) {
-					Identifier id = Registry.ITEM.getId(blockItem);
+					Identifier id = Registries.ITEM.getId(blockItem);
 					return id.getPath().startsWith("stripped") && (id.getPath().endsWith("log") || id.getPath().endsWith("stem"));
 				}
 
@@ -273,7 +273,7 @@ public class KindSearcher<I, O> {
 			entry -> {
 				if (entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof PillarBlock block
 						&& (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.NETHER_WOOD)) {
-					Identifier id = Registry.ITEM.getId(blockItem);
+					Identifier id = Registries.ITEM.getId(blockItem);
 					return id.getPath().startsWith("stripped") && (id.getPath().endsWith("wood") || id.getPath().endsWith("hyphae"));
 				}
 
@@ -286,7 +286,7 @@ public class KindSearcher<I, O> {
 			entry -> {
 				if (entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof PillarBlock block
 						&& (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.NETHER_WOOD)) {
-					Identifier id = Registry.ITEM.getId(blockItem);
+					Identifier id = Registries.ITEM.getId(blockItem);
 					return !id.getPath().startsWith("stripped") && (id.getPath().endsWith("wood") || id.getPath().endsWith("hyphae"));
 				}
 
@@ -296,7 +296,9 @@ public class KindSearcher<I, O> {
 			.afterMapped(Items.WARPED_HYPHAE, ItemStack::getItem)
 			.build();
 	public static final KindSearcher<ItemStack, StackEntry> WOODEN_BUTTON_SEARCHER = itemIdentifierSearcher(
-			entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof WoodenButtonBlock
+			entry -> entry.stack().getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof AbstractButtonBlock block && (
+					block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.NETHER_WOOD
+			)
 	)
 			.afterMapped(Items.WARPED_PRESSURE_PLATE, ItemStack::getItem)
 			.build();

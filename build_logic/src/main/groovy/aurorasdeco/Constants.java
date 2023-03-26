@@ -22,16 +22,16 @@ public final class Constants {
 
 	/* VERSIONS */
 
-	public static final String MINECRAFT_VERSION = "1.19.2";
-	public static final int MAPPINGS = 21;
-	public static final String LOADER_VERSION = "0.17.11";
-	public static final String QFAPI_VERSION = "4.0.0-beta.29+0.75.1";
-	public static final String QSL_VERSION = "3.0.0-beta.29";
+	public static final String MINECRAFT_VERSION = "1.19.4";
+	public static final int MAPPINGS = 7;
+	public static final String LOADER_VERSION = "0.18.6";
+	public static final String QFAPI_VERSION = "6.0.0-beta.2+0.76.0";
+	public static final String QSL_VERSION = "5.0.0-beta.1";
 	public static final int JAVA_VERSION = 17;
 	// Dependencies
-	public static final String TERRAFORM_WOOD_API_VERSION = "4.1.0";
-	public static final String TRINKETS_VERSION = "3.4.0";
-	public static final String EMI_VERSION = "0.4.0+1.19";
+	public static final String TERRAFORM_WOOD_API_VERSION = "6.1.0-alpha.4";
+	public static final String TRINKETS_VERSION = "3.6.0";
+	public static final String EMI_VERSION = "0.7.2+1.19.4";
 
 	public record Contributor(String name, String role) {}
 }

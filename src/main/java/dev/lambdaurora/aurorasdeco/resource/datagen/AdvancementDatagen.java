@@ -95,7 +95,7 @@ public final class AdvancementDatagen {
 		advancement.parent(new Identifier("recipes/root"));
 		advancement.rewards(AdvancementRewards.Builder.recipe(recipe.getId()));
 		advancement.criteriaMerger(CriterionMerger.OR);
-		advancement.criterion("has_self", InventoryChangedCriterion.Conditions.items(recipe.getOutput().getItem()));
+		advancement.criterion("has_self", InventoryChangedCriterion.Conditions.items(recipe.getResult(null).getItem()));
 		advancement.criterion("has_the_recipe",
 				new RecipeUnlockedCriterion.Conditions(EntityPredicate.Extended.EMPTY, recipe.getId())
 		);

@@ -302,7 +302,7 @@ public class SignPostBlock extends BlockWithEntity implements Waterloggable {
 	}
 
 	private @Nullable BlockPos getWorldSpawnPos(World world) {
-		var properties = world.getLevelProperties();
+		var properties = world.getProperties();
 		return world.getDimension().natural()
 				? new BlockPos(properties.getSpawnX(), properties.getSpawnY(), properties.getSpawnZ())
 				: null;

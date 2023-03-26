@@ -25,13 +25,14 @@ import dev.lambdaurora.aurorasdeco.block.entity.SignPostBlockEntity;
 import dev.lambdaurora.aurorasdeco.client.renderer.SignPostBlockEntityRenderer;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPackets;
 import dev.lambdaurora.aurorasdeco.util.ColorUtil;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.SelectionManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
@@ -39,8 +40,8 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.ScreenTexts;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Axis;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3f;
 import org.lwjgl.glfw.GLFW;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
@@ -76,9 +77,11 @@ public class SignPostEditScreen extends Screen {
 
 	@Override
 	protected void init() {
-		this.client.keyboard.setRepeatEvents(true);
-		this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, this.height / 4 + 120, 200, 20, ScreenTexts.DONE,
-				button -> this.finishEditing()));
+		this.addDrawableChild(
+				ButtonWidget.builder(ScreenTexts.DONE, button -> this.finishEditing())
+						.positionAndSize(this.width / 2 - 100, this.height / 4 + 120, 200, 20)
+						.build()
+		);
 		this.selectionManager = new SelectionManager(() -> this.text[this.currentRow], text -> this.text[this.currentRow] = text,
 				SelectionManager.makeClipboardGetter(this.client), SelectionManager.makeClipboardSetter(this.client),
 				text -> this.client.textRenderer.getWidth(text) <= 90);
@@ -86,8 +89,6 @@ public class SignPostEditScreen extends Screen {
 
 	@Override
 	public void removed() {
-		this.client.keyboard.setRepeatEvents(false);
-
 		if (this.signPost.getType().supports(this.signPost.getCachedState())) {
 			byte flags = 0;
 			if (this.signPost.getUp() != null) {
@@ -203,11 +204,11 @@ public class SignPostEditScreen extends Screen {
 		matrices.push();
 		matrices.translate(0, 0, 2 / 16.0);
 		if (!sign.isLeft()) {
-			matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(180));
+			matrices.multiply(Axis.Y_NEGATIVE.rotationDegrees(180));
 		}
 
 		matrices.translate(-2 / 16.0, -.5 / 16.0, 0);
-		this.client.getItemRenderer().renderItem(null, new ItemStack(sign.getSign()), ModelTransformation.Mode.FIXED,
+		this.client.getItemRenderer().method_23177(null, new ItemStack(sign.getSign()), ModelTransformationMode.FIXED,
 				false, matrices, vertexConsumers,
 				this.signPost.getWorld(), light, overlay, 0);
 		matrices.pop();
@@ -235,7 +236,7 @@ public class SignPostEditScreen extends Screen {
 				this.textRenderer.drawWithOutline(text, x, 0, color, backgroundColor, matrices.peek().getModel(), vertexConsumers, light);
 			} else {
 				this.textRenderer.draw(text, x, 0, color, false, matrices.peek().getModel(), vertexConsumers,
-						false, 0, light);
+						TextRenderer.TextLayerType.NORMAL, 0, light);
 			}
 
 			vertexConsumers.draw();
@@ -253,7 +254,7 @@ public class SignPostEditScreen extends Screen {
 							this.textRenderer.drawWithOutline(END_CURSOR, cursorX, 0, color, backgroundColor, matrices.peek().getModel(), vertexConsumers, light);
 						} else {
 							this.textRenderer.draw(END_CURSOR, cursorX, 0, color, false, matrices.peek().getModel(), vertexConsumers,
-									false, 0, light);
+									TextRenderer.TextLayerType.NORMAL, 0, light);
 						}
 						vertexConsumers.draw();
 					} else {
@@ -276,7 +277,6 @@ public class SignPostEditScreen extends Screen {
 					Tessellator tessellator = Tessellator.getInstance();
 					BufferBuilder buffer = tessellator.getBufferBuilder();
 					RenderSystem.setShader(GameRenderer::getPositionColorShader);
-					RenderSystem.disableTexture();
 					RenderSystem.enableColorLogicOp();
 					RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
 					buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
@@ -286,7 +286,6 @@ public class SignPostEditScreen extends Screen {
 					buffer.vertex(model, startX, -2.f, 0.f).color(0, 0, 255, 255).next();
 					BufferRenderer.draw(buffer.end());
 					RenderSystem.disableColorLogicOp();
-					RenderSystem.enableTexture();
 				}
 			}
 		}

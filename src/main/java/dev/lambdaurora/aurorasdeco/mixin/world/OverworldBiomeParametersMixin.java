@@ -19,7 +19,8 @@ package dev.lambdaurora.aurorasdeco.mixin.world;
 
 import com.mojang.datafixers.util.Pair;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoBiomes;
-import net.minecraft.util.registry.RegistryKey;
+import dev.lambdaurora.aurorasdeco.world.gen.DynamicWorldGen;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.util.MultiNoiseUtil;
 import net.minecraft.world.biome.source.util.OverworldBiomeParameters;
@@ -41,29 +42,29 @@ public abstract class OverworldBiomeParametersMixin {
 
 	@Shadow
 	@Final
-	private MultiNoiseUtil.ParameterRange COAST_CONTINENTALNESS;
+	private MultiNoiseUtil.ParameterRange coastContinentalness;
 
 	@Shadow
 	@Final
-	private MultiNoiseUtil.ParameterRange FAR_INLAND_CONTINENTALNESS;
+	private MultiNoiseUtil.ParameterRange farInlandContinentalness;
 
 	@Shadow
 	@Final
-	private MultiNoiseUtil.ParameterRange NEAR_INLAND_CONTINENTALNESS;
+	private MultiNoiseUtil.ParameterRange nearInlandContinentalness;
 
 	@Shadow
 	@Final
-	private MultiNoiseUtil.ParameterRange[] EROSIONS;
+	private MultiNoiseUtil.ParameterRange[] erosions;
 
 	@Shadow
 	@Final
-	private MultiNoiseUtil.ParameterRange MID_INLAND_CONTINENTALNESS;
+	private MultiNoiseUtil.ParameterRange midInlandContinentalness;
 
 	@Inject(
 			method = "addPeaksTo",
 			at = @At(
 					value = "INVOKE",
-					target = "Lnet/minecraft/world/biome/source/util/OverworldBiomeParameters;pickRegularBiome(IILnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;)Lnet/minecraft/util/registry/RegistryKey;"
+					target = "Lnet/minecraft/world/biome/source/util/OverworldBiomeParameters;pickRegularBiome(IILnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;)Lnet/minecraft/registry/RegistryKey;"
 			),
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
@@ -71,30 +72,30 @@ public abstract class OverworldBiomeParametersMixin {
 			CallbackInfo ci,
 			int temperatureIndex, MultiNoiseUtil.ParameterRange temperature,
 			int humidityIndex, MultiNoiseUtil.ParameterRange humidity) {
-		if (temperatureIndex == 2 && humidityIndex == 0) {
+		if (DynamicWorldGen.canInjectBiomes() && temperatureIndex == 2 && humidityIndex == 0 && !(weirdness.max() < 0)) {
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
-					MultiNoiseUtil.ParameterRange.combine(this.COAST_CONTINENTALNESS, this.NEAR_INLAND_CONTINENTALNESS),
-					MultiNoiseUtil.ParameterRange.combine(this.EROSIONS[2], this.EROSIONS[3]),
+					MultiNoiseUtil.ParameterRange.combine(this.coastContinentalness, this.nearInlandContinentalness),
+					MultiNoiseUtil.ParameterRange.combine(this.erosions[2], this.erosions[3]),
 					weirdness,
 					0.f,
-					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
+					AurorasDecoBiomes.LAVENDER_PLAINS
 			);
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
-					MultiNoiseUtil.ParameterRange.combine(this.COAST_CONTINENTALNESS, this.FAR_INLAND_CONTINENTALNESS),
-					this.EROSIONS[4],
+					MultiNoiseUtil.ParameterRange.combine(this.coastContinentalness, this.farInlandContinentalness),
+					this.erosions[4],
 					weirdness,
 					0.f,
-					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
+					AurorasDecoBiomes.LAVENDER_PLAINS
 			);
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
-					MultiNoiseUtil.ParameterRange.combine(this.COAST_CONTINENTALNESS, this.FAR_INLAND_CONTINENTALNESS),
-					this.EROSIONS[6],
+					MultiNoiseUtil.ParameterRange.combine(this.coastContinentalness, this.farInlandContinentalness),
+					this.erosions[6],
 					weirdness,
 					0.f,
-					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
+					AurorasDecoBiomes.LAVENDER_PLAINS
 			);
 		}
 	}
@@ -103,7 +104,7 @@ public abstract class OverworldBiomeParametersMixin {
 			method = "addHighBiomesTo",
 			at = @At(
 					value = "INVOKE",
-					target = "Lnet/minecraft/world/biome/source/util/OverworldBiomeParameters;pickRegularBiome(IILnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;)Lnet/minecraft/util/registry/RegistryKey;"
+					target = "Lnet/minecraft/world/biome/source/util/OverworldBiomeParameters;pickRegularBiome(IILnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;)Lnet/minecraft/registry/RegistryKey;"
 			),
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
@@ -111,30 +112,30 @@ public abstract class OverworldBiomeParametersMixin {
 			CallbackInfo ci,
 			int temperatureIndex, MultiNoiseUtil.ParameterRange temperature,
 			int humidityIndex, MultiNoiseUtil.ParameterRange humidity) {
-		if (temperatureIndex == 2 && humidityIndex == 0) {
+		if (DynamicWorldGen.canInjectBiomes() && temperatureIndex == 2 && humidityIndex == 0 && !(weirdness.max() < 0)) {
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
-					this.COAST_CONTINENTALNESS,
-					MultiNoiseUtil.ParameterRange.combine(this.EROSIONS[0], this.EROSIONS[1]),
+					this.coastContinentalness,
+					MultiNoiseUtil.ParameterRange.combine(this.erosions[0], this.erosions[1]),
 					weirdness,
 					0.f,
-					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
+					AurorasDecoBiomes.LAVENDER_PLAINS
 			);
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
-					MultiNoiseUtil.ParameterRange.combine(this.COAST_CONTINENTALNESS, this.NEAR_INLAND_CONTINENTALNESS),
-					MultiNoiseUtil.ParameterRange.combine(this.EROSIONS[2], this.EROSIONS[3]),
+					MultiNoiseUtil.ParameterRange.combine(this.coastContinentalness, this.nearInlandContinentalness),
+					MultiNoiseUtil.ParameterRange.combine(this.erosions[2], this.erosions[3]),
 					weirdness,
 					0.f,
-					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
+					AurorasDecoBiomes.LAVENDER_PLAINS
 			);
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
-					MultiNoiseUtil.ParameterRange.combine(this.COAST_CONTINENTALNESS, this.FAR_INLAND_CONTINENTALNESS),
-					this.EROSIONS[4],
+					MultiNoiseUtil.ParameterRange.combine(this.coastContinentalness, this.farInlandContinentalness),
+					this.erosions[4],
 					weirdness,
 					0.f,
-					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
+					AurorasDecoBiomes.LAVENDER_PLAINS
 			);
 		}
 	}
@@ -143,7 +144,7 @@ public abstract class OverworldBiomeParametersMixin {
 			method = "addMidBiomesTo",
 			at = @At(
 					value = "INVOKE",
-					target = "Lnet/minecraft/world/biome/source/util/OverworldBiomeParameters;pickRegularBiome(IILnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;)Lnet/minecraft/util/registry/RegistryKey;"
+					target = "Lnet/minecraft/world/biome/source/util/OverworldBiomeParameters;pickRegularBiome(IILnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;)Lnet/minecraft/registry/RegistryKey;"
 			),
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
@@ -151,45 +152,34 @@ public abstract class OverworldBiomeParametersMixin {
 			CallbackInfo ci,
 			int temperatureIndex, MultiNoiseUtil.ParameterRange temperature,
 			int humidityIndex, MultiNoiseUtil.ParameterRange humidity) {
-		if (temperatureIndex == 2 && humidityIndex == 0) {
+		if (DynamicWorldGen.canInjectBiomes() && temperatureIndex == 2 && humidityIndex == 0 && !(weirdness.max() < 0)) {
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
-					this.NEAR_INLAND_CONTINENTALNESS, this.EROSIONS[2], weirdness, 0.f,
-					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
+					this.nearInlandContinentalness, this.erosions[2], weirdness, 0.f,
+					AurorasDecoBiomes.LAVENDER_PLAINS
 			);
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
-					MultiNoiseUtil.ParameterRange.combine(this.COAST_CONTINENTALNESS, this.NEAR_INLAND_CONTINENTALNESS),
-					this.EROSIONS[3],
+					MultiNoiseUtil.ParameterRange.combine(this.coastContinentalness, this.nearInlandContinentalness),
+					this.erosions[3],
 					weirdness,
 					0.f,
-					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
+					AurorasDecoBiomes.LAVENDER_PLAINS
 			);
 
-			if (weirdness.max() < 0L) {
-				this.addSurfaceBiomeTo(
-						parameters, temperature, humidity,
-						MultiNoiseUtil.ParameterRange.combine(this.NEAR_INLAND_CONTINENTALNESS, this.FAR_INLAND_CONTINENTALNESS),
-						this.EROSIONS[4],
-						weirdness,
-						0.f,
-						AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
-				);
-			} else {
-				this.addSurfaceBiomeTo(
-						parameters, temperature, humidity,
-						MultiNoiseUtil.ParameterRange.combine(this.COAST_CONTINENTALNESS, this.FAR_INLAND_CONTINENTALNESS),
-						this.EROSIONS[4],
-						weirdness,
-						0.f,
-						AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
-				);
-				this.addSurfaceBiomeTo(
-						parameters, temperature, humidity,
-						this.COAST_CONTINENTALNESS, this.EROSIONS[6], weirdness, 0.f,
-						AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
-				);
-			}
+			this.addSurfaceBiomeTo(
+					parameters, temperature, humidity,
+					MultiNoiseUtil.ParameterRange.combine(this.coastContinentalness, this.farInlandContinentalness),
+					this.erosions[4],
+					weirdness,
+					0.f,
+					AurorasDecoBiomes.LAVENDER_PLAINS
+			);
+			this.addSurfaceBiomeTo(
+					parameters, temperature, humidity,
+					this.coastContinentalness, this.erosions[6], weirdness, 0.f,
+					AurorasDecoBiomes.LAVENDER_PLAINS
+			);
 		}
 	}
 
@@ -197,7 +187,7 @@ public abstract class OverworldBiomeParametersMixin {
 			method = "addLowBiomesTo",
 			at = @At(
 					value = "INVOKE",
-					target = "Lnet/minecraft/world/biome/source/util/OverworldBiomeParameters;pickRegularBiome(IILnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;)Lnet/minecraft/util/registry/RegistryKey;"
+					target = "Lnet/minecraft/world/biome/source/util/OverworldBiomeParameters;pickRegularBiome(IILnet/minecraft/world/biome/source/util/MultiNoiseUtil$ParameterRange;)Lnet/minecraft/registry/RegistryKey;"
 			),
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
@@ -205,30 +195,30 @@ public abstract class OverworldBiomeParametersMixin {
 			CallbackInfo ci,
 			int temperatureIndex, MultiNoiseUtil.ParameterRange temperature,
 			int humidityIndex, MultiNoiseUtil.ParameterRange humidity) {
-		if (temperatureIndex == 2 && humidityIndex == 0) {
+		if (DynamicWorldGen.canInjectBiomes() && temperatureIndex == 2 && humidityIndex == 0 && !(weirdness.max() < 0)) {
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
-					this.NEAR_INLAND_CONTINENTALNESS,
-					MultiNoiseUtil.ParameterRange.combine(this.EROSIONS[2], this.EROSIONS[3]),
+					this.nearInlandContinentalness,
+					MultiNoiseUtil.ParameterRange.combine(this.erosions[2], this.erosions[3]),
 					weirdness,
 					0.f,
-					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
+					AurorasDecoBiomes.LAVENDER_PLAINS
 			);
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
-					MultiNoiseUtil.ParameterRange.combine(this.NEAR_INLAND_CONTINENTALNESS, this.FAR_INLAND_CONTINENTALNESS),
-					this.EROSIONS[4],
+					MultiNoiseUtil.ParameterRange.combine(this.nearInlandContinentalness, this.farInlandContinentalness),
+					this.erosions[4],
 					weirdness,
 					0.f,
-					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
+					AurorasDecoBiomes.LAVENDER_PLAINS
 			);
 			this.addSurfaceBiomeTo(
 					parameters, temperature, humidity,
-					MultiNoiseUtil.ParameterRange.combine(this.MID_INLAND_CONTINENTALNESS, this.FAR_INLAND_CONTINENTALNESS),
-					this.EROSIONS[5],
+					MultiNoiseUtil.ParameterRange.combine(this.midInlandContinentalness, this.farInlandContinentalness),
+					this.erosions[5],
 					weirdness,
 					0.f,
-					AurorasDecoBiomes.LAVENDER_PLAINS.getKey()
+					AurorasDecoBiomes.LAVENDER_PLAINS
 			);
 		}
 	}
