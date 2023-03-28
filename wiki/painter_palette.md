@@ -2,7 +2,7 @@
 
 <!--description:Learn everything about the Painter's Palette!
 A very helpful item when drawing on blackboards.-->
-<!--thumbnail:images/render/item/painter_palette.png-->
+<!--thumbnail:images/render/item/painter_palette.png;A picture of a painter's palette item.-->
 
 Painter's Palette is a tool item designed to be used along with <a href="blackboards.md">blackboards</a>.  
 This item have an inventory capable of holding different blackboard-based <a href="blackboards.md#dyes">dyes</a>, some modifiers, and drawing tools.

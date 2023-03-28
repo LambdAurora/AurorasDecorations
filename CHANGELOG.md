@@ -64,4 +64,8 @@
 - Optimized ModelLoaderMixin ([#46](https://github.com/LambdAurora/AurorasDecorations/pull/46)).
 - Switched to Quilt Point of Interest API for some stuff, reducing code to maintain.
 
+### 1.0.0-beta.13
+
+- Fixed Lavender Plains replacing Flower Forest biomes sometimes.
+
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"

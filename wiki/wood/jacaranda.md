@@ -1,7 +1,7 @@
 # Jacaranda Wood
 
 <!--description:Learn everything about the Jacaranda wood type, a tree part of the Lavender Plains.-->
-<!--thumbnail:images/jacaranda_wood.png-->
+<!--thumbnail:images/jacaranda_wood.png;A picture of the wood set of Jacaranda wood;large-->
 
 Jacaranda wood is a brand-new purple-ish wood type to bring more wood variety and complement the very cute [Lavender Plains](../world_generation/biomes/lavender_plains.md).
 It comes with the all different available variants of wooden blocks, including the new ones this mod brings.

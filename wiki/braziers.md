@@ -1,7 +1,7 @@
 # Braziers
 
 <!--description:Learn everything about braziers, a new decorative light source.-->
-<!--thumbnail:images/render/lit_brazier.png-->
+<!--thumbnail:images/render/lit_brazier.png;A picture of a lit brazier.-->
 
 Braziers are decorative light sources that come in three different types: regular, soul and [copper sulfate](copper_sulfate.md). 
 They can be extinguished with a shovel, and lit up with a flint and steel, like campfires.

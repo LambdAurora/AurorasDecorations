@@ -1,7 +1,7 @@
 # Redstone Lantern
 
 <!--description:Learn everything about the Redstone Lantern, a quite useful lantern for your redstone builds.-->
-<!--thumbnail:images/render/redstone_lantern.png-->
+<!--thumbnail:images/render/redstone_lantern.png;Picture of a Redstone Lantern.-->
 
 Redstone Lantern is a type of lantern which primary color is red, like redstone!  
 They emit some redstone dust particles while placed and lit.

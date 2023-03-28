@@ -1,7 +1,7 @@
 # Wind Chime
 
 <!--description:Learn everything about the Wind Chime, an ambient suspended animated decorative block.-->
-<!--thumbnail:images/render/wind_chime.png-->
+<!--thumbnail:images/render/wind_chime.png;A picture of a wind chime.-->
 
 Wind Chime is an ambient suspended decorative block.  
 They are very animated. For example, when placed outside, they will sway with the wind. 

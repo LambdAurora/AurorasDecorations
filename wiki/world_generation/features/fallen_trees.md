@@ -1,7 +1,7 @@
 # Fallen Trees
 
 <!--description:Fallen trees are a world generation feature introduced in Aurora's Decorations, they come in different variants.-->
-<!--thumbnail:images/worldgen/features/fallen_oak_tree.png-->
+<!--thumbnail:images/worldgen/features/fallen_oak_tree.png;A picture of a fallen oak tree in a forest.;large-->
 
 Fallen Trees are a new world generation feature introduced by this mod.
 They come in different variants similar to different tree types.

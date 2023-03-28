@@ -1,7 +1,7 @@
 # Lavender
 
 <!--description:Learn everything about the lavender, a very cozy flower.-->
-<!--thumbnail:images/assets/item/lavender.png-->
+<!--thumbnail:images/assets/item/lavender.png;A picture of a lavender.-->
 
 [Lavender][lavender_wikipedia] is a common flower in temperate climates,
 it has a nice shade of purple which lead the color to be named the same.

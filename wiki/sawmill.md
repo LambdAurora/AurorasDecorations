@@ -1,7 +1,7 @@
 # Sawmill
 
 <!--description:Learn everything about the Sawmill, a very practical crafting station.-->
-<!--thumbnail:images/render/sawmill.png-->
+<!--thumbnail:images/render/sawmill.png;A picture of a sawmill.-->
 
 The sawmill is a very practical crafting station centered around wood blocks. 
 It works the same as a regular stonecutter, except it uses wood.
