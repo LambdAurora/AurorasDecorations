@@ -18,6 +18,11 @@ await Deno.mkdir("deploy_out");
 
 console.log("Deploying...");
 
+interface EmbedSpec {
+	image: { url: string; alt: string; };
+	style: "normal" | "large";
+}
+
 interface MarkdownPage {
 	path: string;
 	title: string;
@@ -25,7 +30,7 @@ interface MarkdownPage {
 	nav: NavigationData[];
 	main: html.Element;
 	description: string;
-	thumbnail_meta: string;
+	embed_meta: string;
 }
 
 type MarkdownPages = { [x: string]: MarkdownPage };
@@ -82,11 +87,13 @@ async function load_markdown(path: string, assets_to_copy: { [x: string]: string
 	});
 
 	let page_description = "Welcome to the Aurora's Decorations wiki. Aurora's Decorations is a decorations-focused mod.";
-	let page_thumbnail: string;
+	let page_embed: EmbedSpec | null = null;
 
-	function get_thumbnail_meta_tag() {
-		if (page_thumbnail) {
-			return `<meta property="og:image" content="${WEBSITE_PREFIX + page_thumbnail}"/>`;
+	function get_embed_tag() {
+		if (page_embed) {
+			return `<meta property="og:image" content="${WEBSITE_PREFIX + page_embed.image.url}">
+<meta property="og:image:alt" content="${page_embed.image.alt}">
+${page_embed.style === "large" ? "<meta property=\"twitter:card\" content=\"summary_large_image\">" : ""}`;
 		}
 		return "";
 	}
@@ -125,7 +132,19 @@ async function load_markdown(path: string, assets_to_copy: { [x: string]: string
 				page_description = node.content.substring("description:".length);
 				return false;
 			} else if (node.content?.startsWith("thumbnail:")) {
-				page_thumbnail = node.content.substring("thumbnail:".length);
+				const thumbnail_raw = node.content.substring("thumbnail:".length).split(";");
+
+				if (thumbnail_raw.length === 1) {
+					console.error(`Missing alt attribute for thumbnail of page ${path}.`);
+				}
+
+				page_embed = {
+					image: {
+						url: thumbnail_raw[0],
+						alt: thumbnail_raw[1] ?? "Missing alt tag."
+					},
+					style: thumbnail_raw[2] as ("normal" | "large") ?? "normal"
+				};
 				return false;
 			}
 		}
@@ -136,14 +155,16 @@ async function load_markdown(path: string, assets_to_copy: { [x: string]: string
 	fix_links_in_html(main.children, assets_to_copy);
 
 	const raw_title = get_raw_markdown_title(doc);
+	const title = get_markdown_title(raw_title);
+
 	return {
 		path: path.replace(/\.md$/, ".html"),
-		title: get_markdown_title(raw_title),
+		title: title,
 		raw_title: raw_title,
 		nav: build_navigation_data(main),
 		main: main,
 		description: page_description,
-		thumbnail_meta: get_thumbnail_meta_tag()
+		embed_meta: get_embed_tag()
 	};
 }
 
@@ -200,7 +221,8 @@ async function deploy_markdown(markdown_pages: MarkdownPages, page_data: Markdow
 		<meta property="og:site_name" content="Aurora's Decorations">
 		<meta property="og:url" content="${WEBSITE_PREFIX + page_data.path.substring(2)}">
 		<meta property="og:description" content="${page_data.description}">
-		${page_data.thumbnail_meta}
+		<meta property="twitter:creator" content="@LambdAurora">
+		${page_data.embed_meta}
 
 		<link rel="icon" href="${relativize_from_root(page_data.path)}icon.png" />
 

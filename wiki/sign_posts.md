@@ -2,7 +2,7 @@
 
 <!--description:Learn everything about the sign posts.
 Indicate directions in a neat way!-->
-<!--thumbnail:images/sign_post.png-->
+<!--thumbnail:images/sign_post.png;A picture of a sign posts with various signs pointing to different directions.;large-->
 
 Sign Posts are a neat way to indicate directions or paths.
 

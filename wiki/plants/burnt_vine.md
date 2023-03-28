@@ -1,7 +1,7 @@
 # Burnt Vine
 
 <!--description:Learn everything about the burnt vine block, a variant of the vine block.-->
-<!--thumbnail:images/burnt_vine-->
+<!--thumbnail:images/burnt_vine;Picture of burnt vine, similar to vines but they more clearly stop at the bottom.-->
 
 Vines are a really nice decorative organic block, they can make your builds look abandoned,
 or very organic, they give more life to some trees, etc.

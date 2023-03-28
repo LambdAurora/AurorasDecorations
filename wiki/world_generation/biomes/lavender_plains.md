@@ -1,7 +1,7 @@
 # Lavender Plains
 
 <!--description:Learn everything about the lavender plains, a beautiful and very purple biome.-->
-<!--thumbnail:images/biome/lavender_plains.png-->
+<!--thumbnail:images/biome/lavender_plains.png;A picture of a plain filled with lavender flowers and floating petals.;large-->
 
 The Lavender Plains is a biome with an average temperature. 
 It is filled with [lavenders](../../plants/lavender.md) everywhere, and will spawn some oak, fancy oak, and birch trees. 

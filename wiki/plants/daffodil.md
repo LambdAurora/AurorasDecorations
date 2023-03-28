@@ -1,7 +1,7 @@
 # Daffodil
 
 <!--description:Learn everything about the daffodil, a nice yellow flower.-->
-<!--thumbnail:images/assets/item/daffodil.png-->
+<!--thumbnail:images/assets/item/daffodil.png;A picture of a daffodil.-->
 
 Daffodil ([Narcissus pseudonarcissus][daffodil_wikipedia]) is an European flower with pale yellow tepals, with a darker central trumpet.
 Daffodils can be placed with a specific orientation.

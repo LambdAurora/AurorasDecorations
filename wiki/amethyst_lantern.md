@@ -1,7 +1,7 @@
 # Amethyst Lantern
 
 <!--description:Learn everything about the Amethyst Lantern, a very cute and practical lantern.-->
-<!--thumbnail:images/amethyst_lantern.png-->
+<!--thumbnail:images/amethyst_lantern.png;Picture of the Amethyst Lantern placed in various ways.;large-->
 
 The Amethyst Lantern is a type of lantern which primary color is purple, like amethyst! 
 They emit some purple particles while placed.

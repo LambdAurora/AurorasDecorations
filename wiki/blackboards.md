@@ -2,7 +2,7 @@
 
 <!--description:Learn everything about the blackboards!
 Wonderful blocks on which you can draw on.-->
-<!--thumbnail:images/blackboards.png-->
+<!--thumbnail:images/blackboards.png;A picture of blackboards and chalkboards with stuff drawn on it.;large-->
 
 Blackboards are blocks which you can draw on with dyes. 
 They come in three variants: blackboard, chalkboard (green), and glassboard (transparent).
