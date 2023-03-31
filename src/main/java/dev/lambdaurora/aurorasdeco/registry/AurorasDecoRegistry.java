@@ -153,19 +153,19 @@ public final class AurorasDecoRegistry {
 			new QuiltItemSettings().group(ItemGroup.REDSTONE),
 			DerivedBlockItem::pressurePlate
 	);
+	public static final TrapdoorBlock AZALEA_TRAPDOOR = registerWithItem("azalea_trapdoor",
+			new TrapdoorBlock(QuiltBlockSettings.copyOf(Blocks.OAK_TRAPDOOR).mapColor(AZALEA_PLANKS_BLOCK.getDefaultMapColor())),
+			new QuiltItemSettings().group(ItemGroup.REDSTONE),
+			DerivedBlockItem::trapdoor
+	);
 	public static final TerraformSignBlock AZALEA_SIGN_BLOCK = registerBlock("azalea_sign",
 			new TerraformSignBlock(
 					id("entity/sign/azalea"),
 					QuiltBlockSettings.copyOf(AZALEA_PLANKS_BLOCK).strength(1.f).noCollision()
 			)
 	);
-	public static final TrapdoorBlock AZALEA_TRAPDOOR = registerWithItem("azalea_trapdoor",
-			new TrapdoorBlock(QuiltBlockSettings.copyOf(Blocks.OAK_TRAPDOOR).mapColor(AZALEA_PLANKS_BLOCK.getDefaultMapColor())),
-			new QuiltItemSettings().group(ItemGroup.REDSTONE),
-			DerivedBlockItem::trapdoor
-	);
-	public static final Block AZALEA_WALL_SIGN_BLOCK = registerBlock("azalea_wall_sign",
-			new TerraformWallSignBlock(id("entity/sign/azalea"), QuiltBlockSettings.copyOf(AZALEA_SIGN_BLOCK))
+	public static final TerraformWallSignBlock AZALEA_WALL_SIGN_BLOCK = registerBlock("azalea_wall_sign",
+			new TerraformWallSignBlock(id("entity/sign/azalea"), QuiltBlockSettings.copyOf(AZALEA_SIGN_BLOCK).dropsLike(AZALEA_SIGN_BLOCK))
 	);
 
 	public static final Item AZALEA_BOAT_ITEM = TerraformBoatItemHelper.registerBoatItem(
@@ -244,19 +244,21 @@ public final class AurorasDecoRegistry {
 			new QuiltItemSettings().group(ItemGroup.REDSTONE),
 			DerivedBlockItem::pressurePlate
 	);
+	public static final TrapdoorBlock JACARANDA_TRAPDOOR = registerWithItem("jacaranda_trapdoor",
+			new TrapdoorBlock(QuiltBlockSettings.copyOf(Blocks.OAK_TRAPDOOR).mapColor(JACARANDA_PLANKS_BLOCK.getDefaultMapColor())),
+			new QuiltItemSettings().group(ItemGroup.REDSTONE),
+			DerivedBlockItem::trapdoor
+	);
 	public static final TerraformSignBlock JACARANDA_SIGN_BLOCK = registerBlock("jacaranda_sign",
 			new TerraformSignBlock(
 					id("entity/sign/jacaranda"),
 					QuiltBlockSettings.copyOf(JACARANDA_PLANKS_BLOCK).strength(1.f).noCollision()
 			)
 	);
-	public static final TrapdoorBlock JACARANDA_TRAPDOOR = registerWithItem("jacaranda_trapdoor",
-			new TrapdoorBlock(QuiltBlockSettings.copyOf(Blocks.OAK_TRAPDOOR).mapColor(JACARANDA_PLANKS_BLOCK.getDefaultMapColor())),
-			new QuiltItemSettings().group(ItemGroup.REDSTONE),
-			DerivedBlockItem::trapdoor
-	);
 	public static final Block JACARANDA_WALL_SIGN_BLOCK = registerBlock("jacaranda_wall_sign",
-			new TerraformWallSignBlock(id("entity/sign/jacaranda"), QuiltBlockSettings.copyOf(JACARANDA_SIGN_BLOCK))
+			new TerraformWallSignBlock(
+					id("entity/sign/jacaranda"), QuiltBlockSettings.copyOf(JACARANDA_SIGN_BLOCK).dropsLike(JACARANDA_SIGN_BLOCK)
+			)
 	);
 
 	public static final Item JACARANDA_BOAT_ITEM = TerraformBoatItemHelper.registerBoatItem(
