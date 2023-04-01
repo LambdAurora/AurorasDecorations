@@ -23,7 +23,7 @@ public final class Constants {
 	/* VERSIONS */
 
 	public static final String MINECRAFT_VERSION = "1.19.4";
-	public static final int MAPPINGS = 7;
+	public static final int MAPPINGS = 10;
 	public static final String LOADER_VERSION = "0.18.6";
 	public static final String QFAPI_VERSION = "6.0.0-beta.2+0.76.0";
 	public static final String QSL_VERSION = "5.0.0-beta.1";

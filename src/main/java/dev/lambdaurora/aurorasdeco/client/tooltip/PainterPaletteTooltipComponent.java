@@ -127,8 +127,8 @@ public class PainterPaletteTooltipComponent implements TooltipComponent {
 		if (end) this.drawSlotPart(matrices, 18 + 1, 20, 0, 0, 60, 1, 1);
 
 		if (!stack.isEmpty()) {
-			itemRenderer.method_32797(matrices, stack, 2, 2, index);
-			itemRenderer.method_4025(matrices, textRenderer, stack, 2, 2);
+			itemRenderer.renderItemWithOverridesInGui(matrices, stack, 2, 2, index);
+			itemRenderer.renderGuiItemDecorations(matrices, textRenderer, stack, 2, 2);
 			this.drawColorOverlay(matrices, stack);
 		}
 	}

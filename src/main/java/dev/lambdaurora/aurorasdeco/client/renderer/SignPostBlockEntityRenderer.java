@@ -86,7 +86,7 @@ public class SignPostBlockEntityRenderer implements BlockEntityRenderer<SignPost
 			matrices.translate(0, 0, 5 / 16.0);
 
 		matrices.translate(-2 / 16.0, -.5 / 16.0, -2 / 16.0);
-		this.client.getItemRenderer().method_23177(null, new ItemStack(sign.getSign()), ModelTransformationMode.FIXED,
+		this.client.getItemRenderer().renderItem(null, new ItemStack(sign.getSign()), ModelTransformationMode.FIXED,
 				false, matrices, vertexConsumers,
 				entity.getWorld(), light, overlay, 0);
 		matrices.pop();

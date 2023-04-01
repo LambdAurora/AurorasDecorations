@@ -119,7 +119,7 @@ public class SawmillScreen extends HandledScreen<SawmillScreenHandler> {
 			int recipeX = x + offset % 4 * 16;
 			int line = offset / 4;
 			int recipeY = y + line * 18 + 2;
-			this.client.getItemRenderer().renderInGui(matrices, list.get(i).getResult(this.client.world.getRegistryManager()), recipeX, recipeY);
+			this.client.getItemRenderer().renderItemInGui(matrices, list.get(i).getResult(this.client.world.getRegistryManager()), recipeX, recipeY);
 		}
 	}
 
