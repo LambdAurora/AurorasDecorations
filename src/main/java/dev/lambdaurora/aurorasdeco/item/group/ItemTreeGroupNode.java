@@ -18,8 +18,10 @@
 package dev.lambdaurora.aurorasdeco.item.group;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.feature_flags.FeatureFlagBitSet;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -40,6 +42,16 @@ public class ItemTreeGroupNode implements ItemTreeNode {
 		var group = new ItemTreeGroupNode(id);
 		consumer.accept(group);
 		return group;
+	}
+
+	public boolean contains(ItemConvertible item) {
+		return this.nodes.parallelStream().anyMatch(node -> {
+			if (node instanceof ItemTreeItemNode itemNode) {
+				return itemNode.stack().getItem() == item.asItem();
+			} else {
+				return false;
+			}
+		});
 	}
 
 	public void add(ItemStack stack, ItemGroup.Visibility visibility) {
@@ -80,17 +92,45 @@ public class ItemTreeGroupNode implements ItemTreeNode {
 		this.groupNodes.putAll(groupNode.groupNodes);
 	}
 
-	public int addAfter(ItemStack toFind, ItemTreeNode node) {
+	private int addRelative(ItemStack toFind, ItemTreeNode node, int offset) {
 		for (int i = 0; i < this.nodes.size(); i++) {
 			if (this.nodes.get(i) instanceof ItemTreeItemNode item) {
 				if (ItemStack.canCombine(item.stack(), toFind)) {
-					this.nodes.add(i + 1, node);
-					return i + 1;
+					this.nodes.add(i + offset, node);
+					return i + offset;
 				}
 			}
 		}
 
 		return -1;
+	}
+
+	public int addBefore(ItemStack toFind, ItemTreeNode node) {
+		return this.addRelative(toFind, node, 0);
+	}
+
+	public int addBefore(ItemStack toFind, ItemStack toAdd, ItemGroup.Visibility visibility) {
+		return this.addBefore(toFind, new ItemTreeItemNode(toAdd, visibility));
+	}
+
+	public int addBefore(ItemStack toFind, ItemStack toAdd) {
+		return this.addBefore(toFind, toAdd, ItemGroup.Visibility.PARENT_AND_SEARCH_TABS);
+	}
+
+	public void addBefore(ItemStack toFind, ItemStack... toAdd) {
+		int inserted = this.addBefore(toFind, toAdd[0]);
+
+		for (int i = 1; i < toAdd.length; i++) {
+			nodes.add(inserted + i, new ItemTreeItemNode(toAdd[i]));
+		}
+	}
+
+	public void addBefore(ItemConvertible toFind, ItemConvertible... toAdd) {
+		this.addBefore(new ItemStack(toFind), Arrays.stream(toAdd).map(ItemStack::new).toArray(ItemStack[]::new));
+	}
+
+	public int addAfter(ItemStack toFind, ItemTreeNode node) {
+		return this.addRelative(toFind, node, 1);
 	}
 
 	public int addAfter(ItemStack toFind, ItemStack toAdd, ItemGroup.Visibility visibility) {
@@ -203,10 +243,10 @@ public class ItemTreeGroupNode implements ItemTreeNode {
 	}
 
 	@Override
-	public void build(Collection<ItemStack> stacks, ItemGroup.Visibility visibility) {
+	public void build(Collection<ItemStack> stacks, FeatureFlagBitSet enabledFeatures, ItemGroup.Visibility visibility) {
 		if (this.visibility == ItemGroup.Visibility.PARENT_AND_SEARCH_TABS || this.visibility == visibility) {
 			for (var node : this.nodes) {
-				node.build(stacks, visibility);
+				node.build(stacks, enabledFeatures, visibility);
 			}
 		}
 	}

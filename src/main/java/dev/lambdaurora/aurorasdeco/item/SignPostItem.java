@@ -143,12 +143,15 @@ public class SignPostItem extends Item {
 
 	public static void insertIntoSignsNode(ItemTreeGroupNode signs) {
 		var nodes = signs.getNodes();
+		boolean hangingSign = signs.contains(Items.OAK_HANGING_SIGN);
 
 		for (var signPost : SIGN_POSTS) {
 			boolean found = false;
 
 			for (int i = 0; i < nodes.size(); i++) {
-				if (nodes.get(i) instanceof ItemTreeItemNode itemNode && itemNode.stack().getItem() instanceof HangingSignItem) {
+				if (nodes.get(i) instanceof ItemTreeItemNode itemNode && (
+						hangingSign ? (itemNode.stack().getItem() instanceof HangingSignItem)
+								: (itemNode.stack().getItem() instanceof SignItem))) {
 					var id = Registries.ITEM.getId(itemNode.stack().getItem());
 					var woodId = signPost.getWoodType().getId();
 

@@ -17,6 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.item.group;
 
+import net.minecraft.feature_flags.FeatureFlagBitSet;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 
@@ -25,5 +26,5 @@ import java.util.Collection;
 public interface ItemTreeNode {
 	ItemGroup.Visibility getVisibility();
 
-	void build(Collection<ItemStack> stacks, ItemGroup.Visibility visibility);
+	void build(Collection<ItemStack> stacks, FeatureFlagBitSet enabledFeatures, ItemGroup.Visibility visibility);
 }

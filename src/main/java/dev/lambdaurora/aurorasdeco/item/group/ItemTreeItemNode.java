@@ -17,6 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.item.group;
 
+import net.minecraft.feature_flags.FeatureFlagBitSet;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 
@@ -49,9 +50,10 @@ public class ItemTreeItemNode implements ItemTreeNode {
 	}
 
 	@Override
-	public void build(Collection<ItemStack> stacks, ItemGroup.Visibility visibility) {
-		if (this.visibility == ItemGroup.Visibility.PARENT_AND_SEARCH_TABS || this.visibility == visibility) {
-			stacks.add(stack);
+	public void build(Collection<ItemStack> stacks, FeatureFlagBitSet enabledFeatures, ItemGroup.Visibility visibility) {
+		if ((this.visibility == ItemGroup.Visibility.PARENT_AND_SEARCH_TABS || this.visibility == visibility)
+				&& this.stack.getItem().enabledIn(enabledFeatures)) {
+			stacks.add(this.stack);
 		}
 	}
 }

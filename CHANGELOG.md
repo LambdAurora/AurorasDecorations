@@ -66,6 +66,9 @@
 
 ### 1.0.0-beta.13
 
+- \[1.20] Added custom models for the bamboo pile.
+- \[1.19.4] Reorganized creative tab injection of Aurora's Decorations items to match the new tabs.
 - Fixed Lavender Plains replacing Flower Forest biomes sometimes.
+- Improved Painter's Palette texture.
 
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"

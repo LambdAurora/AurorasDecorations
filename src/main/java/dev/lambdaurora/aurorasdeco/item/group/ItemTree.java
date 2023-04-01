@@ -109,12 +109,15 @@ public class ItemTree extends ItemTreeGroupNode {
 
 			entries.getDisplayStacks().clear();
 			entries.getSearchTabStacks().clear();
-			tree.build(entries.getDisplayStacks(), ItemGroup.Visibility.PARENT_TAB_ONLY);
-			tree.build(entries.getSearchTabStacks(), ItemGroup.Visibility.SEARCH_TAB_ONLY);
+			tree.build(entries.getDisplayStacks(), entries.getEnabledFeatures(), ItemGroup.Visibility.PARENT_TAB_ONLY);
+			tree.build(entries.getSearchTabStacks(), entries.getEnabledFeatures(), ItemGroup.Visibility.SEARCH_TAB_ONLY);
 		};
 	}
 
 	private static void modifyBuildingBlocks(ItemTree tree) {
+		var mangrove = tree.collectItemsAsGroup(new Identifier("minecraft", "mangrove"),
+				Items.MANGROVE_LOG, Items.MANGROVE_BUTTON
+		);
 		var cherry = tree.collectItemsAsGroup(new Identifier("minecraft", "cherry"),
 				Items.CHERRY_LOG, Items.CHERRY_BUTTON
 		);
@@ -135,7 +138,7 @@ public class ItemTree extends ItemTreeGroupNode {
 		azaleaGroup.add(AZALEA_TRAPDOOR);
 		azaleaGroup.add(AZALEA_PRESSURE_PLATE_BLOCK);
 		azaleaGroup.add(AZALEA_BUTTON_BLOCK);
-		tree.addAfter(cherry, azaleaGroup);
+		tree.addAfter(cherry != null ? cherry : mangrove, azaleaGroup);
 
 		var jacarandaGroup = new ItemTreeGroupNode(AurorasDeco.id("jacaranda"));
 		jacarandaGroup.add(JACARANDA_LOG_BLOCK);
@@ -175,7 +178,7 @@ public class ItemTree extends ItemTreeGroupNode {
 				Items.OAK_LOG, Items.WARPED_STEM
 		);
 
-		logs.addAfter(Items.CHERRY_LOG, AZALEA_LOG_BLOCK, FLOWERING_AZALEA_LOG_BLOCK, JACARANDA_LOG_BLOCK);
+		logs.addBefore(Items.MUSHROOM_STEM, AZALEA_LOG_BLOCK, FLOWERING_AZALEA_LOG_BLOCK, JACARANDA_LOG_BLOCK);
 
 		var leaves = tree.collectItemsAsGroup(new Identifier("minecraft", "leaves"),
 				Items.OAK_LEAVES, Items.FLOWERING_AZALEA_LEAVES
@@ -238,9 +241,9 @@ public class ItemTree extends ItemTreeGroupNode {
 		tree.addAfter(itemFrames, BLACKBOARDS);
 
 		var signs = tree.collectItemsAsGroup(new Identifier("minecraft", "sign"),
-				Items.OAK_SIGN, Items.WARPED_HANGING_SIGN
+				stack -> stack.getItem() instanceof SignItem || stack.getItem() instanceof HangingSignItem
 		);
-		signs.addAfter(Items.CHERRY_HANGING_SIGN,
+		signs.addBefore(Items.CRIMSON_SIGN,
 				AZALEA_SIGNS.signItem(), AZALEA_SIGNS.hangingSignItem(),
 				JACARANDA_SIGNS.signItem(), JACARANDA_SIGNS.hangingSignItem()
 		);
@@ -265,16 +268,24 @@ public class ItemTree extends ItemTreeGroupNode {
 	}
 
 	private static void modifyToolsAndUtilities(ItemTree tree) {
-		tree.addAfter(Items.BRUSH, PAINTER_PALETTE_ITEM);
+		var boats = tree.collectItemsAsGroup(new Identifier("minecraft", "boat"),
+				stack -> stack.getItem() instanceof BoatItem
+		);
+
+		tree.addAfter(tree.contains(Items.BRUSH) ? Items.BRUSH : Items.SHEARS, PAINTER_PALETTE_ITEM);
 		tree.addAfter(Items.TNT_MINECART, SEAT_RESTS);
 
-		var boats = tree.collectItemsAsGroup(new Identifier("minecraft", "boat"),
-				Items.OAK_BOAT, Items.BAMBOO_CHEST_RAFT
-		);
-		boats.addAfter(Items.CHERRY_CHEST_BOAT,
-				AZALEA_BOAT_ITEM, AZALEA_CHEST_BOAT_ITEM,
-				JACARANDA_BOAT_ITEM, JACARANDA_CHEST_BOAT_ITEM
-		);
+		if (boats.contains(Items.CHERRY_CHEST_BOAT)) {
+			boats.addAfter(Items.CHERRY_CHEST_BOAT,
+					AZALEA_BOAT_ITEM, AZALEA_CHEST_BOAT_ITEM,
+					JACARANDA_BOAT_ITEM, JACARANDA_CHEST_BOAT_ITEM
+			);
+		} else {
+			boats.add(AZALEA_BOAT_ITEM);
+			boats.add(AZALEA_CHEST_BOAT_ITEM);
+			boats.add(JACARANDA_BOAT_ITEM);
+			boats.add(JACARANDA_CHEST_BOAT_ITEM);
+		}
 	}
 
 	private static void insertBedStuff(ItemTree tree) {
