@@ -17,20 +17,20 @@
 
 package dev.lambdaurora.aurorasdeco.util;
 
-import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.item.DerivedBlockItem;
+import dev.lambdaurora.aurorasdeco.item.group.ItemTreeGroupNode;
 import net.minecraft.block.*;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
 import static dev.lambdaurora.aurorasdeco.AurorasDeco.id;
 
 /**
- * An utility to make derivations of other blocks.
+ * A utility to make derivations of other blocks.
  *
  * @author LambdAurora
  * @version 1.0.0
@@ -40,22 +40,35 @@ public class Derivator {
 	private final BlockState base;
 	private final String normalBaseName;
 	private final String singularBaseName;
+	private final ItemTreeGroupNode groupNode;
 
-	public Derivator(BlockState base) {
+	public Derivator(BlockState base, @Nullable Derivator parent) {
 		this.base = base;
 		this.normalBaseName = Registries.BLOCK.getId(base.getBlock()).getPath();
 		this.singularBaseName = this.normalBaseName.endsWith("bricks")
 				? this.normalBaseName.substring(0, this.normalBaseName.length() - 1)
 				: this.normalBaseName;
+		this.groupNode = new ItemTreeGroupNode(id(normalBaseName));
+		this.groupNode.add(base.getBlock());
+
+		if (parent != null) {
+			parent.groupNode.add(this.groupNode);
+		}
+	}
+
+	public Derivator(BlockState base) {
+		this(base, null);
+	}
+
+	public ItemTreeGroupNode getGroupNode() {
+		return this.groupNode;
 	}
 
 	public Block mossy() {
 		var derivative = new Derivative("mossy", true);
-		var item = base.getBlock().asItem();
 		return registerWithItem(this.normalBaseName, derivative,
 				new Block(QuiltBlockSettings.copyOf(this.base.getBlock())),
-				this.derivativeSearcher(new Derivative(this.normalBaseName, false)).build(),
-				new QuiltItemSettings());
+				new QuiltItemSettings(), null);
 	}
 
 	public Block cracked() {
@@ -63,8 +76,7 @@ public class Derivator {
 		var item = base.getBlock().asItem();
 		return registerWithItem(this.normalBaseName, derivative,
 				new Block(QuiltBlockSettings.copyOf(this.base.getBlock())),
-				this.derivativeSearcher(new Derivative(this.normalBaseName, false)).build(),
-				new QuiltItemSettings());
+				new QuiltItemSettings(), this.groupNode);
 	}
 
 	public Block chiseled() {
@@ -72,53 +84,29 @@ public class Derivator {
 		var item = base.getBlock().asItem();
 		return registerWithItem(this.normalBaseName, derivative,
 				new Block(QuiltBlockSettings.copyOf(this.base.getBlock())),
-				this.derivativeSearcher(new Derivative(this.normalBaseName, false)).build(),
-				new QuiltItemSettings());
+				new QuiltItemSettings(), this.groupNode);
 	}
 
 	public WallBlock wall() {
 		var derivative = new Derivative("wall", false);
 		var name = derivative.apply(this.singularBaseName);
 		var block = register(name, new WallBlock(QuiltBlockSettings.copyOf(this.base.getBlock())));
-		register(name, new DerivedBlockItem(block, KindSearcher.WALL_SEARCHER, KindSearcher::findLastOfGroup,
-				new QuiltItemSettings()));
+		this.groupNode.add(register(name, new BlockItem(block, new QuiltItemSettings())));
 		return block;
 	}
 
 	public SlabBlock slab() {
 		var derivative = new Derivative("slab", false);
-		var item = base.getBlock().asItem();
 		return registerWithItem(this.singularBaseName, derivative,
 				new SlabBlock(QuiltBlockSettings.copyOf(this.base.getBlock())),
-				derivativeSearcher(derivative).build(),
-				new QuiltItemSettings());
-	}
-
-	public SlabBlock slab(Item after) {
-		var derivative = new Derivative("slab", false);
-		var item = base.getBlock().asItem();
-		return registerWithItem(this.singularBaseName, derivative,
-				new SlabBlock(QuiltBlockSettings.copyOf(this.base.getBlock())),
-				closeDerivativeSearcher(derivative).afterMapped(after, ItemStack::getItem).build(),
-				new QuiltItemSettings());
+				new QuiltItemSettings(), this.groupNode);
 	}
 
 	public StairsBlock stairs() {
 		var derivative = new Derivative("stairs", false);
-		var item = base.getBlock().asItem();
 		return registerWithItem(this.singularBaseName, derivative, new StairsBlock(this.base,
 						QuiltBlockSettings.copyOf(this.base.getBlock())),
-				derivativeSearcher(derivative).build(),
-				new QuiltItemSettings());
-	}
-
-	public StairsBlock stairs(Item after) {
-		var derivative = new Derivative("stairs", false);
-		var item = base.getBlock().asItem();
-		return registerWithItem(this.singularBaseName, derivative, new StairsBlock(this.base,
-						QuiltBlockSettings.copyOf(this.base.getBlock())),
-				closeDerivativeSearcher(derivative).afterMapped(after, ItemStack::getItem).build(),
-				new QuiltItemSettings());
+				new QuiltItemSettings(), this.groupNode);
 	}
 
 	private static <T extends Block> T register(String name, T block) {
@@ -129,24 +117,12 @@ public class Derivator {
 		return Registry.register(Registries.ITEM, id(name), item);
 	}
 
-	private KindSearcher.Builder<ItemStack, KindSearcher.StackEntry> derivativeSearcher(Derivative derivative) {
-		return KindSearcher.itemIdentifierSearcher(entry ->
-				(entry.id().getNamespace().equals("minecraft") || entry.id().getNamespace().equals(AurorasDeco.NAMESPACE))
-						&& derivative.matches(entry.id().getPath()));
-	}
-
-	private static KindSearcher.Builder<ItemStack, KindSearcher.StackEntry> closeDerivativeSearcher(Derivative derivative) {
-		return KindSearcher.itemIdentifierSearcher(entry ->
-				(entry.id().getNamespace().equals("minecraft") || entry.id().getNamespace().equals(AurorasDeco.NAMESPACE))
-						&& derivative.matches(entry.id().getPath()) && entry.stack().getItem() instanceof DerivedBlockItem);
-	}
-
 	private static <T extends Block> T registerWithItem(String base, Derivative derivative, T block,
-			KindSearcher<ItemStack, KindSearcher.StackEntry> searcher,
-			Item.Settings settings) {
+			Item.Settings settings, @Nullable ItemTreeGroupNode groupNode) {
 		var name = derivative.apply(base);
 		register(name, block);
-		register(name, new DerivedBlockItem(block, searcher, settings));
+		var item = register(name, new BlockItem(block, settings));
+		if (groupNode != null) groupNode.add(item);
 		return block;
 	}
 

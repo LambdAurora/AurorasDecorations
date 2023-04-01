@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "hanging_sign",
+  "pattern": [
+    "A A",
+    "BBB",
+    "BBB"
+  ],
+  "key": {
+    "B": {
+      "item": "aurorasdeco:stripped_jacaranda_log"
+    },
+    "A": {
+      "item": "minecraft:chain"
+    }
+  },
+  "result": {
+    "item": "aurorasdeco:jacaranda_hanging_sign",
+    "count": 6
+  },
+  "show_notification": true
+}

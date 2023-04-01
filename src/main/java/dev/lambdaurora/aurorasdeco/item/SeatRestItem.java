@@ -18,11 +18,7 @@
 package dev.lambdaurora.aurorasdeco.item;
 
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
-import dev.lambdaurora.aurorasdeco.util.KindSearcher;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.collection.DefaultedList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +32,6 @@ import java.util.stream.Stream;
  * @since 1.0.0
  */
 public class SeatRestItem extends Item {
-	private static final KindSearcher<ItemStack, Item> SEAT_REST_KIND_SEARCHER
-			= KindSearcher.assignableSearcher(SeatRestItem.class, ItemStack::getItem).build();
 	private static final List<SeatRestItem> SEAT_RESTS = new ArrayList<>();
 
 	private final WoodType woodType;

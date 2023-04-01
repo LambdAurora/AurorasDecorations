@@ -23,10 +23,9 @@ import dev.lambdaurora.aurorasdeco.block.plant.DaffodilBlock;
 import dev.lambdaurora.aurorasdeco.block.plant.DuckweedBlock;
 import dev.lambdaurora.aurorasdeco.block.plant.LavenderBlock;
 import dev.lambdaurora.aurorasdeco.block.sapling.JacarandaSaplingGenerator;
-import dev.lambdaurora.aurorasdeco.item.DerivedBlockItem;
 import dev.lambdaurora.aurorasdeco.item.DuckweedItem;
-import dev.lambdaurora.aurorasdeco.util.Registrar;
 import net.minecraft.block.*;
+import net.minecraft.item.BlockItem;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
@@ -54,11 +53,11 @@ public final class AurorasDecoPlants {
 	/* Plants */
 
 	public static final Registrar.BlockEntry<DaffodilBlock> DAFFODIL = Registrar.register("daffodil", new DaffodilBlock())
-			.withItem(new QuiltItemSettings(), DerivedBlockItem::flower)
+			.withItem(new QuiltItemSettings(), BlockItem::new)
 			.finish();
 
 	public static final Registrar.BlockEntry<LavenderBlock> LAVENDER = Registrar.register("lavender", new LavenderBlock())
-			.withItem(new QuiltItemSettings(), DerivedBlockItem::flower)
+			.withItem(new QuiltItemSettings(), BlockItem::new)
 			.finish();
 
 	public static final Registrar.BlockEntry<DuckweedBlock> DUCKWEED = Registrar.register("duckweed", new DuckweedBlock())
@@ -81,8 +80,7 @@ public final class AurorasDecoPlants {
 
 	public static final SaplingBlock JACARANDA_SAPLING = registerWithItem("jacaranda_sapling",
 			new SaplingBlock(new JacarandaSaplingGenerator(), QuiltBlockSettings.copyOf(Blocks.OAK_SAPLING)),
-			new QuiltItemSettings(),
-			DerivedBlockItem::sapling
+			new QuiltItemSettings()
 	);
 
 	public static final FlowerPotBlock POTTED_JACARANDA_SAPLING = registerBlock("potted/jacaranda_sapling",
@@ -92,16 +90,13 @@ public final class AurorasDecoPlants {
 
 	public static final LeavesBlock JACARANDA_LEAVES = registerWithItem("jacaranda_leaves",
 			new LeavesBlock(QuiltBlockSettings.copyOf(Blocks.BIRCH_LEAVES)),
-			new QuiltItemSettings(),
-			DerivedBlockItem::leaves);
+			new QuiltItemSettings());
 	public static final LeavesBlock BUDDING_JACARANDA_LEAVES = registerWithItem("budding_jacaranda_leaves",
 			new LeavesBlock(QuiltBlockSettings.copyOf(Blocks.FLOWERING_AZALEA_LEAVES)),
-			new QuiltItemSettings(),
-			DerivedBlockItem::leaves);
+			new QuiltItemSettings());
 	public static final LeavesBlock FLOWERING_JACARANDA_LEAVES = registerWithItem("flowering_jacaranda_leaves",
 			new LeavesBlock(QuiltBlockSettings.copyOf(BUDDING_JACARANDA_LEAVES)),
-			new QuiltItemSettings(),
-			DerivedBlockItem::leaves);
+			new QuiltItemSettings());
 
 	static {
 		FLOWER_FOREST_PLANTS = List.of(DAFFODIL.getDefaultState(), LAVENDER.getDefaultState());

@@ -10,6 +10,7 @@
   "block.aurorasdeco.azalea_door": "Azalea Door",
   "block.aurorasdeco.azalea_fence": "Azalea Fence",
   "block.aurorasdeco.azalea_fence_gate": "Azalea Fence Gate",
+  "block.aurorasdeco.azalea_hanging_sign": "Azalea Hanging Sign",
   "block.aurorasdeco.azalea_log": "Azalea Log",
   "block.aurorasdeco.azalea_planks": "Azalea Planks",
   "block.aurorasdeco.azalea_pressure_plate": "Azalea Pressure Plate",
@@ -29,6 +30,7 @@
   "block.aurorasdeco.jacaranda_door": "Jacaranda Door",
   "block.aurorasdeco.jacaranda_fence": "Jacaranda Fence",
   "block.aurorasdeco.jacaranda_fence_gate": "Jacaranda Fence Gate",
+  "block.aurorasdeco.jacaranda_hanging_sign": "Jacaranda Hanging Sign",
   "block.aurorasdeco.jacaranda_leaves": "Jacaranda Leaves",
   "block.aurorasdeco.budding_jacaranda_leaves": "Budding Jacaranda Leaves",
   "block.aurorasdeco.flowering_jacaranda_leaves": "Flowering Jacaranda Leaves",
@@ -141,6 +143,7 @@
   "block.aurorasdeco.small_log_pile": "Small %s Log Pile",
   "block.aurorasdeco.small_stem_pile": "Small %s Stem Pile",
   "block.aurorasdeco.small_log_pile.oak": "Small Log Pile",
+  "block.aurorasdeco.small_log_pile.bamboo": "Small Bamboo Pile",
 
   "block.aurorasdeco.soul_brazier": "Soul Brazier",
 
@@ -173,6 +176,9 @@
   "item.aurorasdeco.sign_post": "%s Sign Post",
 
   "lore.aurorasdeco.not_sleepy.place": "This place doesn't make me sleepy anymore...",
+
+  "resourcepack.aurorasdeco.azalea_tree.name": "Azalea Tree",
+  "resourcepack.aurorasdeco.swamp_tweaks.name": "Swamp Tweaks",
 
   "stat.aurorasdeco.interact_with_sawmill": "Interactions with Sawmill",
 
@@ -219,13 +225,14 @@
   "aurorasdeco.wood_type.acacia": "Acacia",
   "aurorasdeco.wood_type.dark_oak": "Dark Oak",
   "aurorasdeco.wood_type.mangrove": "Mangrove",
+  "aurorasdeco.wood_type.cherry": "Cherry",
   "aurorasdeco.wood_type.azalea": "Azalea",
   "aurorasdeco.wood_type.flowering_azalea": "Flowering Azalea",
+  "aurorasdeco.wood_type.jacaranda": "Jacaranda",
+  "aurorasdeco.wood_type.bamboo": "Bamboo",
   "aurorasdeco.wood_type.mushroom": "Mushroom",
   "aurorasdeco.wood_type.crimson": "Crimson",
   "aurorasdeco.wood_type.warped": "Warped",
-  "aurorasdeco.wood_type.bamboo": "Bamboo",
-  "aurorasdeco.wood_type.jacaranda": "Jacaranda",
   "aurorasdeco.wood_type.redwood": "Redwood",
   "aurorasdeco.wood_type.blockus.charred": "Charred",
   "aurorasdeco.wood_type.blockus.legacy": "Legacy",

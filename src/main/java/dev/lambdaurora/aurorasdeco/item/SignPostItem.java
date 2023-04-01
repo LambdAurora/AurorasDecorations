@@ -20,18 +20,19 @@ package dev.lambdaurora.aurorasdeco.item;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.SignPostBlock;
 import dev.lambdaurora.aurorasdeco.block.entity.SignPostBlockEntity;
+import dev.lambdaurora.aurorasdeco.item.group.ItemTreeGroupNode;
+import dev.lambdaurora.aurorasdeco.item.group.ItemTreeItemNode;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
-import dev.lambdaurora.aurorasdeco.util.KindSearcher;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.item.*;
+import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
@@ -44,15 +45,12 @@ import static dev.lambdaurora.aurorasdeco.AurorasDeco.id;
  * Represents a sign post item.
  *
  * @author LambdAurora
- * @version 1.0.0-beta.11
+ * @version 1.0.0-beta.13
  * @since 1.0.0-beta.1
  */
 public class SignPostItem extends Item {
 	public static final Identifier SIGN_POST_MODEL = AurorasDeco.id("block/template/sign_post");
 	public static final Identifier ABSOLUTE_OAK_SIGN_POST_TEXTURE = id("textures/block/sign_post/oak.png");
-
-	private static final KindSearcher<ItemStack, Item> SIGN_POST_KIND_SEARCHER
-			= KindSearcher.assignableSearcher(SignPostItem.class, ItemStack::getItem).build();
 	private static final List<SignPostItem> SIGN_POSTS = new ArrayList<>();
 
 	private final WoodType woodType;
@@ -85,13 +83,6 @@ public class SignPostItem extends Item {
 	public WoodType getWoodType() {
 		return this.woodType;
 	}
-
-	/*@Override
-	public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
-		if (this.isInGroup(group) || group == ItemGroup.SEARCH) {
-			stacks.add(SIGN_POST_KIND_SEARCHER.findLastOfGroup(stacks), new ItemStack(this));
-		}
-	}*/
 
 	@Override
 	public ActionResult useOnBlock(ItemUsageContext context) {
@@ -148,5 +139,30 @@ public class SignPostItem extends Item {
 			}
 		}
 		return super.useOnBlock(context);
+	}
+
+	public static void insertIntoSignsNode(ItemTreeGroupNode signs) {
+		var nodes = signs.getNodes();
+
+		for (var signPost : SIGN_POSTS) {
+			boolean found = false;
+
+			for (int i = 0; i < nodes.size(); i++) {
+				if (nodes.get(i) instanceof ItemTreeItemNode itemNode && itemNode.stack().getItem() instanceof HangingSignItem) {
+					var id = Registries.ITEM.getId(itemNode.stack().getItem());
+					var woodId = signPost.getWoodType().getId();
+
+					if (woodId.getNamespace().equals(id.getNamespace()) && id.getPath().startsWith(woodId.getPath())) {
+						signs.add(i + 1, new ItemStack(signPost));
+						found = true;
+						break;
+					}
+				}
+			}
+
+			if (!found) {
+				signs.add(signPost);
+			}
+		}
 	}
 }

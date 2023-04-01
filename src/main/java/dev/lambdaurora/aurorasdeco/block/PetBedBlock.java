@@ -18,21 +18,33 @@
 package dev.lambdaurora.aurorasdeco.block;
 
 import com.google.common.collect.ImmutableMap;
+import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import dev.lambdaurora.aurorasdeco.item.group.ItemTreeGroupNode;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
+import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -50,6 +62,7 @@ public class PetBedBlock extends Block {
 
 	private static final Map<Direction, VoxelShape> COLLISION_SHAPES;
 	private static final Map<Direction, VoxelShape> OUTLINE_SHAPES;
+	public static final ItemTreeGroupNode PET_BEDS_ITEM_GROUP_NODE = new ItemTreeGroupNode(AurorasDeco.id("pet_bed"));
 
 	public PetBedBlock(Settings settings) {
 		super(settings);
@@ -95,6 +108,21 @@ public class PetBedBlock extends Block {
 	@Override
 	public BlockState mirror(BlockState state, BlockMirror mirror) {
 		return state.rotate(mirror.getRotation(state.get(FACING)));
+	}
+
+	public static void register() {
+		for (var dye : AuroraUtil.DYE_COLORS) {
+			registerPetBed(dye);
+		}
+	}
+
+	private static void registerPetBed(DyeColor color) {
+		var block = Registry.register(Registries.BLOCK,
+				AurorasDeco.id("pet_bed/" + color.getName()),
+				new PetBedBlock(QuiltBlockSettings.of(Material.WOOL)
+						.mapColor(color).sounds(BlockSoundGroup.WOOD).strength(.2f)));
+		var item = AurorasDecoRegistry.registerItem("pet_bed/" + color.getName(), new BlockItem(block, new QuiltItemSettings()));
+		PET_BEDS_ITEM_GROUP_NODE.add(item);
 	}
 
 	static {

@@ -1,0 +1,88 @@
+{
+	"credit": "Made by LambdAurora",
+	"parent": "aurorasdeco:block/template/small_log_pile",
+	"textures": {
+		"log": "minecraft:block/bamboo_block",
+		"log_top": "minecraft:block/bamboo_block_top"
+	},
+	"elements": [
+		{
+			"name": "east_log",
+			"from": [ 11, 0, 0 ],
+			"to": [ 15, 4, 16 ],
+			"faces": {
+				"north": {"uv": [ 0,  0, 4,  4 ], "texture": "#log_top"},
+				"east":  {"uv": [ 4, 16, 0,  0 ], "rotation": 270, "texture": "#log"},
+				"south": {"uv": [ 0,  0, 4,  4 ], "texture": "#log_top"},
+				"west":  {"uv": [ 0,  0, 4, 16 ], "rotation": 270, "texture": "#log"},
+				"up":    {"uv": [ 0,  0, 4, 16 ], "texture": "#log"},
+				"down":  {"uv": [ 4, 16, 0,  0 ], "texture": "#log", "cullface": "down"}
+			}
+		},
+		{
+			"name": "middle_down_log",
+			"from": [ 6, 0, 0 ],
+			"to": [ 10, 4, 16 ],
+			"faces": {
+				"north": {"uv": [ 0,  0, 4,  4 ], "texture": "#log_top"},
+				"east":  {"uv": [ 8, 16, 4,  0 ], "rotation": 270, "texture": "#log"},
+				"south": {"uv": [ 0,  0, 4,  4 ], "texture": "#log_top"},
+				"west":  {"uv": [ 4,  0, 8, 16 ], "rotation": 270, "texture": "#log"},
+				"up":    {"uv": [ 4,  0, 8, 16 ], "texture": "#log"},
+				"down":  {"uv": [ 8, 16, 4,  0 ], "texture": "#log", "cullface": "down"}
+			}
+		},
+		{
+			"name": "west_log",
+			"from": [ 1, 0, 0 ],
+			"to": [ 5, 4, 16 ],
+			"faces": {
+				"north": {"uv": [  0,  0,  4,  4 ], "texture": "#log_top"},
+				"east":  {"uv": [ 12, 16,  8,  0 ], "rotation": 270, "texture": "#log"},
+				"south": {"uv": [  0,  0,  4,  4 ], "texture": "#log_top"},
+				"west":  {"uv": [  8,  0, 12, 16 ], "rotation": 270, "texture": "#log"},
+				"up":    {"uv": [  8,  0, 12, 16 ], "texture": "#log"},
+				"down":  {"uv": [ 12, 16,  8,  0 ], "texture": "#log", "cullface": "down"}
+			}
+		},
+		{
+			"name": "north_log",
+			"from": [ 0, 3, 1 ],
+			"to": [ 16, 7, 5 ],
+			"faces": {
+				"north": {"uv": [ 8, 16, 4,  0 ], "rotation": 270, "texture": "#log"},
+				"east":  {"uv": [ 0,  0, 4,  4 ], "texture": "#log_top"},
+				"south": {"uv": [ 4,  0, 8, 16 ], "rotation": 270, "texture": "#log"},
+				"west":  {"uv": [ 0,  0, 4,  4 ], "texture": "#log_top"},
+				"up":    {"uv": [ 4,  0, 8, 16 ], "rotation": 270, "texture": "#log"},
+				"down":  {"uv": [ 4,  0, 8, 16 ], "rotation": 270, "texture": "#log"}
+			}
+		},
+		{
+			"name": "middle_top_log",
+			"from": [ 0, 3, 6 ],
+			"to": [ 16, 7, 10 ],
+			"faces": {
+				"north": {"uv": [ 12, 16,  8,  0 ], "rotation": 270, "texture": "#log"},
+				"east":  {"uv": [  0,  0,  4,  4 ], "texture": "#log_top"},
+				"south": {"uv": [  8,  0, 12, 16 ], "rotation": 270, "texture": "#log"},
+				"west":  {"uv": [  0,  0,  4,  4 ], "texture": "#log_top"},
+				"up":    {"uv": [  8,  0, 12, 16 ], "rotation": 270, "texture": "#log"},
+				"down":  {"uv": [  8,  0, 12, 16 ], "rotation": 270, "texture": "#log"}
+			}
+		},
+		{
+			"name": "south_log",
+			"from": [ 0, 3, 11 ],
+			"to": [ 16, 7, 15 ],
+			"faces": {
+				"north": {"uv": [ 12, 16, 16,  0 ], "rotation": 270, "texture": "#log"},
+				"east":  {"uv": [  0,  0,  4,  4 ], "texture": "#log_top"},
+				"south": {"uv": [ 16,  0, 12, 16 ], "rotation": 270, "texture": "#log"},
+				"west":  {"uv": [  0,  0,  4,  4 ], "texture": "#log_top"},
+				"up":    {"uv": [ 16,  0, 12, 16 ], "rotation": 270, "texture": "#log"},
+				"down":  {"uv": [ 16,  0, 12, 16 ], "rotation": 270, "texture": "#log"}
+			}
+		}
+	]
+}

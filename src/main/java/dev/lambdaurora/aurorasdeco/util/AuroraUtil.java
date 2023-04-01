@@ -27,19 +27,44 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public final class AuroraUtil {
 	public static final List<Direction> DIRECTIONS = List.of(Direction.values());
 	public static final List<Direction> HORIZONTAL_DIRECTIONS = DIRECTIONS.stream().filter(d -> d.getAxis().isHorizontal()).toList();
+	public static final Set<DyeColor> DYE_COLORS = Collections.unmodifiableSet(buildDyeColors());
+
+	private static Set<DyeColor> buildDyeColors() {
+		var set = new LinkedHashSet<>(
+				List.of(
+						DyeColor.WHITE,
+						DyeColor.LIGHT_GRAY,
+						DyeColor.GRAY,
+						DyeColor.BLACK,
+						DyeColor.BROWN,
+						DyeColor.RED,
+						DyeColor.ORANGE,
+						DyeColor.YELLOW,
+						DyeColor.LIME,
+						DyeColor.GREEN,
+						DyeColor.CYAN,
+						DyeColor.LIGHT_BLUE,
+						DyeColor.BLUE,
+						DyeColor.PURPLE,
+						DyeColor.MAGENTA,
+						DyeColor.PINK
+				)
+		);
+		set.addAll(List.of(DyeColor.values()));
+		return set;
+	}
 
 	private AuroraUtil() {
 		throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");

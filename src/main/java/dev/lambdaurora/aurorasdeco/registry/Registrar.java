@@ -15,10 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.util;
+package dev.lambdaurora.aurorasdeco.registry;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.registry.WoodType;
+import dev.lambdaurora.aurorasdeco.item.group.ItemTreeGroupNode;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
@@ -29,6 +29,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
@@ -123,6 +124,13 @@ public final class Registrar {
 
 		public BlockRegistrationCompleter<T> withItem(Item.Settings settings, BiFunction<T, Item.Settings, BlockItem> factory) {
 			this.item = Registrar.register(this.id, factory.apply(this.registeredObject, settings)).finish();
+			return this;
+		}
+
+		public BlockRegistrationCompleter<T> addToGroup(ItemTreeGroupNode node) {
+			Objects.requireNonNull(this.item, "Cannot add null item to an ItemTreeGroupNode.");
+
+			node.add(this.item);
 			return this;
 		}
 

@@ -10,6 +10,7 @@
   "block.aurorasdeco.azalea_door": "Porte en azalée",
   "block.aurorasdeco.azalea_fence": "Barrière en azalée",
   "block.aurorasdeco.azalea_fence_gate": "Portillon en azalée",
+  "block.aurorasdeco.azalea_hanging_sign": "Pancarte suspendue en azalée",
   "block.aurorasdeco.azalea_log": "Bûche d'azalée",
   "block.aurorasdeco.azalea_planks": "Planches d'azalée",
   "block.aurorasdeco.azalea_pressure_plate": "Plaque de pression en azalée",
@@ -29,6 +30,7 @@
   "block.aurorasdeco.jacaranda_door": "Porte en jacaranda",
   "block.aurorasdeco.jacaranda_fence": "Barrière en jacaranda",
   "block.aurorasdeco.jacaranda_fence_gate": "Portillon en jacaranda",
+  "block.aurorasdeco.jacaranda_hanging_sign": "Pancarte suspendue en jacaranda",
   "block.aurorasdeco.jacaranda_leaves": "Feuilles de jacaranda",
   "block.aurorasdeco.budding_jacaranda_leaves": "Feuilles de jacaranda bourgeonnant",
   "block.aurorasdeco.flowering_jacaranda_leaves": "Feuilles de jacaranda fleurie",
@@ -141,6 +143,7 @@
   "block.aurorasdeco.small_log_pile": "Petite pile de bûches de %s",
   "block.aurorasdeco.small_stem_pile": "Petite pile de tiges de %s",
   "block.aurorasdeco.small_log_pile.oak": "Petite pile de bûches",
+  "block.aurorasdeco.small_log_pile.bamboo": "Petite pile de bamboo",
 
   "block.aurorasdeco.soul_brazier": "Brasero des âmes",
 
@@ -173,6 +176,9 @@
   "item.aurorasdeco.sign_post": "Panneau directionnel en %s",
 
   "lore.aurorasdeco.not_sleepy.place": "Cette endroit me garde éveillé...",
+
+  "resourcepack.aurorasdeco.azalea_tree.name": "Arbre azalée",
+  "resourcepack.aurorasdeco.swamp_tweaks.name": "Marécages!",
 
   "stat.aurorasdeco.interact_with_sawmill": "Intéractions avec une scie",
 
@@ -219,13 +225,14 @@
   "aurorasdeco.wood_type.acacia": "acacia",
   "aurorasdeco.wood_type.dark_oak": "chêne noir",
   "aurorasdeco.wood_type.mangrove": "palétuvier",
+  "aurorasdeco.wood_type.cherry": "cerisier",
   "aurorasdeco.wood_type.azalea": "azalée",
   "aurorasdeco.wood_type.flowering_azalea": "azalée en fleurs",
+  "aurorasdeco.wood_type.jacaranda": "jacaranda",
+  "aurorasdeco.wood_type.bamboo": "bamboo",
   "aurorasdeco.wood_type.mushroom": "champignon",
   "aurorasdeco.wood_type.crimson": "bois carmin",
   "aurorasdeco.wood_type.warped": "bois biscornu",
-  "aurorasdeco.wood_type.bamboo": "bamboo",
-  "aurorasdeco.wood_type.jacaranda": "jacaranda",
   "aurorasdeco.wood_type.redwood": "séquoia",
   "aurorasdeco.wood_type.blockus.charred": "bois carbonisé",
   "aurorasdeco.wood_type.blockus.legacy": "ancien bois",

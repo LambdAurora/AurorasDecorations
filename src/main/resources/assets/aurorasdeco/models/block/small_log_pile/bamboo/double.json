@@ -1,0 +1,49 @@
+{
+	"credit": "Made by LambdAurora",
+	"parent": "aurorasdeco:block/template/small_log_pile",
+	"textures": {
+		"log": "minecraft:block/bamboo_block",
+		"log_top": "minecraft:block/bamboo_block_top"
+	},
+	"elements": [
+		{
+			"name": "east_log",
+			"from": [ 11, 6, 0 ],
+			"to": [ 15, 10, 16 ],
+			"faces": {
+				"north": {"uv": [ 0,  0, 4,  4 ], "texture": "#log_top"},
+				"east":  {"uv": [ 0, 16, 4,  0 ], "rotation": 270, "texture": "#log"},
+				"south": {"uv": [ 0,  0, 4,  4 ], "texture": "#log_top"},
+				"west":  {"uv": [ 4,  0, 0, 16 ], "rotation": 270, "texture": "#log"},
+				"up":    {"uv": [ 4,  0, 0, 16 ], "texture": "#log"},
+				"down":  {"uv": [ 0, 16, 4,  0 ], "texture": "#log"}
+			}
+		},
+		{
+			"name": "middle_log",
+			"from": [ 6, 6, 0 ],
+			"to": [ 10, 10, 16 ],
+			"faces": {
+				"north": {"uv": [  0,  0,  4,  4 ], "texture": "#log_top"},
+				"east":  {"uv": [ 12, 16,  8,  0 ], "rotation": 90, "texture": "#log"},
+				"south": {"uv": [  0,  0,  4,  4 ], "texture": "#log_top"},
+				"west":  {"uv": [  8,  0, 12, 16 ], "rotation": 90, "texture": "#log"},
+				"up":    {"uv": [ 12, 16,  8,  0 ], "texture": "#log"},
+				"down":  {"uv": [  8,  0, 12, 16 ], "texture": "#log"}
+			}
+		},
+		{
+			"name": "west_log",
+			"from": [ 1, 6, 0 ],
+			"to": [ 5, 10, 16 ],
+			"faces": {
+				"north": {"uv": [  0,  0,  4,  4 ], "texture": "#log_top"},
+				"east":  {"uv": [ 16, 16, 12,  0 ], "rotation": 90, "texture": "#log"},
+				"south": {"uv": [  0,  0,  4,  4 ], "texture": "#log_top"},
+				"west":  {"uv": [ 12,  0, 16, 16 ], "rotation": 90, "texture": "#log"},
+				"up":    {"uv": [ 16, 16, 12,  0 ], "texture": "#log"},
+				"down":  {"uv": [ 12,  0, 16, 16 ], "texture": "#log"}
+			}
+		}
+	]
+}

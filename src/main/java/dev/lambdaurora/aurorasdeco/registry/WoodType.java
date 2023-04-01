@@ -54,6 +54,7 @@ import java.util.function.Consumer;
  */
 public final class WoodType {
 	public static final WoodType OAK;
+	public static final WoodType BAMBOO;
 
 	private static final List<ModificationCallbackEntry> CALLBACKS = new ArrayList<>();
 	private static final List<WoodType> TYPES;
@@ -74,8 +75,23 @@ public final class WoodType {
 	}
 
 	static {
-		OAK = new WoodType(new Identifier("oak"));
-		TYPES = new ArrayList<>(List.of(OAK));
+		TYPES = new ArrayList<>(List.of(
+				OAK = new WoodType(new Identifier("oak")),
+				new WoodType(new Identifier("spruce")),
+				new WoodType(new Identifier("birch")),
+				new WoodType(new Identifier("jungle")),
+				new WoodType(new Identifier("acacia")),
+				new WoodType(new Identifier("dark_oak")),
+				new WoodType(new Identifier("mangrove")),
+				new WoodType(new Identifier("cherry")),
+				new WoodType(AurorasDeco.id("azalea")),
+				new WoodType(AurorasDeco.id("flowering_azalea")),
+				new WoodType(AurorasDeco.id("jacaranda")),
+				BAMBOO = new WoodType(new Identifier("bamboo")),
+				new WoodType(new Identifier("mushroom")),
+				new WoodType(new Identifier("crimson")),
+				new WoodType(new Identifier("warped"))
+		));
 	}
 
 	/**
@@ -108,6 +124,10 @@ public final class WoodType {
 	}
 
 	public String getLogType() {
+		if (AuroraUtil.idEqual(this.id, Identifier.DEFAULT_NAMESPACE, "bamboo")) {
+			return "log";
+		}
+
 		var component = this.getComponent(ComponentType.LOG);
 		if (component == null) return "none";
 
@@ -215,7 +235,7 @@ public final class WoodType {
 			if (woodName == null) continue;
 
 			Identifier woodId;
-			if (id.getNamespace().equals("minecraft") && woodName.equals("azalea")) {
+			if (id.getNamespace().equals(Identifier.DEFAULT_NAMESPACE) && woodName.equals("azalea")) {
 				woodId = AurorasDeco.id("azalea");
 			} else {
 				woodId = new Identifier(id.getNamespace(), woodName);
@@ -254,7 +274,7 @@ public final class WoodType {
 	private static String getPathName(Identifier id) {
 		var path = id.getPath();
 		var namespace = id.getNamespace();
-		if (!namespace.equals("minecraft") && !namespace.equals(AurorasDeco.NAMESPACE))
+		if (!namespace.equals(Identifier.DEFAULT_NAMESPACE) && !namespace.equals(AurorasDeco.NAMESPACE))
 			path = namespace + '/' + path;
 		return path;
 	}
@@ -349,6 +369,8 @@ public final class WoodType {
 			return texture;
 		}),
 		LOG((id, block) -> {
+			if (block == Blocks.BAMBOO_BLOCK) return "bamboo";
+
 			var material = ((AbstractBlockAccessor) block).getMaterial();
 			if (material != Material.WOOD && material != Material.NETHER_WOOD) return null;
 			String logType;
@@ -362,6 +384,10 @@ public final class WoodType {
 
 			return id.getPath().substring(0, id.getPath().length() - logType.length());
 		}, (resourceManager, component) -> {
+			if (component.block() == Blocks.BAMBOO_BLOCK) {
+				return new Identifier(Identifier.DEFAULT_NAMESPACE, "block/bamboo_block");
+			}
+
 			var componentId = component.id();
 			var texture = getBetterNetherEndPaths(component.texture(), false);
 			if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(texture)).isPresent())
@@ -379,6 +405,10 @@ public final class WoodType {
 			}
 			return texture;
 		}, (resourceManager, component) -> {
+			if (component.block() == Blocks.BAMBOO_BLOCK) {
+				return new Identifier(Identifier.DEFAULT_NAMESPACE, "block/bamboo_block_top");
+			}
+
 			var componentId = component.id();
 			var texture = getBetterNetherEndPaths(component.topTexture(), true);
 			if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(texture)).isPresent())
@@ -400,7 +430,7 @@ public final class WoodType {
 		STAIRS(simpleWoodFilter("stairs")),
 		LEAVES((id, block) -> {
 			String leavesType;
-			if (AuroraUtil.idEqual(id, "minecraft", "nether_wart_block"))
+			if (AuroraUtil.idEqual(id, Identifier.DEFAULT_NAMESPACE, "nether_wart_block"))
 				return "crimson"; // Thanks Minecraft.
 			else if (id.getPath().endsWith("_leaves")) leavesType = "_leaves";
 			else if (id.getPath().endsWith("_wart_block")) leavesType = "_wart_block";

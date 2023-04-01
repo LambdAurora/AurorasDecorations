@@ -21,6 +21,7 @@ import com.mojang.logging.LogUtils;
 import dev.lambdaurora.aurorasdeco.blackboard.BlackboardColor;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigPottedCactusBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
+import dev.lambdaurora.aurorasdeco.item.group.ItemTree;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPackets;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
@@ -72,6 +73,8 @@ public class AurorasDeco implements ModInitializer {
 			BlackboardColor.tryRegisterColorFromItem(context.id(), context.value());
 		});
 
+		ItemTree.init();
+
 		ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_OPEN_GUI_FAIL, AurorasDecoPackets::handleSignPostOpenGuiFailPacket);
 		ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.SIGN_POST_SET_TEXT, AurorasDecoPackets::handleSignPostSetTextPacket);
 		ServerPlayNetworking.registerGlobalReceiver(AurorasDecoPackets.PAINTER_PALETTE_SCROLL, AurorasDecoPackets::handlePainterPaletteScroll);
@@ -81,12 +84,12 @@ public class AurorasDeco implements ModInitializer {
 		ResourceLoader.registerBuiltinResourcePack(id("azalea_tree"), ResourcePackActivationType.DEFAULT_ENABLED,
 				Text.literal("Aurora's Deco").formatted(Formatting.GOLD)
 						.append(Text.literal(" - ").formatted(Formatting.GRAY))
-						.append(Text.literal("Azalea Tree").formatted(Formatting.LIGHT_PURPLE))
+						.append(Text.translatable("resourcepack.aurorasdeco.azalea_tree.name").formatted(Formatting.LIGHT_PURPLE))
 		);
 		ResourceLoader.registerBuiltinResourcePack(id("swamp_worldgen"), ResourcePackActivationType.NORMAL,
 				Text.literal("Aurora's Deco").formatted(Formatting.GOLD)
 						.append(Text.literal(" - ").formatted(Formatting.GRAY))
-						.append(Text.literal("Swamp Tweaks").formatted(Formatting.DARK_GREEN))
+						.append(Text.translatable("resourcepack.aurorasdeco.swamp_tweaks.name").formatted(Formatting.DARK_GREEN))
 		);
 		ResourceLoader.get(ResourceType.SERVER_DATA).getRegisterDefaultResourcePackEvent().register(context -> {
 			context.addResourcePack(RESOURCE_PACK.rebuild(ResourceType.SERVER_DATA, null));

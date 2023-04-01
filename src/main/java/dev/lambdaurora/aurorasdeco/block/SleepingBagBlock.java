@@ -19,6 +19,9 @@ package dev.lambdaurora.aurorasdeco.block;
 
 import com.google.common.collect.ImmutableMap;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
+import dev.lambdaurora.aurorasdeco.item.group.ItemTreeGroupNode;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BedPart;
@@ -26,6 +29,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
@@ -51,8 +55,10 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.poi.PointOfInterestType;
+import net.minecraft.world.poi.PointOfInterestTypes;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
+import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 import org.quiltmc.qsl.poi.api.PointOfInterestHelper;
 
 import java.util.ArrayList;
@@ -99,6 +105,8 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
 	);
 
 	private static final List<SleepingBagBlock> SLEEPING_BAGS = new ArrayList<>();
+	public static final ItemTreeGroupNode SLEEPING_BAGS_ITEM_GROUP_NODE = new ItemTreeGroupNode(AurorasDeco.id("sleeping_bag"));
+
 	private final DyeColor color;
 
 	public SleepingBagBlock(DyeColor color) {
@@ -261,7 +269,18 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
 		return SLEEPING_BAGS.stream();
 	}
 
-	public static SleepingBagBlock register(DyeColor color) {
+	public static void register() {
+		for (var color : AuroraUtil.DYE_COLORS) {
+			var block = register(color);
+			var item = AurorasDecoRegistry.registerItem("sleeping_bag/" + block.getColor().getName(),
+					new BlockItem(block, new QuiltItemSettings().maxCount(1)));
+			SLEEPING_BAGS_ITEM_GROUP_NODE.add(item);
+		}
+
+		appendToPointOfInterest(PointOfInterestTypes.HOME);
+	}
+
+	private static SleepingBagBlock register(DyeColor color) {
 		var block = Registry.register(Registries.BLOCK,
 				AurorasDeco.id("sleeping_bag/" + color.getName()),
 				new SleepingBagBlock(color));
@@ -271,7 +290,7 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
 		return block;
 	}
 
-	public static void appendToPointOfInterest(RegistryKey<PointOfInterestType> poiType) {
+	private static void appendToPointOfInterest(RegistryKey<PointOfInterestType> poiType) {
 
 		var type = Registries.POINT_OF_INTEREST_TYPE.getHolder(poiType);
 

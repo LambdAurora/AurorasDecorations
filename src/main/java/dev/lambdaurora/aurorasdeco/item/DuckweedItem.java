@@ -17,12 +17,11 @@
 
 package dev.lambdaurora.aurorasdeco.item;
 
-import dev.lambdaurora.aurorasdeco.util.KindSearcher;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.item.Items;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -37,9 +36,9 @@ import net.minecraft.world.World;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class DuckweedItem extends DerivedBlockItem {
+public class DuckweedItem extends BlockItem {
 	public DuckweedItem(Block block, Settings settings) {
-		super(block, KindSearcher.strictlyAfter(Items.LILY_PAD), KindSearcher::findLastOfGroup, settings);
+		super(block, settings);
 	}
 
 	@Override
