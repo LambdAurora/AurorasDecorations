@@ -36,10 +36,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
@@ -287,7 +284,9 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 
 					Blackboard.DrawAction action = Blackboard.DrawAction.DEFAULT;
 					for (var possibleAction : Blackboard.DrawAction.ACTIONS) {
-						if (possibleAction.getOffHandTool() != null && offhand.isOf(possibleAction.getOffHandTool())) {
+						Item offHandTool = possibleAction.getOffHandTool(world.getEnabledFlags());
+
+						if (offHandTool != null && offhand.isOf(offHandTool)) {
 							action = possibleAction;
 							break;
 						}

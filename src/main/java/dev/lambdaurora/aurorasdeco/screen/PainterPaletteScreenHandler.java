@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
  * Represents the painter's palette screen handler.
  *
  * @author LambdAurora
- * @version 1.0.0-beta.6
+ * @version 1.0.0-beta.13
  * @since 1.0.0-beta.6
  */
 public class PainterPaletteScreenHandler extends NestedScreenHandler {
@@ -58,7 +58,9 @@ public class PainterPaletteScreenHandler extends NestedScreenHandler {
 		}
 
 		for (int row = 0; row < 4; ++row) {
-			this.addSlot(new BlackboardToolSlot(inventory, (inventory.size() - 4) + row, -16, 18 + row * 18));
+			this.addSlot(new BlackboardToolSlot(
+					inventory, playerInventory.player.getWorld().getEnabledFlags(), (inventory.size() - 4) + row, -16, 18 + row * 18
+			));
 		}
 
 		this.addPlayerInventory(playerInventory, 8, 85);

@@ -21,6 +21,8 @@ import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.feature_flags.FeatureFlagBitSet;
+import net.minecraft.feature_flags.FeatureFlags;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -365,28 +367,49 @@ public class Blackboard implements BlackboardHandler {
 	}
 
 	public enum DrawAction {
-		DEFAULT(null, "aurorasdeco.blackboard.tool.pixel") {
+		DEFAULT("aurorasdeco.blackboard.tool.pixel") {
+			@Override
+			public @Nullable Item getOffHandTool(FeatureFlagBitSet enabledFeatures) {
+				return null;
+			}
+
 			@Override
 			public boolean execute(BlackboardHandler blackboard, int x, int y, BlackboardDrawModifier modifier) {
 				short colorData = blackboard.getPixel(x, y);
 				return blackboard.setPixel(x, y, modifier.apply(colorData));
 			}
 		},
-		BRUSH(Items.WHITE_WOOL, "aurorasdeco.blackboard.tool.brush") {
+		BRUSH("aurorasdeco.blackboard.tool.brush") {
+			@Override
+			public @Nullable Item getOffHandTool(FeatureFlagBitSet enabledFeatures) {
+				if (enabledFeatures.hasFlag(FeatureFlags.UPDATE_1_20)) return Items.BRUSH;
+				else return Items.WHITE_WOOL;
+			}
+
 			@Override
 			public boolean execute(BlackboardHandler blackboard, int x, int y, BlackboardDrawModifier modifier) {
 				short colorData = blackboard.getPixel(x, y);
 				return blackboard.brush(x, y, modifier.apply(colorData));
 			}
 		},
-		FILL(Items.BUCKET, "aurorasdeco.blackboard.tool.fill") {
+		FILL("aurorasdeco.blackboard.tool.fill") {
+			@Override
+			public @Nullable Item getOffHandTool(FeatureFlagBitSet enabledFeatures) {
+				return Items.BUCKET;
+			}
+
 			@Override
 			public boolean execute(BlackboardHandler blackboard, int x, int y, BlackboardDrawModifier modifier) {
 				short colorData = blackboard.getPixel(x, y);
 				return blackboard.fill(x, y, modifier.apply(colorData));
 			}
 		},
-		REPLACE(Items.ENDER_PEARL, "aurorasdeco.blackboard.tool.replace") {
+		REPLACE("aurorasdeco.blackboard.tool.replace") {
+			@Override
+			public @Nullable Item getOffHandTool(FeatureFlagBitSet enabledFeatures) {
+				return Items.ENDER_PEARL;
+			}
+
 			@Override
 			public boolean execute(BlackboardHandler blackboard, int x, int y, BlackboardDrawModifier modifier) {
 				short colorData = blackboard.getPixel(x, y);
@@ -396,21 +419,17 @@ public class Blackboard implements BlackboardHandler {
 
 		public static final List<DrawAction> ACTIONS = List.of(values());
 
-		private final Item offhandTool;
 		private final String translationKey;
 
-		DrawAction(@Nullable Item offhandTool, @NotNull String translationKey) {
-			this.offhandTool = offhandTool;
+		DrawAction(@NotNull String translationKey) {
 			this.translationKey = translationKey;
-		}
-
-		public @Nullable Item getOffHandTool() {
-			return this.offhandTool;
 		}
 
 		public Text getName() {
 			return Text.translatable(this.translationKey);
 		}
+
+		public abstract @Nullable Item getOffHandTool(FeatureFlagBitSet enabledFeatures);
 
 		public abstract boolean execute(BlackboardHandler blackboard, int x, int y, BlackboardDrawModifier modifier);
 	}

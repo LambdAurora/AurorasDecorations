@@ -36,7 +36,7 @@ import org.quiltmc.loader.api.minecraft.ClientOnly;
  * Represents the painter's palette container screen.
  *
  * @author LambdAurora
- * @version 1.0.0-beta.6
+ * @version 1.0.0-beta.13
  * @since 1.0.0-beta.6
  */
 @ClientOnly
@@ -69,6 +69,22 @@ public class PainterPaletteScreen extends HandledScreen<PainterPaletteScreenHand
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 		this.renderBackground(matrices);
+
+		for (var slot : this.handler.slots) {
+			if (slot instanceof BlackboardToolSlot) {
+				RenderSystem.setShaderTexture(0, TEXTURE);
+
+				int x = this.getBackgroundX() + slot.x + 24 - 1;
+				int y = this.getBackgroundY() + slot.y - 1;
+
+				if (slot.getStack().isEmpty()) {
+					drawTexture(matrices, x, y, this.backgroundWidth + 26, 24, 18, 18, 256, 256);
+				} else {
+					drawTexture(matrices, x, y, this.backgroundWidth + 26, 42, 18, 18, 256, 256);
+				}
+			}
+		}
+
 		super.render(matrices, mouseX, mouseY, delta);
 
 		matrices.push();
@@ -88,13 +104,17 @@ public class PainterPaletteScreen extends HandledScreen<PainterPaletteScreenHand
 
 				matrices.push();
 				matrices.translate(slot.x + 24, slot.y, 0);
-				drawTexture(matrices, -3, -3, this.backgroundWidth + 24, 0, 22, 22, 256, 256);
+				this.drawSelectedIndicator(matrices);
 				matrices.pop();
 			}
 		}
 		matrices.pop();
 
 		this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+	}
+
+	private void drawSelectedIndicator(MatrixStack matrices) {
+		drawTexture(matrices, -3, -3, this.backgroundWidth + 24, 0, 22, 22, 256, 256);
 	}
 
 	@Override

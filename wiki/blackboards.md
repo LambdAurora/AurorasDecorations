@@ -106,7 +106,7 @@ You can shade a pixel using bone meal to lighten it, or coal to darken it;
 and you can use glowstone dust to toggle the saturation state of a pixel.
 
 To draw multiple things at once, you can hold in your off-hand:
- - a white wool to use a "brush".
+ - a brush (or white wool before 1.20).
  - a bucket to fill an area.
  - an ender-pearl to replace a color.
  - a stick to draw lines.

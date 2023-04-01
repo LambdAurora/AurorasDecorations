@@ -26,6 +26,7 @@ import dev.lambdaurora.aurorasdeco.screen.PainterPaletteScreenHandler;
 import dev.lambdaurora.aurorasdeco.tooltip.PainterPaletteTooltipData;
 import net.minecraft.client.item.TooltipData;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.feature_flags.FeatureFlagBitSet;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
@@ -52,7 +53,7 @@ import java.util.Optional;
  * Represents a painter's palette item which can be used for easier painting on blackboards.
  *
  * @author LambdAurora
- * @version 1.0.0-beta.11
+ * @version 1.0.0-beta.13
  * @since 1.0.0-beta.6
  */
 public class PainterPaletteItem extends Item {
@@ -75,10 +76,10 @@ public class PainterPaletteItem extends Item {
 		return inventory.getSelectedTool();
 	}
 
-	public static MutableText getSelectedToolMessage(PainterPaletteInventory inventory) {
+	public static MutableText getSelectedToolMessage(PainterPaletteInventory inventory, FeatureFlagBitSet enabledFeatures) {
 		Text toolName = Blackboard.DrawAction.ACTIONS.stream()
 				.filter(drawAction -> {
-					var offHandTool = drawAction.getOffHandTool();
+					var offHandTool = drawAction.getOffHandTool(enabledFeatures);
 					var selectedTool = inventory.getSelectedTool();
 
 					return (offHandTool == null && selectedTool.isEmpty()) || selectedTool.isOf(offHandTool);
@@ -179,7 +180,7 @@ public class PainterPaletteItem extends Item {
 					else paletteStack.removeSubNbt("inventory");
 					player.playerScreenHandler.sendContentUpdates();
 
-					var message = getSelectedToolMessage(inventory);
+					var message = getSelectedToolMessage(inventory, player.getWorld().getEnabledFlags());
 					BlackboardColor primaryColor = BlackboardColor.fromItem(inventory.getSelectedColor().getItem());
 
 					if (primaryColor != null && primaryColor != BlackboardColor.EMPTY) message.styled(style -> style.withColor(primaryColor.getColor()));
@@ -227,7 +228,6 @@ public class PainterPaletteItem extends Item {
 		private static final int SIZE = COLOR_SIZE + TOOLS_SIZE;
 		private static final String SELECTED_COLOR_KEY = "selected_color";
 		private static final String SELECTED_TOOL_KEY = "selected_tool";
-
 		private byte selectedColor = 0;
 		private byte selectedTool = -1;
 

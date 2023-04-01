@@ -19,6 +19,22 @@ This item have an inventory capable of holding different blackboard-based <a hre
 
 ## Crafting
 
+### 1.20+
+
+<table class="crafting-grid">
+<thead>
+    <th>Crafting Table</th>
+</thead>
+<tbody>
+    <tr>
+        <td>Brush</td>
+        <td>Planks</td>
+    </tr>
+</tbody>
+</table>
+
+### 1.19
+
 <table class="crafting-grid">
 <thead>
     <th>Crafting Table</th>

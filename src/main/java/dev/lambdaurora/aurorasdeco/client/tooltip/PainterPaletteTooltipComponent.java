@@ -20,6 +20,7 @@ package dev.lambdaurora.aurorasdeco.client.tooltip;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.lambdaurora.aurorasdeco.blackboard.BlackboardColor;
 import dev.lambdaurora.aurorasdeco.item.PainterPaletteItem;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -39,7 +40,7 @@ import org.quiltmc.loader.api.minecraft.ClientOnly;
  * Represents the painter's palette tooltip component.
  *
  * @author LambdAurora
- * @version 1.0.0-beta.6
+ * @version 1.0.0-beta.13
  * @since 1.0.0-beta.6
  */
 @ClientOnly
@@ -49,7 +50,8 @@ public class PainterPaletteTooltipComponent implements TooltipComponent {
 
 	public PainterPaletteTooltipComponent(PainterPaletteItem.PainterPaletteInventory inventory) {
 		this.inventory = inventory;
-		this.selectedToolText = PainterPaletteItem.getSelectedToolMessage(inventory).formatted(Formatting.GRAY);
+		var enabledFlags = MinecraftClient.getInstance().world.getEnabledFlags();
+		this.selectedToolText = PainterPaletteItem.getSelectedToolMessage(inventory, enabledFlags).formatted(Formatting.GRAY);
 	}
 
 	@Override
@@ -92,47 +94,43 @@ public class PainterPaletteTooltipComponent implements TooltipComponent {
 
 		matrices.push();
 		y += 12;
+
 		matrices.translate(x, y, 0);
-
-		this.drawSlot(matrices, 0, true, false);
-		if (!previousColorStack.isEmpty()) {
-			itemRenderer.method_32797(matrices, previousColorStack, x + 2, y + 2, inventory.getSlotOf(previousColorStack));
-			itemRenderer.method_4025(matrices, textRenderer, previousColorStack, x + 2, y + 2);
-			this.drawColorOverlay(matrices, previousColorStack);
-		}
+		this.drawSlot(matrices, itemRenderer, textRenderer, previousColorStack, inventory.getSlotOf(previousColorStack), true, false);
 
 		matrices.translate(18, 0, 0);
-		this.drawSlot(matrices, 0, false, false);
-		itemRenderer.method_32797(matrices, primaryColorStack, x + 18 + 2, y + 2, inventory.getSelectedColorSlot());
-		itemRenderer.method_4025(matrices, textRenderer, primaryColorStack, x + 18 + 2, y + 2);
-		this.drawColorOverlay(matrices, primaryColorStack);
-		HandledScreen.drawSlotHighlight(matrices, x + 1, y + 1, 0);
+		this.drawSlot(matrices, itemRenderer, textRenderer, primaryColorStack, inventory.getSelectedColorSlot(), false, false);
+		HandledScreen.drawSlotHighlight(matrices, 2, 2, 0);
 
 		matrices.translate(18, 0, 0);
-		this.drawSlot(matrices, 0, false, true);
-		if (!previousColorStack.isEmpty()) {
-			itemRenderer.method_32797(matrices, nextColorStack, x + 18 * 2 + 2, y + 2, inventory.getSlotOf(nextColorStack));
-			itemRenderer.method_4025(matrices, textRenderer, nextColorStack, x + 18 * 2 + 2, y + 2);
-			this.drawColorOverlay(matrices, nextColorStack);
-		}
+		this.drawSlot(matrices, itemRenderer, textRenderer, nextColorStack, inventory.getSlotOf(nextColorStack), false, true);
 
 		matrices.pop();
 	}
 
-	private void drawSlot(MatrixStack matrices, int z, boolean start, boolean end) {
-		this.drawSlotPart(matrices, 1, 1, z, 0, 0, 18, 20);
+	private void drawSlot(
+			MatrixStack matrices, ItemRenderer itemRenderer, TextRenderer textRenderer, ItemStack stack,
+			int index, boolean start, boolean end
+	) {
+		this.drawSlotPart(matrices, 1, 1, 0, 0, 0, 18, 20);
 
-		if (start) this.drawSlotPart(matrices, 0, 0, z, 0, 20, 1, 1);
-		if (end) this.drawSlotPart(matrices, 0, 0, z, 0, 20, 1, 1);
+		if (start) this.drawSlotPart(matrices, 0, 0, 0, 0, 20, 1, 1);
+		if (end) this.drawSlotPart(matrices, 0, 0, 0, 0, 20, 1, 1);
 
-		this.drawSlotPart(matrices, 1, 0, z, 0, 20, 18, 1);
-		this.drawSlotPart(matrices, 1, 20, z, 0, 60, 18, 1);
+		this.drawSlotPart(matrices, 1, 0, 0, 0, 20, 18, 1);
+		this.drawSlotPart(matrices, 1, 20, 0, 0, 60, 18, 1);
 
-		if (start) this.drawSlotPart(matrices, 0, 0, z, 0, 18, 1, 20);
-		if (end) this.drawSlotPart(matrices, 18 + 1, 0, z, 0, 18, 1, 20);
+		if (start) this.drawSlotPart(matrices, 0, 0, 0, 0, 18, 1, 20);
+		if (end) this.drawSlotPart(matrices, 18 + 1, 0, 0, 0, 18, 1, 20);
 
-		if (start) this.drawSlotPart(matrices, 0, 20, z, 0, 60, 1, 1);
-		if (end) this.drawSlotPart(matrices, 18 + 1, 20, z, 0, 60, 1, 1);
+		if (start) this.drawSlotPart(matrices, 0, 20, 0, 0, 60, 1, 1);
+		if (end) this.drawSlotPart(matrices, 18 + 1, 20, 0, 0, 60, 1, 1);
+
+		if (!stack.isEmpty()) {
+			itemRenderer.method_32797(matrices, stack, 2, 2, index);
+			itemRenderer.method_4025(matrices, textRenderer, stack, 2, 2);
+			this.drawColorOverlay(matrices, stack);
+		}
 	}
 
 	private void drawColorOverlay(MatrixStack matrices, ItemStack stack) {
