@@ -1,0 +1,16 @@
+{
+  "type": "aurorasdeco:actually_good_smithing_transform",
+  "group": "aurorasdeco:blackboard",
+  "addition": {
+    "item": "minecraft:honeycomb"
+  },
+  "base": {
+    "item": "aurorasdeco:chalkboard"
+  },
+  "result": {
+    "item": "aurorasdeco:waxed_chalkboard"
+  },
+  "template": {
+    "item": "minecraft:air"
+  }
+}

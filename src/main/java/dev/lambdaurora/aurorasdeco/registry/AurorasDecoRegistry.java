@@ -30,8 +30,12 @@ import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigPottedCactusBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigStaticFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.block.entity.*;
-import dev.lambdaurora.aurorasdeco.item.*;
+import dev.lambdaurora.aurorasdeco.item.BlackboardItem;
+import dev.lambdaurora.aurorasdeco.item.PainterPaletteItem;
+import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
+import dev.lambdaurora.aurorasdeco.item.SignPostItem;
 import dev.lambdaurora.aurorasdeco.item.group.ItemTree;
+import dev.lambdaurora.aurorasdeco.recipe.ActuallyGoodTransformSmithingRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.BlackboardCloneRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.ExplodingRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
@@ -42,7 +46,10 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.*;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
+import net.minecraft.item.WallStandingBlockItem;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
@@ -311,7 +318,7 @@ public final class AurorasDecoRegistry {
 			new WallTorchBlock(QuiltBlockSettings.copyOf(COPPER_SULFATE_TORCH_BLOCK)
 					.dropsLike(COPPER_SULFATE_TORCH_BLOCK), COPPER_SULFATE_FLAME));
 	public static final WallStandingBlockItem COPPER_SULFATE_TORCH_ITEM = registerItem("copper_sulfate_torch",
-					new WallStandingBlockItem(COPPER_SULFATE_TORCH_BLOCK, COPPER_SULFATE_WALL_TORCH_BLOCK, new QuiltItemSettings(), Direction.DOWN)
+			new WallStandingBlockItem(COPPER_SULFATE_TORCH_BLOCK, COPPER_SULFATE_WALL_TORCH_BLOCK, new QuiltItemSettings(), Direction.DOWN)
 	);
 	//endregion
 
@@ -498,6 +505,11 @@ public final class AurorasDecoRegistry {
 	public static final RecipeType<WoodcuttingRecipe> WOODCUTTING_RECIPE_TYPE = registerRecipeType("woodcutting");
 	public static final RecipeSerializer<WoodcuttingRecipe> WOODCUTTING_RECIPE_SERIALIZER
 			= register("woodcutting", WoodcuttingRecipe.SERIALIZER);
+
+	public static final RecipeType<ActuallyGoodTransformSmithingRecipe> ACTUALLY_GOOD_TRANSFORM_SMITHING_RECIPE_TYPE
+			= registerRecipeType("actually_good_smithing_transform");
+	public static final RecipeSerializer<ActuallyGoodTransformSmithingRecipe> ACTUALLY_GOOD_TRANSFORM_SMITHING_RECIPE_SERIALIZER
+			= register("actually_good_smithing_transform", ActuallyGoodTransformSmithingRecipe.SERIALIZER);
 
 	/* POI */
 

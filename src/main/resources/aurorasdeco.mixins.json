@@ -7,6 +7,7 @@
     "SimpleRegistryAccessor",
     "SpawnHelperMixin",
     "StateManagerBuilderAccessor",
+    "TransformSmithingRecipeAccessor",
     "block.AbstractBlockAccessor",
     "block.BedBlockMixin",
     "block.BlockAccessor",
@@ -53,6 +54,7 @@
     "client.MobEntityRendererAccessor",
     "client.ModelLoaderMixin",
     "client.MouseMixin",
+    "client.SmithingScreenMixin",
     "client.TranslationStorageMixin"
   ],
   "injectors": {
