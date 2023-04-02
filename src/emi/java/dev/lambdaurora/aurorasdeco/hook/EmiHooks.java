@@ -22,14 +22,19 @@ import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.Bounds;
+import dev.emi.emi.recipe.EmiSmithingRecipe;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.client.screen.PainterPaletteScreen;
+import dev.lambdaurora.aurorasdeco.hook.emi.ActuallyGoodTransformSmithingEmiRecipe;
 import dev.lambdaurora.aurorasdeco.hook.emi.ExplodingEmiRecipe;
 import dev.lambdaurora.aurorasdeco.hook.emi.WoodcuttingEmiRecipe;
+import dev.lambdaurora.aurorasdeco.recipe.ActuallyGoodTransformSmithingRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.ExplodingRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.minecraft.block.Blocks;
+import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.SmithingRecipe;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 @ClientOnly
@@ -57,6 +62,13 @@ public final class EmiHooks implements EmiPlugin {
 
 		for (ExplodingRecipe recipe : registry.getRecipeManager().listAllOfType(AurorasDecoRegistry.EXPLODING_RECIPE_TYPE)) {
 			registry.addRecipe(new ExplodingEmiRecipe(recipe));
+		}
+
+		for (SmithingRecipe recipe : registry.getRecipeManager().listAllOfType(RecipeType.SMITHING)) {
+			if (recipe instanceof ActuallyGoodTransformSmithingRecipe betterRecipe) {
+				registry.removeRecipes(emiRecipe -> emiRecipe instanceof EmiSmithingRecipe && emiRecipe.getId().equals(recipe.getId()));
+				registry.addRecipe(new ActuallyGoodTransformSmithingEmiRecipe(betterRecipe));
+			}
 		}
 
 		registry.addExclusionArea(PainterPaletteScreen.class, (screen, consumer) -> {

@@ -506,8 +506,6 @@ public final class AurorasDecoRegistry {
 	public static final RecipeSerializer<WoodcuttingRecipe> WOODCUTTING_RECIPE_SERIALIZER
 			= register("woodcutting", WoodcuttingRecipe.SERIALIZER);
 
-	public static final RecipeType<ActuallyGoodTransformSmithingRecipe> ACTUALLY_GOOD_TRANSFORM_SMITHING_RECIPE_TYPE
-			= registerRecipeType("actually_good_smithing_transform");
 	public static final RecipeSerializer<ActuallyGoodTransformSmithingRecipe> ACTUALLY_GOOD_TRANSFORM_SMITHING_RECIPE_SERIALIZER
 			= register("actually_good_smithing_transform", ActuallyGoodTransformSmithingRecipe.SERIALIZER);
 

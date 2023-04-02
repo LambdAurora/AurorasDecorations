@@ -20,10 +20,13 @@ package dev.lambdaurora.aurorasdeco.recipe;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import dev.lambdaurora.aurorasdeco.mixin.TransformSmithingRecipeAccessor;
+import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.TransformSmithingRecipe;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
@@ -52,6 +55,11 @@ public class ActuallyGoodTransformSmithingRecipe extends TransformSmithingRecipe
 	public boolean isEmpty() {
 		return Stream.of(((TransformSmithingRecipeAccessor) this).getBase(), ((TransformSmithingRecipeAccessor) this).getAddition())
 				.anyMatch(Ingredient::isEmpty);
+	}
+
+	@Override
+	public RecipeSerializer<?> getSerializer() {
+		return SERIALIZER;
 	}
 
 	public static class Serializer implements QuiltRecipeSerializer<ActuallyGoodTransformSmithingRecipe> {
