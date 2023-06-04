@@ -45,6 +45,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Represents a wood type.
  *
@@ -63,6 +66,8 @@ public final class WoodType {
 	private final String pathName;
 	private final String absoluteLangPath;
 	private final String langPath;
+
+	public static final Logger LOGGER = LoggerFactory.getLogger("aurorasdeco:woodtype");
 
 	public WoodType(Identifier id) {
 		this.id = id;
@@ -109,14 +114,16 @@ public final class WoodType {
 
 	public String getLogType() {
 		var component = this.getComponent(ComponentType.LOG);
-		if (component == null) return "none";
+		if (component == null)
+			return "none";
 
 		return component.id().getPath().substring(this.id.getPath().length() + 1);
 	}
 
 	public @Nullable Block getLog() {
 		var component = this.getComponent(ComponentType.LOG);
-		if (component == null) return null;
+		if (component == null)
+			return null;
 		return component.block();
 	}
 
@@ -128,20 +135,24 @@ public final class WoodType {
 	}
 
 	/**
-	 * {@return the log side texture if a log component is associated, otherwise the planks texture}
+	 * {@return the log side texture if a log component is associated, otherwise the
+	 * planks texture}
 	 */
 	public Identifier getLogSideTexture(ResourceManager resourceManager) {
 		var log = this.getComponent(ComponentType.LOG);
-		if (log == null) return this.getComponent(ComponentType.PLANKS).texture();
+		if (log == null)
+			return this.getPlanksTexture(resourceManager);
 		return ComponentType.LOG.getTexture(resourceManager, log);
 	}
 
 	/**
-	 * {@return the log top texture if a log component is associated, otherwise the planks texture}
+	 * {@return the log top texture if a log component is associated, otherwise the
+	 * planks texture}
 	 */
 	public Identifier getLogTopTexture(ResourceManager resourceManager) {
 		var log = this.getComponent(ComponentType.LOG);
-		if (log == null) return this.getComponent(ComponentType.PLANKS).texture();
+		if (log == null)
+			return this.getPlanksTexture(resourceManager);
 		return ComponentType.LOG.getTopTexture(resourceManager, log);
 	}
 
@@ -156,7 +167,8 @@ public final class WoodType {
 	 * Returns the component associated to the given component type.
 	 *
 	 * @param type the component type
-	 * @return the component if associated to the given component type, or {@code null} otherwise
+	 * @return the component if associated to the given component type, or
+	 *         {@code null} otherwise
 	 */
 	public Component getComponent(ComponentType type) {
 		return this.components.get(type);
@@ -197,7 +209,8 @@ public final class WoodType {
 				'}';
 	}
 
-	public static void registerWoodTypeModificationCallback(Consumer<WoodType> callback, ComponentType... requiredComponents) {
+	public static void registerWoodTypeModificationCallback(Consumer<WoodType> callback,
+			ComponentType... requiredComponents) {
 		var entry = new ModificationCallbackEntry(callback, Arrays.asList(requiredComponents));
 		CALLBACKS.add(entry);
 
@@ -208,11 +221,13 @@ public final class WoodType {
 	}
 
 	public static void onBlockRegister(Identifier id, Block block) {
-		if (id.getNamespace().equals("mossywood")) return; // Mossywood is too much of a pain to support.
+		if (id.getNamespace().equals("mossywood"))
+			return; // Mossywood is too much of a pain to support.
 
 		for (var componentType : ComponentType.types()) {
 			var woodName = componentType.filter(id, block);
-			if (woodName == null) continue;
+			if (woodName == null)
+				continue;
 
 			Identifier woodId;
 			if (id.getNamespace().equals("minecraft") && woodName.equals("azalea")) {
@@ -303,7 +318,8 @@ public final class WoodType {
 		}
 
 		public Identifier topTexture() {
-			if (this.block() == Blocks.MUSHROOM_STEM) return new Identifier("block/mushroom_block_inside");
+			if (this.block() == Blocks.MUSHROOM_STEM)
+				return new Identifier("block/mushroom_block_inside");
 			var id = this.id();
 			return new Identifier(id.getNamespace(), "block/" + id.getPath() + "_top");
 		}
@@ -334,31 +350,55 @@ public final class WoodType {
 	// This can't be good
 	public enum ComponentType {
 		PLANKS((id, block) -> {
-			if (!id.getPath().endsWith("_planks")) return null;
+			if (!id.getPath().endsWith("_planks"))
+				return null;
 			return id.getPath().substring(0, id.getPath().length() - "_planks".length());
 		}, (resourceManager, component) -> {
 			Identifier texture = component.texture();
 
 			if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(texture)).isEmpty()) {
 				// For mods that don't use standard texture paths but logical.
-				var alternate = new Identifier(component.id().getNamespace(), "block/" + component.woodType().getId().getPath() + "/planks");
+				var componentId = component.id();
+				var alternate = new Identifier(componentId.getNamespace(),
+						"block/" + component.woodType().getId().getPath() + "/planks");
 				if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(alternate)).isPresent())
 					return alternate;
+
+				// For mods like Chipped that group by VARIANT_oak_planks
+				var split_paths = componentId.getPath().split("_");
+				var base_name = split_paths[split_paths.length - 1] + "/";
+				for (int i = split_paths.length - 2; i >= 0; i--) {
+					base_name = split_paths[i] + "_" + base_name;
+					alternate = new Identifier(componentId.getNamespace(),
+							"block/" + base_name + componentId.getPath());
+					if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(alternate)).isPresent())
+						return alternate;
+				}
+
+				LOGGER.warn("No valid alternative texture path found for " + componentId.getPath());
+
 			}
 
 			return texture;
 		}),
 		LOG((id, block) -> {
 			var material = ((AbstractBlockAccessor) block).getMaterial();
-			if (material != Material.WOOD && material != Material.NETHER_WOOD) return null;
+			if (material != Material.WOOD && material != Material.NETHER_WOOD)
+				return null;
 			String logType;
-			if (id.getPath().startsWith("stripped_")) return null;
-			else if (id.getPath().startsWith("striped_")) return null;
-			else if (id.getPath().endsWith("_log")) logType = "_log";
-			else if (id.getPath().endsWith("_stem")) logType = "_stem";
-			else return null;
+			if (id.getPath().startsWith("stripped_"))
+				return null;
+			else if (id.getPath().startsWith("striped_"))
+				return null;
+			else if (id.getPath().endsWith("_log"))
+				logType = "_log";
+			else if (id.getPath().endsWith("_stem"))
+				logType = "_stem";
+			else
+				return null;
 
-			if (id.getPath().endsWith("_table" + logType)) return null;
+			if (id.getPath().endsWith("_table" + logType))
+				return null;
 
 			return id.getPath().substring(0, id.getPath().length() - logType.length());
 		}, (resourceManager, component) -> {
@@ -368,7 +408,8 @@ public final class WoodType {
 				return texture;
 			else {
 				// For mods that don't use standard texture paths but logical.
-				var sideId = new Identifier(componentId.getNamespace(), "block/" + component.woodType().getId().getPath() + "/log");
+				var sideId = new Identifier(componentId.getNamespace(),
+						"block/" + component.woodType().getId().getPath() + "/log");
 				if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(sideId)).isPresent())
 					return sideId;
 
@@ -376,6 +417,19 @@ public final class WoodType {
 				sideId = new Identifier(componentId.getNamespace(), "block/" + componentId.getPath() + "/side");
 				if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(sideId)).isPresent())
 					return sideId;
+
+				// For mods like Chipped that group by VARIANT_oak_log
+				var split_paths = componentId.getPath().split("_");
+				var base_name = split_paths[split_paths.length - 1] + "/";
+				for (int i = split_paths.length - 2; i >= 0; i--) {
+					base_name = split_paths[i] + "_" + base_name;
+					sideId = new Identifier(componentId.getNamespace(),
+							"block/" + base_name + componentId.getPath());
+					if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(sideId)).isPresent())
+						return sideId;
+				}
+
+				LOGGER.warn("No valid alternative texture path found for " + componentId.getPath());
 			}
 			return texture;
 		}, (resourceManager, component) -> {
@@ -385,7 +439,8 @@ public final class WoodType {
 				return texture;
 			else {
 				// For mods that don't use standard texture paths but logical.
-				var topId = new Identifier(componentId.getNamespace(), "block/" + component.woodType().getId().getPath() + "/log_top");
+				var topId = new Identifier(componentId.getNamespace(),
+						"block/" + component.woodType().getId().getPath() + "/log_top");
 				if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(topId)).isPresent())
 					return topId;
 
@@ -393,6 +448,20 @@ public final class WoodType {
 				topId = new Identifier(componentId.getNamespace(), "block/" + componentId.getPath() + "/top");
 				if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(topId)).isPresent())
 					return topId;
+
+				// For mods like Chipped that group by VARIANT_oak_logs
+				var split_paths = componentId.getPath().split("_");
+				var base_name = split_paths[split_paths.length - 1] + "/";
+				for (int i = split_paths.length - 2; i >= 0; i--) {
+					base_name = split_paths[i] + "_" + base_name;
+					topId = new Identifier(componentId.getNamespace(),
+							"block/" + base_name + componentId.getPath() + "_top");
+					if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(topId)).isPresent())
+						return topId;
+				}
+
+				LOGGER.warn("No valid alternative texture path found for " + componentId.getNamespace() + ":"
+						+ componentId.getPath());
 			}
 			return texture;
 		}),
@@ -402,11 +471,15 @@ public final class WoodType {
 			String leavesType;
 			if (AuroraUtil.idEqual(id, "minecraft", "nether_wart_block"))
 				return "crimson"; // Thanks Minecraft.
-			else if (id.getPath().endsWith("_leaves")) leavesType = "_leaves";
-			else if (id.getPath().endsWith("_wart_block")) leavesType = "_wart_block";
-			else return null;
+			else if (id.getPath().endsWith("_leaves"))
+				leavesType = "_leaves";
+			else if (id.getPath().endsWith("_wart_block"))
+				leavesType = "_wart_block";
+			else
+				return null;
 
-			if (id.getPath().startsWith("flowering")) return null;
+			if (id.getPath().startsWith("flowering"))
+				return null;
 
 			return id.getPath().substring(0, id.getPath().length() - leavesType.length());
 		}, (resourceManager, component) -> {
@@ -414,11 +487,13 @@ public final class WoodType {
 
 			if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(texture)).isEmpty()) {
 				// For mods that don't use standard texture paths but logical.
-				var alternate = new Identifier(component.id().getNamespace(), "block/" + component.woodType().getId().getPath() + "/leaves");
+				var alternate = new Identifier(component.id().getNamespace(),
+						"block/" + component.woodType().getId().getPath() + "/leaves");
 				if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(alternate)).isPresent())
 					return alternate;
 
-				alternate = new Identifier(component.id().getNamespace(), "block/" + component.woodType().getId().getPath() + "/wart_block");
+				alternate = new Identifier(component.id().getNamespace(),
+						"block/" + component.woodType().getId().getPath() + "/wart_block");
 				if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(alternate)).isPresent())
 					return alternate;
 			}
@@ -469,14 +544,17 @@ public final class WoodType {
 	}
 
 	public interface Filter {
-		@Nullable String filter(Identifier id, Block block);
+		@Nullable
+		String filter(Identifier id, Block block);
 	}
 
 	private static Filter simpleWoodFilter(String suffix) {
 		return (id, block) -> {
-			if (!id.getPath().endsWith('_' + suffix)) return null;
+			if (!id.getPath().endsWith('_' + suffix))
+				return null;
 			var material = ((AbstractBlockAccessor) block).getMaterial();
-			if (material != Material.WOOD && material != Material.NETHER_WOOD) return null;
+			if (material != Material.WOOD && material != Material.NETHER_WOOD)
+				return null;
 			return id.getPath().substring(0, id.getPath().length() - (suffix.length() + 1));
 		};
 	}
@@ -500,8 +578,10 @@ public final class WoodType {
 			String newPath = texture.getPath().substring(0, texture.getPath().length() - 4) + "_bark";
 			boolean logSides = texture.getNamespace().equals("betterend") || texture.getPath().contains("rubeus")
 					|| texture.getPath().contains("nether_sakura") || texture.getPath().contains("anchor_tree");
-			if (logSides) newPath = texture.getPath() + "_side";
-			if (texture.getPath().contains("stalagnate")) newPath += "_side";
+			if (logSides)
+				newPath = texture.getPath() + "_side";
+			if (texture.getPath().contains("stalagnate"))
+				newPath += "_side";
 			return new Identifier(texture.getNamespace(), newPath);
 		}
 
