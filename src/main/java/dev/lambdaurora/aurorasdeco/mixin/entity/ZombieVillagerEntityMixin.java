@@ -39,7 +39,7 @@ public class ZombieVillagerEntityMixin extends ZombieEntity {
 	@Inject(method = "getConversionRate", at = @At("RETURN"), cancellable = true)
 	private void onGetConversionRate(CallbackInfoReturnable<Integer> cir) {
 		if (this.random.nextFloat() < .35f) {
-			int lanterns = (int) ((ServerWorld) this.world).getPointOfInterestStorage().getInSquare(
+			int lanterns = (int) ((ServerWorld) this.getWorld()).getPointOfInterestStorage().getInSquare(
 					poiType -> poiType.isRegistryKey(AurorasDecoRegistry.AMETHYST_LANTERN_POI),
 					this.getBlockPos(),
 					AmethystLanternBlock.EFFECT_RADIUS,

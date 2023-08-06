@@ -19,12 +19,14 @@ package dev.lambdaurora.aurorasdeco.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.MapColor;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 /**
  * Represents a block which cannot be moved by pistons or slime blocks
@@ -38,8 +40,8 @@ import net.minecraft.world.World;
 public class SturdyStoneBlock extends Block {
 	public static final BooleanProperty POWERED = Properties.POWERED;
 
-	public SturdyStoneBlock(Settings settings) {
-		super(settings);
+	public SturdyStoneBlock() {
+		super(QuiltBlockSettings.create().mapColor(MapColor.STONE).pistonBehavior(PistonBehavior.BLOCK).requiresTool().strength(3.5f));
 		this.setDefaultState(this.getDefaultState().with(POWERED, false));
 	}
 
@@ -57,12 +59,5 @@ public class SturdyStoneBlock extends Block {
 		if (shouldPower != powered) {
 			world.setBlockState(pos, state.with(POWERED, shouldPower), Block.NO_REDRAW);
 		}
-	}
-
-	/* Piston */
-
-	@Override
-	public PistonBehavior getPistonBehavior(BlockState state) {
-		return PistonBehavior.BLOCK;
 	}
 }

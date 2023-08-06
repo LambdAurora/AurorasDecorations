@@ -93,7 +93,7 @@ public class BakedGlassboardModel extends BakedBlackboardModel {
 			return true;
 		});
 
-		this.models.get(fixedMask).forEach(context.bakedModelConsumer());
+		this.models.get(fixedMask).forEach(model -> model.emitBlockQuads(blockView, state, pos, randomSupplier, context));
 
 		context.popTransform();
 

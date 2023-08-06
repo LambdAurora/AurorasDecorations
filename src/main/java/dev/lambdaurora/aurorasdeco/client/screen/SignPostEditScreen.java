@@ -26,6 +26,7 @@ import dev.lambdaurora.aurorasdeco.client.renderer.SignPostBlockEntityRenderer;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPackets;
 import dev.lambdaurora.aurorasdeco.util.ColorUtil;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GameRenderer;
@@ -36,8 +37,8 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.SelectionManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.CommonTexts;
 import net.minecraft.text.OrderedText;
-import net.minecraft.text.ScreenTexts;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Axis;
@@ -78,7 +79,7 @@ public class SignPostEditScreen extends Screen {
 	@Override
 	protected void init() {
 		this.addDrawableChild(
-				ButtonWidget.builder(ScreenTexts.DONE, button -> this.finishEditing())
+				ButtonWidget.builder(CommonTexts.DONE, button -> this.finishEditing())
 						.positionAndSize(this.width / 2 - 100, this.height / 4 + 120, 200, 20)
 						.build()
 		);
@@ -166,13 +167,14 @@ public class SignPostEditScreen extends Screen {
 	/* Rendering */
 
 	@Override
-	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+		MatrixStack matrices = graphics.getMatrices();
 		var upData = this.signPost.getUp();
 		var downData = this.signPost.getDown();
 
 		DiffuseLighting.setupFlatGuiLighting();
-		this.renderBackground(matrices);
-		drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 40, ColorUtil.TEXT_COLOR);
+		this.renderBackground(graphics);
+		graphics.drawCenteredShadowedText(this.textRenderer, this.title, this.width / 2, 40, ColorUtil.TEXT_COLOR);
 		matrices.push();
 		matrices.translate(this.width / 2.f, 0.0, 50.0);
 		float f = 93.75f;
@@ -182,21 +184,22 @@ public class SignPostEditScreen extends Screen {
 		matrices.scale(1, -1, -0.6666667f);
 		var immediate = this.client.getBufferBuilders().getEntityVertexConsumers();
 		if (upData != null)
-			this.renderSign(upData, 0, -6 / 16.f, matrices, immediate,
+			this.renderSign(upData, 0, -6 / 16.f, graphics, immediate,
 					LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
 
 		if (downData != null)
-			this.renderSign(downData, 1, 3 / 16.f, matrices, immediate,
+			this.renderSign(downData, 1, 3 / 16.f, graphics, immediate,
 					LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
 
 		matrices.pop();
 		DiffuseLighting.setup3DGuiLighting();
-		super.render(matrices, mouseX, mouseY, delta);
+		super.render(graphics, mouseX, mouseY, delta);
 	}
 
 	private void renderSign(SignPostBlockEntity.Sign sign, int row, float yOffset,
-			MatrixStack matrices, VertexConsumerProvider.Immediate vertexConsumers,
+			GuiGraphics graphics, VertexConsumerProvider.Immediate vertexConsumers,
 			int light, int overlay) {
+		MatrixStack matrices = graphics.getMatrices();
 		matrices.push();
 
 		matrices.translate(0, yOffset, 0);
@@ -259,9 +262,9 @@ public class SignPostEditScreen extends Screen {
 						vertexConsumers.draw();
 					} else {
 						if (glowing) {
-							fill(matrices, cursorX - 2, -3, cursorX + 1, 10, 0xff000000 | backgroundColor);
+							graphics.fill(cursorX - 2, -3, cursorX + 1, 10, 0xff000000 | backgroundColor);
 						}
-						fill(matrices, cursorX - 1, -2, cursorX, 9, 0xff000000 | color);
+						graphics.fill(cursorX - 1, -2, cursorX, 9, 0xff000000 | color);
 					}
 				}
 

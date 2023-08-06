@@ -17,24 +17,16 @@
 
 package dev.lambdaurora.aurorasdeco.client.model;
 
-import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.SignPostBlock;
-import net.fabricmc.fabric.api.client.model.ModelProviderContext;
-import net.fabricmc.fabric.api.client.model.ModelVariantProvider;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
+import net.fabricmc.fabric.api.client.model.loading.v1.BlockStateResolver;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.block.BlockModels;
 import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.UnbakedModel;
-import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.BlockRenderView;
-import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.function.Supplier;
@@ -61,27 +53,19 @@ public class BakedSignPostModel extends ForwardingBakedModel {
 	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<RandomGenerator> randomSupplier,
 			RenderContext context) {
 		if (state.getBlock() instanceof SignPostBlock signPostBlock) {
-			((FabricBakedModel) this.wrapped).emitBlockQuads(blockView, signPostBlock.getFenceState(state), pos, randomSupplier, context);
+			this.wrapped.emitBlockQuads(blockView, signPostBlock.getFenceState(state), pos, randomSupplier, context);
 		}
 	}
 
-	public static class Provider implements ModelVariantProvider {
+	public record Provider(SignPostBlock signPostBlock) implements BlockStateResolver {
 		@Override
-		public @Nullable UnbakedModel loadModelVariant(ModelIdentifier modelId, ModelProviderContext context) {
-			if (modelId.getNamespace().equals(AurorasDeco.NAMESPACE) && modelId.getPath().startsWith("sign_post/") &&
-					!modelId.getVariant().equals("inventory")) {
-				if (Registries.BLOCK.get(new Identifier(modelId.getNamespace(), modelId.getPath())) instanceof SignPostBlock signPostBlock) {
-					var states = signPostBlock.getStateManager().getStates();
-					for (var state : states) {
-						if (modelId.equals(BlockModels.getModelId(state))) {
-							var fenceState = signPostBlock.getFenceState(state);
-							var fenceModel = context.loadModel(BlockModels.getModelId(fenceState));
-							return new UnbakedForwardingModel(fenceModel, BakedSignPostModel::new);
-						}
-					}
-				}
+		public void resolveBlockStates(Context context) {
+			var states = this.signPostBlock.getStateManager().getStates();
+			for (var state : states) {
+				var fenceState = this.signPostBlock.getFenceState(state);
+				var fenceModel = context.getOrLoadModel(BlockModels.getModelId(fenceState));
+				context.setModel(state, new UnbakedForwardingModel(fenceModel, BakedSignPostModel::new));
 			}
-			return null;
 		}
 	}
 }

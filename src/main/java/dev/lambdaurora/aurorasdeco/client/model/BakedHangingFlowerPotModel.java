@@ -52,8 +52,8 @@ public class BakedHangingFlowerPotModel extends ForwardingBakedModel {
 
 		if (state.getBlock() instanceof HangingFlowerPotBlock hangingFlowerPotBlock) {
 			var model = this.client.getBakedModelManager().getBlockModels().getModel(hangingFlowerPotBlock.getFlowerPotState(state));
-			if (model instanceof FabricBakedModel fabricBakedModel)
-				fabricBakedModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+			if (model != null)
+				model.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 		}
 	}
 }

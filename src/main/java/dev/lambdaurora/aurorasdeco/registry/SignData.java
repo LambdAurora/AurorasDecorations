@@ -60,12 +60,12 @@ public final class SignData {
 		this.hangingSignBlock = AurorasDecoRegistry.registerBlock(name + "_hanging_sign",
 				new TerraformHangingSignBlock(
 						hangingSignTexture, hangingSignGuiTexture,
-						QuiltBlockSettings.copyOf(base).strength(1.f).requiredFlags(FeatureFlags.UPDATE_1_20)
+						QuiltBlockSettings.copyOf(base).strength(1.f)
 				));
 		this.wallHangingSignBlock = AurorasDecoRegistry.registerBlock(name + "_wall_hanging_sign",
 				new TerraformWallHangingSignBlock(
 						hangingSignTexture, hangingSignGuiTexture,
-						QuiltBlockSettings.copyOf(base).strength(1.f).dropsLike(this.hangingSignBlock).requiredFlags(FeatureFlags.UPDATE_1_20)
+						QuiltBlockSettings.copyOf(base).strength(1.f).dropsLike(this.hangingSignBlock)
 				));
 
 		this.signItem = AurorasDecoRegistry.registerItem(name + "_sign",

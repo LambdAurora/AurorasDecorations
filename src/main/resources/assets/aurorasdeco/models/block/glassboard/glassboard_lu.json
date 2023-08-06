@@ -9,7 +9,7 @@
       "faces": {
         "north": {"uv": [ 0, 0, 8, 8 ], "texture": "#board"},
         "east":  {"uv": [ 0, 15, 8, 16 ], "texture": "#wood", "rotation": 90, "cullface": "east" },
-        "south": {"uv": [ 8, 0, 0, 8 ], "texture": "#board", "cullface": "south"},
+        "south": {"uv": [ 8, 0, 0, 8 ], "texture": "#board"},
         "up":    {"uv": [ 8, 0, 0, 1 ], "texture": "#wood", "cullface": "up"}
       }
     }

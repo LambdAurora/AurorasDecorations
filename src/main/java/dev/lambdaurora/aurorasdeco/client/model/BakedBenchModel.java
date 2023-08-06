@@ -18,7 +18,6 @@
 package dev.lambdaurora.aurorasdeco.client.model;
 
 import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachedBlockView;
@@ -59,8 +58,13 @@ public class BakedBenchModel extends ForwardingBakedModel {
 		var attachment = ((RenderAttachedBlockView) blockView).getBlockEntityRenderAttachment(pos);
 		if (attachment instanceof SeatRestItem seatRestItem) {
 			var entry = this.restModelManager.get(seatRestItem.getWoodType());
-			if (entry != null && entry.getBakedBenchRest() instanceof FabricBakedModel restModel) {
-				restModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+
+			if (entry != null) {
+				BakedModel model = entry.getBakedBenchRest();
+
+				if (model != null) {
+					model.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+				}
 			}
 		}
 	}

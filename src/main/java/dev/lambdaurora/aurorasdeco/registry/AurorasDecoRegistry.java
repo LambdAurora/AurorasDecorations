@@ -41,10 +41,12 @@ import dev.lambdaurora.aurorasdeco.recipe.ExplodingRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.util.Derivator;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -99,25 +101,25 @@ public final class AurorasDecoRegistry {
 
 	//region Azalea
 	public static final PillarBlock AZALEA_LOG_BLOCK = registerWithItem("azalea_log",
-			createLogBlock(MapColor.DULL_PINK, MapColor.DARK_DULL_PINK),
+			createLogBlock(MapColor.CRIMSON_STEM, MapColor.WARPED_HYPHAE),
 			new QuiltItemSettings());
 	public static final PillarBlock STRIPPED_AZALEA_LOG_BLOCK = registerWithItem("stripped_azalea_log",
-			new PillarBlock(QuiltBlockSettings.copyOf(Blocks.STRIPPED_OAK_LOG).mapColor(MapColor.DARK_DULL_PINK)),
+			new PillarBlock(QuiltBlockSettings.copyOf(Blocks.STRIPPED_OAK_LOG).mapColor(MapColor.WARPED_HYPHAE)),
 			new QuiltItemSettings());
 	public static final PillarBlock STRIPPED_AZALEA_WOOD_BLOCK = registerWithItem("stripped_azalea_wood",
 			new PillarBlock(QuiltBlockSettings.copyOf(STRIPPED_AZALEA_LOG_BLOCK)),
 			new QuiltItemSettings());
 	public static final PillarBlock AZALEA_WOOD_BLOCK = registerWithItem("azalea_wood",
-			createLogBlock(MapColor.DARK_DULL_PINK, MapColor.DARK_DULL_PINK),
+			createLogBlock(MapColor.WARPED_HYPHAE, MapColor.WARPED_HYPHAE),
 			new QuiltItemSettings());
 	public static final PillarBlock FLOWERING_AZALEA_LOG_BLOCK = registerWithItem("flowering_azalea_log",
-			createFloweringLogBlock(() -> AZALEA_LOG_BLOCK, MapColor.DULL_PINK, MapColor.DARK_DULL_PINK),
+			createFloweringLogBlock(() -> AZALEA_LOG_BLOCK, MapColor.CRIMSON_STEM, MapColor.WARPED_HYPHAE),
 			new QuiltItemSettings());
 	public static final PillarBlock FLOWERING_AZALEA_WOOD_BLOCK = registerWithItem("flowering_azalea_wood",
-			createFloweringLogBlock(() -> AZALEA_WOOD_BLOCK, MapColor.DULL_PINK, MapColor.DARK_DULL_PINK),
+			createFloweringLogBlock(() -> AZALEA_WOOD_BLOCK, MapColor.CRIMSON_STEM, MapColor.WARPED_HYPHAE),
 			new QuiltItemSettings());
 	public static final Block AZALEA_PLANKS_BLOCK = registerWithItem("azalea_planks",
-			new Block(QuiltBlockSettings.copyOf(Blocks.OAK_PLANKS).mapColor(MapColor.DULL_PINK)),
+			new Block(QuiltBlockSettings.copyOf(Blocks.OAK_PLANKS).mapColor(MapColor.CRIMSON_STEM)),
 			new QuiltItemSettings());
 	public static final Block AZALEA_SLAB_BLOCK = registerWithItem("azalea_slab",
 			new SlabBlock(QuiltBlockSettings.copyOf(AZALEA_PLANKS_BLOCK)), new QuiltItemSettings()
@@ -168,19 +170,19 @@ public final class AurorasDecoRegistry {
 
 	//region Jacaranda
 	public static final PillarBlock JACARANDA_LOG_BLOCK = registerWithItem("jacaranda_log",
-			createLogBlock(MapColor.PALE_PURPLE, MapColor.TERRACOTTA_PURPLE),
+			createLogBlock(MapColor.ICE, MapColor.PURPLE_TERRACOTTA),
 			new QuiltItemSettings());
 	public static final PillarBlock STRIPPED_JACARANDA_LOG_BLOCK = registerWithItem("stripped_jacaranda_log",
-			new PillarBlock(QuiltBlockSettings.copyOf(Blocks.STRIPPED_OAK_LOG).mapColor(MapColor.TERRACOTTA_PURPLE)),
+			new PillarBlock(QuiltBlockSettings.copyOf(Blocks.STRIPPED_OAK_LOG).mapColor(MapColor.PURPLE_TERRACOTTA)),
 			new QuiltItemSettings());
 	public static final PillarBlock STRIPPED_JACARANDA_WOOD_BLOCK = registerWithItem("stripped_jacaranda_wood",
 			new PillarBlock(QuiltBlockSettings.copyOf(STRIPPED_JACARANDA_LOG_BLOCK)),
 			new QuiltItemSettings());
 	public static final PillarBlock JACARANDA_WOOD_BLOCK = registerWithItem("jacaranda_wood",
-			createLogBlock(MapColor.TERRACOTTA_PURPLE, MapColor.TERRACOTTA_PURPLE),
+			createLogBlock(MapColor.PURPLE_TERRACOTTA, MapColor.PURPLE_TERRACOTTA),
 			new QuiltItemSettings());
 	public static final Block JACARANDA_PLANKS_BLOCK = registerWithItem("jacaranda_planks",
-			new Block(QuiltBlockSettings.copyOf(AZALEA_PLANKS_BLOCK).mapColor(MapColor.PALE_PURPLE)),
+			new Block(QuiltBlockSettings.copyOf(AZALEA_PLANKS_BLOCK).mapColor(MapColor.ICE)),
 			new QuiltItemSettings());
 	public static final Block JACARANDA_SLAB_BLOCK = registerWithItem("jacaranda_slab",
 			new SlabBlock(QuiltBlockSettings.copyOf(JACARANDA_PLANKS_BLOCK)), new QuiltItemSettings()
@@ -238,7 +240,9 @@ public final class AurorasDecoRegistry {
 	public static final BigFlowerPotBlock.PlantAirBlock PLANT_AIR_BLOCK = registerBlock(
 			"plant_air",
 			new BigFlowerPotBlock.PlantAirBlock(
-					QuiltBlockSettings.of(Material.AIR)
+					FabricBlockSettings.create()
+							.solid(false)
+							.replaceable()
 							.nonOpaque()
 							.strength(-1.f, 3600000.f)
 							.dropsNothing()
@@ -264,8 +268,10 @@ public final class AurorasDecoRegistry {
 
 	//region Blackboards
 	public static final BlackboardBlock BLACKBOARD_BLOCK = registerWithItem("blackboard",
-			new BlackboardBlock(QuiltBlockSettings.of(Material.DECORATION).strength(.2f)
+			new BlackboardBlock(FabricBlockSettings.create()
+					.strength(.2f)
 					.nonOpaque()
+					.pistonBehavior(PistonBehavior.DESTROY)
 					.sounds(BlockSoundGroup.WOOD),
 					false),
 			new QuiltItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
@@ -285,7 +291,7 @@ public final class AurorasDecoRegistry {
 			BlackboardItem::new);
 
 	public static final BlackboardBlock GLASSBOARD_BLOCK = registerWithItem("glassboard",
-			new BlackboardBlock(QuiltBlockSettings.copyOf(BLACKBOARD_BLOCK).sounds(BlockSoundGroup.GLASS), false),
+			new BlackboardBlock(QuiltBlockSettings.copyOf(BLACKBOARD_BLOCK).nonOpaque().sounds(BlockSoundGroup.GLASS), false),
 			new QuiltItemSettings().equipmentSlot(stack -> EquipmentSlot.HEAD),
 			BlackboardItem::new);
 	public static final BlackboardBlock WAXED_GLASSBOARD_BLOCK = registerWithItem("waxed_glassboard",
@@ -294,7 +300,7 @@ public final class AurorasDecoRegistry {
 			BlackboardItem::new);
 
 	public static final BlackboardPressBlock BLACKBOARD_PRESS_BLOCK = registerWithItem("blackboard_press",
-			new BlackboardPressBlock(QuiltBlockSettings.of(Material.METAL)),
+			new BlackboardPressBlock(FabricBlockSettings.create().mapColor(MapColor.METAL)),
 			new QuiltItemSettings()
 	);
 
@@ -329,7 +335,7 @@ public final class AurorasDecoRegistry {
 			new CopperHopperBlock(QuiltBlockSettings.copyOf(Blocks.HOPPER).mapColor(MapColor.ORANGE)),
 			new QuiltItemSettings());
 	public static final SturdyStoneBlock STURDY_STONE_BLOCK = registerWithItem("sturdy_stone",
-			new SturdyStoneBlock(QuiltBlockSettings.of(Material.STONE).requiresTool().strength(3.5f)),
+			new SturdyStoneBlock(),
 			new QuiltItemSettings());
 	public static final FenceGateBlock NETHER_BRICK_FENCE_GATE = registerWithItem("nether_brick_fence_gate",
 			new FenceGateBlock(QuiltBlockSettings.copyOf(Blocks.NETHER_BRICK_FENCE), SignType.OAK),
@@ -337,7 +343,8 @@ public final class AurorasDecoRegistry {
 	//endregion
 
 	public static final BookPileBlock BOOK_PILE_BLOCK = Registrar.register("book_pile",
-					new BookPileBlock(QuiltBlockSettings.of(Material.DECORATION).strength(.2f)
+					new BookPileBlock(QuiltBlockSettings.create()
+							.strength(.2f)
 							.nonOpaque()))
 			.then(block -> {
 				((ItemExtensions) Items.BOOK).makePlaceable(block, false);
@@ -365,19 +372,19 @@ public final class AurorasDecoRegistry {
 	//endregion
 
 	public static final WindChimeBlock WIND_CHIME_BLOCK = registerWithItem("wind_chime",
-			new WindChimeBlock(QuiltBlockSettings.of(Material.DECORATION).nonOpaque()
+			new WindChimeBlock(QuiltBlockSettings.create().nonOpaque()
 					.sounds(BlockSoundGroup.AMETHYST_BLOCK)),
 			new QuiltItemSettings());
 
 	//region Braziers
 	public static final BrazierBlock BRAZIER_BLOCK = registerWithItem("brazier",
-			new BrazierBlock(MapColor.BRIGHT_RED, 1, 15, ParticleTypes.FLAME),
+			new BrazierBlock(MapColor.FIRE, 1, 15, ParticleTypes.FLAME),
 			new QuiltItemSettings());
 	public static final BrazierBlock SOUL_BRAZIER_BLOCK = registerWithItem("soul_brazier",
 			new BrazierBlock(MapColor.LIGHT_BLUE, 2, 10, ParticleTypes.SOUL),
 			new QuiltItemSettings());
 	public static final BrazierBlock COPPER_SULFATE_BRAZIER_BLOCK = registerWithItem("copper_sulfate_brazier",
-			new CopperSulfateBrazierBlock(MapColor.EMERALD_GREEN, 2, 14, COPPER_SULFATE_FLAME),
+			new CopperSulfateBrazierBlock(MapColor.EMERALD, 2, 14, COPPER_SULFATE_FLAME),
 			new QuiltItemSettings());
 	//endregion
 
@@ -529,14 +536,14 @@ public final class AurorasDecoRegistry {
 		return new FloweringAzaleaLogBlock(
 				normal,
 				QuiltBlockSettings.copyOf(Blocks.OAK_LOG)
-						.mapColorProvider(state -> state.get(PillarBlock.AXIS).isVertical() ? topMapColor : sideMapColor)
+						.mapColor(state -> state.get(PillarBlock.AXIS).isVertical() ? topMapColor : sideMapColor)
 		);
 	}
 
 	private static PillarBlock createLogBlock(MapColor topMapColor, MapColor sideMapColor) {
 		return new PillarBlock(
 				QuiltBlockSettings.copyOf(Blocks.OAK_LOG)
-						.mapColorProvider(state -> state.get(PillarBlock.AXIS).isVertical() ? topMapColor : sideMapColor)
+						.mapColor(state -> state.get(PillarBlock.AXIS).isVertical() ? topMapColor : sideMapColor)
 		);
 	}
 

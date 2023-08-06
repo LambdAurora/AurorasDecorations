@@ -25,6 +25,7 @@ import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BedPart;
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.VillagerEntity;
@@ -110,7 +111,9 @@ public class SleepingBagBlock extends HorizontalFacingBlock {
 	private final DyeColor color;
 
 	public SleepingBagBlock(DyeColor color) {
-		super(QuiltBlockSettings.of(Material.WOOL, color.getMapColor())
+		super(QuiltBlockSettings.create()
+				.mapColor(color.getMapColor())
+				.pistonBehavior(PistonBehavior.DESTROY)
 				.strength(.5f)
 				.sounds(BlockSoundGroup.WOOL));
 

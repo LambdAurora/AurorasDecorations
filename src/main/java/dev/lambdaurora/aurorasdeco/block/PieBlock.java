@@ -19,6 +19,7 @@ package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.accessor.ItemExtensions;
 import net.minecraft.block.*;
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.FoodComponent;
@@ -64,7 +65,10 @@ public class PieBlock extends Block {
 	private final FoodComponent foodComponent;
 
 	public PieBlock(FoodComponent foodComponent) {
-		this(QuiltBlockSettings.of(Material.CAKE).strength(0.5f).sounds(BlockSoundGroup.WOOL), foodComponent);
+		this(QuiltBlockSettings.create()
+						.mapColor(MapColor.NONE).pistonBehavior(PistonBehavior.DESTROY).strength(0.5f).sounds(BlockSoundGroup.WOOL),
+				foodComponent
+		);
 	}
 
 	public PieBlock(Settings settings, FoodComponent foodComponent) {
@@ -116,7 +120,7 @@ public class PieBlock extends Block {
 
 	@Override
 	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-		return world.getBlockState(pos.down()).getMaterial().isSolid();
+		return world.getBlockState(pos.down()).isSolid();
 	}
 
 	/* Updates */

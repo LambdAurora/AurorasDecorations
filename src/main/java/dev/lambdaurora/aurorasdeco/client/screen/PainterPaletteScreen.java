@@ -17,14 +17,13 @@
 
 package dev.lambdaurora.aurorasdeco.client.screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.screen.PainterPaletteScreenHandler;
 import dev.lambdaurora.aurorasdeco.screen.slot.BlackboardToolSlot;
 import dev.lambdaurora.aurorasdeco.screen.slot.ColorSlot;
 import dev.lambdaurora.aurorasdeco.screen.slot.LockedSlot;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.slot.Slot;
@@ -59,62 +58,57 @@ public class PainterPaletteScreen extends HandledScreen<PainterPaletteScreenHand
 	}
 
 	@Override
-	protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
-		RenderSystem.setShaderTexture(0, TEXTURE);
-		drawTexture(matrices, this.getBackgroundX(), this.getBackgroundY(), 0, 0, this.backgroundWidth + 24, this.backgroundHeight);
+	protected void drawBackground(GuiGraphics graphics, float delta, int mouseX, int mouseY) {
+		graphics.setShaderColor(1.f, 1.f, 1.f, 1.f);
+		graphics.drawTexture(TEXTURE,
+				this.getBackgroundX(), this.getBackgroundY(), 0, 0, this.backgroundWidth + 24, this.backgroundHeight
+		);
 	}
 
 	@Override
-	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-		this.renderBackground(matrices);
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+		this.renderBackground(graphics);
 
 		for (var slot : this.handler.slots) {
 			if (slot instanceof BlackboardToolSlot) {
-				RenderSystem.setShaderTexture(0, TEXTURE);
-
 				int x = this.getBackgroundX() + slot.x + 24 - 1;
 				int y = this.getBackgroundY() + slot.y - 1;
 
 				if (slot.getStack().isEmpty()) {
-					drawTexture(matrices, x, y, this.backgroundWidth + 26, 24, 18, 18, 256, 256);
+					graphics.drawTexture(TEXTURE, x, y, this.backgroundWidth + 26, 24, 18, 18, 256, 256);
 				} else {
-					drawTexture(matrices, x, y, this.backgroundWidth + 26, 42, 18, 18, 256, 256);
+					graphics.drawTexture(TEXTURE, x, y, this.backgroundWidth + 26, 42, 18, 18, 256, 256);
 				}
 			}
 		}
 
-		super.render(matrices, mouseX, mouseY, delta);
+		super.render(graphics, mouseX, mouseY, delta);
 
+		MatrixStack matrices = graphics.getMatrices();
 		matrices.push();
 		matrices.translate(this.getBackgroundX(), this.getBackgroundY(), 275);
 		for (var slot : this.handler.slots) {
 			if (slot instanceof LockedSlot) {
-				RenderSystem.setShaderTexture(0, LOCK_TEXTURE);
-
 				matrices.push();
 				matrices.translate(slot.x + 24 + 4, slot.y + 4, 0);
 				matrices.scale(.75f, .75f, 1);
-				drawTexture(matrices, 0, 0, 46, 212, 16, 16, 256, 256);
+				graphics.drawTexture(LOCK_TEXTURE, 0, 0, 46, 212, 16, 16, 256, 256);
 				matrices.pop();
 			} else if ((slot instanceof ColorSlot && slot.getIndex() == this.handler.getInventory().getSelectedColorSlot())
 					|| (slot instanceof BlackboardToolSlot && slot.getIndex() == this.handler.getInventory().getSelectedToolSlot())) {
-				RenderSystem.setShaderTexture(0, TEXTURE);
-
 				matrices.push();
 				matrices.translate(slot.x + 24, slot.y, 0);
-				this.drawSelectedIndicator(matrices);
+				this.drawSelectedIndicator(graphics);
 				matrices.pop();
 			}
 		}
 		matrices.pop();
 
-		this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+		this.drawMouseoverTooltip(graphics, mouseX, mouseY);
 	}
 
-	private void drawSelectedIndicator(MatrixStack matrices) {
-		drawTexture(matrices, -3, -3, this.backgroundWidth + 24, 0, 22, 22, 256, 256);
+	private void drawSelectedIndicator(GuiGraphics graphics) {
+		graphics.drawTexture(TEXTURE, -3, -3, this.backgroundWidth + 24, 0, 22, 22, 256, 256);
 	}
 
 	@Override

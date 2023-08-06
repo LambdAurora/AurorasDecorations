@@ -29,7 +29,6 @@ import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
@@ -115,7 +114,7 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 	/* Placement */
 
 	public boolean isPlacingPreferred(BlockState state, WorldView world, BlockPos pos) {
-		return world.getBlockState(pos.offset(state.get(FACING).getOpposite())).getMaterial().isSolid();
+		return world.getBlockState(pos.offset(state.get(FACING).getOpposite())).isSolid();
 	}
 
 	@Override
@@ -380,13 +379,6 @@ public class BlackboardBlock extends BlockWithEntity implements Waterloggable {
 		}
 
 		return stack;
-	}
-
-	/* Piston */
-
-	@Override
-	public PistonBehavior getPistonBehavior(BlockState state) {
-		return PistonBehavior.DESTROY;
 	}
 
 	/* Block Entity Stuff */

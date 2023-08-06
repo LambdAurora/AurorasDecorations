@@ -17,10 +17,11 @@
 
 package dev.lambdaurora.aurorasdeco.block.plant;
 
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Fertilizable;
 import net.minecraft.block.FlowerBlock;
-import net.minecraft.block.Material;
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
@@ -48,7 +49,9 @@ public class AuroraFlowerBlock extends FlowerBlock implements Fertilizable {
 	}
 
 	public static QuiltBlockSettings defaultSettings() {
-		return QuiltBlockSettings.of(Material.PLANT)
+		return FabricBlockSettings.create()
+				.pistonBehavior(PistonBehavior.DESTROY)
+				.notSolid()
 				.noCollision()
 				.breakInstantly()
 				.sounds(BlockSoundGroup.GRASS);
@@ -62,12 +65,12 @@ public class AuroraFlowerBlock extends FlowerBlock implements Fertilizable {
 	}
 
 	@Override
-	public boolean canGrow(World world, RandomGenerator random, BlockPos pos, BlockState state) {
+	public boolean canFertilize(World world, RandomGenerator random, BlockPos pos, BlockState state) {
 		return true;
 	}
 
 	@Override
-	public void grow(ServerWorld world, RandomGenerator random, BlockPos pos, BlockState state) {
+	public void fertilize(ServerWorld world, RandomGenerator random, BlockPos pos, BlockState state) {
 		dropStack(world, pos, new ItemStack(this));
 	}
 }

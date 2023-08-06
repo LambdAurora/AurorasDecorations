@@ -69,7 +69,7 @@ public abstract class ItemFrameEntityMixin extends AbstractDecorationEntity {
 					this.setInvisible(true);
 					this.playSound(AurorasDecoSounds.ITEM_FRAME_HIDE_BACKGROUND_SOUND_EVENT, 1.f, 1.f);
 					stack.damage(1, player, p -> p.sendToolBreakStatus(hand));
-					world.emitGameEvent(player, GameEvent.SHEAR, this.getBlockPos());
+					this.getWorld().emitGameEvent(player, GameEvent.SHEAR, this.getBlockPos());
 					cir.setReturnValue(ActionResult.CONSUME);
 				} else {
 					cir.setReturnValue(ActionResult.SUCCESS);

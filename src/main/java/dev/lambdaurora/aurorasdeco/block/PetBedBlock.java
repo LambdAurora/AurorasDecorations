@@ -24,7 +24,6 @@ import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
@@ -119,7 +118,7 @@ public class PetBedBlock extends Block {
 	private static void registerPetBed(DyeColor color) {
 		var block = Registry.register(Registries.BLOCK,
 				AurorasDeco.id("pet_bed/" + color.getName()),
-				new PetBedBlock(QuiltBlockSettings.of(Material.WOOL)
+				new PetBedBlock(QuiltBlockSettings.create()
 						.mapColor(color).sounds(BlockSoundGroup.WOOD).strength(.2f)));
 		var item = AurorasDecoRegistry.registerItem("pet_bed/" + color.getName(), new BlockItem(block, new QuiltItemSettings()));
 		PET_BEDS_ITEM_GROUP_NODE.add(item);

@@ -18,8 +18,8 @@
 package dev.lambdaurora.aurorasdeco.mixin.client;
 
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
-import net.minecraft.client.recipebook.ClientRecipeBook;
-import net.minecraft.client.recipebook.RecipeBookGroup;
+import net.minecraft.client.recipe_book.ClientRecipeBook;
+import net.minecraft.client.recipe_book.RecipeBookGroup;
 import net.minecraft.recipe.Recipe;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.spongepowered.asm.mixin.Mixin;

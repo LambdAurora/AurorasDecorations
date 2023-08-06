@@ -20,11 +20,13 @@ package dev.lambdaurora.aurorasdeco.client.model;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.render.model.json.ModelVariantMap;
+import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
@@ -38,31 +40,39 @@ import java.util.function.BiConsumer;
 @ClientOnly
 public class RestModelManager {
 	private final Map<WoodType, RestModelEntry> models = new Reference2ObjectOpenHashMap<>();
-	private final ModelLoader modelLoader;
-
-	public RestModelManager(ModelLoader modelLoader) {
-		this.modelLoader = modelLoader;
-	}
 
 	public RestModelEntry get(WoodType woodType) {
 		return this.models.get(woodType);
 	}
 
-	public void init(ResourceManager resourceManager, ModelVariantMap.DeserializationContext deserializationContext,
-			BiConsumer<Identifier, UnbakedModel> modelRegister) {
+	public void init(ModelLoadingPlugin.Context context) {
 		this.models.clear();
 		WoodType.forEach(woodType -> {
 			var planksComponent = woodType.getComponent(WoodType.ComponentType.PLANKS);
 			if (planksComponent == null) return;
 
-			var entry = this.loadModelEntry(woodType, resourceManager, deserializationContext);
+			var entry = this.loadModelEntry(woodType, MinecraftClient.getInstance().getResourceManager());
 			this.models.put(woodType, entry);
-			entry.register(modelRegister);
+
+			context.addModels(entry.getBenchRestId());
+			context.resolveModel().register(ctx -> {
+				if (ctx.id().equals(entry.getBenchRestId()))
+					return entry.getBenchRest();
+				return null;
+			});
+		});
+
+		context.modifyModelOnLoad().register((unbakedModel, ctx) -> {
+			if (ctx.id() instanceof ModelIdentifier modelId && !modelId.getVariant().equals("inventory")
+					&& modelId.getPath().startsWith("bench/")) {
+				return new UnbakedBenchModel(unbakedModel, this);
+			} else {
+				return unbakedModel;
+			}
 		});
 	}
 
-	private RestModelEntry loadModelEntry(WoodType woodType, ResourceManager resourceManager,
-			ModelVariantMap.DeserializationContext deserializationContext) {
+	private RestModelEntry loadModelEntry(WoodType woodType, ResourceManager resourceManager) {
 		var pathName = woodType.getPathName();
 
 		// Bench rest
@@ -76,11 +86,10 @@ public class RestModelManager {
 				AurorasDeco.warn("Failed to load the bench rest models for the {} wood type. Could not locate the model.", woodType);
 			} else {
 				try (var reader = new InputStreamReader(resource.get().open())) {
-					var stateFactory = deserializationContext.getStateFactory();
+					var deserializationContext = new ModelVariantMap.DeserializationContext();
 					deserializationContext.setStateFactory(benchBlock.getStateManager());
 					var map = ModelVariantMap.fromJson(deserializationContext, reader);
 					benchRest = map.getMultipartModel();
-					deserializationContext.setStateFactory(stateFactory);
 				} catch (IOException e) {
 					AurorasDeco.warn("Failed to load the bench rest models for the {} wood type.", woodType, e);
 				}
@@ -92,8 +101,7 @@ public class RestModelManager {
 
 	public class RestModelEntry {
 		private final Identifier benchRestId;
-		private UnbakedModel benchRest;
-		private BakedModel bakedModel;
+		private final UnbakedModel benchRest;
 
 		public RestModelEntry(Identifier benchRestId, UnbakedModel benchRest) {
 			this.benchRestId = benchRestId;
@@ -114,7 +122,7 @@ public class RestModelManager {
 		}
 
 		public BakedModel getBakedBenchRest() {
-			return modelLoader.getBakedModelMap().get(this.getBenchRestId());
+			return MinecraftClient.getInstance().getBakedModelManager().getModel(this.getBenchRestId());
 		}
 	}
 }

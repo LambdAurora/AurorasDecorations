@@ -21,6 +21,9 @@
     "entrypoints": {
       "init": [
         "dev.lambdaurora.aurorasdeco.debug.AurorasDecoDebug"
+      ],
+      "quilt:game_test": [
+        "dev.lambdaurora.aurorasdeco.test.AurorasDecoTests"
       ]
     },
     "depends": [

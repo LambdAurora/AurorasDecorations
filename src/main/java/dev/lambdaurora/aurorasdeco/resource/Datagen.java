@@ -27,7 +27,6 @@ import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
 import dev.lambdaurora.aurorasdeco.client.AurorasDecoClient;
 import dev.lambdaurora.aurorasdeco.item.SeatRestItem;
 import dev.lambdaurora.aurorasdeco.item.SignPostItem;
-import dev.lambdaurora.aurorasdeco.mixin.block.AbstractBlockAccessor;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
@@ -38,7 +37,6 @@ import dev.lambdaurora.aurorasdeco.util.ColorUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
@@ -403,8 +401,9 @@ public final class Datagen {
 			}
 		});
 
-		Registries.BLOCK.stream().filter(block -> ((AbstractBlockAccessor) block).getMaterial() == Material.WOOD
-						|| ((AbstractBlockAccessor) block).getMaterial() == Material.NETHER_WOOD)
+		// @TODO: RE-ADD WOOD FILTERING
+		Registries.BLOCK.stream()/*.filter(block -> ((AbstractBlockAccessor) block).getMaterial() == Material.WOOD
+						|| ((AbstractBlockAccessor) block).getMaterial() == Material.NETHER_WOOD)*/
 				.forEach(Datagen::registerWoodcuttingRecipesForBlockVariants);
 
 		BenchBlock.streamBenches().forEach(block -> {

@@ -28,9 +28,9 @@ import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.ModelBaker;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.render.model.json.ModelVariantMap;
+import net.minecraft.client.resource.Material;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
@@ -89,10 +89,8 @@ public class UnbakedGlassboardModel extends UnbakedBlackboardModel {
 					} else {
 						try (var reader = new InputStreamReader(resource.get().open())) {
 
-							var stateFactory = deserializationContext.getStateFactory();
 							deserializationContext.setStateFactory(block.getStateManager());
 							var map = ModelVariantMap.fromJson(deserializationContext, reader);
-							deserializationContext.setStateFactory(stateFactory);
 
 							map.getVariantMap().forEach((variant, model) -> modelConsumer.accept(
 									new ModelIdentifier(identifier.getNamespace(), identifier.getPath(), this.variant.replaceFirst("facing=\\w+", variant)),
@@ -109,7 +107,7 @@ public class UnbakedGlassboardModel extends UnbakedBlackboardModel {
 
 	@Override
 	public BakedModel bake(
-			ModelBaker modelBaker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId
+			ModelBaker modelBaker, Function<Material, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId
 	) {
 		var baseModel = this.bakeBaseModel(modelBaker, textureGetter, rotationContainer, modelId);
 
@@ -117,7 +115,7 @@ public class UnbakedGlassboardModel extends UnbakedBlackboardModel {
 	}
 
 	private Int2ObjectMap<List<BakedModel>> bakeAllConnectingModels(
-			ModelBaker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer,
+			ModelBaker baker, Function<Material, Sprite> textureGetter, ModelBakeSettings rotationContainer,
 			Identifier modelId, BakedModel baseModel
 	) {
 		var map = new Int2ObjectOpenHashMap<List<BakedModel>>();

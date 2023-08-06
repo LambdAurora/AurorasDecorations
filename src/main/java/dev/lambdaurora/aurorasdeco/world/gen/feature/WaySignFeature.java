@@ -45,7 +45,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.*;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.*;
-import net.minecraft.util.math.intprovider.IntProvider;
+import net.minecraft.util.math.int_provider.IntProvider;
 import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
@@ -190,7 +190,7 @@ public class WaySignFeature extends Feature<WaySignFeature.Config> {
 		}
 
 		var chunkGenerator = (ChunkGeneratorAccessor) world.getChunkManager().getChunkGenerator();
-		ConcentricRingPlacementCalculator concentricRingPlacementCalculator = world.getChunkManager().method_46642();
+		ConcentricRingPlacementCalculator concentricRingPlacementCalculator = world.getChunkManager().getConcentricRingPlacementCalculator();
 		var structurePlacements = new Object2ObjectArrayMap<StructurePlacement, Set<Holder<StructureFeature>>>();
 
 		for (var holder : structures) {

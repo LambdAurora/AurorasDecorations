@@ -17,13 +17,11 @@
 
 package dev.lambdaurora.aurorasdeco.client.screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.PartType;
 import dev.lambdaurora.aurorasdeco.screen.ShelfScreenHandler;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -47,26 +45,24 @@ public class ShelfScreen extends HandledScreen<ShelfScreenHandler> {
 	}
 
 	@Override
-	protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
-		RenderSystem.setShaderTexture(0, TEXTURE);
+	protected void drawBackground(GuiGraphics graphics, float delta, int mouseX, int mouseY) {
+		graphics.setShaderColor(1.f, 1.f, 1.f, 1.f);
 		int x = (this.width - this.backgroundWidth) / 2;
 		int y = (this.height - this.backgroundHeight) / 2;
-		this.drawTexture(matrices, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+		graphics.drawTexture(TEXTURE, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
 		if (this.handler.getPartType() != PartType.DOUBLE) {
 			x += 52;
 			y += 16;
 
-			this.drawTexture(matrices, x, y, 184, 0, 256 - 184, 18 * 2);
+			graphics.drawTexture(TEXTURE, x, y, 184, 0, 256 - 184, 18 * 2);
 		}
 	}
 
 	@Override
-	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-		this.renderBackground(matrices);
-		super.render(matrices, mouseX, mouseY, delta);
-		this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+		this.renderBackground(graphics);
+		super.render(graphics, mouseX, mouseY, delta);
+		this.drawMouseoverTooltip(graphics, mouseX, mouseY);
 	}
 }

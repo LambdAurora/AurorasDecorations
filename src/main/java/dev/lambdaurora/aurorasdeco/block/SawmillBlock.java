@@ -21,7 +21,7 @@ import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.screen.SawmillScreenHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
+import net.minecraft.block.MapColor;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -60,7 +60,7 @@ public final class SawmillBlock extends Block {
 	private static final VoxelShape SHAPE;
 
 	public SawmillBlock() {
-		super(QuiltBlockSettings.of(Material.WOOD).nonOpaque().strength(2.5f).sounds(BlockSoundGroup.WOOD));
+		super(QuiltBlockSettings.create().mapColor(MapColor.WOOD).nonOpaque().strength(2.5f).sounds(BlockSoundGroup.WOOD));
 
 		this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
 	}

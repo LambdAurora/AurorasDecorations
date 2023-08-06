@@ -71,10 +71,10 @@ public final class AurorasDecoPlants {
 	/* Potted Plants */
 
 	public static final FlowerPotBlock POTTED_DAFFODIL = registerBlock("potted/daffodil",
-			new DirectionalFlowerPotBlock(DAFFODIL.block(), QuiltBlockSettings.of(Material.DECORATION).nonOpaque().breakInstantly()));
+			new DirectionalFlowerPotBlock(DAFFODIL.block(), QuiltBlockSettings.copyOf(Blocks.FLOWER_POT)));
 
 	public static final FlowerPotBlock POTTED_LAVENDER = registerBlock("potted/lavender",
-			new FlowerPotBlock(LAVENDER.block(), QuiltBlockSettings.of(Material.DECORATION).nonOpaque().breakInstantly()));
+			new FlowerPotBlock(LAVENDER.block(), QuiltBlockSettings.copyOf(Blocks.FLOWER_POT)));
 
 	/* Saplings */
 
@@ -84,7 +84,7 @@ public final class AurorasDecoPlants {
 	);
 
 	public static final FlowerPotBlock POTTED_JACARANDA_SAPLING = registerBlock("potted/jacaranda_sapling",
-			new FlowerPotBlock(JACARANDA_SAPLING, QuiltBlockSettings.of(Material.DECORATION).nonOpaque().breakInstantly()));
+			new FlowerPotBlock(JACARANDA_SAPLING, QuiltBlockSettings.copyOf(Blocks.FLOWER_POT)));
 
 	/* Leaves */
 

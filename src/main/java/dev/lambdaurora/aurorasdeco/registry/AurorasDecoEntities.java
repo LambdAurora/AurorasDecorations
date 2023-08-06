@@ -19,13 +19,13 @@ package dev.lambdaurora.aurorasdeco.registry;
 
 import dev.lambdaurora.aurorasdeco.entity.FakeLeashKnotEntity;
 import dev.lambdaurora.aurorasdeco.entity.SeatEntity;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import org.quiltmc.qsl.entity.api.QuiltEntityTypeBuilder;
 
 import static dev.lambdaurora.aurorasdeco.AurorasDeco.id;
 
@@ -46,23 +46,23 @@ public final class AurorasDecoEntities {
 	public static final EntityType<FakeLeashKnotEntity> FAKE_LEASH_KNOT_ENTITY_TYPE = Registry.register(
 			Registries.ENTITY_TYPE,
 			id("fake_leash_knot"),
-			FabricEntityTypeBuilder.<FakeLeashKnotEntity>createMob()
+			QuiltEntityTypeBuilder.<FakeLeashKnotEntity>createMob()
 					.entityFactory(FakeLeashKnotEntity::new)
-					.dimensions(EntityDimensions.fixed(.375f, .5f))
-					.defaultAttributes(MobEntity::createAttributes)
-					.forceTrackedVelocityUpdates(false)
-					.trackRangeChunks(10)
-					.trackedUpdateRate(Integer.MAX_VALUE)
+					.setDimensions(EntityDimensions.fixed(.375f, .5f))
+					.defaultAttributes(MobEntity.createAttributes())
+					.alwaysUpdateVelocity(false)
+					.maxChunkTrackingRange(10)
+					.trackingTickInterval(Integer.MAX_VALUE)
 					.build()
 	);
 	public static final EntityType<SeatEntity> SEAT_ENTITY_TYPE = Registry.register(
 			Registries.ENTITY_TYPE,
 			id("seat"),
-			FabricEntityTypeBuilder.create(SpawnGroup.MISC, SeatEntity::new)
-					.dimensions(EntityDimensions.fixed(0.f, 0.f))
+			QuiltEntityTypeBuilder.create(SpawnGroup.MISC, SeatEntity::new)
+					.setDimensions(EntityDimensions.fixed(0.f, 0.f))
 					.disableSaving()
 					.disableSummon()
-					.trackRangeChunks(10)
+					.maxChunkTrackingRange(10)
 					.build()
 	);
 

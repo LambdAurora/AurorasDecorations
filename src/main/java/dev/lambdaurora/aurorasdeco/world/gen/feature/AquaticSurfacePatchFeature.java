@@ -20,7 +20,7 @@ package dev.lambdaurora.aurorasdeco.world.gen.feature;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.lambdaurora.aurorasdeco.world.gen.WorldGenUtils;
-import net.minecraft.util.math.intprovider.IntProvider;
+import net.minecraft.util.math.int_provider.IntProvider;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.FeatureConfig;
 import net.minecraft.world.gen.feature.util.FeatureContext;

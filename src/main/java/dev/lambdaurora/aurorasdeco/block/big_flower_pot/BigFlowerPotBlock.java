@@ -29,7 +29,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -83,7 +83,10 @@ public class BigFlowerPotBlock extends Block/* implements FluidFillable*/ {
 	}
 
 	public BigFlowerPotBlock(PottedPlantType type) {
-		this(type, FabricBlockSettings.of(Material.DECORATION).strength(.1f).nonOpaque());
+		this(type, FabricBlockSettings.create()
+				.notSolid().pistonBehavior(PistonBehavior.DESTROY)
+				.strength(.1f).nonOpaque()
+		);
 	}
 
 	public PottedPlantType getPlantType() {
@@ -250,7 +253,7 @@ public class BigFlowerPotBlock extends Block/* implements FluidFillable*/ {
 
 	/* Loot table */
 
-	protected void acceptPlantDrops(BlockState state, LootContext.Builder builder, Consumer<ItemStack> consumer) {
+	protected void acceptPlantDrops(BlockState state, LootContextParameterSet.Builder builder, Consumer<ItemStack> consumer) {
 		var item = this.getEquivalentPlantStack(state);
 		if (item != null) {
 			consumer.accept(item);
@@ -258,11 +261,11 @@ public class BigFlowerPotBlock extends Block/* implements FluidFillable*/ {
 	}
 
 	@Override
-	public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
+	public List<ItemStack> getDroppedStacks(BlockState state, LootContextParameterSet.Builder builder) {
 		if (this.isEmpty())
 			return super.getDroppedStacks(state, builder);
 
-		builder.putDrop(PLANT_LOOT_ID, (context, consumer) -> this.acceptPlantDrops(state, builder, consumer));
+		builder.withDynamicDrop(PLANT_LOOT_ID, (consumer) -> this.acceptPlantDrops(state, builder, consumer));
 
 		return AurorasDecoRegistry.BIG_FLOWER_POT_BLOCK.getDroppedStacks(state, builder);
 	}
@@ -296,7 +299,7 @@ public class BigFlowerPotBlock extends Block/* implements FluidFillable*/ {
 
 	public static class PlantAirBlock extends Block {
 		public PlantAirBlock(Settings settings) {
-			super(settings);
+			super(settings.pistonBehavior(PistonBehavior.DESTROY));
 		}
 
 		@Override
@@ -336,13 +339,6 @@ public class BigFlowerPotBlock extends Block/* implements FluidFillable*/ {
 			if (downState.getBlock() instanceof BigFlowerPotBlock) {
 				downState.onEntityCollision(world, downPos, entity);
 			}
-		}
-
-		/* Piston */
-
-		@Override
-		public PistonBehavior getPistonBehavior(BlockState state) {
-			return PistonBehavior.DESTROY;
 		}
 
 		/* Updates */

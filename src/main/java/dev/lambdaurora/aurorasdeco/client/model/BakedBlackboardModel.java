@@ -57,7 +57,7 @@ public class BakedBlackboardModel extends ForwardingBakedModel {
 	protected void emitBlockMesh(BlockRenderView blockView, BlockPos pos, RenderContext context) {
 		var attachment = ((RenderAttachedBlockView) blockView).getBlockEntityRenderAttachment(pos);
 		if (attachment instanceof Mesh mesh) {
-			context.meshConsumer().accept(mesh);
+			mesh.outputTo(context.getEmitter());
 		}
 	}
 
@@ -68,7 +68,8 @@ public class BakedBlackboardModel extends ForwardingBakedModel {
 		var nbt = BlockItem.getBlockEntityNbtFromStack(stack);
 		if (nbt != null && nbt.contains("pixels", NbtElement.BYTE_ARRAY_TYPE)) {
 			var blackboard = Blackboard.fromNbt(nbt);
-			context.meshConsumer().accept(blackboard.buildMesh(Direction.NORTH, blackboard.isLit() ? LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE : 0));
+			blackboard.buildMesh(Direction.NORTH, blackboard.isLit() ? LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE : 0)
+					.outputTo(context.getEmitter());
 		}
 	}
 }

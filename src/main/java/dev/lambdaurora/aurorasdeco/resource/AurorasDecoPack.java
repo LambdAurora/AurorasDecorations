@@ -26,7 +26,6 @@ import com.mojang.logging.LogUtils;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.*;
 import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
-import net.minecraft.block.Material;
 import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
@@ -58,9 +57,7 @@ public class AurorasDecoPack extends InMemoryResourcePack {
 				.map(Registries.BLOCK::getId));
 		this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("shelves"), ShelfBlock.streamShelves()
 				.map(Registries.BLOCK::getId));
-		this.registerTag(new String[]{"blocks"}, new Identifier("mineable/axe"), SignPostBlock.stream()
-				.filter(block -> block.getDefaultState().getMaterial() == Material.WOOD
-						|| block.getDefaultState().getMaterial() == Material.NETHER_WOOD)
+		this.registerTag(new String[]{"blocks"}, new Identifier("mineable/axe"), SignPostBlock.stream() // @TODO: FIX THIS SO IT DOESN'T FUCK THE STONE FENCES
 				.map(Registries.BLOCK::getId));
 		this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("small_log_piles"), SmallLogPileBlock.stream()
 				.map(Registries.BLOCK::getId));

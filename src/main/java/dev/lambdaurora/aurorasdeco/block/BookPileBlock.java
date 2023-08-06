@@ -29,7 +29,7 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -176,10 +176,10 @@ public class BookPileBlock extends BlockWithEntity implements Waterloggable {
 	/* Loot table */
 
 	@Override
-	public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
-		var blockEntity = builder.get(LootContextParameters.BLOCK_ENTITY);
+	public List<ItemStack> getDroppedStacks(BlockState state, LootContextParameterSet.Builder builder) {
+		var blockEntity = builder.getParameter(LootContextParameters.BLOCK_ENTITY);
 		if (blockEntity instanceof BookPileBlockEntity bookPile) {
-			builder.putDrop(BOOKS_LOOT_ID, (context, consumer) -> {
+			builder.withDynamicDrop(BOOKS_LOOT_ID, (consumer) -> {
 				for (var stack : bookPile.getBooks()) {
 					if (!stack.isEmpty()) consumer.accept(stack.copy());
 				}

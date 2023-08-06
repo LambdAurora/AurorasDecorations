@@ -25,7 +25,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.client.util.SpriteIdentifier;
+import net.minecraft.client.resource.Material;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.PlayerScreenHandler;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
@@ -37,9 +37,10 @@ import java.util.List;
 public class WindChimeBlockEntityRenderer implements BlockEntityRenderer<WindChimeBlockEntity> {
 	public static final EntityModelLayer WIND_CHIME_MODEL_LAYER = new EntityModelLayer(AurorasDeco.id("wind_chime"),
 			"main");
-	public static final SpriteIdentifier WIND_CHIME_TEXTURE = new SpriteIdentifier(
+	public static final Material WIND_CHIME_TEXTURE = new Material(
 			PlayerScreenHandler.BLOCK_ATLAS_TEXTURE,
-			AurorasDeco.id("block/wind_chime"));
+			AurorasDeco.id("block/wind_chime")
+	);
 
 	private static final float EASTERN_CHIME_X = 11.f;
 	private static final float WESTERN_CHIME_X = 5.f;

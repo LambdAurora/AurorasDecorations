@@ -54,6 +54,6 @@ public class BakedVariantModel extends ForwardingBakedModel {
 		var model = this.variantMap.get(state);
 		if (model == null) return;
 
-		((FabricBakedModel) model).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+		model.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 	}
 }

@@ -341,13 +341,6 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
 		return AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE.instantiate(pos, state);
 	}
 
-	/* Piston */
-
-	@Override
-	public PistonBehavior getPistonBehavior(BlockState state) {
-		return PistonBehavior.BLOCK;
-	}
-
 	/* Fluid */
 
 	@Override
@@ -371,6 +364,7 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
 		var planks = woodType.getComponent(WoodType.ComponentType.PLANKS);
 		if (planks == null) throw new IllegalStateException("ShelfBlock attempted to be created while the wood type is invalid.");
 		return QuiltBlockSettings.copyOf(planks.block())
+				.pistonBehavior(PistonBehavior.BLOCK)
 				.collidable(true)
 				.luminance(0) // Override any smart luminance stuff from other mods to avoid crashes.
 				.nonOpaque();

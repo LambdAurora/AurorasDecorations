@@ -17,12 +17,10 @@
 
 package dev.lambdaurora.aurorasdeco.client.screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import dev.lambdaurora.aurorasdeco.screen.SawmillScreenHandler;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -52,31 +50,30 @@ public class SawmillScreen extends HandledScreen<SawmillScreenHandler> {
 	}
 
 	@Override
-	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-		super.render(matrices, mouseX, mouseY, delta);
-		this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+		super.render(graphics, mouseX, mouseY, delta);
+		this.drawMouseoverTooltip(graphics, mouseX, mouseY);
 	}
 
 	@Override
-	protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-		this.renderBackground(matrices);
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
-		RenderSystem.setShaderTexture(0, TEXTURE);
-		drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+	protected void drawBackground(GuiGraphics graphics, float delta, int mouseX, int mouseY) {
+		this.renderBackground(graphics);
+		graphics.setShaderColor(1.f, 1.f, 1.f, 1.f);
+		graphics.drawTexture(TEXTURE, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 		int scrollAmount = (int) (41.f * this.scrollAmount);
-		drawTexture(matrices, this.x + 119, this.y + 15 + scrollAmount, 176 + (this.shouldScroll() ? 0 : 12), 0,
-				12, 15);
+		graphics.drawTexture(TEXTURE,
+				this.x + 119, this.y + 15 + scrollAmount, 176 + (this.shouldScroll() ? 0 : 12), 0, 12, 15
+		);
 		int recipesX = this.x + 52;
 		int recipesY = this.y + 14;
 		int recipesScrollOffset = this.scrollOffset + 12;
-		this.renderRecipeBackground(matrices, mouseX, mouseY, recipesX, recipesY, recipesScrollOffset);
-		this.renderRecipeIcons(matrices, recipesX, recipesY, recipesScrollOffset);
+		this.renderRecipeBackground(graphics, mouseX, mouseY, recipesX, recipesY, recipesScrollOffset);
+		this.renderRecipeIcons(graphics, recipesX, recipesY, recipesScrollOffset);
 	}
 
 	@Override
-	protected void drawMouseoverTooltip(MatrixStack matrices, int x, int y) {
-		super.drawMouseoverTooltip(matrices, x, y);
+	protected void drawMouseoverTooltip(GuiGraphics graphics, int x, int y) {
+		super.drawMouseoverTooltip(graphics, x, y);
 		if (this.canCraft) {
 			int i = this.x + 52;
 			int j = this.y + 14;
@@ -88,13 +85,13 @@ public class SawmillScreen extends HandledScreen<SawmillScreenHandler> {
 				int n = i + m % 4 * 16;
 				int o = j + m / 4 * 18 + 2;
 				if (x >= n && x < n + 16 && y >= o && y < o + 18) {
-					this.renderTooltip(matrices, list.get(l).getResult(this.client.world.getRegistryManager()), x, y);
+					graphics.drawTooltip(this.textRenderer, list.get(l).getResult(this.client.world.getRegistryManager()), x, y);
 				}
 			}
 		}
 	}
 
-	private void renderRecipeBackground(MatrixStack matrices, int mouseX, int mouseY, int x, int y, int scrollOffset) {
+	private void renderRecipeBackground(GuiGraphics graphics, int mouseX, int mouseY, int x, int y, int scrollOffset) {
 		for (int i = this.scrollOffset; i < scrollOffset && i < this.handler.getAvailableRecipeCount(); ++i) {
 			int offset = i - this.scrollOffset;
 			int recipeX = x + offset % 4 * 16;
@@ -107,11 +104,11 @@ public class SawmillScreen extends HandledScreen<SawmillScreenHandler> {
 				v += 36;
 			}
 
-			drawTexture(matrices, recipeX, recipeY - 1, 0, v, 16, 18);
+			graphics.drawTexture(TEXTURE, recipeX, recipeY - 1, 0, v, 16, 18);
 		}
 	}
 
-	private void renderRecipeIcons(MatrixStack matrices, int x, int y, int scrollOffset) {
+	private void renderRecipeIcons(GuiGraphics graphics, int x, int y, int scrollOffset) {
 		var list = this.handler.getAvailableRecipes();
 
 		for (int i = this.scrollOffset; i < scrollOffset && i < this.handler.getAvailableRecipeCount(); ++i) {
@@ -119,7 +116,7 @@ public class SawmillScreen extends HandledScreen<SawmillScreenHandler> {
 			int recipeX = x + offset % 4 * 16;
 			int line = offset / 4;
 			int recipeY = y + line * 18 + 2;
-			this.client.getItemRenderer().renderItemInGui(matrices, list.get(i).getResult(this.client.world.getRegistryManager()), recipeX, recipeY);
+			graphics.drawItem(list.get(i).getResult(this.client.world.getRegistryManager()), recipeX, recipeY);
 		}
 	}
 

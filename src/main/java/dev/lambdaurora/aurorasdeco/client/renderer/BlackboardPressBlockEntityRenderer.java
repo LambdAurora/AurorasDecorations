@@ -21,7 +21,9 @@ import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.BlackboardPressBlock;
 import dev.lambdaurora.aurorasdeco.block.entity.BlackboardPressBlockEntity;
 import dev.lambdaurora.aurorasdeco.client.model.UnbakedVariantModel;
+import dev.lambdaurora.aurorasdeco.mixin.client.ModelLoaderAccessor;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;
@@ -33,7 +35,6 @@ import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.render.model.json.ModelVariantMap;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Axis;
 import net.minecraft.util.math.BlockPos;
@@ -44,7 +45,6 @@ import net.minecraft.util.random.RandomSeed;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 public class BlackboardPressBlockEntityRenderer implements BlockEntityRenderer<BlackboardPressBlockEntity> {
 	public static final Identifier PRESS_PLATE_ID = AurorasDeco.id("blockstates/blackboard_press/press_plate.json");
@@ -96,28 +96,46 @@ public class BlackboardPressBlockEntityRenderer implements BlockEntityRenderer<B
 		}
 	}
 
-	public static void initModels(ResourceManager resourceManager, ModelVariantMap.DeserializationContext deserializationContext,
-			BiConsumer<Identifier, UnbakedModel> modelRegister) {
-		var stateFactory = deserializationContext.getStateFactory();
-		deserializationContext.setStateFactory(AurorasDecoRegistry.BLACKBOARD_PRESS_BLOCK.getStateManager());
+	public static void initModels(ModelLoadingPlugin.Context context) {
+		boolean[] firstRun = {true};
 
-		initModel(PRESS_PLATE_ID, PRESS_PLATE_MODEL_ID, resourceManager, deserializationContext, modelRegister);
-		initModel(SCREW_ID, SCREW_MODEL_ID, resourceManager, deserializationContext, modelRegister);
+		context.modifyModelOnLoad().register((model, ctx) -> {
+			if (firstRun[0]) {
+				firstRun[0] = false;
 
-		deserializationContext.setStateFactory(stateFactory);
+				var modelLoader = (ModelLoaderAccessor) ctx.loader();
+
+				var pressModel = initModel(PRESS_PLATE_ID, PRESS_PLATE_MODEL_ID);
+				modelLoader.invokePutModel(PRESS_PLATE_MODEL_ID, pressModel);
+				modelLoader.getModelsToBake().put(PRESS_PLATE_MODEL_ID, pressModel);
+
+				var screwModel = initModel(SCREW_ID, SCREW_MODEL_ID);
+				modelLoader.invokePutModel(SCREW_MODEL_ID, screwModel);
+				modelLoader.getModelsToBake().put(SCREW_MODEL_ID, screwModel);
+			}
+
+			return model;
+		});
 	}
 
-	private static void initModel(Identifier resourceId, Identifier modelId, ResourceManager resourceManager,
-			ModelVariantMap.DeserializationContext deserializationContext, BiConsumer<Identifier, UnbakedModel> modelRegister) {
-		resourceManager.getResource(resourceId).ifPresentOrElse(resource -> {
+	private static UnbakedModel initModel(Identifier resourceId, Identifier modelId) {
+		var model = MinecraftClient.getInstance().getResourceManager().getResource(resourceId).map(resource -> {
 			try (var reader = new InputStreamReader(resource.open())) {
-				var map = ModelVariantMap.fromJson(deserializationContext, reader);
-				modelRegister.accept(modelId,
-						new UnbakedVariantModel<>(AurorasDecoRegistry.BLACKBOARD_PRESS_BLOCK, map.getVariantMap(), List.of(BlackboardPressBlock.WATERLOGGED))
-				);
+				var context = new ModelVariantMap.DeserializationContext();
+				context.setStateFactory(AurorasDecoRegistry.BLACKBOARD_PRESS_BLOCK.getStateManager());
+				var map = ModelVariantMap.fromJson(context, reader);
+				return new UnbakedVariantModel<>(AurorasDecoRegistry.BLACKBOARD_PRESS_BLOCK, map.getVariantMap(), List.of(BlackboardPressBlock.WATERLOGGED));
 			} catch (IOException e) {
 				AurorasDeco.warn("Failed to load the blackboard \"{}\" model.", modelId, e);
+				return null;
 			}
-		}, () -> AurorasDeco.warn("Failed to load the blackboard \"{}\" model: missing file.", modelId));
+		});
+
+		if (model.isEmpty()) {
+			AurorasDeco.warn("Failed to load the blackboard \"{}\" model: missing file.", modelId);
+			return null;
+		} else {
+			return model.get();
+		}
 	}
 }

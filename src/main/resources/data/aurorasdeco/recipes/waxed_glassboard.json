@@ -1,13 +1,16 @@
 {
-  "type": "minecraft:smithing",
+  "type": "aurorasdeco:actually_good_smithing_transform",
   "group": "aurorasdeco:blackboard",
-  "base": {
-    "item": "aurorasdeco:glassboard"
-  },
   "addition": {
     "item": "minecraft:honeycomb"
   },
+  "base": {
+    "item": "aurorasdeco:glassboard"
+  },
   "result": {
     "item": "aurorasdeco:waxed_glassboard"
+  },
+  "template": {
+    "item": "minecraft:air"
   }
 }

@@ -92,7 +92,7 @@ public class FakeLeashKnotEntity extends MobEntity {
 	public void tick() {
 		super.tick();
 
-		if (!this.world.isClient()) {
+		if (!this.getWorld().isClient()) {
 			if (this.obstructionCheckCounter++ == 100) {
 				this.obstructionCheckCounter = 0;
 
@@ -126,13 +126,13 @@ public class FakeLeashKnotEntity extends MobEntity {
 
 	@Override
 	public ActionResult interactAt(PlayerEntity player, Vec3d hitPos, Hand hand) {
-		return ActionResult.success(this.world.isClient());
+		return ActionResult.success(this.getWorld().isClient());
 	}
 
 	private void breakAndDiscard(boolean drop) {
-		this.world.playSound(null, this.getBlockPos(), SoundEvents.ENTITY_LEASH_KNOT_BREAK, SoundCategory.BLOCKS,
+		this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_LEASH_KNOT_BREAK, SoundCategory.BLOCKS,
 				1.f, 1.f);
-		if (this.isAlive() && this.getHoldingEntity() != null && drop && !this.world.isClient())
+		if (this.isAlive() && this.getHoldingEntity() != null && drop && !this.getWorld().isClient())
 			this.dropItem(Items.LEAD, 1);
 		this.discard();
 
@@ -142,7 +142,7 @@ public class FakeLeashKnotEntity extends MobEntity {
 	}
 
 	public boolean canStayAttached() {
-		var state = this.world.getBlockState(this.getBlockPos());
+		var state = this.getWorld().getBlockState(this.getBlockPos());
 		return state.isIn(BlockTags.FENCES);
 	}
 }

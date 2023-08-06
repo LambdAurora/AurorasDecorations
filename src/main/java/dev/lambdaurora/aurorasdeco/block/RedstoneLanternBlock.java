@@ -19,10 +19,7 @@ package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.block.behavior.RedstoneLanternBehavior;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.LanternBlock;
+import net.minecraft.block.*;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
@@ -84,7 +81,7 @@ public class RedstoneLanternBlock extends LanternBlock {
 	/* Redstone */
 
 	@Override
-	public boolean emitsRedstonePower(BlockState state) {
+	public boolean isRedstonePowerSource(BlockState state) {
 		return true;
 	}
 

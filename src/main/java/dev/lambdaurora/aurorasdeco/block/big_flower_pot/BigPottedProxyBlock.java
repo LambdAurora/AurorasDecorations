@@ -30,6 +30,7 @@ import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
@@ -126,7 +127,7 @@ public class BigPottedProxyBlock extends BigFlowerPotBlock {
 	/* Loot table */
 
 	@Override
-	protected void acceptPlantDrops(BlockState state, LootContext.Builder builder, Consumer<ItemStack> consumer) {
+	protected void acceptPlantDrops(BlockState state, LootContextParameterSet.Builder builder, Consumer<ItemStack> consumer) {
 		var stacks = this.getPlantState(state).getDroppedStacks(builder);
 		for (var stack : stacks) {
 			consumer.accept(stack);

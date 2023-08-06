@@ -29,7 +29,7 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -258,11 +258,11 @@ public class BenchBlock extends Block implements BlockEntityProvider, SeatBlock,
 	/* Loot table */
 
 	@Override
-	public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
-		var blockEntity = builder.get(LootContextParameters.BLOCK_ENTITY);
+	public List<ItemStack> getDroppedStacks(BlockState state, LootContextParameterSet.Builder builder) {
+		var blockEntity = builder.getParameter(LootContextParameters.BLOCK_ENTITY);
 		if (blockEntity instanceof BenchBlockEntity bench) {
 			if (bench.hasRest()) {
-				builder.putDrop(SEAT_REST, (context, consumer) -> consumer.accept(new ItemStack(bench.getRest())));
+				builder.withDynamicDrop(SEAT_REST, (consumer) -> consumer.accept(new ItemStack(bench.getRest())));
 			}
 		}
 

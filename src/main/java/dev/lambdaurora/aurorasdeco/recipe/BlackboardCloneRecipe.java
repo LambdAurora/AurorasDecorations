@@ -21,7 +21,7 @@ import dev.lambdaurora.aurorasdeco.blackboard.Blackboard;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoTags;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
-import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.RecipeInputInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtElement;
@@ -55,7 +55,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
 	}
 
 	@Override
-	public boolean matches(CraftingInventory inv, World world) {
+	public boolean matches(RecipeInputInventory inv, World world) {
 		boolean hasInput = false, hasOutput = false;
 		int count = 0;
 
@@ -74,7 +74,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
 	}
 
 	@Override
-	public ItemStack craft(CraftingInventory inv, DynamicRegistryManager registryManager) {
+	public ItemStack craft(RecipeInputInventory inv, DynamicRegistryManager registryManager) {
 		Blackboard blackboard = null;
 		ItemStack output = null;
 		Text customName = null;
@@ -121,7 +121,7 @@ public class BlackboardCloneRecipe extends SpecialCraftingRecipe {
 	}
 
 	@Override
-	public DefaultedList<ItemStack> getRemainder(CraftingInventory craftingInventory) {
+	public DefaultedList<ItemStack> getRemainder(RecipeInputInventory craftingInventory) {
 		DefaultedList<ItemStack> defaultedList = DefaultedList.ofSize(craftingInventory.size(), ItemStack.EMPTY);
 
 		for (int i = 0; i < defaultedList.size(); ++i) {

@@ -21,8 +21,8 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.ModelBaker;
 import net.minecraft.client.render.model.UnbakedModel;
+import net.minecraft.client.resource.Material;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
@@ -43,7 +43,7 @@ public record UnbakedBenchModel(UnbakedModel baseModel, RestModelManager restMod
 
 	@Override
 	public BakedModel bake(
-			ModelBaker modelBaker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId
+			ModelBaker modelBaker, Function<Material, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId
 	) {
 		return new BakedBenchModel(this.baseModel().bake(modelBaker, textureGetter, rotationContainer, modelId), this.restModelManager());
 	}

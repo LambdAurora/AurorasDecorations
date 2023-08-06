@@ -182,7 +182,8 @@ public class SmallLogPileBlock extends Block implements Waterloggable {
 
 	private static Settings settings(WoodType woodType) {
 		var log = woodType.getComponent(WoodType.ComponentType.LOG);
-		return QuiltBlockSettings.of(log.material(), log.mapColor())
+		return QuiltBlockSettings.create()
+				.mapColor(log.mapColor())
 				.sounds(log.blockSoundGroup())
 				.strength(2.f)
 				.nonOpaque();

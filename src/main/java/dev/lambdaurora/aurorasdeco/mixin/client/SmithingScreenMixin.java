@@ -34,10 +34,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(SmithingScreen.class)
 public class SmithingScreenMixin {
 	@Shadow
-	private @Nullable ArmorStandEntity field_42067;
+	private @Nullable ArmorStandEntity display;
 
 	@Inject(
-			method = "method_48641",
+			method = "displayStack",
 			at = @At(
 					value = "INVOKE",
 					target = "Lnet/minecraft/entity/decoration/ArmorStandEntity;equipStack(Lnet/minecraft/entity/EquipmentSlot;Lnet/minecraft/item/ItemStack;)V",
@@ -46,8 +46,8 @@ public class SmithingScreenMixin {
 	)
 	private void aurorasdeco$onArmorStandPreview(ItemStack stack, CallbackInfo ci) {
 		if (stack.isIn(AurorasDecoTags.BLACKBOARD_ITEMS)) {
-			this.field_42067.equipStack(EquipmentSlot.HEAD, stack);
-			this.field_42067.equipStack(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
+			this.display.equipStack(EquipmentSlot.HEAD, stack);
+			this.display.equipStack(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
 		}
 	}
 }

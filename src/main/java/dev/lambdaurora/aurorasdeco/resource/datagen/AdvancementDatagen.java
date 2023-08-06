@@ -32,6 +32,7 @@ import net.minecraft.predicate.entity.EntityPredicate;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.unmapped.C_ctsfmifk;
 import net.minecraft.util.Identifier;
 
 import java.util.Map;
@@ -97,7 +98,7 @@ public final class AdvancementDatagen {
 		advancement.criteriaMerger(CriterionMerger.OR);
 		advancement.criterion("has_self", InventoryChangedCriterion.Conditions.items(recipe.getResult(null).getItem()));
 		advancement.criterion("has_the_recipe",
-				new RecipeUnlockedCriterion.Conditions(EntityPredicate.Extended.EMPTY, recipe.getId())
+				new RecipeUnlockedCriterion.Conditions(C_ctsfmifk.field_24388, recipe.getId())
 		);
 
 		int i = 0;
@@ -121,7 +122,7 @@ public final class AdvancementDatagen {
 				items.add(child);
 			} else items.add(ingredientJson);
 		}
-		return new InventoryChangedCriterion.Conditions(EntityPredicate.Extended.EMPTY,
+		return new InventoryChangedCriterion.Conditions(C_ctsfmifk.field_24388,
 				NumberRange.IntRange.ANY, NumberRange.IntRange.ANY, NumberRange.IntRange.ANY,
 				ItemPredicate.deserializeAll(items));
 	}

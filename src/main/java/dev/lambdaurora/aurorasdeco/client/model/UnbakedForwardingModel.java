@@ -21,8 +21,8 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.ModelBaker;
 import net.minecraft.client.render.model.UnbakedModel;
+import net.minecraft.client.resource.Material;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
@@ -50,7 +50,7 @@ public record UnbakedForwardingModel(UnbakedModel baseModel, Function<BakedModel
 
 	@Override
 	public BakedModel bake(
-			ModelBaker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId
+			ModelBaker loader, Function<Material, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId
 	) {
 		return this.factory.apply(this.baseModel.bake(loader, textureGetter, rotationContainer, modelId));
 	}

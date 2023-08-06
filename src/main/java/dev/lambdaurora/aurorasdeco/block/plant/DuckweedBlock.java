@@ -140,12 +140,12 @@ public final class DuckweedBlock extends Block implements FluidFillable, Fertili
 	}
 
 	@Override
-	public boolean canGrow(World world, RandomGenerator random, BlockPos pos, BlockState state) {
+	public boolean canFertilize(World world, RandomGenerator random, BlockPos pos, BlockState state) {
 		return true;
 	}
 
 	@Override
-	public void grow(ServerWorld world, RandomGenerator random, BlockPos pos, BlockState state) {
+	public void fertilize(ServerWorld world, RandomGenerator random, BlockPos pos, BlockState state) {
 		var list = Util.toShuffledList(AuroraUtil.HORIZONTAL_DIRECTIONS.stream(), random);
 
 		for (var direction : list) {

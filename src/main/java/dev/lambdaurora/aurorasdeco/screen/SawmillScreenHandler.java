@@ -82,7 +82,7 @@ public final class SawmillScreenHandler extends ScreenHandler {
 		};
 		this.output = new CraftingResultInventory();
 		this.context = context;
-		this.world = playerInventory.player.world;
+		this.world = playerInventory.player.getWorld();
 		this.inputSlot = this.addSlot(new Slot(this.input, 0, 20, 33));
 		this.outputSlot = this.addSlot(new OutputSlot(this.output, 1, 143, 33));
 
@@ -188,7 +188,7 @@ public final class SawmillScreenHandler extends ScreenHandler {
 			var item = stack.getItem();
 			outputStack = stack.copy();
 			if (fromIndex == 1) {
-				item.onCraft(stack, player.world, player);
+				item.onCraft(stack, player.getWorld(), player);
 				if (!this.insertItem(stack, 2, 38, true)) {
 					return ItemStack.EMPTY;
 				}
@@ -248,8 +248,8 @@ public final class SawmillScreenHandler extends ScreenHandler {
 
 		@Override
 		public void onTakeItem(PlayerEntity player, ItemStack stack) {
-			stack.onCraft(player.world, player, stack.getCount());
-			SawmillScreenHandler.this.output.unlockLastRecipe(player);
+			stack.onCraft(player.getWorld(), player, stack.getCount());
+			SawmillScreenHandler.this.output.unlockLastRecipe(player, this.getIngredients());
 			var inputStack = SawmillScreenHandler.this.inputSlot.takeStack(1);
 			if (!inputStack.isEmpty()) {
 				SawmillScreenHandler.this.populateResult();
@@ -265,6 +265,10 @@ public final class SawmillScreenHandler extends ScreenHandler {
 
 			});
 			super.onTakeItem(player, stack);
+		}
+
+		private List<ItemStack> getIngredients() {
+			return List.of(SawmillScreenHandler.this.inputSlot.getStack());
 		}
 	}
 }

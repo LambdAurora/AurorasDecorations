@@ -91,13 +91,13 @@ public class BigPottedSweetBerryBushBlock extends BigPottedProxyBlock implements
 	}
 
 	@Override
-	public boolean canGrow(World world, RandomGenerator random, BlockPos pos, BlockState state) {
-		return ((Fertilizable) this.getPlant()).canGrow(world, random, pos, state);
+	public boolean canFertilize(World world, RandomGenerator random, BlockPos pos, BlockState state) {
+		return ((Fertilizable) this.getPlant()).canFertilize(world, random, pos, state);
 	}
 
 	@Override
-	public void grow(ServerWorld world, RandomGenerator random, BlockPos pos, BlockState state) {
-		((Fertilizable) this.getPlant()).grow(world, random, pos, state);
+	public void fertilize(ServerWorld world, RandomGenerator random, BlockPos pos, BlockState state) {
+		((Fertilizable) this.getPlant()).fertilize(world, random, pos, state);
 	}
 
 	static {

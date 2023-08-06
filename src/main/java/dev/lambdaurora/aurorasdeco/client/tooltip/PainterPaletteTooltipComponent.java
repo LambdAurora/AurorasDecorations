@@ -22,13 +22,12 @@ import dev.lambdaurora.aurorasdeco.blackboard.BlackboardColor;
 import dev.lambdaurora.aurorasdeco.item.PainterPaletteItem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.tooltip.BundleTooltipComponent;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -84,11 +83,12 @@ public class PainterPaletteTooltipComponent implements TooltipComponent {
 	}
 
 	@Override
-	public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices, ItemRenderer itemRenderer) {
+	public void drawItems(TextRenderer textRenderer, int x, int y, GuiGraphics graphics) {
 		ItemStack primaryColorStack = this.inventory.getSelectedColor();
 
 		if (primaryColorStack.isEmpty()) return;
 
+		MatrixStack matrices = graphics.getMatrices();
 		ItemStack previousColorStack = this.inventory.getPreviousColorStack();
 		ItemStack nextColorStack = this.inventory.getNextColorStack();
 
@@ -96,56 +96,55 @@ public class PainterPaletteTooltipComponent implements TooltipComponent {
 		y += 12;
 
 		matrices.translate(x, y, 0);
-		this.drawSlot(matrices, itemRenderer, textRenderer, previousColorStack, inventory.getSlotOf(previousColorStack), true, false);
+		this.drawSlot(graphics, textRenderer, previousColorStack, inventory.getSlotOf(previousColorStack), true, false);
 
 		matrices.translate(18, 0, 0);
-		this.drawSlot(matrices, itemRenderer, textRenderer, primaryColorStack, inventory.getSelectedColorSlot(), false, false);
-		HandledScreen.drawSlotHighlight(matrices, 2, 2, 0);
+		this.drawSlot(graphics, textRenderer, primaryColorStack, inventory.getSelectedColorSlot(), false, false);
+		HandledScreen.drawSlotHighlight(graphics, 2, 2, 0);
 
 		matrices.translate(18, 0, 0);
-		this.drawSlot(matrices, itemRenderer, textRenderer, nextColorStack, inventory.getSlotOf(nextColorStack), false, true);
+		this.drawSlot(graphics, textRenderer, nextColorStack, inventory.getSlotOf(nextColorStack), false, true);
 
 		matrices.pop();
 	}
 
 	private void drawSlot(
-			MatrixStack matrices, ItemRenderer itemRenderer, TextRenderer textRenderer, ItemStack stack,
+			GuiGraphics graphics, TextRenderer textRenderer, ItemStack stack,
 			int index, boolean start, boolean end
 	) {
-		this.drawSlotPart(matrices, 1, 1, 0, 0, 0, 18, 20);
+		this.drawSlotPart(graphics, 1, 1, 0, 0, 0, 18, 20);
 
-		if (start) this.drawSlotPart(matrices, 0, 0, 0, 0, 20, 1, 1);
-		if (end) this.drawSlotPart(matrices, 0, 0, 0, 0, 20, 1, 1);
+		if (start) this.drawSlotPart(graphics, 0, 0, 0, 0, 20, 1, 1);
+		if (end) this.drawSlotPart(graphics, 0, 0, 0, 0, 20, 1, 1);
 
-		this.drawSlotPart(matrices, 1, 0, 0, 0, 20, 18, 1);
-		this.drawSlotPart(matrices, 1, 20, 0, 0, 60, 18, 1);
+		this.drawSlotPart(graphics, 1, 0, 0, 0, 20, 18, 1);
+		this.drawSlotPart(graphics, 1, 20, 0, 0, 60, 18, 1);
 
-		if (start) this.drawSlotPart(matrices, 0, 0, 0, 0, 18, 1, 20);
-		if (end) this.drawSlotPart(matrices, 18 + 1, 0, 0, 0, 18, 1, 20);
+		if (start) this.drawSlotPart(graphics, 0, 0, 0, 0, 18, 1, 20);
+		if (end) this.drawSlotPart(graphics, 18 + 1, 0, 0, 0, 18, 1, 20);
 
-		if (start) this.drawSlotPart(matrices, 0, 20, 0, 0, 60, 1, 1);
-		if (end) this.drawSlotPart(matrices, 18 + 1, 20, 0, 0, 60, 1, 1);
+		if (start) this.drawSlotPart(graphics, 0, 20, 0, 0, 60, 1, 1);
+		if (end) this.drawSlotPart(graphics, 18 + 1, 20, 0, 0, 60, 1, 1);
 
 		if (!stack.isEmpty()) {
-			itemRenderer.renderItemWithOverridesInGui(matrices, stack, 2, 2, index);
-			itemRenderer.renderGuiItemDecorations(matrices, textRenderer, stack, 2, 2);
-			this.drawColorOverlay(matrices, stack);
+			graphics.drawItem(stack, 2, 2, index);
+			this.drawColorOverlay(graphics, stack);
 		}
 	}
 
-	private void drawColorOverlay(MatrixStack matrices, ItemStack stack) {
+	private void drawColorOverlay(GuiGraphics graphics, ItemStack stack) {
 		var color = BlackboardColor.fromItem(stack.getItem());
 		if (color != null) {
-			matrices.push();
-			matrices.translate(14, 14, 210);
-			DrawableHelper.fill(matrices, 0, 0, 4, 4, color.getColor());
-			matrices.pop();
+			graphics.getMatrices().push();
+			graphics.getMatrices().translate(14, 14, 210);
+			graphics.fill(0, 0, 4, 4, color.getColor());
+			graphics.getMatrices().pop();
 		}
 	}
 
-	private void drawSlotPart(MatrixStack matrices, int x, int y, int z, float u, float v, int width, int height) {
+	private void drawSlotPart(GuiGraphics graphics, int x, int y, int z, float u, float v, int width, int height) {
 		RenderSystem.setShaderColor(1.f, 1.f, 1.f, 1.f);
 		RenderSystem.setShaderTexture(0, BundleTooltipComponent.TEXTURE);
-		DrawableHelper.drawTexture(matrices, x, y, 0, u, v, width, height, 128, 128);
+		graphics.drawTexture(BundleTooltipComponent.TEXTURE, x, y, 0, u, v, width, height, 128, 128);
 	}
 }

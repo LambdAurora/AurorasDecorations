@@ -1,0 +1,41 @@
+{
+	DataVersion: 3465,
+	size: [3, 3, 3],
+	data: [
+		{pos: [0, 0, 0], state: "minecraft:air"},
+		{pos: [0, 0, 1], state: "minecraft:barrier"},
+		{pos: [0, 0, 2], state: "minecraft:air"},
+		{pos: [1, 0, 0], state: "minecraft:barrier"},
+		{pos: [1, 0, 1], state: "minecraft:redstone_lamp{lit:false}"},
+		{pos: [1, 0, 2], state: "minecraft:air"},
+		{pos: [2, 0, 0], state: "minecraft:air"},
+		{pos: [2, 0, 1], state: "minecraft:barrier"},
+		{pos: [2, 0, 2], state: "minecraft:air"},
+		{pos: [0, 1, 0], state: "minecraft:air"},
+		{pos: [0, 1, 1], state: "minecraft:redstone_wire{east:side,north:none,power:0,south:none,west:side}"},
+		{pos: [0, 1, 2], state: "minecraft:air"},
+		{pos: [1, 1, 0], state: "minecraft:redstone_wire{east:none,north:side,power:0,south:side,west:none}"},
+		{pos: [1, 1, 1], state: "aurorasdeco:wall_lantern/redstone{extension:none,facing:north,lit:true,waterlogged:false}", nbt: {id: "aurorasdeco:lantern"}},
+		{pos: [1, 1, 2], state: "minecraft:redstone_lamp{lit:false}"},
+		{pos: [2, 1, 0], state: "minecraft:air"},
+		{pos: [2, 1, 1], state: "minecraft:redstone_wire{east:side,north:none,power:0,south:none,west:side}"},
+		{pos: [2, 1, 2], state: "minecraft:air"},
+		{pos: [0, 2, 0], state: "minecraft:air"},
+		{pos: [0, 2, 1], state: "minecraft:air"},
+		{pos: [0, 2, 2], state: "minecraft:air"},
+		{pos: [1, 2, 0], state: "minecraft:air"},
+		{pos: [1, 2, 1], state: "minecraft:redstone_lamp{lit:false}"},
+		{pos: [1, 2, 2], state: "minecraft:air"},
+		{pos: [2, 2, 0], state: "minecraft:air"},
+		{pos: [2, 2, 1], state: "minecraft:air"},
+		{pos: [2, 2, 2], state: "minecraft:air"}
+	],
+	palette: [
+		"minecraft:barrier",
+		"minecraft:redstone_lamp{lit:false}",
+		"minecraft:air",
+		"minecraft:redstone_wire{east:side,north:none,power:0,south:none,west:side}",
+		"minecraft:redstone_wire{east:none,north:side,power:0,south:side,west:none}",
+		"aurorasdeco:wall_lantern/redstone{extension:none,facing:north,lit:true,waterlogged:false}"
+	]
+}

@@ -21,9 +21,11 @@ import com.terraformersmc.terraform.boat.api.client.TerraformBoatClientHelper;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.BlackboardBlock;
 import dev.lambdaurora.aurorasdeco.block.HangingFlowerPotBlock;
+import dev.lambdaurora.aurorasdeco.block.SignPostBlock;
 import dev.lambdaurora.aurorasdeco.block.StumpBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.PottedPlantType;
-import dev.lambdaurora.aurorasdeco.client.model.BakedSignPostModel;
+import dev.lambdaurora.aurorasdeco.block.entity.BlackboardBlockEntity;
+import dev.lambdaurora.aurorasdeco.client.model.*;
 import dev.lambdaurora.aurorasdeco.client.particle.AmethystGlintParticle;
 import dev.lambdaurora.aurorasdeco.client.particle.LavenderPetalParticle;
 import dev.lambdaurora.aurorasdeco.client.renderer.*;
@@ -31,9 +33,10 @@ import dev.lambdaurora.aurorasdeco.client.screen.CopperHopperScreen;
 import dev.lambdaurora.aurorasdeco.client.screen.PainterPaletteScreen;
 import dev.lambdaurora.aurorasdeco.client.screen.SawmillScreen;
 import dev.lambdaurora.aurorasdeco.client.screen.ShelfScreen;
+import dev.lambdaurora.aurorasdeco.mixin.client.ModelLoaderAccessor;
 import dev.lambdaurora.aurorasdeco.registry.*;
 import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
-import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
@@ -60,6 +63,7 @@ import org.quiltmc.qsl.lifecycle.api.client.event.ClientLifecycleEvents;
 import org.quiltmc.qsl.lifecycle.api.client.event.ClientWorldTickEvents;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 import org.quiltmc.qsl.resource.loader.api.ResourceLoader;
+import org.quiltmc.qsl.resource.loader.api.reloader.ResourceReloaderKeys;
 
 import static dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry.*;
 
@@ -153,11 +157,47 @@ public class AurorasDecoClient implements ClientModInitializer {
 		EntityModelLayerRegistry.registerModelLayer(WindChimeBlockEntityRenderer.WIND_CHIME_MODEL_LAYER,
 				WindChimeBlockEntityRenderer::getTexturedModelData);
 
-		ModelLoadingRegistry.INSTANCE.registerModelProvider(RenderRule::reload);
-		ModelLoadingRegistry.INSTANCE.registerVariantProvider(resourceManager -> new BakedSignPostModel.Provider());
-
-		ResourceLoader.get(ResourceType.CLIENT_RESOURCES).getRegisterDefaultResourcePackEvent().register(context -> {
+		ResourceLoader resourceLoader = ResourceLoader.get(ResourceType.CLIENT_RESOURCES);
+		resourceLoader.registerReloader(new RenderRule.Reloader());
+		resourceLoader.addReloaderOrdering(RenderRule.Reloader.ID, ResourceReloaderKeys.BEFORE_VANILLA);
+		resourceLoader.getRegisterDefaultResourcePackEvent().register(context -> {
 			context.addResourcePack(AurorasDecoClient.RESOURCE_PACK.rebuild(ResourceType.CLIENT_RESOURCES, context.resourceManager()));
+		});
+
+		ModelLoadingPlugin.register(context -> {
+			RenderRule.addModels(context);
+
+			new RestModelManager().init(context);
+
+			BlackboardPressBlockEntityRenderer.initModels(context);
+
+			SignPostBlock.stream().forEach(signPostBlock -> {
+				context.registerBlockStateResolver(signPostBlock, new BakedSignPostModel.Provider(signPostBlock));
+			});
+
+			context.modifyModelOnLoad().register((model, ctx) -> {
+				if (ctx.id() instanceof ModelIdentifier modelId && !modelId.getVariant().equals("inventory"))
+					if (modelId.getPath().startsWith("big_flower_pot/")) {
+						var potBlock = PottedPlantType.fromId(modelId.getPath().substring("big_flower_pot/".length())).getPot();
+						if (potBlock.hasDynamicModel()) {
+							return new UnbakedForwardingModel(model, BakedBigFlowerPotModel::new);
+						}
+					} else if (modelId.getPath().startsWith("hanging_flower_pot")) {
+						return new UnbakedForwardingModel(model, BakedHangingFlowerPotModel::new);
+					} else if (modelId.getPath().endsWith("board")) {
+						return UnbakedBlackboardModel.of(modelId, model,
+								(partId, m) -> {
+									var modelLoader = (ModelLoaderAccessor) ctx.loader();
+									modelLoader.invokePutModel(partId, m);
+									modelLoader.getModelsToBake().put(partId, m);
+								}
+						);
+					}
+
+				return model;
+			});
+
+			BlackboardBlockEntity.markAllMeshesDirty();
 		});
 	}
 
@@ -223,9 +263,6 @@ public class AurorasDecoClient implements ClientModInitializer {
 		var modelId = new ModelIdentifier(new Identifier(id.getNamespace(), id.getPath() + "_base"),
 				"inventory");
 		BuiltinItemRendererRegistry.INSTANCE.register(blackboard, new BlackboardItemRenderer(modelId));
-		ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> {
-			out.accept(modelId);
-			out.accept(BLACKBOARD_MASK);
-		});
+		ModelLoadingPlugin.register(context -> context.addModels(modelId, BLACKBOARD_MASK));
 	}
 }

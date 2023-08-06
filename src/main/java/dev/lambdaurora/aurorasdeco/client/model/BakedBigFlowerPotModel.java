@@ -20,9 +20,9 @@ package dev.lambdaurora.aurorasdeco.client.model;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigFlowerPotBlock;
 import dev.lambdaurora.aurorasdeco.block.big_flower_pot.BigPottedProxyBlock;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TallPlantBlock;
 import net.minecraft.block.enums.DoubleBlockHalf;
@@ -76,45 +76,43 @@ public class BakedBigFlowerPotModel extends ForwardingBakedModel {
 				}
 
 			var model = client.getBakedModelManager().getBlockModels().getModel(plantState);
-			if (model instanceof FabricBakedModel fabricBakedModel) {
+			context.pushTransform(quad -> {
+				Vector3f vec = null;
+				for (int i = 0; i < 4; i++) {
+					vec = quad.copyPos(i, vec);
+					vec.mul(ratio);
+					vec.add(offset, .8f, offset);
+					quad.pos(i, vec);
+				}
+				quad.material(RendererAccess.INSTANCE.getRenderer().materialFinder()
+						.ambientOcclusion(model.useAmbientOcclusion() ? TriState.DEFAULT : TriState.FALSE)
+						.find()
+				);
+				return true;
+			});
+			model.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+			context.popTransform();
+
+			if (potBlock.getPlantType().isTall()) {
+				var upPlantState = plantState.with(TallPlantBlock.HALF, DoubleBlockHalf.UPPER);
+				final var upModel = client.getBakedModelManager().getBlockModels().getModel(upPlantState);
 				context.pushTransform(quad -> {
 					Vector3f vec = null;
 					for (int i = 0; i < 4; i++) {
 						vec = quad.copyPos(i, vec);
 						vec.mul(ratio);
-						vec.add(offset, .8f, offset);
+						vec.add(offset, .8f + ratio, offset);
 						quad.pos(i, vec);
 					}
-					quad.material(RendererAccess.INSTANCE.getRenderer().materialFinder()
-							.disableAo(0, !model.useAmbientOcclusion()).find());
+					quad.material(
+							RendererAccess.INSTANCE.getRenderer().materialFinder()
+									.ambientOcclusion(upModel.useAmbientOcclusion() ? TriState.DEFAULT : TriState.FALSE)
+									.find()
+					);
 					return true;
 				});
-				fabricBakedModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+				upModel.emitBlockQuads(blockView, state, pos.up(), randomSupplier, context);
 				context.popTransform();
-			}
-
-			if (potBlock.getPlantType().isTall()) {
-				var upPlantState = plantState.with(TallPlantBlock.HALF, DoubleBlockHalf.UPPER);
-				final var upModel = client.getBakedModelManager().getBlockModels().getModel(upPlantState);
-				if (upModel instanceof FabricBakedModel) {
-					context.pushTransform(quad -> {
-						Vector3f vec = null;
-						for (int i = 0; i < 4; i++) {
-							vec = quad.copyPos(i, vec);
-							vec.mul(ratio);
-							vec.add(offset, .8f + ratio, offset);
-							quad.pos(i, vec);
-						}
-						quad.material(
-								RendererAccess.INSTANCE.getRenderer().materialFinder()
-										.disableAo(0, !upModel.useAmbientOcclusion())
-										.find()
-						);
-						return true;
-					});
-					((FabricBakedModel) upModel).emitBlockQuads(blockView, state, pos.up(), randomSupplier, context);
-					context.popTransform();
-				}
 			}
 		}
 	}

@@ -344,13 +344,6 @@ public class WallLanternBlock<L extends LanternBlock> extends BlockWithEntity im
 				world.isClient() ? SwayingBlockEntity::clientTick : SwayingBlockEntity::serverTick);
 	}
 
-	/* Piston */
-
-	@Override
-	public PistonBehavior getPistonBehavior(BlockState state) {
-		return PistonBehavior.DESTROY;
-	}
-
 	/* Fluid */
 
 	@Override
@@ -368,8 +361,8 @@ public class WallLanternBlock<L extends LanternBlock> extends BlockWithEntity im
 	/* Redstone */
 
 	@Override
-	public boolean emitsRedstonePower(BlockState state) {
-		return this.lanternBlock.emitsRedstonePower(state);
+	public boolean isRedstonePowerSource(BlockState state) {
+		return this.lanternBlock.isRedstonePowerSource(state);
 	}
 
 	@Override
@@ -402,7 +395,7 @@ public class WallLanternBlock<L extends LanternBlock> extends BlockWithEntity im
 
 	private static Settings settings(LanternBlock lanternBlock) {
 		ASSOCIATED_LANTERN_INIT.set(lanternBlock);
-		return QuiltBlockSettings.copyOf(lanternBlock).dropsLike(lanternBlock);
+		return QuiltBlockSettings.copyOf(lanternBlock).pistonBehavior(PistonBehavior.DESTROY).dropsLike(lanternBlock);
 	}
 
 	static {

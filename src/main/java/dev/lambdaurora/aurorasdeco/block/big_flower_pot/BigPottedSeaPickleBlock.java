@@ -23,6 +23,7 @@ import dev.lambdaurora.aurorasdeco.mixin.block.BlockSettingsAccessor;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.block.*;
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -61,7 +62,7 @@ public class BigPottedSeaPickleBlock extends BigFlowerPotBlock implements Waterl
 	private final Map<BlockState, VoxelShape> shapeCache = new Object2ObjectOpenHashMap<>();
 
 	public BigPottedSeaPickleBlock(PottedPlantType type) {
-		super(type, QuiltBlockSettings.of(Material.DECORATION).strength(.1f).nonOpaque());
+		super(type, QuiltBlockSettings.create().pistonBehavior(PistonBehavior.DESTROY).nonSolid().strength(.1f).nonOpaque());
 
 		var plantSettings = ((AbstractBlockAccessor) type.getPlant()).getSettings();
 		((AbstractBlockAccessor) this).getSettings()

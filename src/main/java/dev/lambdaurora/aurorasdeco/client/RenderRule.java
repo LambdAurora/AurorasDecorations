@@ -20,7 +20,9 @@ package dev.lambdaurora.aurorasdeco.client;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mojang.logging.LogUtils;
+import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -33,9 +35,12 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.profiler.Profiler;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
+import org.quiltmc.qsl.resource.loader.api.reloader.SimpleResourceReloader;
 import org.slf4j.Logger;
 
 import java.io.InputStreamReader;
@@ -43,7 +48,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 /**
  * Represents a render rule.
@@ -117,60 +123,12 @@ public record RenderRule(List<Model> models) {
 		return model;
 	}
 
-	public static void reload(ResourceManager manager, Consumer<Identifier> out) {
-		ITEM_RULES.clear();
-		TAG_RULES.clear();
-
-		manager.findResources("aurorasdeco/render_rules", path -> path.getPath().endsWith(".json")).forEach((id, resource) -> {
-			try (var reader = new InputStreamReader(resource.open())) {
-				var element = JsonParser.parseReader(reader);
-				if (element.isJsonObject()) {
-					var root = element.getAsJsonObject();
-
-					var models = new ArrayList<Model>();
-					var modelsJson = root.getAsJsonArray("models");
-					modelsJson.forEach(modelElement -> {
-						var model = Model.readModelPredicate(id, modelElement);
-						if (model != null)
-							models.add(model);
-					});
-
-					if (models.isEmpty())
-						return;
-
-					var renderRule = new RenderRule(models);
-
-					var match = root.getAsJsonObject("match");
-					boolean success = false;
-					if (match.has("item")) {
-						ITEM_RULES.put(Identifier.tryParse(match.get("item").getAsString()), renderRule);
-						success = true;
-					} else if (match.has("items")) {
-						var array = match.getAsJsonArray("items");
-						for (var item : array) {
-							ITEM_RULES.put(Identifier.tryParse(item.getAsString()), renderRule);
-						}
-						success = true;
-					} else if (match.has("tag")) {
-						var tagId = Identifier.tryParse(match.get("tag").getAsString());
-						TAG_RULES.put(TagKey.of(RegistryKeys.ITEM, tagId), renderRule);
-						success = true;
-					}
-
-					if (success)
-						models.forEach(model -> out.accept(model.getModelId()));
-				}
-			} catch (Exception e) {
-				LOGGER.error("Failed to read render rule {}. {}", id, e);
-			}
-		});
+	public static void addModels(ModelLoadingPlugin.Context context) {
+		ITEM_RULES.values().stream().flatMap(rule -> rule.models().stream()).map(Model::modelId).forEach(context::addModels);
+		TAG_RULES.values().stream().flatMap(rule -> rule.models().stream()).map(Model::modelId).forEach(context::addModels);
 	}
 
 	public record Model(ModelIdentifier modelId, @Nullable Block restrictedBlock, @Nullable TagKey<Block> restrictedBlockTag) {
-		public ModelIdentifier getModelId() {
-			return this.modelId;
-		}
-
 		public boolean test(ItemStack stack, BlockState state) {
 			if (this.restrictedBlock != null) {
 				return state.isOf(this.restrictedBlock);
@@ -229,6 +187,74 @@ public record RenderRule(List<Model> models) {
 				}
 			}
 			return new Model(new ModelIdentifier(modelId, "inventory"), restrictedBlock, restrictedBlockTag);
+		}
+	}
+
+	public record RenderRules(Map<Identifier, RenderRule> itemRules, Map<TagKey<Item>, RenderRule> tagRules) {
+	}
+
+	public static class Reloader implements SimpleResourceReloader<RenderRules> {
+		public static final Identifier ID = AurorasDeco.id("render_rules");
+
+		@Override
+		public @NotNull Identifier getQuiltId() {
+			return ID;
+		}
+
+		@Override
+		public CompletableFuture<RenderRules> load(ResourceManager manager, Profiler profiler, Executor executor) {
+			return CompletableFuture.supplyAsync(() -> {
+				var rules = new RenderRules(new Object2ObjectOpenHashMap<>(), new Object2ObjectOpenHashMap<>());
+
+				manager.findResources("aurorasdeco/render_rules", path -> path.getPath().endsWith(".json")).forEach((id, resource) -> {
+					try (var reader = new InputStreamReader(resource.open())) {
+						var element = JsonParser.parseReader(reader);
+						if (element.isJsonObject()) {
+							var root = element.getAsJsonObject();
+
+							var models = new ArrayList<Model>();
+							var modelsJson = root.getAsJsonArray("models");
+							modelsJson.forEach(modelElement -> {
+								var model = Model.readModelPredicate(id, modelElement);
+								if (model != null)
+									models.add(model);
+							});
+
+							if (models.isEmpty())
+								return;
+
+							var renderRule = new RenderRule(models);
+
+							var match = root.getAsJsonObject("match");
+							if (match.has("item")) {
+								rules.itemRules.put(Identifier.tryParse(match.get("item").getAsString()), renderRule);
+							} else if (match.has("items")) {
+								var array = match.getAsJsonArray("items");
+								for (var item : array) {
+									rules.itemRules.put(Identifier.tryParse(item.getAsString()), renderRule);
+								}
+							} else if (match.has("tag")) {
+								var tagId = Identifier.tryParse(match.get("tag").getAsString());
+								rules.tagRules.put(TagKey.of(RegistryKeys.ITEM, tagId), renderRule);
+							}
+						}
+					} catch (Exception e) {
+						LOGGER.error("Failed to read render rule {}. {}", id, e);
+					}
+				});
+
+				return rules;
+			}, executor);
+		}
+
+		@Override
+		public CompletableFuture<Void> apply(RenderRules data, ResourceManager manager, Profiler profiler, Executor executor) {
+			return CompletableFuture.runAsync(() -> {
+				ITEM_RULES.clear();
+				ITEM_RULES.putAll(data.itemRules);
+				TAG_RULES.clear();
+				TAG_RULES.putAll(data.tagRules);
+			}, executor);
 		}
 	}
 }

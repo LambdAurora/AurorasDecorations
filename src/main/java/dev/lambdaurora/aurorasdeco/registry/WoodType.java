@@ -18,19 +18,19 @@
 package dev.lambdaurora.aurorasdeco.registry;
 
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.mixin.block.AbstractBlockAccessor;
+import dev.lambdaurora.aurorasdeco.resource.ModTagReader;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
-import net.minecraft.block.Material;
 import net.minecraft.client.color.block.BlockColorProvider;
 import net.minecraft.client.color.item.ItemColorProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
@@ -293,10 +293,6 @@ public final class WoodType {
 			return Registries.BLOCK.getId(this.block());
 		}
 
-		public Material material() {
-			return ((AbstractBlockAccessor) this.block()).getMaterial();
-		}
-
 		public MapColor mapColor() {
 			return this.block().getDefaultMapColor();
 		}
@@ -355,6 +351,7 @@ public final class WoodType {
 	public enum ComponentType {
 		PLANKS((id, block) -> {
 			if (!id.getPath().endsWith("_planks")) return null;
+			if (!ModTagReader.INSTANCE.getValues(BlockTags.PLANKS).contains(id)) return null;
 			return id.getPath().substring(0, id.getPath().length() - "_planks".length());
 		}, (resourceManager, component) -> {
 			Identifier texture = component.texture();
@@ -371,16 +368,17 @@ public final class WoodType {
 		LOG((id, block) -> {
 			if (block == Blocks.BAMBOO_BLOCK) return "bamboo";
 
-			var material = ((AbstractBlockAccessor) block).getMaterial();
-			if (material != Material.WOOD && material != Material.NETHER_WOOD) return null;
 			String logType;
 			if (id.getPath().startsWith("stripped_")) return null;
 			else if (id.getPath().startsWith("striped_")) return null;
+			else if (id.getPath().startsWith("attached_")) return null;
 			else if (id.getPath().endsWith("_log")) logType = "_log";
 			else if (id.getPath().endsWith("_stem")) logType = "_stem";
 			else return null;
 
 			if (id.getPath().endsWith("_table" + logType)) return null;
+
+			if (!ModTagReader.INSTANCE.getValues(BlockTags.LOGS).contains(id)) return null;
 
 			return id.getPath().substring(0, id.getPath().length() - logType.length());
 		}, (resourceManager, component) -> {
@@ -437,6 +435,8 @@ public final class WoodType {
 			else return null;
 
 			if (id.getPath().startsWith("flowering")) return null;
+
+			if (!ModTagReader.INSTANCE.getValues(BlockTags.LEAVES).contains(id)) return null;
 
 			return id.getPath().substring(0, id.getPath().length() - leavesType.length());
 		}, (resourceManager, component) -> {
@@ -505,8 +505,6 @@ public final class WoodType {
 	private static Filter simpleWoodFilter(String suffix) {
 		return (id, block) -> {
 			if (!id.getPath().endsWith('_' + suffix)) return null;
-			var material = ((AbstractBlockAccessor) block).getMaterial();
-			if (material != Material.WOOD && material != Material.NETHER_WOOD) return null;
 			return id.getPath().substring(0, id.getPath().length() - (suffix.length() + 1));
 		};
 	}

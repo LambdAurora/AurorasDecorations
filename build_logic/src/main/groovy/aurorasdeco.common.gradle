@@ -74,6 +74,7 @@ repositories {
 		url 'https://maven.terraformersmc.com/'
 		content {
 			includeGroup 'dev.emi'
+			includeGroup 'com.llamalad7.mixinextras'
 			includeGroup 'com.terraformersmc'
 			includeGroup 'com.terraformersmc.terraform-api'
 		}

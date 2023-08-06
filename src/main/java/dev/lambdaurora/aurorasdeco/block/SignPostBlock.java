@@ -39,7 +39,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
-import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -324,10 +324,10 @@ public class SignPostBlock extends BlockWithEntity implements Waterloggable {
 	/* Loot table */
 
 	@Override
-	public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
+	public List<ItemStack> getDroppedStacks(BlockState state, LootContextParameterSet.Builder builder) {
 		var stacks = new ArrayList<>(this.getFenceState(state).getDroppedStacks(builder));
 
-		var blockEntity = builder.get(LootContextParameters.BLOCK_ENTITY);
+		var blockEntity = builder.getParameter(LootContextParameters.BLOCK_ENTITY);
 		if (blockEntity instanceof SignPostBlockEntity signPost) {
 			var upSign = signPost.getUp();
 			var downSign = signPost.getDown();
@@ -352,13 +352,6 @@ public class SignPostBlock extends BlockWithEntity implements Waterloggable {
 		return stacks;
 	}
 
-	/* Piston */
-
-	@Override
-	public PistonBehavior getPistonBehavior(BlockState state) {
-		return PistonBehavior.BLOCK;
-	}
-
 	/* Entity Stuff */
 
 	@Override
@@ -374,7 +367,7 @@ public class SignPostBlock extends BlockWithEntity implements Waterloggable {
 	}
 
 	private static QuiltBlockSettings settings(FenceBlock fenceBlock) {
-		return QuiltBlockSettings.copyOf(fenceBlock);
+		return QuiltBlockSettings.copyOf(fenceBlock).pistonBehavior(PistonBehavior.BLOCK);
 	}
 
 	static {

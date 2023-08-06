@@ -28,9 +28,9 @@ import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.predicate.BlockPredicate;
 import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
 import net.minecraft.predicate.entity.AdvancementEntityPredicateSerializer;
-import net.minecraft.predicate.entity.EntityPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.unmapped.C_ctsfmifk;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
@@ -46,7 +46,7 @@ public class PetUsePetBedCriterion extends AbstractCriterion<PetUsePetBedCriteri
 	}
 
 	@Override
-	protected Conditions conditionsFromJson(JsonObject obj, EntityPredicate.Extended playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
+	protected Conditions conditionsFromJson(JsonObject obj, C_ctsfmifk playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
 		return new Conditions(playerPredicate, BlockPredicate.fromJson(obj.get("block")));
 	}
 
@@ -72,7 +72,7 @@ public class PetUsePetBedCriterion extends AbstractCriterion<PetUsePetBedCriteri
 	public static class Conditions extends AbstractCriterionConditions {
 		private final BlockPredicate blockPredicate;
 
-		public Conditions(EntityPredicate.Extended playerPredicate, BlockPredicate blockPredicate) {
+		public Conditions(C_ctsfmifk playerPredicate, BlockPredicate blockPredicate) {
 			super(ID, playerPredicate);
 			this.blockPredicate = blockPredicate;
 		}

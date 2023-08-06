@@ -20,9 +20,9 @@ package dev.lambdaurora.aurorasdeco.blackboard;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
+import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.feature_flags.FeatureFlagBitSet;
-import net.minecraft.feature_flags.FeatureFlags;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -232,8 +232,8 @@ public class Blackboard implements BlackboardHandler {
 		var lit = light != 0;
 
 		var material = RendererAccess.INSTANCE.getRenderer().materialFinder()
-				.disableDiffuse(0, lit)
-				.disableAo(0, lit)
+				.disableDiffuse(lit)
+				.ambientOcclusion(lit ? TriState.FALSE : TriState.DEFAULT)
 				.find();
 		for (int y = 0; y < 16; y++) {
 			for (int x = 0; x < 16; x++) {
@@ -249,8 +249,8 @@ public class Blackboard implements BlackboardHandler {
 					int squareY = 15 - y;
 					emitter.square(facing, x / 16.f, squareY / 16.f,
 									(x + 1) / 16.f, (squareY + 1) / 16.f, 0.928f)
-							.spriteBake(0, WHITE_SPRITE, MutableQuadView.BAKE_LOCK_UV)
-							.spriteColor(0, color, color, color, color)
+							.spriteBake(WHITE_SPRITE, MutableQuadView.BAKE_LOCK_UV)
+							.color(color, color, color, color)
 							.material(material);
 					if (light != 0)
 						emitter.lightmap(light, light, light, light);
@@ -382,8 +382,7 @@ public class Blackboard implements BlackboardHandler {
 		BRUSH("aurorasdeco.blackboard.tool.brush") {
 			@Override
 			public @Nullable Item getOffHandTool(FeatureFlagBitSet enabledFeatures) {
-				if (enabledFeatures.hasFlag(FeatureFlags.UPDATE_1_20)) return Items.BRUSH;
-				else return Items.WHITE_WOOL;
+				return Items.BRUSH;
 			}
 
 			@Override

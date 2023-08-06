@@ -21,8 +21,8 @@ import dev.lambdaurora.aurorasdeco.mixin.block.VineBlockAccessor;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoPlants;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.Material;
 import net.minecraft.block.VineBlock;
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
@@ -48,7 +48,9 @@ import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 public final class BurntVineBlock extends VineBlock {
 	public BurntVineBlock() {
 		super(
-				QuiltBlockSettings.of(Material.REPLACEABLE_PLANT)
+				QuiltBlockSettings.create()
+						.pistonBehavior(PistonBehavior.DESTROY)
+						.replaceable()
 						.noCollision()
 						.strength(.2f)
 						.sounds(BlockSoundGroup.VINE)
