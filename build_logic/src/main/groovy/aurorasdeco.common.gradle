@@ -82,11 +82,11 @@ repositories {
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:${Constants.MINECRAFT_VERSION}"
-	mappings "org.quiltmc:quilt-mappings:${Constants.MINECRAFT_VERSION}+build.${Constants.MAPPINGS}:intermediary-v2"
+	minecraft "com.mojang:minecraft:${Constants.MINECRAFT_VERSION.version()}"
+	mappings "org.quiltmc:quilt-mappings:${Constants.MINECRAFT_VERSION.version()}+build.${Constants.MAPPINGS}:intermediary-v2"
 	modImplementation "org.quiltmc:quilt-loader:${Constants.LOADER_VERSION}"
 
-	modImplementation("org.quiltmc.quilted-fabric-api:quilted-fabric-api:${Constants.QFAPI_VERSION}-${Constants.MINECRAFT_VERSION}")
+	modImplementation("org.quiltmc.quilted-fabric-api:quilted-fabric-api:${Constants.QFAPI_VERSION}-${Constants.MINECRAFT_VERSION.version()}")
 	include(modImplementation("com.terraformersmc.terraform-api:terraform-wood-api-v1:${Constants.TERRAFORM_WOOD_API_VERSION}") {
 		exclude group: 'net.fabricmc'
 		exclude group: 'net.fabricmc.fabric-api'

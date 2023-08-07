@@ -74,7 +74,8 @@ public class AurorasDecoExtension implements Serializable {
 
 				new aurorasdeco.DependencyAppenderUtil("emi", "dev.emi:emi-fabric:" + Constants.EMI_VERSION).apply(this.project);
 				new aurorasdeco.DependencyAppenderUtil("emi",
-						"org.quiltmc.quilted-fabric-api:quilted-fabric-api-deprecated:" + Constants.QFAPI_VERSION + "-" + Constants.MINECRAFT_VERSION
+						"org.quiltmc.quilted-fabric-api:quilted-fabric-api-deprecated:"
+								+ Constants.QFAPI_VERSION + "-" + Constants.MINECRAFT_VERSION.version()
 				).apply(this.project);
 
 				this.project.getDependencies().add("emiImplementation", sourceSets.getByName("main").getOutput());

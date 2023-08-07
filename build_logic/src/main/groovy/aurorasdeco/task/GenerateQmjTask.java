@@ -92,8 +92,20 @@ public abstract class GenerateQmjTask extends DefaultTask {
 			{
 				writer.beginObject()
 						.name("id").value("minecraft")
-						.name("versions").value(Constants.MINECRAFT_VERSION)
-						.endObject();
+						.name("versions");
+				if (Constants.MINECRAFT_VERSION.supported().isEmpty()) {
+					writer.value(Constants.MINECRAFT_VERSION.version());
+				} else {
+					writer.beginObject()
+							.name("any").beginArray();
+					for (var version : Constants.MINECRAFT_VERSION.all()) {
+						writer.value("=" + version);
+					}
+					writer.endArray()
+							.endObject();
+				}
+				writer.endObject();
+
 				writer.beginObject()
 						.name("id").value("quilt_loader")
 						.name("versions").value(">=" + Constants.LOADER_VERSION)
