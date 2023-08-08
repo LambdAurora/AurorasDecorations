@@ -23,8 +23,10 @@ import org.quiltmc.qsl.testing.api.game.TestRegistrationContext;
 public class AurorasDecoTests implements QuiltGameTest {
 	@Override
 	public void registerTests(TestRegistrationContext context) {
-		context.register(CopperHopperTest.class);
-		context.register(RedstoneLanternTest.class);
-		context.register(SturdyStoneTest.class);
+		context.register(
+				CopperHopperTest.class,
+				RedstoneLanternTest.class,
+				SturdyStoneTest.class
+		);
 	}
 }

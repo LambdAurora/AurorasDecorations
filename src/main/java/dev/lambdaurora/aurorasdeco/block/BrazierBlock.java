@@ -19,7 +19,6 @@ package dev.lambdaurora.aurorasdeco.block;
 
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoSounds;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoTags;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -79,7 +78,7 @@ public class BrazierBlock extends AuroraBlock implements Waterloggable {
 	private final int fireDamage;
 
 	public BrazierBlock(MapColor color, int fireDamage, int luminance, ParticleEffect particle) {
-		this(FabricBlockSettings.create(), color, fireDamage, luminance, particle);
+		this(QuiltBlockSettings.create(), color, fireDamage, luminance, particle);
 	}
 
 	public BrazierBlock(QuiltBlockSettings settings, MapColor color, int fireDamage, int luminance, ParticleEffect particle) {

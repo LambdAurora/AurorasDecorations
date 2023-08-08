@@ -41,7 +41,6 @@ import dev.lambdaurora.aurorasdeco.recipe.ExplodingRecipe;
 import dev.lambdaurora.aurorasdeco.recipe.WoodcuttingRecipe;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.util.Derivator;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -240,7 +239,7 @@ public final class AurorasDecoRegistry {
 	public static final BigFlowerPotBlock.PlantAirBlock PLANT_AIR_BLOCK = registerBlock(
 			"plant_air",
 			new BigFlowerPotBlock.PlantAirBlock(
-					FabricBlockSettings.create()
+					QuiltBlockSettings.create()
 							.solid(false)
 							.replaceable()
 							.nonOpaque()
@@ -268,7 +267,7 @@ public final class AurorasDecoRegistry {
 
 	//region Blackboards
 	public static final BlackboardBlock BLACKBOARD_BLOCK = registerWithItem("blackboard",
-			new BlackboardBlock(FabricBlockSettings.create()
+			new BlackboardBlock(QuiltBlockSettings.create()
 					.strength(.2f)
 					.nonOpaque()
 					.pistonBehavior(PistonBehavior.DESTROY)
@@ -300,7 +299,7 @@ public final class AurorasDecoRegistry {
 			BlackboardItem::new);
 
 	public static final BlackboardPressBlock BLACKBOARD_PRESS_BLOCK = registerWithItem("blackboard_press",
-			new BlackboardPressBlock(FabricBlockSettings.create().mapColor(MapColor.METAL)),
+			new BlackboardPressBlock(QuiltBlockSettings.create().mapColor(MapColor.METAL)),
 			new QuiltItemSettings()
 	);
 
@@ -604,7 +603,7 @@ public final class AurorasDecoRegistry {
 
 					if ((id.getNamespace().equals("betternether") || id.getNamespace().equals("betterend")) && (id.getPath().contains("stripped") || (id.getPath().contains("mushroom") && !id.getPath().contains("mushroom_fir")) || id.getPath().contains("amaranita")))
 						return false;
-					return !id.getNamespace().equals("aurorasdeco") || !id.getPath().contains("sign_post");
+					return !id.getNamespace().equals("aurorasdeco") && !id.getPath().contains("sign_post");
 				})
 				.forAll(context -> {
 					if (context.value() instanceof FlowerPotBlock flowerPotBlock) {

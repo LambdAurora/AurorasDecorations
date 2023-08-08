@@ -17,7 +17,6 @@
 
 package dev.lambdaurora.aurorasdeco.block.plant;
 
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Fertilizable;
 import net.minecraft.block.FlowerBlock;
@@ -49,9 +48,9 @@ public class AuroraFlowerBlock extends FlowerBlock implements Fertilizable {
 	}
 
 	public static QuiltBlockSettings defaultSettings() {
-		return FabricBlockSettings.create()
+		return QuiltBlockSettings.create()
 				.pistonBehavior(PistonBehavior.DESTROY)
-				.notSolid()
+				.nonSolid(true)
 				.noCollision()
 				.breakInstantly()
 				.sounds(BlockSoundGroup.GRASS);

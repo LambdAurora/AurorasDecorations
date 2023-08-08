@@ -74,4 +74,9 @@
 - Improved Painter's Palette texture.
 - Switched ModelLoaderMixin to new Model API usage.
 
+### 1.0.0-beta.14
+
+- Fixed some issues with the detection of wood types.
+- Fixed compatibility issues with other mods by requiring a fixed version of QSL.
+
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"

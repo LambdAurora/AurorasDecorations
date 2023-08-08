@@ -31,6 +31,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
@@ -282,7 +283,6 @@ public final class WoodType {
 	private static String getLangPath(Identifier id) {
 		return switch (id.getPath()) {
 			case "azalea" -> "azalea"; // Common
-			case "bamboo" -> "bamboo";
 			case "redwood" -> "redwood";
 			default -> getPathName(id).replaceAll("/", ".");
 		};
@@ -424,8 +424,8 @@ public final class WoodType {
 			}
 			return texture;
 		}),
-		SLAB(simpleWoodFilter("slab")),
-		STAIRS(simpleWoodFilter("stairs")),
+		SLAB(simpleWoodFilter("slab", BlockTags.WOODEN_SLABS)),
+		STAIRS(simpleWoodFilter("stairs", BlockTags.WOODEN_STAIRS)),
 		LEAVES((id, block) -> {
 			String leavesType;
 			if (AuroraUtil.idEqual(id, Identifier.DEFAULT_NAMESPACE, "nether_wart_block"))
@@ -455,12 +455,12 @@ public final class WoodType {
 
 			return texture;
 		}),
-		PRESSURE_PLATE(simpleWoodFilter("pressure_plate")),
-		TRAPDOOR(simpleWoodFilter("trapdoor")),
-		DOOR(simpleWoodFilter("door")),
-		FENCE(simpleWoodFilter("fence")),
-		FENCE_GATE(simpleWoodFilter("fence_gate")),
-		LADDER(simpleWoodFilter("ladder"));
+		PRESSURE_PLATE(simpleWoodFilter("pressure_plate", BlockTags.WOODEN_PRESSURE_PLATES)),
+		TRAPDOOR(simpleWoodFilter("trapdoor", BlockTags.WOODEN_TRAPDOORS)),
+		DOOR(simpleWoodFilter("door", BlockTags.WOODEN_DOORS)),
+		FENCE(simpleWoodFilter("fence", BlockTags.WOODEN_FENCES)),
+		FENCE_GATE(simpleWoodFilter("fence_gate", BlockTags.FENCE_GATES)),
+		LADDER(simpleWoodFilter("ladder", null));
 
 		private static final List<ComponentType> COMPONENT_TYPES = List.of(values());
 		private final Filter filter;
@@ -502,10 +502,14 @@ public final class WoodType {
 		@Nullable String filter(Identifier id, Block block);
 	}
 
-	private static Filter simpleWoodFilter(String suffix) {
+	private static Filter simpleWoodFilter(String suffix, TagKey<Block> tagKey) {
 		return (id, block) -> {
 			if (!id.getPath().endsWith('_' + suffix)) return null;
-			return id.getPath().substring(0, id.getPath().length() - (suffix.length() + 1));
+			if (tagKey != null && !ModTagReader.INSTANCE.getValues(tagKey).contains(id)) return null;
+
+			String path = id.getPath().substring(0, id.getPath().length() - (suffix.length() + 1));
+			if (WoodType.fromId(new Identifier(id.getNamespace(), path)) == null) return null;
+			return path;
 		};
 	}
 
