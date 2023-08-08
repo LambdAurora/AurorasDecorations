@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "aurorasdeco:bench/oak",
+    "aurorasdeco:bench/spruce",
+    "aurorasdeco:bench/birch",
+    "aurorasdeco:bench/jungle",
+    "aurorasdeco:bench/acacia",
+    "aurorasdeco:bench/dark_oak",
+    "aurorasdeco:bench/mangrove",
+    "aurorasdeco:bench/cherry",
+    "aurorasdeco:bench/bamboo",
+    "aurorasdeco:bench/crimson",
+    "aurorasdeco:bench/warped"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "aurorasdeco:wall_lantern/amethyst",
+    "aurorasdeco:wall_lantern/soul",
+    "aurorasdeco:wall_lantern/copper_sulfate",
+    "aurorasdeco:wall_lantern/redstone",
+    "aurorasdeco:wall_lantern"
+  ]
+}

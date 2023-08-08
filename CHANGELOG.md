@@ -79,4 +79,8 @@
 - Fixed some issues with the detection of wood types.
 - Fixed compatibility issues with other mods by requiring a fixed version of QSL.
 
+### 1.0.0-beta.15
+
+- Fixed missing copper sulfate wall lantern and possibly more.
+
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"

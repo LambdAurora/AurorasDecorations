@@ -368,6 +368,7 @@ public final class AurorasDecoRegistry {
 					.build()
 	);
 	public static final WallLanternBlock<AmethystLanternBlock> AMETHYST_WALL_LANTERN_BLOCK = LanternRegistry.registerWallLantern(AMETHYST_LANTERN_BLOCK);
+	public static final WallLanternBlock<LanternBlock> COPPER_SULFATE_WALL_LANTERN_BLOCK = LanternRegistry.registerWallLantern(COPPER_SULFATE_LANTERN_BLOCK);
 	//endregion
 
 	public static final WindChimeBlock WIND_CHIME_BLOCK = registerWithItem("wind_chime",
@@ -603,32 +604,36 @@ public final class AurorasDecoRegistry {
 
 					if ((id.getNamespace().equals("betternether") || id.getNamespace().equals("betterend")) && (id.getPath().contains("stripped") || (id.getPath().contains("mushroom") && !id.getPath().contains("mushroom_fir")) || id.getPath().contains("amaranita")))
 						return false;
-					return !id.getNamespace().equals("aurorasdeco") && !id.getPath().contains("sign_post");
+					return !(id.getNamespace().equals("aurorasdeco") && id.getPath().contains("sign_post"));
 				})
 				.forAll(context -> {
-					if (context.value() instanceof FlowerPotBlock flowerPotBlock) {
+					Identifier id = context.id();
+					Block block = context.value();
+
+					if (block instanceof FlowerPotBlock flowerPotBlock) {
 						if (flowerPotBlock == Blocks.FLOWER_POT) return;
 
 						context.register(
-								AurorasDeco.id(AuroraUtil.getIdPath("hanging_flower_pot", context.id(), "^potted[_/]")),
+								AurorasDeco.id(AuroraUtil.getIdPath("hanging_flower_pot", id, "^potted[_/]")),
 								new HangingFlowerPotBlock(flowerPotBlock)
 						);
 					} else {
-						WoodType.onBlockRegister(context.id(), context.value());
-						if (context.value() instanceof FenceBlock fenceBlock) {
+						WoodType.onBlockRegister(id, block);
+						if (block instanceof FenceBlock fenceBlock) {
 							var signPostBlock = Registry.register(
 									context.registry(),
-									AurorasDeco.id(AuroraUtil.getIdPath("sign_post", context.id(), "_fence$")),
+									AurorasDeco.id(AuroraUtil.getIdPath("sign_post", id, "_fence$")),
 									new SignPostBlock(fenceBlock)
 							);
 
 							SIGN_POST_BLOCK_ENTITY_TYPE.addSupportedBlock(signPostBlock);
-						} else LanternRegistry.tryRegisterWallLantern(context.registry(), context.value(), context.id());
+						} else LanternRegistry.tryRegisterWallLantern(context.registry(), block, id);
 					}
 				});
 
 		RegistryMonitor.create(Registries.ITEM).filter(context -> context.value() instanceof BlockItem item)
 				.forAll(context -> {
+					Identifier id = context.id();
 					var accessor = (BlockItemAccessor) context.value();
 					var item = (BlockItem) context.value();
 
@@ -637,20 +642,20 @@ public final class AurorasDecoRegistry {
 						if (lanternBlock != null)
 							accessor.aurorasdeco$setWallBlock(lanternBlock);
 						Item.BLOCK_ITEMS.put(lanternBlock, item);
-					} else if (item.getBlock() instanceof CandleBlock candleBlock && context.id().getNamespace().equals("minecraft")) {
+					} else if (item.getBlock() instanceof CandleBlock candleBlock && id.getNamespace().equals("minecraft")) {
 						var wall = registerBlock(
-								"wall_" + context.id().getPath(),
+								"wall_" + id.getPath(),
 								new WallCandleBlock(candleBlock)
 						);
 						var chandelier = registerBlock(
-								"chandelier/" + context.id().getPath().replace("_candle", ""),
+								"chandelier/" + id.getPath().replace("_candle", ""),
 								new ChandelierBlock(candleBlock)
 						);
 						accessor.aurorasdeco$setWallBlock(wall);
 						accessor.aurorasdeco$setCeilingBlock(chandelier);
 
-						Item.BLOCK_ITEMS.put(wall, context.value());
-						Item.BLOCK_ITEMS.put(chandelier, context.value());
+						Item.BLOCK_ITEMS.put(wall, item);
+						Item.BLOCK_ITEMS.put(chandelier, item);
 					}
 				});
 

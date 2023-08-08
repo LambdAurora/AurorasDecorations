@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "aurorasdeco:stump/oak",
+    "aurorasdeco:stump/spruce",
+    "aurorasdeco:stump/birch",
+    "aurorasdeco:stump/jungle",
+    "aurorasdeco:stump/acacia",
+    "aurorasdeco:stump/dark_oak",
+    "aurorasdeco:stump/mangrove",
+    "aurorasdeco:stump/cherry",
+    "aurorasdeco:stump/crimson",
+    "aurorasdeco:stump/warped"
+  ]
+}

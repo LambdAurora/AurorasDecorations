@@ -28,6 +28,7 @@ import dev.lambdaurora.aurorasdeco.resource.AurorasDecoPack;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
 import dev.lambdaurora.aurorasdeco.world.gen.DynamicWorldGen;
 import net.minecraft.block.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.resource.ResourceType;
@@ -61,17 +62,20 @@ public class AurorasDeco implements ModInitializer {
 		AurorasDecoRegistry.init();
 
 		RegistryMonitor.create(Registries.ITEM).forAll(context -> {
-			if (AuroraUtil.idEqual(context.id(), "pockettools", "pocket_cactus")) {
+			Identifier id = context.id();
+			Item item = context.value();
+
+			if (AuroraUtil.idEqual(id, "pockettools", "pocket_cactus")) {
 				Registry.register(Registries.BLOCK, id("big_flower_pot/pocket_cactus"),
-						PottedPlantType.register("pocket_cactus", Blocks.POTTED_CACTUS, context.value(),
+						PottedPlantType.register("pocket_cactus", Blocks.POTTED_CACTUS, item,
 								type -> new BigPottedCactusBlock(type, BigPottedCactusBlock.POCKET_CACTUS_SHAPE)));
-			} else if (PottedPlantType.isValidPlant(context.value())) {
-				var potBlock = PottedPlantType.registerFromItem(context.value());
+			} else if (PottedPlantType.isValidPlant(item)) {
+				var potBlock = PottedPlantType.registerFromItem(item);
 				if (potBlock != null)
 					Registry.register(Registries.BLOCK, id("big_flower_pot/" + potBlock.getPlantType().getId()), potBlock);
 			}
 
-			BlackboardColor.tryRegisterColorFromItem(context.id(), context.value());
+			BlackboardColor.tryRegisterColorFromItem(id, item);
 		});
 
 		ItemTree.init();
