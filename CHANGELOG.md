@@ -87,4 +87,8 @@
 
 - Fixed missing mushroom-derived blocks like mushroom stem pile, mushroom stump, etc.
 
+### 1.0.0-beta.17
+
+- Fixed X-ray with certain mods using double shelves blocks.
+
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"

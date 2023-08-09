@@ -370,7 +370,7 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
 				.nonOpaque();
 	}
 
-	private static Map<PartType, VoxelShape> createTypeShapes(int xMin, int zMin, int xMax, int zMax) {
+	private static Map<PartType, VoxelShape> createTypeShapes(double xMin, double zMin, double xMax, double zMax) {
 		var builder = ImmutableMap.<PartType, VoxelShape>builder();
 		builder.put(PartType.BOTTOM, createCuboidShape(xMin, 0, zMin, xMax, 8, zMax));
 		builder.put(PartType.TOP, createCuboidShape(xMin, 8, zMin, xMax, 16, zMax));
@@ -381,10 +381,10 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
 	static {
 		var facingBuilder = ImmutableMap.<Direction, Map<PartType, VoxelShape>>builder();
 
-		facingBuilder.put(Direction.NORTH, createTypeShapes(0, 12, 16, 16));
-		facingBuilder.put(Direction.EAST, createTypeShapes(0, 0, 4, 16));
-		facingBuilder.put(Direction.SOUTH, createTypeShapes(0, 0, 16, 4));
-		facingBuilder.put(Direction.WEST, createTypeShapes(12, 0, 16, 16));
+		facingBuilder.put(Direction.NORTH, createTypeShapes(0, 12, 16, 15.99f));
+		facingBuilder.put(Direction.EAST, createTypeShapes(0.01f, 0, 4, 16));
+		facingBuilder.put(Direction.SOUTH, createTypeShapes(0, 0.01f, 16, 4));
+		facingBuilder.put(Direction.WEST, createTypeShapes(12, 0, 15.99f, 16));
 
 		SHAPES = new EnumMap<>(facingBuilder.build());
 
