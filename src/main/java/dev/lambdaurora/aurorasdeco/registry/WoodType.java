@@ -367,6 +367,7 @@ public final class WoodType {
 		}),
 		LOG((id, block) -> {
 			if (block == Blocks.BAMBOO_BLOCK) return "bamboo";
+			else if (block == Blocks.MUSHROOM_STEM) return "mushroom";
 
 			String logType;
 			if (id.getPath().startsWith("stripped_")) return null;

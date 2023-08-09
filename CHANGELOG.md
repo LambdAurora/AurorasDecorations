@@ -83,4 +83,8 @@
 
 - Fixed missing copper sulfate wall lantern and possibly more.
 
+### 1.0.0-beta.16
+
+- Fixed missing mushroom-derived blocks like mushroom stem pile, mushroom stump, etc.
+
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"
