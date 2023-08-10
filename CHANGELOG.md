@@ -91,4 +91,11 @@
 
 - Fixed X-ray with certain mods using double shelves blocks.
 
+### 1.0.0-beta.18
+
+- Improved rendering performances of the painter's palette.
+- Improved compatibility for wood-based features.
+- Fixed wrong leaf texture on cherry wood stumps.
+- Fixed bad serialization of empty blackboards causing stacking issues.
+
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"

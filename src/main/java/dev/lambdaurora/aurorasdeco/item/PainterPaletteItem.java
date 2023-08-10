@@ -35,12 +35,14 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.Registries;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ClickType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -194,15 +196,63 @@ public class PainterPaletteItem extends Item {
 	}
 
 	public int getColor(ItemStack paletteStack, int tintIndex) {
-		var inventory = PainterPaletteInventory.fromNbt(paletteStack.getSubNbt("inventory"));
+		NbtCompound nbt = paletteStack.getSubNbt("inventory");
 
-		var primaryColor = BlackboardDrawModifier.fromItem(inventory.getSelectedColor());
-		BlackboardDrawModifier nextColor = inventory.getNextColor();
-		BlackboardDrawModifier previousColor = inventory.getPreviousColor();
+		BlackboardDrawModifier primaryColor = null;
+		BlackboardDrawModifier previousColor = null;
+		BlackboardDrawModifier nextColor = null;
 
-		if (primaryColor == BlackboardColor.EMPTY) primaryColor = null;
-		if (previousColor == BlackboardColor.EMPTY) previousColor = null;
-		if (nextColor == BlackboardColor.EMPTY) nextColor = null;
+		if (nbt != null) {
+			int selectedColor;
+
+			if (nbt.contains(PainterPaletteInventory.SELECTED_COLOR_KEY, NbtElement.BYTE_TYPE)) {
+				selectedColor = nbt.getByte(PainterPaletteInventory.SELECTED_COLOR_KEY);
+			} else {
+				selectedColor = 0;
+			}
+
+			NbtList colors = nbt.getList("colors", NbtElement.COMPOUND_TYPE);
+
+			int previousSlot = -1, nextSlot = -1;
+			NbtCompound previousNbt = null, nextNbt = null;
+
+			for (var colorNbt : colors) {
+				var slotNbt = (NbtCompound) colorNbt;
+				int slot = slotNbt.getByte("slot");
+
+				if (slot == selectedColor) {
+					primaryColor = modifierFromNbt(slotNbt);
+				} else if (slot > selectedColor) {
+					if (nextSlot < selectedColor || slot < nextSlot || nextSlot == -1) {
+						nextSlot = slot;
+						nextNbt = slotNbt;
+					}
+					if (previousSlot == -1 || (slot > previousSlot && previousSlot > selectedColor)) {
+						previousSlot = slot;
+						previousNbt = slotNbt;
+					}
+				} else {
+					if (nextSlot == -1 || (slot < nextSlot && nextSlot < selectedColor)) {
+						nextSlot = slot;
+						nextNbt = slotNbt;
+					}
+					if (previousSlot > selectedColor || slot > previousSlot || previousSlot == -1) {
+						previousSlot = slot;
+						previousNbt = slotNbt;
+					}
+				}
+			}
+
+			if (nextSlot == -1 || nextSlot == previousSlot) nextNbt = null;
+			if (previousSlot == -1) previousNbt = null;
+
+			previousColor = previousNbt == null ? BlackboardColor.EMPTY : modifierFromNbt(previousNbt);
+			nextColor = nextNbt == null ? BlackboardColor.EMPTY : modifierFromNbt(nextNbt);
+
+			if (primaryColor == BlackboardColor.EMPTY) primaryColor = null;
+			if (previousColor == BlackboardColor.EMPTY) previousColor = null;
+			if (nextColor == BlackboardColor.EMPTY) nextColor = null;
+		}
 
 		return switch (tintIndex) {
 			case 1 -> primaryColor == null ? DEFAULT_BACKGROUND_COLOR : primaryColor.getColor();
@@ -309,34 +359,33 @@ public class PainterPaletteItem extends Item {
 		}
 
 		private byte findFirstNextColor() {
-			byte i = (byte) ((this.selectedColor + 1) % COLOR_SIZE);
-			while (i != this.selectedColor) {
+			byte i = this.selectedColor;
+
+			do {
+				i = (byte) ((i + 1) % COLOR_SIZE);
 				var stack = this.getStack(i);
 
 				if (!stack.isEmpty()) {
 					return i;
 				}
-
-				i = (byte) ((i + 1) % COLOR_SIZE);
-			}
+			} while (i != this.selectedColor);
 
 			return -1;
 		}
 
 		private byte findFirstPreviousColor() {
-			byte i = (byte) (this.selectedColor - 1);
-			if (i == -1) i = COLOR_SIZE - 1;
+			byte i = this.selectedColor;
 
-			while (i != this.selectedColor) {
+			do {
+				i--;
+				if (i == -1) i = COLOR_SIZE - 1;
+
 				var stack = this.getStack(i);
 
 				if (!stack.isEmpty()) {
 					return i;
 				}
-
-				i--;
-				if (i == -1) i = COLOR_SIZE - 1;
-			}
+			} while (i != this.selectedColor);
 
 			return -1;
 		}
@@ -477,5 +526,17 @@ public class PainterPaletteItem extends Item {
 				this.setStack(slot, item);
 			}
 		}
+	}
+
+	private static BlackboardDrawModifier modifierFromNbt(NbtCompound nbt) {
+		var itemNbt = nbt.getCompound("item");
+		Identifier id = Identifier.tryParse(itemNbt.getString("id"));
+
+		if (id == null) return BlackboardColor.EMPTY;
+
+		Item item = Registries.ITEM.get(id);
+		BlackboardDrawModifier modifier = BlackboardDrawModifier.fromItem(item);
+
+		return modifier == null ? BlackboardColor.EMPTY : modifier;
 	}
 }

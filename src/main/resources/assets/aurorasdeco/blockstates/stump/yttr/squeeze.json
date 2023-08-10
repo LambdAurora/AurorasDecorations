@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "aurorasdeco:block/stump/yttr/squeeze",
+        "y": 180
+      },
+      {
+        "model": "aurorasdeco:block/stump/yttr/squeeze"
+      },
+      {
+        "model": "aurorasdeco:block/stump/yttr/squeeze",
+        "y": 90
+      },
+      {
+        "model": "aurorasdeco:block/stump/yttr/squeeze",
+        "y": 270
+      }
+    ]
+  }
+}

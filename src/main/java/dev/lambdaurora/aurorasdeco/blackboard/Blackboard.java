@@ -313,11 +313,13 @@ public class Blackboard implements BlackboardHandler {
 				}
 			}
 
+			nbt.putInt("version", 2);
 			nbt.putByteArray("pixels", pixels);
+			nbt.putBoolean("lit", this.isLit());
+		} else if (this.isLit()) {
+			nbt.putBoolean("lit", true);
 		}
 
-		nbt.putBoolean("lit", this.isLit());
-		nbt.putInt("version", 2);
 		return nbt;
 	}
 

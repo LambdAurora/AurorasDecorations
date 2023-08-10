@@ -397,10 +397,24 @@ public final class WoodType {
 				if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(sideId)).isPresent())
 					return sideId;
 
-				// For mods similar to how Promenade does it.
-				sideId = new Identifier(componentId.getNamespace(), "block/" + componentId.getPath() + "/side");
+				// For mods that don't use standard texture paths but logically evil.
+				sideId = new Identifier(
+						componentId.getNamespace(),
+						"block/" + component.woodType().getId().getPath() + "/" + component.woodType().getLogType() + "/side"
+				);
 				if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(sideId)).isPresent())
 					return sideId;
+
+				// For mods similar to how Yttr does it.
+				sideId = new Identifier(componentId.getNamespace(), "block/" + componentId.getPath() + "_side");
+				if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(sideId)).isPresent())
+					return sideId;
+
+				// For mods similar to how Promenade did it.
+				sideId = new Identifier(componentId.getNamespace(), "block/" + componentId.getPath() + "/side");
+				if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(sideId)).isPresent()) {
+					return sideId;
+				}
 			}
 			return texture;
 		}, (resourceManager, component) -> {
@@ -418,7 +432,12 @@ public final class WoodType {
 				if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(topId)).isPresent())
 					return topId;
 
-				// For mods similar to how Promenade does it.
+				// For mods that don't use standard texture paths but logically evil.
+				topId = new Identifier(componentId.getNamespace(), "block/" + component.woodType().getId().getPath() + "/log/top");
+				if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(topId)).isPresent())
+					return topId;
+
+				// For mods similar to how Promenade did it.
 				topId = new Identifier(componentId.getNamespace(), "block/" + componentId.getPath() + "/top");
 				if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(topId)).isPresent())
 					return topId;

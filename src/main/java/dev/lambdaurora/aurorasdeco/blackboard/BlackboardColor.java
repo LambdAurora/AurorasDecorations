@@ -236,8 +236,8 @@ public class BlackboardColor extends BlackboardDrawModifier {
 	}
 
 	@Override
-	public boolean matchItem(ItemStack item) {
-		return this.item == item.getItem();
+	public boolean matchItem(Item item) {
+		return this.item == item;
 	}
 
 	@Override

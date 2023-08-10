@@ -17,6 +17,7 @@
 
 package dev.lambdaurora.aurorasdeco.blackboard;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.registry.tag.ItemTags;
@@ -38,8 +39,9 @@ public abstract class BlackboardDrawModifier {
 
 	public static final BlackboardDrawModifier SHADE_INCREASE = new BlackboardDrawModifier("aurorasdeco.blackboard.modifier.darken", 0xff444444) {
 		@Override
-		public boolean matchItem(ItemStack item) {
-			return item.isIn(ItemTags.COALS);
+		@SuppressWarnings("deprecated")
+		public boolean matchItem(Item item) {
+			return item.getBuiltInRegistryHolder().isIn(ItemTags.COALS);
 		}
 
 		@Override
@@ -57,8 +59,8 @@ public abstract class BlackboardDrawModifier {
 
 	public static final BlackboardDrawModifier SHADE_DECREASE = new BlackboardDrawModifier("aurorasdeco.blackboard.modifier.lighten", 0xffeeeeee) {
 		@Override
-		public boolean matchItem(ItemStack item) {
-			return item.isOf(Items.BONE_MEAL);
+		public boolean matchItem(Item item) {
+			return item == Items.BONE_MEAL;
 		}
 
 		@Override
@@ -76,8 +78,8 @@ public abstract class BlackboardDrawModifier {
 
 	public static final BlackboardDrawModifier SATURATION = new BlackboardDrawModifier("aurorasdeco.blackboard.modifier.saturation", 0xffffbc5e) {
 		@Override
-		public boolean matchItem(ItemStack item) {
-			return item.isOf(Items.GLOWSTONE_DUST);
+		public boolean matchItem(Item item) {
+			return item == Items.GLOWSTONE_DUST;
 		}
 
 		@Override
@@ -111,16 +113,20 @@ public abstract class BlackboardDrawModifier {
 		return this.color;
 	}
 
-	public abstract boolean matchItem(ItemStack item);
+	public abstract boolean matchItem(Item item);
 
 	public abstract short apply(short colorData);
 
-	public static @Nullable BlackboardDrawModifier fromItem(ItemStack item) {
+	public static @Nullable BlackboardDrawModifier fromItem(Item item) {
 		for (var modifier : MODIFIERS) {
 			if (modifier.matchItem(item))
 				return modifier;
 		}
 
 		return null;
+	}
+
+	public static @Nullable BlackboardDrawModifier fromItem(ItemStack item) {
+		return fromItem(item.getItem());
 	}
 }
