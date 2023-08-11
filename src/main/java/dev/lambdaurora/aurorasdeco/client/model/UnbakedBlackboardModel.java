@@ -17,8 +17,6 @@
 
 package dev.lambdaurora.aurorasdeco.client.model;
 
-import dev.lambdaurora.aurorasdeco.AurorasDeco;
-import dev.lambdaurora.aurorasdeco.blackboard.Blackboard;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
@@ -28,8 +26,6 @@ import net.minecraft.client.render.model.json.ModelVariantMap;
 import net.minecraft.client.resource.Material;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
@@ -39,9 +35,6 @@ import java.util.function.Function;
 
 @ClientOnly
 public class UnbakedBlackboardModel implements AuroraUnbakedModel {
-	private static final Material WHITE = new Material(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE,
-			AurorasDeco.id("special/white"));
-
 	protected final UnbakedModel baseModel;
 
 	public static UnbakedBlackboardModel of(ModelIdentifier id, UnbakedModel baseModel,
@@ -79,7 +72,6 @@ public class UnbakedBlackboardModel implements AuroraUnbakedModel {
 	protected BakedModel bakeBaseModel(
 			ModelBaker loader, Function<Material, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId
 	) {
-		Blackboard.setWhiteSprite(textureGetter.apply(WHITE));
 		return this.baseModel.bake(loader, textureGetter, rotationContainer, modelId);
 	}
 }

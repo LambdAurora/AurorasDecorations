@@ -98,4 +98,10 @@
 - Fixed wrong leaf texture on cherry wood stumps.
 - Fixed bad serialization of empty blackboards causing stacking issues.
 
+### 1.0.0-beta.19
+
+- Fixed blackboard issues with ModernFix, improved texture fetching reliability.
+- Fixed glassboards not integrating correctly with LambdaBetterGrass.
+- Fixed some typo in the compatibility system of wood-based features.
+
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"

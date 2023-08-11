@@ -17,17 +17,20 @@
 
 package dev.lambdaurora.aurorasdeco.blackboard;
 
+import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.util.TriState;
-import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.feature_flags.FeatureFlagBitSet;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,8 +47,7 @@ import java.util.List;
  * @since 1.0.0
  */
 public class Blackboard implements BlackboardHandler {
-	@ClientOnly
-	private static Sprite WHITE_SPRITE;
+	private static final Identifier WHITE_SPRITE_ID = AurorasDeco.id("special/white");
 
 	private final short[] pixels = new short[256];
 	private boolean lit;
@@ -220,12 +222,9 @@ public class Blackboard implements BlackboardHandler {
 	/* Rendering */
 
 	@ClientOnly
-	public static void setWhiteSprite(Sprite whiteSprite) {
-		WHITE_SPRITE = whiteSprite;
-	}
-
-	@ClientOnly
 	public Mesh buildMesh(Direction facing, int light) {
+		var sprite = MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).apply(WHITE_SPRITE_ID);
+
 		var meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
 		var emitter = meshBuilder.getEmitter();
 
@@ -249,7 +248,7 @@ public class Blackboard implements BlackboardHandler {
 					int squareY = 15 - y;
 					emitter.square(facing, x / 16.f, squareY / 16.f,
 									(x + 1) / 16.f, (squareY + 1) / 16.f, 0.928f)
-							.spriteBake(WHITE_SPRITE, MutableQuadView.BAKE_LOCK_UV)
+							.spriteBake(sprite, MutableQuadView.BAKE_LOCK_UV)
 							.color(color, color, color, color)
 							.material(material);
 					if (light != 0)

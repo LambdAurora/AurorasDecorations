@@ -433,7 +433,10 @@ public final class WoodType {
 					return topId;
 
 				// For mods that don't use standard texture paths but logically evil.
-				topId = new Identifier(componentId.getNamespace(), "block/" + component.woodType().getId().getPath() + "/log/top");
+				topId = new Identifier(
+						componentId.getNamespace(),
+						"block/" + component.woodType().getId().getPath() + "/" + component.woodType().getLogType() + "/top"
+				);
 				if (resourceManager.getResource(AuroraUtil.toAbsoluteTexturesId(topId)).isPresent())
 					return topId;
 

@@ -88,7 +88,6 @@ public class UnbakedGlassboardModel extends UnbakedBlackboardModel {
 						LOGGER.warn("Could not load glassboard model part (" + corner + ", " + type + "): could not locate the blockstate file.");
 					} else {
 						try (var reader = new InputStreamReader(resource.get().open())) {
-
 							deserializationContext.setStateFactory(block.getStateManager());
 							var map = ModelVariantMap.fromJson(deserializationContext, reader);
 
