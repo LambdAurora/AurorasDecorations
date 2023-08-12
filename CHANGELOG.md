@@ -104,4 +104,11 @@
 - Fixed glassboards not integrating correctly with LambdaBetterGrass.
 - Fixed some typo in the compatibility system of wood-based features.
 
+### 1.0.0-beta.20
+
+- Added sign post waxing similar to sign waxing.
+- Added shelf NBT property `locked`.
+- Fixed render rules model injection issues.
+- Fixed shelves not respecting locks (NBT property `Lock`).
+
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"

@@ -23,6 +23,7 @@ import dev.lambdaurora.aurorasdeco.screen.ShelfScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
@@ -46,10 +47,15 @@ import org.quiltmc.qsl.block.entity.api.QuiltBlockEntity;
 public class ShelfBlockEntity extends LootableContainerBlockEntity
 		implements ExtendedScreenHandlerFactory, QuiltBlockEntity {
 	private DefaultedList<ItemStack> inventory;
+	private boolean locked;
 
 	public ShelfBlockEntity(BlockPos pos, BlockState state) {
 		super(AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE, pos, state);
 		this.inventory = DefaultedList.ofSize(8, ItemStack.EMPTY);
+	}
+
+	public boolean isLocked() {
+		return this.locked;
 	}
 
 	@Override
@@ -71,6 +77,8 @@ public class ShelfBlockEntity extends LootableContainerBlockEntity
 		if (!this.deserializeLootTable(nbt)) {
 			Inventories.readNbt(nbt, this.inventory);
 		}
+
+		this.locked = nbt.getBoolean("locked");
 	}
 
 	@Override
@@ -79,6 +87,8 @@ public class ShelfBlockEntity extends LootableContainerBlockEntity
 		if (!this.serializeLootTable(nbt)) {
 			Inventories.writeNbt(nbt, this.inventory);
 		}
+
+		nbt.putBoolean("locked", this.locked);
 	}
 
 	@Override
@@ -124,5 +134,10 @@ public class ShelfBlockEntity extends LootableContainerBlockEntity
 	@Override
 	public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
 		buf.writeEnumConstant(this.getCachedState().get(ShelfBlock.TYPE));
+	}
+
+	@Override
+	public boolean checkUnlocked(PlayerEntity player) {
+		return !this.locked && super.checkUnlocked(player);
 	}
 }

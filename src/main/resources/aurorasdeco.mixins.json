@@ -17,6 +17,7 @@
     "block.FlowerPotBlockMixin",
     "block.HopperBlockEntityMixin",
     "block.LanternBlockMixin",
+    "block.LockableContainerBlockEntityAccessor",
     "block.PistonBlockEntityMixin",
     "block.PistonBlockMixin",
     "block.RedstoneWireBlockMixin",

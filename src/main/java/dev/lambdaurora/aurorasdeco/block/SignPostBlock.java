@@ -62,6 +62,8 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldEvents;
+import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.loader.api.minecraft.MinecraftQuiltLoader;
@@ -76,7 +78,7 @@ import java.util.stream.Stream;
  * Represents a sign post block.
  *
  * @author LambdAurora
- * @version 1.0.0-beta.11
+ * @version 1.0.0-beta.20
  * @since 1.0.0-beta.1
  */
 @SuppressWarnings("deprecation")
@@ -218,6 +220,19 @@ public class SignPostBlock extends BlockWithEntity implements Waterloggable {
 
 		if (stack.getItem() instanceof SignPostItem)
 			return ActionResult.PASS; // Let the item handle it.
+
+		if (signPost.isWaxed()) {
+			world.playSound(null, signPost.getPos(), SoundEvents.BLOCK_SIGN_WAXED_INTERACT_FAIL, SoundCategory.BLOCKS);
+			return ActionResult.PASS;
+		}
+
+		if (stack.isOf(Items.HONEYCOMB)) {
+			signPost.setWaxed(true);
+			world.syncWorldEvent(null, WorldEvents.BLOCK_WAXED, signPost.getPos(), 0);
+			world.emitGameEvent(GameEvent.BLOCK_CHANGE, signPost.getPos(), GameEvent.Context.create(player, signPost.getCachedState()));
+			player.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
+			return ActionResult.SUCCESS;
+		}
 
 		boolean handEmpty = stack.isEmpty();
 		boolean dye = stack.getItem() instanceof DyeItem;

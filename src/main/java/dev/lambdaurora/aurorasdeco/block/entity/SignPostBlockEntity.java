@@ -44,13 +44,14 @@ import java.util.UUID;
  * Represents the sign post block entity.
  *
  * @author LambdAurora
- * @version 1.0.0-beta.12
+ * @version 1.0.0-beta.20
  * @since 1.0.0-beta.1
  */
 public class SignPostBlockEntity extends BasicBlockEntity {
 	private Sign up;
 	private Sign down;
 	private GenerationSettings generationSettings;
+	private boolean waxed;
 	@Nullable
 	private UUID editor;
 
@@ -82,6 +83,17 @@ public class SignPostBlockEntity extends BasicBlockEntity {
 
 	public @Nullable Sign getSign(boolean up) {
 		return up ? this.up : this.down;
+	}
+
+	public boolean isWaxed() {
+		return this.waxed;
+	}
+
+	public void setWaxed(boolean waxed) {
+		if (this.waxed != waxed) {
+			this.waxed = waxed;
+			this.attemptToSync();
+		}
 	}
 
 	/* Generation settings */
@@ -166,6 +178,7 @@ public class SignPostBlockEntity extends BasicBlockEntity {
 	public void readNbt(NbtCompound nbt) {
 		super.readNbt(nbt);
 		this.readSignPostNbt(nbt);
+		this.waxed = nbt.getBoolean("waxed");
 
 		if (nbt.contains("generation_settings", NbtElement.COMPOUND_TYPE)) {
 			this.generationSettings = GenerationSettings.fromNbt(nbt.getCompound("generation_settings"));
@@ -176,6 +189,7 @@ public class SignPostBlockEntity extends BasicBlockEntity {
 	public void writeNbt(NbtCompound nbt) {
 		super.writeNbt(nbt);
 		this.writeSignPostNbt(nbt);
+		nbt.putBoolean("waxed", this.waxed);
 
 		if (this.generationSettings != null) {
 			nbt.put("generation_settings", this.generationSettings.toNbt());

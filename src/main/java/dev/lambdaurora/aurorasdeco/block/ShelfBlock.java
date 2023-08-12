@@ -18,6 +18,7 @@
 package dev.lambdaurora.aurorasdeco.block;
 
 import com.google.common.collect.ImmutableMap;
+import dev.lambdaurora.aurorasdeco.mixin.block.LockableContainerBlockEntityAccessor;
 import dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry;
 import dev.lambdaurora.aurorasdeco.registry.WoodType;
 import dev.lambdaurora.aurorasdeco.util.AuroraUtil;
@@ -30,6 +31,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.inventory.ContainerLock;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
@@ -38,6 +40,7 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
@@ -227,14 +230,25 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
 	/* Interaction */
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-			BlockHitResult hit) {
+	public ActionResult onUse(
+			BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit
+	) {
 		if (!world.isClient()) {
 			var shelf = AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE.get(world, pos);
 
-			if (shelf != null) {
+			if (shelf != null && shelf.canPlayerUse(player)) {
 				var handStack = player.getStackInHand(hand);
-				if (!handStack.isEmpty()) {
+
+				if (shelf.isLocked()) {
+					player.sendMessage(
+							Text.translatable("container.isLocked", shelf.getDisplayName()),
+							true
+					);
+					return ActionResult.PASS;
+				}
+
+				if (!handStack.isEmpty()
+						&& ((LockableContainerBlockEntityAccessor) shelf).getLock().equals(ContainerLock.EMPTY)) {
 					var facing = state.get(FACING);
 
 					int y = 0;
@@ -270,9 +284,9 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
 						world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
 						return ActionResult.SUCCESS;
 					}
+				} else if (shelf.checkUnlocked(player)) {
+					player.openHandledScreen(shelf);
 				}
-
-				player.openHandledScreen(shelf);
 			}
 		}
 		return ActionResult.SUCCESS;
@@ -282,7 +296,7 @@ public class ShelfBlock extends BlockWithEntity implements Waterloggable {
 	public void onBlockBreakStart(BlockState state, World world, BlockPos pos, PlayerEntity player) {
 		var shelf = AurorasDecoRegistry.SHELF_BLOCK_ENTITY_TYPE.get(world, pos);
 
-		if (shelf != null && !shelf.isEmpty()) {
+		if (shelf != null && !shelf.isEmpty() && shelf.canPlayerUse(player) && shelf.checkUnlocked(player)) {
 			Direction facing = state.get(FACING);
 
 			var cameraPosVec = player.getCameraPosVec(1.0F);

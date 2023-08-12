@@ -63,7 +63,6 @@ import org.quiltmc.qsl.lifecycle.api.client.event.ClientLifecycleEvents;
 import org.quiltmc.qsl.lifecycle.api.client.event.ClientWorldTickEvents;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 import org.quiltmc.qsl.resource.loader.api.ResourceLoader;
-import org.quiltmc.qsl.resource.loader.api.reloader.ResourceReloaderKeys;
 
 import static dev.lambdaurora.aurorasdeco.registry.AurorasDecoRegistry.*;
 
@@ -158,11 +157,14 @@ public class AurorasDecoClient implements ClientModInitializer {
 				WindChimeBlockEntityRenderer::getTexturedModelData);
 
 		ResourceLoader resourceLoader = ResourceLoader.get(ResourceType.CLIENT_RESOURCES);
-		resourceLoader.registerReloader(new RenderRule.Reloader());
-		resourceLoader.addReloaderOrdering(RenderRule.Reloader.ID, ResourceReloaderKeys.BEFORE_VANILLA);
 		resourceLoader.getRegisterDefaultResourcePackEvent().register(context -> {
 			context.addResourcePack(AurorasDecoClient.RESOURCE_PACK.rebuild(ResourceType.CLIENT_RESOURCES, context.resourceManager()));
 		});
+		resourceLoader.getRegisterTopResourcePackEvent().register(AurorasDeco.id("reload/render_rules"),
+				context -> {
+					RenderRule.reload(context.resourceManager());
+				}
+		);
 
 		ModelLoadingPlugin.register(context -> {
 			RenderRule.addModels(context);

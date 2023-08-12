@@ -29,6 +29,7 @@ import net.minecraft.block.FenceBlock;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -112,6 +113,11 @@ public class SignPostItem extends Item {
 
 			var blockEntity = world.getBlockEntity(pos);
 			if (blockEntity instanceof SignPostBlockEntity signPostBlockEntity) {
+				if (signPostBlockEntity.isWaxed()) {
+					world.playSound(null, signPostBlockEntity.getPos(), SoundEvents.BLOCK_SIGN_WAXED_INTERACT_FAIL, SoundCategory.BLOCKS);
+					return ActionResult.PASS;
+				}
+
 				int r = MathHelper.floor((double) ((180.f + context.getPlayerYaw()) * 16.f / 360.f) + 0.5) & 15;
 
 				var text = stack.hasCustomName()

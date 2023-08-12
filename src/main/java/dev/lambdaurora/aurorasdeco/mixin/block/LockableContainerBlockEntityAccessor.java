@@ -15,19 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package dev.lambdaurora.aurorasdeco.test;
+package dev.lambdaurora.aurorasdeco.mixin.block;
 
-import org.quiltmc.qsl.testing.api.game.QuiltGameTest;
-import org.quiltmc.qsl.testing.api.game.TestRegistrationContext;
+import net.minecraft.block.entity.LockableContainerBlockEntity;
+import net.minecraft.inventory.ContainerLock;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-public class AurorasDecoTests implements QuiltGameTest {
-	@Override
-	public void registerTests(TestRegistrationContext context) {
-		context.register(
-				CopperHopperTest.class,
-				RedstoneLanternTest.class,
-				ShelfTest.class,
-				SturdyStoneTest.class
-		);
-	}
+@Mixin(LockableContainerBlockEntity.class)
+public interface LockableContainerBlockEntityAccessor {
+	@Accessor
+	ContainerLock getLock();
 }

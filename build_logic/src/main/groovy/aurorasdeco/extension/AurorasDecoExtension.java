@@ -13,6 +13,7 @@ import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.Nested;
+import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
 import org.jetbrains.annotations.NotNull;
 
@@ -96,12 +97,17 @@ public class AurorasDecoExtension implements Serializable {
 
 	private void registerSourceSet(SourceSetContainer sourceSets, String name) {
 		sourceSets.register(name, sourceSet -> {
-			sourceSet.setCompileClasspath(sourceSet.getCompileClasspath().plus(sourceSets.getByName("main").getCompileClasspath()));
-			sourceSet.setRuntimeClasspath(sourceSet.getRuntimeClasspath().plus(sourceSets.getByName("main").getRuntimeClasspath()));
+			this.addClasspath(sourceSet, sourceSets.getByName("main"));
+			this.addClasspath(sourceSets.getByName("actualmod"), sourceSet);
 
 			var loom = this.project.getExtensions().getByType(LoomGradleExtensionAPI.class);
 			loom.createRemapConfigurations(sourceSet);
 		}).get();
+	}
+
+	private void addClasspath(SourceSet source, SourceSet addition) {
+		source.setCompileClasspath(source.getCompileClasspath().plus(addition.getCompileClasspath()));
+		source.setRuntimeClasspath(source.getRuntimeClasspath().plus(addition.getRuntimeClasspath()));
 	}
 
 	public static class NamedWriteOnlyList implements Named {
