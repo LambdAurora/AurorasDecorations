@@ -127,6 +127,10 @@ public class BookPileBlock extends BlockWithEntity implements Waterloggable {
 			BlockHitResult hit) {
 		var stack = player.getStackInHand(hand);
 
+		if (!player.getAbilities().allowModifyWorld) {
+			return ActionResult.PASS;
+		}
+
 		if (stack.isOf(Items.BOOK) || stack.isOf(Items.ENCHANTED_BOOK)) {
 			var bookPile = AurorasDecoRegistry.BOOK_PILE_BLOCK_ENTITY_TYPE.get(world, pos);
 			if (bookPile != null && !bookPile.isFull()) {

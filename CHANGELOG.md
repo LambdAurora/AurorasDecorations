@@ -111,4 +111,9 @@
 - Fixed render rules model injection issues.
 - Fixed shelves not respecting locks (NBT property `Lock`).
 
+### 1.0.0-beta.21
+
+- Fixed multiplayer synchronization issues with book piles.
+- Made book pile unmodifiable for players in adventure game mode.
+
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"

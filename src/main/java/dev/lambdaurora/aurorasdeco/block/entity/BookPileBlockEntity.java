@@ -54,7 +54,7 @@ public class BookPileBlockEntity extends BasicBlockEntity {
 				copy.setCount(1);
 				this.books.set(i, copy);
 
-				this.markDirty();
+				this.attemptToSync();
 				return;
 			}
 		}
@@ -65,9 +65,18 @@ public class BookPileBlockEntity extends BasicBlockEntity {
 		var copy = stack.copy();
 		if (!stack.isEmpty()) {
 			stack.setCount(0);
-			this.markDirty();
+			this.attemptToSync();
 		}
 		return copy;
+	}
+
+	/* Sync */
+
+	private void attemptToSync() {
+		if (this.world != null && !this.world.isClient()) {
+			this.markDirty();
+			this.sync();
+		}
 	}
 
 	/* Serialization */
