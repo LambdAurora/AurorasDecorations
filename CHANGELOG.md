@@ -118,6 +118,7 @@
 
 ### 1.0.0-beta.22
 
+- Added Ukrainian translations ([#51](https://github.com/LambdAurora/AurorasDecorations/pull/51)).
 - Fixed various slabs only dropping one item when breaking a double slab block.
 
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"
