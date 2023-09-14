@@ -7,16 +7,12 @@ public final class Constants {
 	public static final String NAME = "Aurora's Decorations";
 	public static final String DESCRIPTION = "A decorations-focused mod which tries to have a twist for its different features.";
 	public static final List<Contributor> CONTRIBUTORS = List.of(
-			new Contributor("Aurora (Lambda Foxes)", "Author"),
-			new Contributor("Lavender (Lambda Foxes)", "Author"),
+			new Contributor("LambdAurora", "Author"),
 			new Contributor("april", "Artist"),
 			new Contributor("harpsi", "Artist"),
 			new Contributor("Kat", "Artist"),
 			new Contributor("unascribed", "Artist")
 	);
-	public static final String WEBSITE = "https://lambdaurora.dev/AurorasDecorations/";
-	public static final String SOURCES = "https://github.com/LambdAurora/AurorasDecorations";
-	public static final String ISSUES = SOURCES + "/issues";
 	public static final String LICENSE = "LGPL-3.0-only";
 	public static final String ICON_PATH = "assets/" + NAMESPACE + "/icon.png";
 
@@ -34,4 +30,15 @@ public final class Constants {
 	public static final String EMI_VERSION = "1.0.18+1.20.1";
 
 	public record Contributor(String name, String role) {}
+
+	public static final class Links {
+		public static final String WEBSITE = "https://lambdaurora.dev/AurorasDecorations/";
+		public static final String SOURCES = "https://github.com/LambdAurora/AurorasDecorations";
+		public static final String ISSUES = SOURCES + "/issues";
+		public static final String CURSEFORGE = "https://www.curseforge.com/minecraft/mc-mods/aurorasdecorations";
+		public static final String DISCORD = "https://discord.lambdaurora.dev/";
+		public static final String GITHUB_RELEASES = SOURCES + "/releases";
+		public static final String MODRINTH = "https://modrinth.com/mod/aurorasdecorations";
+		public static final String TWITTER = "https://twitter.com/LambdAurora";
+	}
 }

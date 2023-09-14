@@ -9,7 +9,7 @@ plugins {
 
 group = project.maven_group
 version = "${project.mod_version}+${MINECRAFT_VERSION.version()}"
-archivesBaseName = project.archives_base_name
+base.archivesName = project.archives_base_name
 
 if (!(System.getenv("CURSEFORGE_TOKEN") || System.getenv("MODRINTH_TOKEN"))) {
 	version += "-local"
@@ -97,7 +97,7 @@ aurorasdeco {
 
 jar {
 	from('LICENSE') {
-		rename { "${it}_${project.archivesBaseName}" }
+		rename { "${it}_${base.archivesName.get()}" }
 	}
 }
 

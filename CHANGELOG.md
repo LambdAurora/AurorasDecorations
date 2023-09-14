@@ -116,4 +116,8 @@
 - Fixed multiplayer synchronization issues with book piles.
 - Made book pile unmodifiable for players in adventure game mode.
 
+### 1.0.0-beta.22
+
+- Fixed various slabs only dropping one item when breaking a double slab block.
+
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"

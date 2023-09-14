@@ -59,9 +59,9 @@ public abstract class GenerateQmjTask extends DefaultTask {
 						.name("contact").beginObject();
 
 				{
-					writer.name("homepage").value(Constants.WEBSITE)
-							.name("sources").value(Constants.SOURCES)
-							.name("issues").value(Constants.ISSUES);
+					writer.name("homepage").value(Constants.Links.WEBSITE)
+							.name("sources").value(Constants.Links.SOURCES)
+							.name("issues").value(Constants.Links.ISSUES);
 				}
 
 				writer.endObject()
@@ -143,6 +143,20 @@ public abstract class GenerateQmjTask extends DefaultTask {
 		writer.endObject();
 
 		writer.name("mixin").value("aurorasdeco.mixins.json");
+
+		writer.name("modmenu").beginObject();
+		{
+			writer.name("links").beginObject();
+			{
+				writer.name("modmenu.curseforge").value(Constants.Links.CURSEFORGE)
+						.name("modmenu.discord").value(Constants.Links.DISCORD)
+						.name("modmenu.github_releases").value(Constants.Links.GITHUB_RELEASES)
+						.name("modmenu.modrinth").value(Constants.Links.MODRINTH)
+						.name("modmenu.twitter").value(Constants.Links.TWITTER);
+			}
+			writer.endObject();
+		}
+		writer.endObject();
 
 		writer.endObject();
 		writer.flush();
