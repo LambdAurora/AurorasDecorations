@@ -42,13 +42,13 @@ loom {
 	runtimeOnlyLog4j = true
 
 	runs {
-		gameTestServer {
+		/*gameTestServer {
 			server()
 			configName = "Game test server"
 			source(sourceSets.testmod)
 			property("quilt.game_test", "true")
 			programArg("--nogui")
-		}
+		}*/
 
 		client {
 			client()
