@@ -65,11 +65,9 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.SignType;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.poi.PointOfInterestType;
 import org.quiltmc.qsl.block.entity.api.QuiltBlockEntityTypeBuilder;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
-import org.quiltmc.qsl.poi.api.PointOfInterestHelper;
 import org.quiltmc.qsl.registry.api.event.RegistryMonitor;
 
 import java.util.function.BiFunction;
@@ -94,9 +92,6 @@ public final class AurorasDecoRegistry {
 	}
 
 	/* Blocks & Items */
-
-	public static final AmethystLanternBlock AMETHYST_LANTERN_BLOCK = registerWithItem("amethyst_lantern",
-			new AmethystLanternBlock(), new QuiltItemSettings());
 
 	//region Azalea
 	public static final PillarBlock AZALEA_LOG_BLOCK = registerWithItem("azalea_log",
@@ -328,8 +323,6 @@ public final class AurorasDecoRegistry {
 	//endregion
 
 	//region Redstone
-	public static final RedstoneLanternBlock REDSTONE_LANTERN_BLOCK = registerWithItem("redstone_lantern",
-			new RedstoneLanternBlock(), new QuiltItemSettings());
 	public static final CopperHopperBlock COPPER_HOPPER_BLOCK = registerWithItem("copper_hopper",
 			new CopperHopperBlock(QuiltBlockSettings.copyOf(Blocks.HOPPER).mapColor(MapColor.ORANGE)),
 			new QuiltItemSettings());
@@ -354,22 +347,6 @@ public final class AurorasDecoRegistry {
 
 	public static final SawmillBlock SAWMILL_BLOCK = registerWithItem("sawmill", new SawmillBlock(),
 			new QuiltItemSettings());
-
-	//region Wall lanterns
-	public static final WallLanternBlock<LanternBlock> WALL_LANTERN_BLOCK = registerBlock("wall_lantern",
-			new WallLanternBlock<>((LanternBlock) Blocks.LANTERN));
-	public static final WallLanternBlock<LanternBlock> SOUL_WALL_LANTERN_BLOCK = registerBlock("wall_lantern/soul",
-			new WallLanternBlock<>((LanternBlock) Blocks.SOUL_LANTERN));
-	public static final WallLanternBlock<RedstoneLanternBlock> REDSTONE_WALL_LANTERN_BLOCK = LanternRegistry.registerWallLantern(REDSTONE_LANTERN_BLOCK);
-	public static final BlockEntityType<LanternBlockEntity> WALL_LANTERN_BLOCK_ENTITY_TYPE = Registry.register(
-			Registries.BLOCK_ENTITY_TYPE,
-			id("lantern"),
-			QuiltBlockEntityTypeBuilder.create(LanternBlockEntity::new, WALL_LANTERN_BLOCK, SOUL_WALL_LANTERN_BLOCK, REDSTONE_WALL_LANTERN_BLOCK)
-					.build()
-	);
-	public static final WallLanternBlock<AmethystLanternBlock> AMETHYST_WALL_LANTERN_BLOCK = LanternRegistry.registerWallLantern(AMETHYST_LANTERN_BLOCK);
-	public static final WallLanternBlock<LanternBlock> COPPER_SULFATE_WALL_LANTERN_BLOCK = LanternRegistry.registerWallLantern(COPPER_SULFATE_LANTERN_BLOCK);
-	//endregion
 
 	public static final WindChimeBlock WIND_CHIME_BLOCK = registerWithItem("wind_chime",
 			new WindChimeBlock(QuiltBlockSettings.create().nonOpaque()
@@ -516,14 +493,6 @@ public final class AurorasDecoRegistry {
 	public static final RecipeSerializer<ActuallyGoodTransformSmithingRecipe> ACTUALLY_GOOD_TRANSFORM_SMITHING_RECIPE_SERIALIZER
 			= register("actually_good_smithing_transform", ActuallyGoodTransformSmithingRecipe.SERIALIZER);
 
-	/* POI */
-
-	public static final RegistryKey<PointOfInterestType> AMETHYST_LANTERN_POI = PointOfInterestHelper.register(
-			id("amethyst_lantern"),
-			0, 2,
-			AMETHYST_LANTERN_BLOCK, AMETHYST_WALL_LANTERN_BLOCK
-	);
-
 	/* Advancement Criteria */
 
 	public static final PetUsePetBedCriterion PET_USE_PET_BED_CRITERION = Criteria.register(new PetUsePetBedCriterion());
@@ -627,7 +596,7 @@ public final class AurorasDecoRegistry {
 							);
 
 							SIGN_POST_BLOCK_ENTITY_TYPE.addSupportedBlock(signPostBlock);
-						} else LanternRegistry.tryRegisterWallLantern(context.registry(), block, id);
+						}
 					}
 				});
 
@@ -637,12 +606,7 @@ public final class AurorasDecoRegistry {
 					var accessor = (BlockItemAccessor) context.value();
 					var item = (BlockItem) context.value();
 
-					if (item.getBlock() instanceof LanternBlock) {
-						var lanternBlock = LanternRegistry.fromItem(item);
-						if (lanternBlock != null)
-							accessor.aurorasdeco$setWallBlock(lanternBlock);
-						Item.BLOCK_ITEMS.put(lanternBlock, item);
-					} else if (item.getBlock() instanceof CandleBlock candleBlock && id.getNamespace().equals("minecraft")) {
+					if (item.getBlock() instanceof CandleBlock candleBlock && id.getNamespace().equals("minecraft")) {
 						var wall = registerBlock(
 								"wall_" + id.getPath(),
 								new WallCandleBlock(candleBlock)

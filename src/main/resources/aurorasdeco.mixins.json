@@ -5,7 +5,6 @@
   "mixins": [
     "ServerAdvancementLoaderMixin",
     "SimpleRegistryAccessor",
-    "SpawnHelperMixin",
     "StateManagerBuilderAccessor",
     "TransformSmithingRecipeAccessor",
     "block.AbstractBlockAccessor",
@@ -23,7 +22,6 @@
     "block.RedstoneWireBlockMixin",
     "block.VineBlockAccessor",
     "entity.ArmorStandEntityMixin",
-    "entity.AvoidAmethystLanternMixin",
     "entity.CatEntityMixin",
     "entity.FoxEntityAccessor",
     "entity.ItemFrameEntityMixin",
@@ -34,7 +32,6 @@
     "entity.SitGoalMixin",
     "entity.SleepTaskMixin",
     "entity.WolfEntityMixin",
-    "entity.ZombieVillagerEntityMixin",
     "item.BlockItemMixin",
     "item.FlintAndSteelItemMixin",
     "item.HoneycombItemMixin",

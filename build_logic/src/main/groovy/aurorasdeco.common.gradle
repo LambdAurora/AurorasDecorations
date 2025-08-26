@@ -5,7 +5,6 @@ plugins {
 	id "org.quiltmc.loom"
 	id "java-library"
 	id "maven-publish"
-	id "org.quiltmc.gradle.licenser"
 }
 
 def extension = project.extensions.create(AurorasDecoExtension, "aurorasdeco", AurorasDecoExtension, project)
@@ -79,6 +78,20 @@ repositories {
 			includeGroup 'com.terraformersmc.terraform-api'
 		}
 	}
+	ivy {
+		name = "AurorasLanterns"
+		url = uri("https://github.com/LambdAurora/AurorasLanterns/releases/download/")
+		patternLayout {
+			artifact("v[revision]/[module]-[revision].[ext]")
+		}
+		content {
+			includeGroup("dev.lambdaurora.auroraslanterns")
+		}
+		metadataSources {
+			artifact()
+		}
+	}
+	mavenLocal()
 }
 
 dependencies {
@@ -92,6 +105,9 @@ dependencies {
 		exclude group: 'net.fabricmc.fabric-api'
 		exclude group: 'org.terraformersmc'
 	})
+
+	modCompileOnly("dev.lambdaurora.auroraslanterns:auroraslanterns:${Constants.AURORASLANTERNS_VERSION}")
+	include("dev.lambdaurora.auroraslanterns:auroraslanterns:${Constants.AURORASLANTERNS_VERSION}")
 
 	// testmod sourceSet should depend on everything in the main source set.
 	testmodImplementation sourceSets.main.output
@@ -114,9 +130,4 @@ tasks.withType(JavaCompile).configureEach {
 
 sourcesJar {
 	dependsOn(generateQmj)
-}
-
-license {
-	rule file('codeformat/HEADER')
-	include '**/*.java'
 }

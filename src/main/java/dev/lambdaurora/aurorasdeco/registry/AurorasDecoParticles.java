@@ -35,7 +35,6 @@ public final class AurorasDecoParticles {
 		throw new UnsupportedOperationException("Someone tried to instantiate a static-only class. How?");
 	}
 
-	public static final DefaultParticleType AMETHYST_GLINT = register("amethyst_glint");
 	public static final DefaultParticleType COPPER_SULFATE_FLAME = register("copper_sulfate_flame");
 	public static final DefaultParticleType COPPER_SULFATE_LAVA = register("copper_sulfate_lava");
 	public static final DefaultParticleType LAVENDER_PETAL = register("lavender_petal");

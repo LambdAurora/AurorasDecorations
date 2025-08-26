@@ -5,6 +5,7 @@ import aurorasdeco.extension.AurorasDecoExtension;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.provider.Property;
+import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.Nested;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
@@ -16,6 +17,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public abstract class GenerateQmjTask extends DefaultTask {
+	@Input
+	public abstract Property<String> getModVersion();
+
 	@OutputDirectory
 	public abstract DirectoryProperty getOutputDir();
 
@@ -25,6 +29,7 @@ public abstract class GenerateQmjTask extends DefaultTask {
 	@Inject
 	public GenerateQmjTask() {
 		this.setGroup("generation");
+		this.getModVersion().convention(this.getProject().getVersion().toString());
 	}
 
 	@TaskAction
@@ -44,7 +49,7 @@ public abstract class GenerateQmjTask extends DefaultTask {
 			writer.name("quilt_loader").beginObject()
 					.name("group").value(this.getProject().getGroup().toString())
 					.name("id").value(Constants.NAMESPACE)
-					.name("version").value(this.getProject().getVersion().toString());
+					.name("version").value(this.getModVersion().get());
 			{
 				writer.name("metadata").beginObject()
 						.name("name").value(Constants.NAME)
@@ -121,6 +126,10 @@ public abstract class GenerateQmjTask extends DefaultTask {
 				writer.beginObject()
 						.name("id").value("terraform-wood-api-v1")
 						.name("versions").value(">=" + Constants.TERRAFORM_WOOD_API_VERSION)
+						.endObject();
+				writer.beginObject()
+						.name("id").value("auroraslanterns")
+						.name("versions").value(">=" + Constants.AURORASLANTERNS_VERSION)
 						.endObject();
 
 				if (this.getAurorasDecoModule().get().getHasEmi().get()) {

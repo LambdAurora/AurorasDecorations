@@ -37,7 +37,6 @@ public final class AurorasDecoSounds {
 
 	public static final SoundEvent FLOWERING_SHEAR_SOUND_EVENT = register("block.flowering.shear");
 	public static final SoundEvent BRAZIER_CRACKLE_SOUND_EVENT = register("block.brazier.crackle");
-	public static final SoundEvent LANTERN_SWING_SOUND_EVENT = register("block.lantern.swing");
 	public static final SoundEvent ARMOR_STAND_HIDE_BASE_PLATE_SOUND_EVENT = register("entity.armor_stand.hide_base_plate");
 	public static final SoundEvent ITEM_FRAME_HIDE_BACKGROUND_SOUND_EVENT = register("entity.item_frame.hide_background");
 

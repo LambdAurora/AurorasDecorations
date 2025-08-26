@@ -28,6 +28,7 @@ public final class Constants {
 	public static final String TERRAFORM_WOOD_API_VERSION = "7.0.1";
 	public static final String TRINKETS_VERSION = "3.7.1";
 	public static final String EMI_VERSION = "1.0.18+1.20.1";
+	public static final String AURORASLANTERNS_VERSION = "1.0.0+1.20.1";
 
 	public record Contributor(String name, String role) {}
 

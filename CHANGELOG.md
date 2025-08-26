@@ -121,4 +121,11 @@
 - Added Ukrainian translations ([#51](https://github.com/LambdAurora/AurorasDecorations/pull/51)).
 - Fixed various slabs only dropping one item when breaking a double slab block.
 
+### 1.0.0-beta.23
+
+- Split off the Amethyst Lantern, the Redstone Lantern, and the Wall Lanterns into their own mod: [Aurora's Lanterns].
+  - To avoid world corruption the mod is bundled with Aurora's Decorations on 1.20.
+  - The new mod is backward compatible, such preserving worlds that used the lanterns pre-split.
+
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"
+[Aurora's Lanterns]: https://modrinth.com/mod/auroraslanterns "Aurora's Lanterns Modrinth page"

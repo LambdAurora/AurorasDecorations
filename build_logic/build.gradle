@@ -29,7 +29,6 @@ sourceSets {
 dependencies {
 	utilImplementation implementation("org.quiltmc:loom:1.3.+")
 	implementation "org.quiltmc:quilt-json5:1.0.2"
-	implementation "org.quiltmc:quilt-gradle-licenser:2.+"
 
 	implementation sourceSets.util.output
 }

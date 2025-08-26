@@ -25,7 +25,6 @@ import com.mojang.blaze3d.texture.NativeImage;
 import com.mojang.logging.LogUtils;
 import dev.lambdaurora.aurorasdeco.AurorasDeco;
 import dev.lambdaurora.aurorasdeco.block.*;
-import dev.lambdaurora.aurorasdeco.registry.LanternRegistry;
 import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
@@ -63,7 +62,6 @@ public class AurorasDecoPack extends InMemoryResourcePack {
 				.map(Registries.BLOCK::getId));
 		this.registerTag(new String[]{"blocks", "items"}, AurorasDeco.id("stumps"), StumpBlock.streamLogStumps()
 				.map(Registries.BLOCK::getId));
-		this.registerTag(new String[]{"blocks"}, AurorasDeco.id("wall_lanterns"), LanternRegistry.streamIds());
 
 		return type == ResourceType.CLIENT_RESOURCES ? this.rebuildClient(resourceManager) : this.rebuildData();
 	}
