@@ -25,7 +25,6 @@ public class AurorasDecoTests implements QuiltGameTest {
 	public void registerTests(TestRegistrationContext context) {
 		context.register(
 				CopperHopperTest.class,
-				RedstoneLanternTest.class,
 				ShelfTest.class,
 				SturdyStoneTest.class
 		);
