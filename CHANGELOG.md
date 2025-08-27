@@ -127,7 +127,7 @@
   - To avoid world corruption the mod is bundled with Aurora's Decorations on 1.20.
   - The new mod is backward compatible, such preserving worlds that used the lanterns pre-split.
 
-### 1.0.0-beta.23
+### 1.0.0-beta.24
 
 - Updated [Aurora's Lanterns] to fix some issues related to block state IDs syncing.
 
