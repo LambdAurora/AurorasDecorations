@@ -131,5 +131,9 @@
 
 - Updated [Aurora's Lanterns] to fix some issues related to block state IDs syncing.
 
+### 1.0.0-beta.25
+
+- Updated [Aurora's Lanterns] to fix some issues related to wall lanterns integration.
+
 [EMI]: https://modrinth.com/mod/emi "EMI Modrinth page"
 [Aurora's Lanterns]: https://modrinth.com/mod/auroraslanterns "Aurora's Lanterns Modrinth page"
